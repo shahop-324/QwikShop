@@ -111,10 +111,7 @@ export default function EcommerceShop() {
           heading="Shop"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Plugins',
-              href: PATH_DASHBOARD.integration.plugins,
-            },
+            
             
           ]}
         />

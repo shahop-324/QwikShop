@@ -16,25 +16,9 @@ const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'general',
     items: [
       { title: 'Home', path: PATH_DASHBOARD.general.home, icon: <HomeRoundedIcon /> },
       { title: 'Order', path: PATH_DASHBOARD.general.order, icon: <ShoppingBagRoundedIcon /> },
-      { title: 'Delivery', path: PATH_DASHBOARD.general.delivery, icon: <LocalShippingRoundedIcon /> },
-      { title: 'Customer', path: PATH_DASHBOARD.general.customer, icon: <GroupsRoundedIcon /> },
-      { title: 'Marketing', path: PATH_DASHBOARD.general.marketing, icon: <CampaignRoundedIcon /> },
-      { title: 'Payment', path: PATH_DASHBOARD.general.payment, icon: <AccountBalanceWalletRoundedIcon /> },
-      { title: 'Discount', path: PATH_DASHBOARD.general.discount, icon: <LocalOfferRoundedIcon /> },
-      { title: 'Manage', path: PATH_DASHBOARD.general.manage, icon: <ManageAccountsRoundedIcon /> },
-    ],
-  },
-
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'management',
-    items: [
-      // MANAGEMENT : Catalouge
       {
         title: 'Catalouge',
         path: PATH_DASHBOARD.catalouge.root,
@@ -43,33 +27,32 @@ const navConfig = [
           { title: 'product', path: PATH_DASHBOARD.catalouge.product },
           { title: 'category', path: PATH_DASHBOARD.catalouge.category },
         ],
-
       },
-
-       // MANAGEMENT : BLOG
-      // {
-      //   title: 'Store theme',
-      //   path: PATH_DASHBOARD.store.root,
-      //   icon: <StoreRoundedIcon />,
-      //   children: [
-      //     { title: 'settings', path: PATH_DASHBOARD.store.settings },
-      //     { title: 'theme', path: PATH_DASHBOARD.store.theme },
-      //     { title: 'pages', path: PATH_DASHBOARD.store.pages },
-      //     { title: 'menus', path: PATH_DASHBOARD.store.menus },
-      //   ],
-      // },
-
+      { title: 'Delivery', path: PATH_DASHBOARD.general.delivery, icon: <LocalShippingRoundedIcon /> },
+      { title: 'Customer', path: PATH_DASHBOARD.general.customer, icon: <GroupsRoundedIcon /> },
+      { title: 'Marketing', path: PATH_DASHBOARD.general.marketing, icon: <CampaignRoundedIcon /> },
+      { title: 'Payment', path: PATH_DASHBOARD.general.payment, icon: <AccountBalanceWalletRoundedIcon /> },
+      { title: 'Discount', path: PATH_DASHBOARD.general.discount, icon: <LocalOfferRoundedIcon /> },
+      { title: 'Manage', path: PATH_DASHBOARD.general.manage, icon: <ManageAccountsRoundedIcon /> },
+      {
+        title: 'Store',
+        path: PATH_DASHBOARD.store.root,
+        icon: <StoreRoundedIcon />,
+        children: [
+          { title: 'settings', path: PATH_DASHBOARD.store.settings },
+          { title: 'theme', path: PATH_DASHBOARD.store.theme },
+          { title: 'pages', path: PATH_DASHBOARD.store.pages },
+          { title: 'menus', path: PATH_DASHBOARD.store.menus },
+        ],
+      },
+      {
+        title: 'Integrations',
+        path: PATH_DASHBOARD.general.integration,
+        icon: <ExtensionRoundedIcon />,
+      },
       // MANAGEMENT : E-COMMERCE
-      // {
-      //   title: 'Integrations',
-      //   path: PATH_DASHBOARD.integration.root,
-      //   icon: <ExtensionRoundedIcon />,
-      //   children: [
-      //     { title: 'plugins', path: PATH_DASHBOARD.integration.plugins },
-      //   ],
-      // },
     ],
-  }, 
+  },
 ];
 
 export default navConfig;

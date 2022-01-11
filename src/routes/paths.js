@@ -43,41 +43,20 @@ export const PATH_DASHBOARD = {
     payment: path(ROOTS_DASHBOARD, '/payment'),
     discount: path(ROOTS_DASHBOARD, '/discount'),
     manage: path(ROOTS_DASHBOARD, '/manage'),
+    integration: path(ROOTS_DASHBOARD, '/integration'),
   },
-  mail: {
-    root: path(ROOTS_DASHBOARD, '/mail'),
-    all: path(ROOTS_DASHBOARD, '/mail/all')
-  },
-  chat: {
-    root: path(ROOTS_DASHBOARD, '/chat'),
-    new: path(ROOTS_DASHBOARD, '/chat/new'),
-    conversation: path(ROOTS_DASHBOARD, '/chat/:conversationKey')
-  },
-  calendar: path(ROOTS_DASHBOARD, '/calendar'),
-  kanban: path(ROOTS_DASHBOARD, '/kanban'),
   catalouge: {
     root: path(ROOTS_DASHBOARD, '/catalouge'),
     product: path(ROOTS_DASHBOARD, '/catalouge/product'),
     category: path(ROOTS_DASHBOARD, '/catalouge/category'),
   },
-  // integration: {
-  //   root: path(ROOTS_DASHBOARD, '/integration'),
-  //   plugins: path(ROOTS_DASHBOARD, '/integration/plugins'),
-  //   product: path(ROOTS_DASHBOARD, '/e-commerce/product/:name'),
-  //   productById: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-air-force-1-ndestrukt'),
-  //   list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
-  //   newProduct: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),
-  //   editById: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-blazer-low-77-vintage/edit'),
-  //   checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
-  //   invoice: path(ROOTS_DASHBOARD, '/e-commerce/invoice')
-  // },
-  // store: {
-  //   root: path(ROOTS_DASHBOARD, '/store'),
-  //   settings: path(ROOTS_DASHBOARD, '/store/settings'),
-  //   theme: path(ROOTS_DASHBOARD, '/store/theme'),
-  //   pages: path(ROOTS_DASHBOARD, '/store/pages'),
-  //   menus: path(ROOTS_DASHBOARD, '/store/menus')
-  // }
+  store: {
+    root: path(ROOTS_DASHBOARD, '/store'),
+    settings: path(ROOTS_DASHBOARD, '/store/settings'),
+    theme: path(ROOTS_DASHBOARD, '/store/theme'),
+    pages: path(ROOTS_DASHBOARD, '/store/pages'),
+    menus: path(ROOTS_DASHBOARD, '/store/menus')
+  }
 };
 
 export const PATH_DOCS = 'https://docs-minimals.vercel.app/introduction';

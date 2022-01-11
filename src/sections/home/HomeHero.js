@@ -154,7 +154,7 @@ export default function HomeHero() {
                 size="large"
                 variant="contained"
                 component={RouterLink}
-                to={PATH_DASHBOARD.root}
+                to={PATH_DASHBOARD.general.home}
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
                 Live Preview

@@ -72,13 +72,8 @@ export default function Router() {
         { path: 'payment', element: <GeneralPayment /> },
         { path: 'discount', element: <GeneralDiscount /> },
         { path: 'manage', element: <GeneralManage /> },
-        // {
-        //   path: 'integration',
-        //   children: [
-        //     { element: <Navigate to="/dashboard/integration/plugins" replace />, index: true },
-        //     { path: 'plugins', element: <EcommerceShop /> },
-        //   ],
-        // },
+        { path: 'integration', element: <GeneralIntegration /> },
+       
         {
           path: 'catalouge',
           children: [
@@ -87,36 +82,16 @@ export default function Router() {
             { path: 'category', element: <EcommerceProductList /> },
           ],
         },
-        // {
-        //   path: 'store',
-        //   children: [
-        //     { element: <Navigate to="/dashboard/store/settings" replace />, index: true },
-        //     { path: 'settings', element: <BlogPosts /> },
-        //     { path: 'theme', element: <BlogPost /> },
-        //     { path: 'pages', element: <BlogNewPost /> },
-        //     { path: 'menus', element: <BlogNewPost /> },
-        //   ],
-        // },
-        // {
-        //   path: 'mail',
-        //   children: [
-        //     { element: <Navigate to="/dashboard/mail/all" replace />, index: true },
-        //     { path: 'label/:customLabel', element: <Mail /> },
-        //     { path: 'label/:customLabel/:mailId', element: <Mail /> },
-        //     { path: ':systemLabel', element: <Mail /> },
-        //     { path: ':systemLabel/:mailId', element: <Mail /> },
-        //   ],
-        // },
-        // {
-        //   path: 'chat',
-        //   children: [
-        //     { element: <Chat />, index: true },
-        //     { path: 'new', element: <Chat /> },
-        //     { path: ':conversationKey', element: <Chat /> },
-        //   ],
-        // },
-        // { path: 'calendar', element: <Calendar /> },
-        // { path: 'kanban', element: <Kanban /> },
+        {
+          path: 'store',
+          children: [
+            { element: <Navigate to="/dashboard/store/settings" replace />, index: true },
+            { path: 'settings', element: <BlogPosts /> },
+            { path: 'theme', element: <BlogPost /> },
+            { path: 'pages', element: <BlogNewPost /> },
+            { path: 'menus', element: <BlogNewPost /> },
+          ],
+        },
       ],
     },
 
@@ -164,6 +139,7 @@ const GeneralMarketing = Loadable(lazy(() => import('../pages/dashboard/GeneralM
 const GeneralPayment = Loadable(lazy(() => import('../pages/dashboard/GeneralPayment')));
 const GeneralDiscount = Loadable(lazy(() => import('../pages/dashboard/GeneralDiscount')));
 const GeneralManage = Loadable(lazy(() => import('../pages/dashboard/GeneralManage')));
+const GeneralIntegration = Loadable(lazy(() => import("../pages/dashboard/GeneralIntegration")));
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
