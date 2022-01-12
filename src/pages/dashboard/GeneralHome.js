@@ -72,14 +72,17 @@ export default function GeneralApp() {
 
           <Grid item xs={12} md={8}>
             <Stack spacing={3}>
-              <BankingExpensesCategories />
-              <BankingRecentTransitions />
+            <BankingRecentTransitions />
+            
+            <BankingExpensesCategories />
+              
             </Stack>
           </Grid>
 
           <Grid item xs={12} md={4}>
             <Stack spacing={3}>
-              <BankingContacts />
+            <BankingContacts />
+            
               <BankingInviteFriends />
             </Stack>
           </Grid>

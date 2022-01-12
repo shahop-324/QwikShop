@@ -5,6 +5,7 @@ const authSlice = createSlice({
 
   initialState: {
     isSignedIn: false,
+    isSubmittingRegister: false,
     token: '',
     error: false,
   },

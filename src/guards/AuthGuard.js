@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 // pages
+import { useSelector } from 'react-redux';
 import Login from '../pages/auth/Login';
 // components
 import LoadingScreen from '../components/LoadingScreen';
@@ -16,14 +17,16 @@ export default function AuthGuard({ children }) {
   const { pathname } = useLocation();
   const [requestedLocation, setRequestedLocation] = useState(null);
 
- 
+  const {isSignedIn} = useSelector((state) => state.auth);
 
-  // if (!isAuthenticated) {
-    // if (pathname !== requestedLocation) {
-    //   setRequestedLocation(pathname);
-    // }
-    // return <Login />;
-  // }
+ if(isSignedIn) {
+if (pathname !== requestedLocation) {
+      setRequestedLocation(pathname);
+    }
+    return <Login />;
+ }
+
+
 
   if (requestedLocation && pathname !== requestedLocation) {
     setRequestedLocation(null);

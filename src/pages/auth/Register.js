@@ -1,8 +1,7 @@
-import { capitalCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Link, Container, Typography, Tooltip } from '@mui/material';
+import { Box, Card, Link, Container, Typography } from '@mui/material';
 import useResponsive from '../../hooks/useResponsive';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
@@ -12,6 +11,7 @@ import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
 import { RegisterForm } from '../../sections/auth/register';
+import ECommerce from "../../assets/ecommerce-website.png";
 
 // ----------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ export default function Register() {
             </Typography>
             <Image
               alt="register"
-              src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_register.png"
+              src={ECommerce}
             />
           </SectionStyle>
         )}
@@ -101,9 +101,7 @@ export default function Register() {
                 <Typography sx={{ color: 'text.secondary' }}>Free forever. No credit card needed.</Typography>
               </Box>
             </Box>
-
             <RegisterForm />
-
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
               By registering, I agree to QwikShop&nbsp;
               <Link underline="always" color="text.primary" href="#">

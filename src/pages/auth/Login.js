@@ -12,6 +12,7 @@ import Logo from '../../components/Logo';
 import Image from '../../components/Image';
 // sections
 import { LoginForm } from '../../sections/auth/login';
+import Packaging from "../../assets/packaging-for-delivery.gif";
 
 // ----------------------------------------------------------------------
 
@@ -87,7 +88,7 @@ export default function Login() {
             </Typography>
             <Image
               alt="login"
-              src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_login.png"
+              src={Packaging}
             />
           </SectionStyle>
         )}

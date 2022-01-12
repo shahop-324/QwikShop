@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 // routes
@@ -11,9 +12,10 @@ GuestGuard.propTypes = {
 
 export default function GuestGuard({ children }) {
 
+  const {isSignedIn} = useSelector((state) => state.auth);
 
-  // if (isAuthenticated) {
+  if (isSignedIn) {
     return <Navigate to={PATH_DASHBOARD.root} />;
-  // }
-  // return <>{children}</>;
+  }
+  return <>{children}</>;
 }
