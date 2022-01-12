@@ -4,23 +4,25 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, IconButton, InputAdornment, Alert } from '@mui/material';
+import { Stack, IconButton, InputAdornment, Alert, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// hooks
-import useAuth from '../../../hooks/useAuth';
+
+// Phone Input
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
+
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
-import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFTextField } from '../../../components/hook-form';
-
+import { FormProvider } from '../../../components/hook-form';
 // ----------------------------------------------------------------------
+import CustomPhoneNumber from '../../../forms/PhoneNumber';
 
 export default function RegisterForm() {
-  const { register } = useAuth();
+  
 
   const isMountedRef = useIsMountedRef();
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [phone, setPhone] = useState();
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string().required('First name required'),
@@ -34,6 +36,7 @@ export default function RegisterForm() {
     lastName: '',
     email: '',
     password: '',
+    mobile: '',
   };
 
   const methods = useForm({
@@ -43,7 +46,6 @@ export default function RegisterForm() {
 
   const {
     reset,
-
     setError,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -51,7 +53,7 @@ export default function RegisterForm() {
 
   const onSubmit = async (data) => {
     try {
-      await register(data.email, data.password, data.firstName, data.lastName);
+      // await register(data.email, data.password, data.firstName, data.lastName);
     } catch (error) {
       console.error(error);
       reset();
@@ -67,25 +69,19 @@ export default function RegisterForm() {
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <RHFTextField name="firstName" label="First name" />
-          <RHFTextField name="lastName" label="Last name" />
+          <TextField fullWidth label="First name" variant="outlined" name="firstName" />
+          <TextField fullWidth label="Last name" variant="outlined" name="lastName" />
         </Stack>
 
-        <RHFTextField name="email" label="Email address" />
+        <TextField fullWidth label="Shop name" variant="outlined" name="shopName" />
 
-        <RHFTextField
-          name="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
+        <PhoneInput
+          name="mobile"
+          placeholder="Enter phone number"
+          value={phone}
+          onChange={setPhone}
+          inputComponent={CustomPhoneNumber}
+          defaultCountry="IN"
         />
 
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>

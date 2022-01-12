@@ -7,8 +7,6 @@ import { Box, Stack, Drawer, IconButton } from '@mui/material';
 import { useSelector } from '../../../redux/store';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
-// utils
-import axios from '../../../utils/axios';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -98,20 +96,7 @@ export default function ChatSidebar() {
   };
 
   const handleChangeSearch = async (event) => {
-    try {
-      const { value } = event.target;
-      setSearchQuery(value);
-      if (value) {
-        const response = await axios.get('/api/chat/search', {
-          params: { query: value },
-        });
-        setSearchResults(response.data.results);
-      } else {
-        setSearchResults([]);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+   
   };
 
   const handleSearchFocus = () => {

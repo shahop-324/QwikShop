@@ -1,5 +1,3 @@
-// hooks
-import useAuth from '../hooks/useAuth';
 // utils
 import createAvatar from '../utils/createAvatar';
 //
@@ -8,7 +6,8 @@ import Avatar from './Avatar';
 // ----------------------------------------------------------------------
 
 export default function MyAvatar({ ...other }) {
-  const { user } = useAuth();
+  
+  let user;
 
   return (
     <Avatar

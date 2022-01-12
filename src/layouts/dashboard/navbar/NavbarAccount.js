@@ -3,8 +3,6 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Link, Typography } from '@mui/material';
-// hooks
-import useAuth from '../../../hooks/useAuth';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -30,7 +28,7 @@ NavbarAccount.propTypes = {
 };
 
 export default function NavbarAccount({ isCollapse }) {
-  const { user } = useAuth();
+
 
   return (
     <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.catalouge.product}>
@@ -57,10 +55,10 @@ export default function NavbarAccount({ isCollapse }) {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {/* {user?.displayName} */}
           </Typography>
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-            {user?.role}
+            {/* {user?.role} */}
           </Typography>
         </Box>
       </RootStyle>

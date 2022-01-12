@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import omit from 'lodash/omit';
-// utils
-import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
 
@@ -116,60 +114,25 @@ export const { actions } = slice;
 // ----------------------------------------------------------------------
 
 export function getBoard() {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/kanban/board');
-      dispatch(slice.actions.getBoardSuccess(response.data.board));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+  
 }
 
 // ----------------------------------------------------------------------
 
 export function createColumn(newColumn) {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.post('/api/kanban/columns/new', newColumn);
-      dispatch(slice.actions.createColumnSuccess(response.data.column));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+
 }
 
 // ----------------------------------------------------------------------
 
 export function updateColumn(columnId, updateColumn) {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.post('/api/kanban/columns/update', {
-        columnId,
-        updateColumn,
-      });
-      dispatch(slice.actions.updateColumnSuccess(response.data.column));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+  
 }
 
 // ----------------------------------------------------------------------
 
 export function deleteColumn(columnId) {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      await axios.post('/api/kanban/columns/delete', { columnId });
-      dispatch(slice.actions.deleteColumnSuccess({ columnId }));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+ 
 }
 
 // ----------------------------------------------------------------------

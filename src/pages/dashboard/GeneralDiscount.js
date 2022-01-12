@@ -17,7 +17,6 @@ import PercentIcon from '@mui/icons-material/Percent';
 import { Grid, Container, Typography, Button, Divider } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
-import useAuth from '../../hooks/useAuth';
 // components
 import Page from '../../components/Page';
 import { DiscountWelcome, DiscountLessons } from '../../sections/@dashboard/general/discount/index';
@@ -66,7 +65,7 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export default function GeneralDiscount() {
-  const { user } = useAuth();
+ let user;
 
   const { themeStretch } = useSettings();
 

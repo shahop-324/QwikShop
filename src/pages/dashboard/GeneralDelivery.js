@@ -7,7 +7,6 @@ import { _userList } from '../../_mock';
 
 // hooks
 import useSettings from '../../hooks/useSettings';
-import useAuth from '../../hooks/useAuth';
 // components
 import Page from '../../components/Page';
 import { DeliveryOverview, DeliveryFeatured } from '../../sections/@dashboard/general/delivery/index';
@@ -17,7 +16,8 @@ import UserNewForm from '../../sections/@dashboard/user/UserNewForm';
 // ----------------------------------------------------------------------
 
 export default function GeneralAnalytics() {
-  const { user } = useAuth();
+
+  let user;
 
   const { themeStretch } = useSettings();
   const { pathname } = useLocation();

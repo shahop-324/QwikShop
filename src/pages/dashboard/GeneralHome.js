@@ -2,7 +2,6 @@
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Stack } from '@mui/material';
 // hooks
-import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -25,7 +24,7 @@ import { EcommerceWidgetSummary } from '../../sections/@dashboard/general/orders
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
-  const { user } = useAuth();
+  let user;
   const theme = useTheme();
   const { themeStretch } = useSettings();
 

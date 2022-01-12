@@ -7,8 +7,6 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
-// utils
-import axios from '../../utils/axios';
 // components
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
@@ -39,32 +37,11 @@ export default function BlogPost() {
   const [error, setError] = useState(null);
 
   const getPost = useCallback(async () => {
-    try {
-      const response = await axios.get('/api/blog/post', {
-        params: { title },
-      });
-
-      if (isMountedRef.current) {
-        setPost(response.data.post);
-      }
-    } catch (error) {
-      console.error(error);
-      setError(error.message);
-    }
+   
   }, [isMountedRef, title]);
 
   const getRecentPosts = useCallback(async () => {
-    try {
-      const response = await axios.get('/api/blog/posts/recent', {
-        params: { title },
-      });
-
-      if (isMountedRef.current) {
-        setRecentPosts(response.data.recentPosts);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+   
   }, [isMountedRef, title]);
 
   useEffect(() => {

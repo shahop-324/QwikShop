@@ -1,8 +1,7 @@
 // @mui
 import { Container, Grid, Typography, Button } from '@mui/material';
 import styled from 'styled-components';
-// hooks
-import useAuth from '../../hooks/useAuth';
+// Hooks
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -20,7 +19,6 @@ const Logo = styled.img`
 `;
 
 export default function GeneralIntegration() {
-  const { user } = useAuth();
   const { themeStretch } = useSettings();
 
   return (

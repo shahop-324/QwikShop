@@ -10,9 +10,7 @@ import { OutlinedInput, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
-
 // ----------------------------------------------------------------------
-
 export default function VerifyCodeForm() {
   const navigate = useNavigate();
 
@@ -102,31 +100,102 @@ export default function VerifyCodeForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="row" spacing={2} justifyContent="center">
-        {Object.keys(values).map((name, index) => (
-          <Controller
-            key={name}
-            name={`code${index + 1}`}
-            control={control}
-            render={({ field }) => (
-              <OutlinedInput
-                {...field}
-                id="field-code"
-                autoFocus={index === 0}
-                placeholder="-"
-                onChange={(event) => handleChangeWithNextField(event, field.onChange)}
-                inputProps={{
-                  maxLength: 1,
-                  sx: {
-                    p: 0,
-                    textAlign: 'center',
-                    width: { xs: 36, sm: 56 },
-                    height: { xs: 36, sm: 56 },
-                  },
-                }}
-              />
-            )}
-          />
-        ))}
+        <OutlinedInput
+          label={null}
+          id="field-code"
+          autoFocus={false}
+          placeholder="-"
+          onChange={() => {}}
+          inputProps={{
+            maxLength: 1,
+            sx: {
+              p: 0,
+              textAlign: 'center',
+              width: { xs: 36, sm: 50 },
+              height: { xs: 36, sm: 50 },
+            },
+          }}
+        />
+        <OutlinedInput
+          label={null}
+          id="field-code"
+          autoFocus={false}
+          placeholder="-"
+          onChange={() => {}}
+          inputProps={{
+            maxLength: 1,
+            sx: {
+              p: 0,
+              textAlign: 'center',
+              width: { xs: 36, sm: 50 },
+              height: { xs: 36, sm: 50 },
+            },
+          }}
+        />
+        <OutlinedInput
+          label={null}
+          id="field-code"
+          autoFocus={false}
+          placeholder="-"
+          onChange={() => {}}
+          inputProps={{
+            maxLength: 1,
+            sx: {
+              p: 0,
+              textAlign: 'center',
+              width: { xs: 36, sm: 50 },
+              height: { xs: 36, sm: 50 },
+            },
+          }}
+        />
+        <OutlinedInput
+          label={null}
+          id="field-code"
+          autoFocus={false}
+          placeholder="-"
+          onChange={() => {}}
+          inputProps={{
+            maxLength: 1,
+            sx: {
+              p: 0,
+              textAlign: 'center',
+              width: { xs: 36, sm: 50 },
+              height: { xs: 36, sm: 50 },
+            },
+          }}
+        />
+        <OutlinedInput
+          label={null}
+          id="field-code"
+          autoFocus={false}
+          placeholder="-"
+          onChange={() => {}}
+          inputProps={{
+            maxLength: 1,
+            sx: {
+              p: 0,
+              textAlign: 'center',
+              width: { xs: 36, sm: 50 },
+              height: { xs: 36, sm: 50 },
+            },
+          }}
+        />
+        <OutlinedInput
+          label={null}
+          id="field-code"
+          autoFocus={false}
+          placeholder="-"
+          onChange={() => {}}
+          inputProps={{
+            maxLength: 1,
+            sx: {
+              p: 0,
+              textAlign: 'center',
+              width: { xs: 36, sm: 50 },
+              height: { xs: 36, sm: 50 },
+            },
+          }}
+        />
       </Stack>
 
       <LoadingButton

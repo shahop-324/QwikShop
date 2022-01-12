@@ -8,8 +8,6 @@ import { styled } from '@mui/material/styles';
 import { Link, Typography, Autocomplete, InputAdornment, Popper } from '@mui/material';
 // hooks
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
-// utils
-import axios from '../../../utils/axios';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -29,27 +27,12 @@ const PopperStyle = styled((props) => <Popper placement="bottom-start" {...props
 export default function BlogPostsSearch() {
   const navigate = useNavigate();
 
-  const isMountedRef = useIsMountedRef();
-
   const [searchQuery, setSearchQuery] = useState('');
 
   const [searchResults, setSearchResults] = useState([]);
 
   const handleChangeSearch = async (value) => {
-    try {
-      setSearchQuery(value);
-      if (value) {
-        const response = await axios.get('/api/blog/posts/search', {
-          params: { query: value },
-        });
-
-        if (isMountedRef.current) {
-          setSearchResults(response.data.results);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
+   
   };
 
   const handleClick = (title) => {

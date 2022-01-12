@@ -18,8 +18,6 @@ import {
   InputAdornment,
   FormControlLabel,
 } from '@mui/material';
-// hooks
-import useAuth from '../../../../hooks/useAuth';
 // utils
 import { fDate } from '../../../../utils/formatTime';
 import { fShortenNumber } from '../../../../utils/formatNumber';
@@ -36,7 +34,7 @@ ProfilePostCard.propTypes = {
 };
 
 export default function ProfilePostCard({ post }) {
-  const { user } = useAuth();
+  let user;
 
   const commentInputRef = useRef(null);
 
