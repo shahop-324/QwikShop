@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 // form
 import { useForm, Controller } from 'react-hook-form';
@@ -9,10 +9,19 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { OutlinedInput, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
+import { useDispatch, useSelector } from 'react-redux';
 import { PATH_DASHBOARD } from '../../../routes/paths';
+import { verifyEmail } from '../../../actions';
+
 // ----------------------------------------------------------------------
+
 export default function VerifyCodeForm() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const {isSubmittingVerify} = useSelector((state) => state.auth);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -39,7 +48,7 @@ export default function VerifyCodeForm() {
     control,
     setValue,
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isValid },
   } = useForm({
     mode: 'onBlur',
     resolver: yupResolver(VerifyCodeSchema),
@@ -54,16 +63,11 @@ export default function VerifyCodeForm() {
   }, []);
 
   const onSubmit = async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log('code:', Object.values(data).join(''));
+    const email = searchParams.get('email');
 
-      enqueueSnackbar('Verify success!');
+    console.log('code:', Object.values(data).join(''));
 
-      navigate(PATH_DASHBOARD.root, { replace: true });
-    } catch (error) {
-      console.error(error);
-    }
+    dispatch(verifyEmail(email, Object.values(data).join('')));
   };
 
   const handlePasteClipboard = (event) => {
@@ -100,102 +104,31 @@ export default function VerifyCodeForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="row" spacing={2} justifyContent="center">
-        <OutlinedInput
-          label={null}
-          id="field-code"
-          autoFocus={false}
-          placeholder="-"
-          onChange={() => {}}
-          inputProps={{
-            maxLength: 1,
-            sx: {
-              p: 0,
-              textAlign: 'center',
-              width: { xs: 36, sm: 50 },
-              height: { xs: 36, sm: 50 },
-            },
-          }}
-        />
-        <OutlinedInput
-          label={null}
-          id="field-code"
-          autoFocus={false}
-          placeholder="-"
-          onChange={() => {}}
-          inputProps={{
-            maxLength: 1,
-            sx: {
-              p: 0,
-              textAlign: 'center',
-              width: { xs: 36, sm: 50 },
-              height: { xs: 36, sm: 50 },
-            },
-          }}
-        />
-        <OutlinedInput
-          label={null}
-          id="field-code"
-          autoFocus={false}
-          placeholder="-"
-          onChange={() => {}}
-          inputProps={{
-            maxLength: 1,
-            sx: {
-              p: 0,
-              textAlign: 'center',
-              width: { xs: 36, sm: 50 },
-              height: { xs: 36, sm: 50 },
-            },
-          }}
-        />
-        <OutlinedInput
-          label={null}
-          id="field-code"
-          autoFocus={false}
-          placeholder="-"
-          onChange={() => {}}
-          inputProps={{
-            maxLength: 1,
-            sx: {
-              p: 0,
-              textAlign: 'center',
-              width: { xs: 36, sm: 50 },
-              height: { xs: 36, sm: 50 },
-            },
-          }}
-        />
-        <OutlinedInput
-          label={null}
-          id="field-code"
-          autoFocus={false}
-          placeholder="-"
-          onChange={() => {}}
-          inputProps={{
-            maxLength: 1,
-            sx: {
-              p: 0,
-              textAlign: 'center',
-              width: { xs: 36, sm: 50 },
-              height: { xs: 36, sm: 50 },
-            },
-          }}
-        />
-        <OutlinedInput
-          label={null}
-          id="field-code"
-          autoFocus={false}
-          placeholder="-"
-          onChange={() => {}}
-          inputProps={{
-            maxLength: 1,
-            sx: {
-              p: 0,
-              textAlign: 'center',
-              width: { xs: 36, sm: 50 },
-              height: { xs: 36, sm: 50 },
-            },
-          }}
-        />
+        {Object.keys(values).map((name, index) => (
+          <Controller
+            key={name}
+            name={`code${index + 1}`}
+            control={control}
+            render={({ field }) => (
+              <OutlinedInput
+                {...field}
+                id="field-code"
+                autoFocus={index === 0}
+                placeholder="-"
+                onChange={(event) => handleChangeWithNextField(event, field.onChange)}
+                inputProps={{
+                  maxLength: 1,
+                  sx: {
+                    p: 0,
+                    textAlign: 'center',
+                    width: { xs: 36, sm: 56 },
+                    height: { xs: 36, sm: 56 },
+                  },
+                }}
+              />
+            )}
+          />
+        ))}
       </Stack>
 
       <LoadingButton
@@ -203,7 +136,7 @@ export default function VerifyCodeForm() {
         size="large"
         type="submit"
         variant="contained"
-        loading={isSubmitting}
+        loading={isSubmittingVerify}
         disabled={!isValid}
         sx={{ mt: 3 }}
       >

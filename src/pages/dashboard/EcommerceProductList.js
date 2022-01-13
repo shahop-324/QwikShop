@@ -53,7 +53,9 @@ export default function EcommerceProductList() {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const { products } = useSelector((state) => state.product);
+  // const { products } = useSelector((state) => state.product);
+
+  const products = [];
 
   const [productList, setProductList] = useState([]);
   const [page, setPage] = useState(0);
@@ -64,7 +66,7 @@ export default function EcommerceProductList() {
   const [orderBy, setOrderBy] = useState('createdAt');
 
   useEffect(() => {
-    dispatch(getProducts());
+    // dispatch(getProducts());
   }, [dispatch]);
 
   useEffect(() => {

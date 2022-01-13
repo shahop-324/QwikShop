@@ -56,15 +56,11 @@ export default function Router() {
     // Dashboard Routes
     {
       path: 'dashboard',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
+      element: <DashboardLayout />,
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'home', element: <GeneralHome /> },
-        { path: 'order', element: <GeneralOrders/> },
+        { path: 'order', element: <GeneralOrders /> },
         { path: 'delivery', element: <GeneralDelivery /> },
         { path: 'customer', element: <GeneralCustomer /> },
         { path: 'marketing', element: <GeneralMarketing /> },
@@ -137,7 +133,7 @@ const GeneralMarketing = Loadable(lazy(() => import('../pages/dashboard/GeneralM
 const GeneralPayment = Loadable(lazy(() => import('../pages/dashboard/GeneralPayment')));
 const GeneralDiscount = Loadable(lazy(() => import('../pages/dashboard/GeneralDiscount')));
 const GeneralManage = Loadable(lazy(() => import('../pages/dashboard/GeneralManage')));
-const GeneralIntegration = Loadable(lazy(() => import("../pages/dashboard/GeneralIntegration")));
+const GeneralIntegration = Loadable(lazy(() => import('../pages/dashboard/GeneralIntegration')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));

@@ -15,18 +15,16 @@ AuthGuard.propTypes = {
 
 export default function AuthGuard({ children }) {
   const { pathname } = useLocation();
+  console.log(pathname, "This is pathname");
   const [requestedLocation, setRequestedLocation] = useState(null);
 
-  const {isSignedIn} = useSelector((state) => state.auth);
+  const { isSignedIn } = useSelector((state) => state.auth);
 
- if(isSignedIn) {
-if (pathname !== requestedLocation) {
+  if (isSignedIn) {
+    if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }
-    return <Login />;
- }
-
-
+  }
 
   if (requestedLocation && pathname !== requestedLocation) {
     setRequestedLocation(null);

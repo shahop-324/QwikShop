@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Stack } from '@mui/material';
 // hooks
+import { useDispatch } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -20,10 +22,18 @@ import {
 } from '../../sections/@dashboard/general/banking';
 
 import { EcommerceWidgetSummary } from '../../sections/@dashboard/general/orders';
+import {stopLoginBtnLoader} from "../../actions";
 
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
+
+const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(stopLoginBtnLoader());
+  }, []);
+
   let user;
   const theme = useTheme();
   const { themeStretch } = useSettings();

@@ -6,7 +6,9 @@ const authSlice = createSlice({
   initialState: {
     isSignedIn: false,
     isSubmittingRegister: false,
-    token: '',
+    isSubmittingLogin: false,
+    isSubmittingVerify: false,
+    token: null,
     error: false,
   },
 
@@ -15,10 +17,20 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.isSignedIn = true;
     },
-    SignOut(state, action) {
+    SignOut(state) {
+      console.log("Sign out was triggered");
       state.token = null;
       state.isSignedIn = false;
     },
+    SetIsSubmittingRegister(state, action) {
+      state.isSubmittingRegister = action.payload.isSubmitting;
+    },
+    SetIsSubmittingLogin(state, action){
+      state.isSubmittingLogin = action.payload.isSubmitting;
+    },
+    SetIsSubmittingVerify(state, action) {
+      state.isSubmittingVerify = action.payload.isSubmitting;
+    }
   },
 });
 

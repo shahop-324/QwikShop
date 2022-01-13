@@ -5,12 +5,14 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
+import { useDispatch } from 'react-redux';
 import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+import { logout } from '../../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +35,7 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   let user;
 
@@ -51,17 +54,12 @@ export default function AccountPopover() {
   };
 
   const handleLogout = async () => {
-    try {
-      // await logout();
-      navigate(PATH_AUTH.login, { replace: true });
+    dispatch(logout());
+    // navigate(PATH_AUTH.login, { replace: true });
 
-      if (isMountedRef.current) {
-        handleClose();
-      }
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar('Unable to logout!', { variant: 'error' });
-    }
+    // if (isMountedRef.current) {
+    //   handleClose();
+    // }
   };
 
   return (

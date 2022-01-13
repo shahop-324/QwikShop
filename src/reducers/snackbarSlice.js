@@ -15,8 +15,10 @@ const snackbarSlice = createSlice({
       state.severity = action.payload.severity;
       state.message = action.payload.message;
     },
-    closeSnackBar(state, action) {
+    closeSnackBar(state) {
+      console.log("This is getting executed")
         state.open = false;
+        state.message = null;
     },
   },
 });
