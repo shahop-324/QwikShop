@@ -34,7 +34,7 @@ AnalyticsWidgetSummary.propTypes = {
   total: PropTypes.number,
 };
 
-export default function AnalyticsWidgetSummary({ total, icon, color = 'primary' }) {
+export default function AnalyticsWidgetSummary({ title, action, total, icon, color = 'primary' }) {
   return (
     <RootStyle
       sx={{
@@ -55,7 +55,7 @@ export default function AnalyticsWidgetSummary({ total, icon, color = 'primary' 
        {icon}
       </IconWrapperStyle>
       <Typography variant="h5">{total}</Typography>
-      <Button className='my-3' variant="contained" to="#">Create campaign</Button>
+      <Button onClick={action} className='my-3' variant="contained" to="#">{title}</Button>
       {/* <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         {title}
       </Typography> */}

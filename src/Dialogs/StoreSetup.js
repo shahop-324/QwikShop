@@ -1,28 +1,49 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-// @mui
-import { Grid, Container, Typography, Box, Card, TextField, Autocomplete } from '@mui/material';
-// _mock_
-import PhoneInput from 'react-phone-number-input';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import { LoadingButton } from '@mui/lab';
-// hooks
-import useSettings from '../../hooks/useSettings';
-// components
-import Page from '../../components/Page';
-import { DeliveryOverview, DeliveryFeatured } from '../../sections/@dashboard/general/delivery/index';
-// sections
-import 'react-phone-number-input/style.css';
-import CustomPhoneNumber from '../../forms/PhoneNumber';
-// ----------------------------------------------------------------------
-export default function GeneralAnalytics() {
-  let user;
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import * as Yup from 'yup';
+// form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-  const [contactPersonName, setContactPersonName] = useState();
-  const [contactEmail, setContactEmail] = useState();
+// @mui
+import {
+  Box,
+  Card,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  TextField,
+  Autocomplete,
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import PhoneInput from 'react-phone-number-input';
+import { FormProvider } from '../components/hook-form';
+import CustomPhoneNumber from '../forms/PhoneNumber';
+
+// eslint-disable-next-line react/prop-types
+
+// Phone Input
+import 'react-phone-number-input/style.css';
+
+const StoreSetup = ({ open, handleClose, handleOpenStoreImage }) => {
+  const NewUserSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().required('Email is required').email(),
+    address: Yup.string().required('Address is required'),
+    country: Yup.string().required('country is required'),
+    company: Yup.string().required('Company is required'),
+    state: Yup.string().required('State is required'),
+    city: Yup.string().required('City is required'),
+    role: Yup.string().required('Role Number is required'),
+    avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
+    phoneNumber: Yup.string().required('Phone number is required'),
+    category: Yup.string().required('Category is required'),
+    landmark: Yup.string().required('Landmark is required'),
+    pincode: Yup.string().required('Pincode is required'),
+  });
+
   const [storeName, setStoreName] = useState();
   const [country, setCountry] = useState();
   const [state, setState] = useState();
@@ -30,177 +51,301 @@ export default function GeneralAnalytics() {
   const [address, setAddress] = useState();
   const [pincode, setPincode] = useState();
   const [landmark, setLandmark] = useState();
+  const [gstin, setGstin] = useState();
+  const [category, setCategory] = useState();
   const [phone, setPhone] = useState();
 
-  const { themeStretch } = useSettings();
+  const methods = useForm({
+    resolver: yupResolver(NewUserSchema),
+  });
+
+  const { handleSubmit } = methods;
+
+  const onSubmit = async () => {
+    const formValues = {
+      storeName,
+      country,
+      state,
+      city,
+      address,
+      pincode,
+      landmark,
+      gstin,
+      category,
+      phone,
+    };
+
+    console.log(formValues);
+  };
 
   return (
-    <Page title="General: Analytics">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Setup QwikShop Delivery
-        </Typography>
+    <>
+      <Dialog fullWidth maxWidth="md" open={open}>
+        <DialogTitle>Setup store</DialogTitle>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <DeliveryOverview displayName={user?.displayName} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <DeliveryFeatured />
-          </Grid>
-          <Grid item xs={12} md={12}>
-            <div className="mt-5 px-4">
-              <Grid className="px-4 pt-3" container spacing={3}>
-                <Grid item xs={12} md={12}>
-                  <Card sx={{ p: 3 }}>
-                    <FormControl component="fieldset" className="mb-3">
-                      <FormLabel component="legend">Address type</FormLabel>
-                      <RadioGroup defaultValue={'shop'} row aria-label="gender" name="row-radio-buttons-group">
-                        <FormControlLabel value="office" control={<Radio defaultChecked />} label="Office" />
-                        <FormControlLabel value="shop" control={<Radio />} label="Shop" />
-                        <FormControlLabel value="residence" control={<Radio />} label="Residence" />
-                      </RadioGroup>
-                    </FormControl>
-                    <Box
-                      sx={{
-                        display: 'grid',
-                        columnGap: 2,
-                        rowGap: 3,
-                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                      }}
-                    >
-                      <TextField
-                        name="name"
-                        label="Store name"
-                        fullWidth
-                        value={storeName}
-                        onChange={(e) => {
-                          setStoreName(e.target.value);
-                        }}
-                      />
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <Grid className="px-4 pt-3" container spacing={3}>
+            <Grid item xs={12} md={12}>
+              <Card sx={{ p: 3 }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    columnGap: 2,
+                    rowGap: 3,
+                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                  }}
+                >
+                  <TextField
+                    name="name"
+                    label="Store name"
+                    fullWidth
+                    value={storeName}
+                    onChange={(e) => {
+                      setStoreName(e.target.value);
+                    }}
+                  />
 
-                      <Autocomplete
-                        value={country}
-                        onChange={(e, value) => {
-                          setCountry(value);
+                  <Autocomplete
+                    value={country}
+                    onChange={(e, value) => {
+                      setCountry(value);
+                    }}
+                    id="country-select-demo"
+                    fullWidth
+                    options={countries}
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img
+                          loading="lazy"
+                          width="20"
+                          src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                          srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                          alt=""
+                        />
+                        {option.label} ({option.code}) +{option.phone}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Choose a country"
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: 'new-password', // disable autocomplete and autofill
                         }}
-                        id="country-select-demo"
-                        fullWidth
-                        options={countries}
-                        autoHighlight
-                        getOptionLabel={(option) => option.label}
-                        renderOption={(props, option) => (
-                          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                            <img
-                              loading="lazy"
-                              width="20"
-                              src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                              srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                              alt=""
-                            />
-                            {option.label} ({option.code}) +{option.phone}
-                          </Box>
-                        )}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Choose a country"
-                            inputProps={{
-                              ...params.inputProps,
-                              autoComplete: 'new-password', // disable autocomplete and autofill
-                            }}
-                          />
-                        )}
                       />
+                    )}
+                  />
 
-                      <TextField
-                        name="state"
-                        label="State/Region"
-                        fullWidth
-                        value={state}
-                        onChange={(e) => {
-                          setState(e.target.value);
-                        }}
-                      />
-                      <TextField
-                        name="city"
-                        label="City"
-                        fullWidth
-                        value={city}
-                        onChange={(e) => {
-                          setCity(e.target.value);
-                        }}
-                      />
-                      <TextField
-                        name="address"
-                        label="Address"
-                        fullWidth
-                        value={address}
-                        onChange={(e) => {
-                          setAddress(e.target.value);
-                        }}
-                      />
-                      <TextField
-                        name="pincode"
-                        label="Pincode"
-                        fullWidth
-                        value={pincode}
-                        onChange={(e) => {
-                          setPincode(e.target.value);
-                        }}
-                      />
-                      <TextField
-                        name="landmark"
-                        label="Landmark"
-                        fullWidth
-                        value={landmark}
-                        onChange={(e) => {
-                          setLandmark(e.target.value);
-                        }}
-                      />
-                      <PhoneInput
-                        name="phoneNumber"
-                        placeholder="Enter phone number"
-                        value={phone}
-                        onChange={setPhone}
-                        inputComponent={CustomPhoneNumber}
-                        defaultCountry="IN"
-                      />
-                      <TextField
-                        name="contactPersonName"
-                        label="Contact Person Name"
-                        fullWidth
-                        value={contactPersonName}
-                        onChange={(e) => {
-                          setContactPersonName(e.target.value);
-                        }}
-                      />
-                      <TextField
-                        type="email"
-                        name="contactEmail"
-                        label="Contact Email"
-                        fullWidth
-                        value={contactEmail}
-                        onChange={(e) => {
-                          setContactEmail(e.target.value);
-                        }}
-                      />
-                    </Box>
-                    <div className="d-flex flex-row align-items-center justify-content-end mt-4">
-                      <LoadingButton onClick={() => {}} type="submit" variant="contained" loading={false}>
-                        Add pickup point
-                      </LoadingButton>
-                    </div>
-                  </Card>
-                </Grid>
-              </Grid>
-            </div>
+                  <TextField
+                    name="state"
+                    label="State/Region"
+                    fullWidth
+                    value={state}
+                    onChange={(e) => {
+                      setState(e.target.value);
+                    }}
+                  />
+                  <TextField
+                    name="city"
+                    label="City"
+                    fullWidth
+                    value={city}
+                    onChange={(e) => {
+                      setCity(e.target.value);
+                    }}
+                  />
+                  <TextField
+                    name="address"
+                    label="Address"
+                    fullWidth
+                    value={address}
+                    onChange={(e) => {
+                      setAddress(e.target.value);
+                    }}
+                  />
+                  <TextField
+                    name="pincode"
+                    label="Pincode"
+                    fullWidth
+                    value={pincode}
+                    onChange={(e) => {
+                      setPincode(e.target.value);
+                    }}
+                  />
+                  <TextField
+                    name="landmark"
+                    label="Landmark"
+                    fullWidth
+                    value={landmark}
+                    onChange={(e) => {
+                      setLandmark(e.target.value);
+                    }}
+                  />
+                  <TextField
+                    name="GSTIN"
+                    label="GSTIN"
+                    fullWidth
+                    value={gstin}
+                    onChange={(e) => {
+                      setGstin(e.target.value);
+                    }}
+                  />
+                  <Autocomplete
+                    value={category}
+                    onChange={(e, value) => {
+                      setCategory(value);
+                    }}
+                    fullWidth
+                    disablePortal
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                        {option.label}
+                      </Box>
+                    )}
+                    options={categoryOptions}
+                    renderInput={(params) => <TextField {...params} label="Category" fullWidth name="category" />}
+                  />
+                  <PhoneInput
+                    name="phoneNumber"
+                    placeholder="Enter phone number"
+                    value={phone}
+                    onChange={setPhone}
+                    inputComponent={CustomPhoneNumber}
+                    defaultCountry="IN"
+                  />
+                </Box>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-    </Page>
+          <DialogActions>
+            <LoadingButton
+              onClick={() => {
+                onSubmit();
+                handleClose();
+                handleOpenStoreImage();
+              }}
+              type="submit"
+              variant="contained"
+              loading={false}
+            >
+              Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
+    </>
   );
-}
+};
+
+export default StoreSetup;
+
+const categoryOptions = [
+  {
+    label: 'Kirana store, Grocery & FMCG',
+    image: 'https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2021-12/211213-wee-groceries-se-405p-a36212.jpg',
+  },
+  {
+    label: 'Restaurants & Hotels',
+    image: 'https://media-cdn.tripadvisor.com/media/photo-s/09/37/8b/94/metro-lounge.jpg',
+  },
+  {
+    label: 'Fashion, Apparel, Shoes & Accessories',
+    image: 'https://mms-images.out.customink.com/mms/images/catalog/categories/13_large.jpg',
+  },
+  {
+    label: 'Fruits & vegetables',
+    image: 'https://static.scientificamerican.com/sciam/cache/file/528E0B49-CDD0-42D4-B5BAA3EBAEC01AE6_source.jpg',
+  },
+  {
+    label: 'Mobile, Computers & Other Accessories',
+    image:
+      'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pink-select-2021?wid=940&hei=1112&fmt=png-alpha&.v=1629842709000',
+  },
+  {
+    label: 'Books & Stationary products',
+    image: 'https://m.media-amazon.com/images/I/717EIB64t7L._SL1500_.jpg',
+  },
+  {
+    label: 'Beauty & Cosmetics',
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmncqVXZMJkFNp6-OOjCKUl_kxiuWm4AjvG_lKKqzAq956scFZERXWq56fXUEWYqC0WM&usqp=CAU',
+  },
+  {
+    label: 'Electronic appliances',
+    image:
+      'https://cdn.vox-cdn.com/thumbor/Atvpj5tUuIgLq55pPrG2-A-MHF8=/0x389:8426x7181/1200x800/filters:focal(3671x2467:5117x3913)/cdn.vox-cdn.com/uploads/chorus_image/image/62795169/samsung_fridge.0.jpg',
+  },
+  {
+    label: 'Home decoration',
+    image: 'https://www.mymove.com/wp-content/uploads/2021/03/Home-decorating_Followtheflow_Shutterstock.jpg',
+  },
+  {
+    label: 'Furniture',
+    image: 'https://www.ikea.com/in/en/images/products/ektorp-2-seat-sofa__0818550_pe774481_s5.jpg?f=s',
+  },
+  {
+    label: 'Pharmacy & Medical Care',
+    image:
+      'https://i.guim.co.uk/img/media/65d68c03a1e035d0670711a642f7a272d3e660eb/0_1216_3063_1838/master/3063.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=3056330a3a98cf23d2dfcbe60ba711ad',
+  },
+  {
+    label: 'Bakery & Cake shops',
+    image: 'https://preppykitchen.com/wp-content/uploads/2019/06/Chocolate-cake-recipe-1200a.jpg',
+  },
+  {
+    label: 'Fresh chicken, Fish & Meat',
+    image:
+      'https://static.freshtohome.com/media/catalog/product/cache/1/image/600x400/18ae109e34f485bd0b0c075abec96b2e/c/h/chicken-breast.jpg',
+  },
+  {
+    label: 'Local & Online services',
+    image:
+      'https://www.schroederplumbing.com/wp-content/uploads/2020/10/Modern-Plumbing-Technology-Old-School-Experience-And-Integrity-From-Your-Plumber-_-Mesa-AZ.jpg',
+  },
+  {
+    label: 'Jwellery, Gold and Gems',
+    image:
+      'https://www.candere.com/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/n/m/nmne3517-a.jpg',
+  },
+  {
+    label: 'Insurance & Financial services',
+    image:
+      'https://m.economictimes.com/thumb/msid-72304068,width-1200,height-900,resizemode-4,imgsize-191408/money10-getty.jpg',
+  },
+  {
+    label: 'Paan shop',
+    image: 'http://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
+  },
+  {
+    label: 'Gym & Sports equipment',
+    image: 'https://content.presspage.com/uploads/2110/1920_gym-covid-19-mask-risk-gettyimages.jpg?10000',
+  },
+  {
+    label: 'Educational institute, Schools & teachers',
+    image:
+      'https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F60cb2948d2b1ff3c9b86dc9c%2FBlack-teacher-wearing-face-mask-while-explaining-math-lesson-in-the-classroom-%2F960x0.jpg%3Ffit%3Dscale',
+  },
+  {
+    label: 'Hardware & Construction tools',
+    image: 'https://laysantechnologies.com/CKeditor/Images/hardwares.png',
+  },
+  {
+    label: 'Transportation, Taxi, Travel & Tourism',
+    image:
+      'https://media.wired.com/photos/5cf832279c2a7cd3975976ca/2:1/w_2000,h_1000,c_limit/Transpo_XcelsiorChargeCharging_TA.jpg',
+  },
+  {
+    label: 'Car, bike, Tractor & vehicle accessories',
+    image:
+      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2019-honda-civic-sedan-1558453497.jpg?crop=1xw:0.9997727789138833xh;center,top&resize=480:*',
+  },
+];
 
 const countries = [
   { code: 'AD', label: 'Andorra', phone: '376' },

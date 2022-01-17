@@ -3,7 +3,7 @@ import { PATH_DASHBOARD } from './routes/paths';
 // API
 // ----------------------------------------------------------------------
 // ROOT PATH AFTER LOGIN SUCCESSFUL
-export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.app; // as '/dashboard/app'
+export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.home; // as '/dashboard/app'
 
 // LAYOUT
 // ----------------------------------------------------------------------

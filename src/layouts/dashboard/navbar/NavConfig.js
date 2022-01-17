@@ -9,6 +9,8 @@ import ExtensionRoundedIcon from '@mui/icons-material/ExtensionRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
+import DinnerDiningRoundedIcon from '@mui/icons-material/DinnerDiningRounded';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 
@@ -30,10 +32,23 @@ const navConfig = [
       },
       { title: 'Delivery', path: PATH_DASHBOARD.general.delivery, icon: <LocalShippingRoundedIcon /> },
       { title: 'Customer', path: PATH_DASHBOARD.general.customer, icon: <GroupsRoundedIcon /> },
+      { title: 'Dining', path: PATH_DASHBOARD.general.dining, icon: <DinnerDiningRoundedIcon /> },
       { title: 'Marketing', path: PATH_DASHBOARD.general.marketing, icon: <CampaignRoundedIcon /> },
       { title: 'Payment', path: PATH_DASHBOARD.general.payment, icon: <AccountBalanceWalletRoundedIcon /> },
       { title: 'Discount', path: PATH_DASHBOARD.general.discount, icon: <LocalOfferRoundedIcon /> },
       { title: 'Manage', path: PATH_DASHBOARD.general.manage, icon: <ManageAccountsRoundedIcon /> },
+      //  **************** Marketing Design Pages **************** //
+      {
+        title: 'Design',
+        path: PATH_DASHBOARD.design.root,
+        icon: <ColorLensIcon />,
+        children: [
+          { title: 'Business Card', path: PATH_DASHBOARD.design.businessCard },
+          { title: 'Store Banner', path: PATH_DASHBOARD.design.storeBanner },
+          { title: 'WhatsApp Story', path: PATH_DASHBOARD.design.whatsAppStory },
+        ],
+      },
+      //
       {
         title: 'Store',
         path: PATH_DASHBOARD.store.root,

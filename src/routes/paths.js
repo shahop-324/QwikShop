@@ -16,7 +16,7 @@ export const PATH_AUTH = {
   register: path(ROOTS_AUTH, '/register'),
   registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
-  verify: path(ROOTS_AUTH, '/verify')
+  verify: path(ROOTS_AUTH, '/verify'),
 };
 
 export const PATH_PAGE = {
@@ -29,7 +29,7 @@ export const PATH_PAGE = {
   faqs: '/faqs',
   page404: '/404',
   page500: '/500',
-  components: '/components'
+  components: '/components',
 };
 
 export const PATH_DASHBOARD = {
@@ -39,12 +39,21 @@ export const PATH_DASHBOARD = {
     order: path(ROOTS_DASHBOARD, '/order'),
     delivery: path(ROOTS_DASHBOARD, '/delivery'),
     customer: path(ROOTS_DASHBOARD, '/customer'),
+    dining: path(ROOTS_DASHBOARD, '/dining'),
     marketing: path(ROOTS_DASHBOARD, '/marketing'),
     payment: path(ROOTS_DASHBOARD, '/payment'),
     discount: path(ROOTS_DASHBOARD, '/discount'),
     manage: path(ROOTS_DASHBOARD, '/manage'),
     integration: path(ROOTS_DASHBOARD, '/integration'),
   },
+
+  design: {
+    root: path(ROOTS_DASHBOARD, '/design'),
+    businessCard: path(ROOTS_DASHBOARD, '/design/business-card'),
+    storeBanner: path(ROOTS_DASHBOARD, '/design/store-banner'),
+    whatsAppStory: path(ROOTS_DASHBOARD, '/design/whatsapp-story'),
+  },
+
   catalouge: {
     root: path(ROOTS_DASHBOARD, '/catalouge'),
     product: path(ROOTS_DASHBOARD, '/catalouge/product'),
@@ -55,8 +64,8 @@ export const PATH_DASHBOARD = {
     settings: path(ROOTS_DASHBOARD, '/store/settings'),
     theme: path(ROOTS_DASHBOARD, '/store/theme'),
     pages: path(ROOTS_DASHBOARD, '/store/pages'),
-    menus: path(ROOTS_DASHBOARD, '/store/menus')
-  }
+    menus: path(ROOTS_DASHBOARD, '/store/menus'),
+  },
 };
 
 export const PATH_DOCS = 'https://docs-minimals.vercel.app/introduction';

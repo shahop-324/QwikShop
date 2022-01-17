@@ -63,6 +63,7 @@ export default function Router() {
         { path: 'order', element: <GeneralOrders /> },
         { path: 'delivery', element: <GeneralDelivery /> },
         { path: 'customer', element: <GeneralCustomer /> },
+        { path: 'dining', element: <GeneralDining /> },
         { path: 'marketing', element: <GeneralMarketing /> },
         { path: 'payment', element: <GeneralPayment /> },
         { path: 'discount', element: <GeneralDiscount /> },
@@ -77,6 +78,15 @@ export default function Router() {
           ],
         },
         {
+          path: 'design',
+          children: [
+            { element: <Navigate to="/design/business-card" replace />, index: true },
+            { path: 'business-card', element: <GeneralBusinessCard /> },
+            { path: 'store-banner', element: <GeneralStoreBanner /> },
+            { path: 'whatsapp-story', element: <GeneralWhatsAppStory /> },
+          ],
+        },
+        {
           path: 'store',
           children: [
             { element: <Navigate to="/dashboard/store/settings" replace />, index: true },
@@ -88,6 +98,8 @@ export default function Router() {
         },
       ],
     },
+
+    
 
     // Main Routes
     {
@@ -126,12 +138,18 @@ const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword'))
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 // Dashboard
 const GeneralHome = Loadable(lazy(() => import('../pages/dashboard/GeneralHome')));
+
+const GeneralBusinessCard = Loadable(lazy(() => import('../pages/dashboard/GeneralBusinessCardDesign')));
+const GeneralStoreBanner = Loadable(lazy(() => import('../pages/dashboard/GeneralStoreBannerDesign')));
+const GeneralWhatsAppStory = Loadable(lazy(() => import('../pages/dashboard/GeneralWhatsAppStoryDesign')));
+
 const GeneralOrders = Loadable(lazy(() => import('../pages/dashboard/GeneralOrders')));
 const GeneralDelivery = Loadable(lazy(() => import('../pages/dashboard/GeneralDelivery')));
 const GeneralCustomer = Loadable(lazy(() => import('../pages/dashboard/GeneralCustomer')));
 const GeneralMarketing = Loadable(lazy(() => import('../pages/dashboard/GeneralMarketing')));
 const GeneralPayment = Loadable(lazy(() => import('../pages/dashboard/GeneralPayment')));
 const GeneralDiscount = Loadable(lazy(() => import('../pages/dashboard/GeneralDiscount')));
+const GeneralDining = Loadable(lazy(() => import('../pages/dashboard/GeneralDining')));
 const GeneralManage = Loadable(lazy(() => import('../pages/dashboard/GeneralManage')));
 const GeneralIntegration = Loadable(lazy(() => import('../pages/dashboard/GeneralIntegration')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));

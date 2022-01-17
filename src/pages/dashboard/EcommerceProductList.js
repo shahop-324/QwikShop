@@ -35,6 +35,8 @@ import {
   ProductListHead,
   ProductListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
+import AddNewProduct from '../../Dialogs/AddNewProduct';
+import AddNewCategory from '../../Dialogs/AddNewCategory';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +54,26 @@ export default function EcommerceProductList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
+
+  const [openAddProduct, setOpenAddproduct] = useState(false);
+
+  const [openAddCategory, setOpenAddcategory] = useState(false);
+
+  const handleCloseAddCategory = () => {
+    setOpenAddcategory(false);
+  }
+
+  const handleOpenAddcategory = () => {
+    setOpenAddcategory(true);
+  }
+
+  const handleCloseAddProduct = () => {
+    setOpenAddproduct(false);
+  }
+
+  const handleOpenAddProduct = () => {
+    setOpenAddproduct(true);
+  }
 
   // const { products } = useSelector((state) => state.product);
 
@@ -133,10 +155,13 @@ export default function EcommerceProductList() {
   const isNotFound = !filteredProducts.length && Boolean(filterName);
 
   return (
-    <Page title="Ecommerce: Product List">
+<>
+<Page title="Product List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Card>
           <ProductListToolbar
+          openAddProduct={handleOpenAddProduct}
+          openAddCategory={handleOpenAddcategory}
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
@@ -239,6 +264,11 @@ export default function EcommerceProductList() {
         </Card>
       </Container>
     </Page>
+
+{openAddCategory && <AddNewCategory open={openAddCategory} handleClose={handleCloseAddCategory} />}
+    {openAddProduct && <AddNewProduct open={openAddProduct} handleClose={handleCloseAddProduct} />}
+</>
+    
   );
 }
 

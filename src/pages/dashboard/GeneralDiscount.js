@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import '../../index.css';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
@@ -65,7 +66,9 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export default function GeneralDiscount() {
- let user;
+  let user;
+
+  const [discountType, setDiscountType] = useState('percentage');
 
   const { themeStretch } = useSettings();
 
@@ -88,26 +91,68 @@ export default function GeneralDiscount() {
             <div className="mt-5 px-4">
               <form>
                 <TextField className="mb-4" fullWidth id="outlined-basic" label="Discount code" variant="outlined" />
-                <FormLabel component="legend">Discount type</FormLabel>
-                <RadioGroup className="mb-4" row aria-label="Discount type" name="row-radio-buttons-group">
-                  <FormControlLabel value="Percentage" control={<Radio />} label="Percentage" />
-                  <FormControlLabel value="Flat" control={<Radio />} label="Flat" />
-                </RadioGroup>
-
                 <TextField
+                  type="number"
                   className="mb-4"
                   fullWidth
                   id="outlined-basic"
-                  label="Discount Percentage"
+                  label="Uses per customer"
                   variant="outlined"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment>
-                        <PercentIcon />
-                      </InputAdornment>
-                    ),
-                  }}
                 />
+                <FormLabel component="legend">Discount type</FormLabel>
+                <RadioGroup
+                  defaultValue={discountType}
+                  className="mb-4"
+                  row
+                  aria-label="Discount type"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="Percentage"
+                    control={<Radio onClick={() => setDiscountType('percentage')} />}
+                    label="Percentage"
+                  />
+                  <FormControlLabel
+                    value="Flat"
+                    control={<Radio onClick={() => setDiscountType('flat')} />}
+                    label="Flat"
+                  />
+                </RadioGroup>
+
+                {discountType !== 'flat' && (
+                  <TextField
+                    className="mb-4"
+                    fullWidth
+                    id="outlined-basic"
+                    label="Discount Percentage"
+                    variant="outlined"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment>
+                          <PercentIcon style={{ fontSize: '20px' }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+
+                {discountType === 'flat' && (
+                  <TextField
+                    className="mb-4"
+                    fullWidth
+                    id="outlined-basic"
+                    label="Discount amount"
+                    variant="outlined"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment>
+                          <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+
                 <TextField
                   className="mb-4"
                   fullWidth
@@ -117,25 +162,28 @@ export default function GeneralDiscount() {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment>
-                        <CurrencyRupeeIcon />
+                        <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
                       </InputAdornment>
                     ),
                   }}
                 />
-                <TextField
-                  className="mb-4"
-                  fullWidth
-                  id="outlined-basic"
-                  label="Maximum discount"
-                  variant="outlined"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment>
-                        <CurrencyRupeeIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+                {discountType !== 'flat' && (
+                  <TextField
+                    className="mb-4"
+                    fullWidth
+                    id="outlined-basic"
+                    label="Maximum discount"
+                    variant="outlined"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment>
+                          <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+
                 <Stack direction="row" spacing={4} alignItems="center">
                   <Typography>Show discount coupon on shop to customers?</Typography>
                   <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
@@ -153,21 +201,24 @@ export default function GeneralDiscount() {
                 <Typography variant="h5">HAPPY60</Typography>
                 <Button>Share</Button>
               </div>
-              <div style={{fontWeight: "500", fontSize: "0.9rem",textTransform: "capitalize"}} className='mb-2'>90% Off on all orders above Rs.80 upto Rs.30</div>
-              <div className="d-flex flex-row align-items-center justify-content-between mb-4">
-                <div style={{fontWeight: "500", fontSize: "1.1rem",textTransform: "capitalize"}}>Times Used</div>
-                <div style={{fontWeight: "500", fontSize: "1.1rem",textTransform: "capitalize"}}>Total Sales</div>
+              <div style={{ fontWeight: '500', fontSize: '0.9rem', textTransform: 'capitalize' }} className="mb-2">
+                90% Off on all orders above Rs.80 upto Rs.30
               </div>
               <div className="d-flex flex-row align-items-center justify-content-between mb-4">
-                <div style={{fontWeight: "700", fontSize: "1.2rem",textTransform: "capitalize"}}>0</div>
-                <div style={{fontWeight: "700", fontSize: "1.2rem",textTransform: "capitalize"}}>Rs. 0</div>
+                <div style={{ fontWeight: '500', fontSize: '1.1rem', textTransform: 'capitalize' }}>Times Used</div>
+                <div style={{ fontWeight: '500', fontSize: '1.1rem', textTransform: 'capitalize' }}>Total Sales</div>
               </div>
-
               <div className="d-flex flex-row align-items-center justify-content-between mb-4">
-                <div style={{fontWeight: "500", fontSize: "1rem",textTransform: "capitalize"}}>Total Discounted</div> <div style={{fontWeight: "700", fontSize: "1.1rem",textTransform: "capitalize"}}>Rs. 0</div>
+                <div style={{ fontWeight: '700', fontSize: '1.2rem', textTransform: 'capitalize' }}>0</div>
+                <div style={{ fontWeight: '700', fontSize: '1.2rem', textTransform: 'capitalize' }}>Rs. 0</div>
               </div>
 
-              <Divider className='mb-3'/>
+              <div className="d-flex flex-row align-items-center justify-content-between mb-4">
+                <div style={{ fontWeight: '500', fontSize: '1rem', textTransform: 'capitalize' }}>Total Discounted</div>{' '}
+                <div style={{ fontWeight: '700', fontSize: '1.1rem', textTransform: 'capitalize' }}>Rs. 0</div>
+              </div>
+
+              <Divider className="mb-3" />
               <Stack
                 direction="row"
                 spacing={4}

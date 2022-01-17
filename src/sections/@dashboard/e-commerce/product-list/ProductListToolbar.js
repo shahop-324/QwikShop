@@ -69,7 +69,14 @@ ProductListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
-export default function ProductListToolbar({ numSelected, filterName, onFilterName, onDeleteProducts }) {
+export default function ProductListToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  onDeleteProducts,
+  openAddProduct,
+  openAddCategory,
+}) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
@@ -103,7 +110,14 @@ export default function ProductListToolbar({ numSelected, filterName, onFilterNa
         </Tooltip>
       ) : (
         <div className="d-flex flex-row align-items-center justify-content-end">
-          <Button className="me-3" variant="contained">
+          <Button
+            onClick={() => {
+              openAddProduct();
+              // openAddCategory();
+            }}
+            className="me-3"
+            variant="contained"
+          >
             Add product
           </Button>
 
