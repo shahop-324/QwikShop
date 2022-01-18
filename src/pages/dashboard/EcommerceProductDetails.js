@@ -69,36 +69,20 @@ export default function EcommerceProductDetails() {
   const { product, error, checkout } = useSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(getProduct(name));
+    // dispatch(getProduct(name));
   }, [dispatch, name]);
 
   const handleAddCart = (product) => {
-    dispatch(addCart(product));
+    // dispatch(addCart(product));
   };
 
   const handleGotoStep = (step) => {
-    dispatch(onGotoStep(step));
+    // dispatch(onGotoStep(step));
   };
 
   return (
     <Page title="Ecommerce: Product Details">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Product Details"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
-            {
-              name: 'Shop',
-              href: PATH_DASHBOARD.eCommerce.shop,
-            },
-            { name: sentenceCase(name) },
-          ]}
-        />
-
+      <Container maxWidth={themeStretch ? false : 'lg'} className="mt-4">
         <CartWidget />
 
         {product && (

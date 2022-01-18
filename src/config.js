@@ -5,6 +5,8 @@ import { PATH_DASHBOARD } from './routes/paths';
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.home; // as '/dashboard/app'
 
+export const HOST_API = 'http://localhost:3080';
+
 // LAYOUT
 // ----------------------------------------------------------------------
 

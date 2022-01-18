@@ -160,7 +160,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                           my: 0.5,
                           borderRadius: 1,
                           '&:hover': { opacity: 0.48 },
-                          ...(field.value.includes(item) && {
+                          ...(field.value?.includes(item) && {
                             bgcolor: 'action.selected',
                           }),
                         }}

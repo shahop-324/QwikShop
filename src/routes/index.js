@@ -27,6 +27,8 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
+  const storeSlugs = ['uncle-store', 'pal-store'];
+
   return useRoutes([
     {
       path: 'auth',
@@ -98,9 +100,24 @@ export default function Router() {
         },
       ],
     },
-
-    
-
+    // Store Routes
+    {
+      path: '*',
+      element: <StoreHeader />,
+      children: storeSlugs.map((el) => ({
+        path: el,
+        children: [
+          { element: <Navigate to={`home`} replace />, index: true },
+          { path: '*', element: <StoreHome /> },
+          { path: 'catalouge', element: <StoreCatalouge /> },
+          { path: 'bag', element: <EcommerceCheckout /> },
+          { path: 'product/*', element: <EcommerceProductDetails /> },
+          { path: 'account', element: <StoreAccount /> },
+          { path: 'wishlist', element: <StoreWishlist /> },
+          {path: 'offers', element: <StoreOffers />},
+        ],
+      })),
+    },
     // Main Routes
     {
       path: '*',
@@ -153,9 +170,12 @@ const GeneralDining = Loadable(lazy(() => import('../pages/dashboard/GeneralDini
 const GeneralManage = Loadable(lazy(() => import('../pages/dashboard/GeneralManage')));
 const GeneralIntegration = Loadable(lazy(() => import('../pages/dashboard/GeneralIntegration')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
+const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
 const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
 const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
+
 // Main
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const About = Loadable(lazy(() => import('../pages/About')));
@@ -167,3 +187,11 @@ const Pricing = Loadable(lazy(() => import('../pages/Pricing')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+
+// Store
+const StoreHeader = Loadable(lazy(() => import('../layouts/store/storeHeader')));
+const StoreCatalouge = Loadable(lazy(() => import('../layouts/store/StoreCatalouge')));
+const StoreHome = Loadable(lazy(() => import('../layouts/store/storeHome')));
+const StoreAccount = Loadable(lazy(() => import('../layouts/store/storeAccount')));
+const StoreWishlist = Loadable(lazy(() => import('../layouts/store/storeWishlist')));
+const StoreOffers = Loadable(lazy(() => import('../layouts/store/storeOffers')));

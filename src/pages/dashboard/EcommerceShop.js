@@ -107,14 +107,7 @@ export default function EcommerceShop() {
   return (
     <Page title="Ecommerce: Shop">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Shop"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            
-            
-          ]}
-        />
+        <HeaderBreadcrumbs heading="Shop" links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }]} />
 
         <Stack
           spacing={2}

@@ -61,7 +61,7 @@ export default function CheckoutCart() {
           <CardHeader
             title={
               <Typography variant="h6">
-                Card
+                Shopping Bag
                 <Typography component="span" sx={{ color: 'text.secondary' }}>
                   &nbsp;({totalItems} item)
                 </Typography>
@@ -91,7 +91,7 @@ export default function CheckoutCart() {
         <Button
           color="inherit"
           component={RouterLink}
-          to={PATH_DASHBOARD.eCommerce.root}
+          to={'/uncle-store'}
           startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
         >
           Continue Shopping

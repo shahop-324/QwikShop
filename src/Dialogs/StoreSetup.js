@@ -138,7 +138,6 @@ const StoreSetup = ({ open, handleClose, handleOpenStoreImage }) => {
                       />
                     )}
                   />
-
                   <TextField
                     name="state"
                     label="State/Region"

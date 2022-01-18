@@ -14,7 +14,6 @@ import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import {
   CheckoutCart,
@@ -25,7 +24,7 @@ import {
 
 // ----------------------------------------------------------------------
 
-const STEPS = ['Cart', 'Billing & address', 'Payment'];
+const STEPS = ['Shopping Bag', 'Billing & address', 'Payment'];
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   top: 10,
@@ -98,18 +97,8 @@ export default function EcommerceCheckout() {
 
   return (
     <Page title="Ecommerce: Checkout">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Checkout"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
-            { name: 'Checkout' },
-          ]}
-        />
+      <Container maxWidth={themeStretch ? false : 'lg'} className='mt-4'>
+        
 
         <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
           <Grid item xs={12} md={8} sx={{ mb: 5 }}>
