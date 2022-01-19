@@ -9,7 +9,7 @@ import { Box, Typography, IconButton, Stack, Link, Button, Divider } from '@mui/
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 const Card = styled.div`
-  border: 1px solid #54D62C5E;
+  border: 1px solid #54d62c5e;
   border-radius: 10px;
   padding: 12px;
   minheight: 150px;
@@ -28,8 +28,10 @@ const FirstTimeOfferCard = ({ expiryTimestamp }) => {
     <>
       <Card>
         <Stack direction={'row'} spacing={3}>
-          <LocalOfferIcon color='success' />
-          <Typography color='success' variant="h6">Rs. 600 OFF</Typography>
+          <LocalOfferIcon color="success" />
+          <Typography color="success" variant="h6">
+            Rs. 600 OFF
+          </Typography>
         </Stack>
 
         <Stack direction={'row'} spacing={3} className="my-3">

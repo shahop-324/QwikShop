@@ -133,7 +133,7 @@ const StoreSetup = ({ open, handleClose, handleOpenStoreImage }) => {
                         label="Choose a country"
                         inputProps={{
                           ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
+                          autoComplete: '', // disable autocomplete and autofill
                         }}
                       />
                     )}
