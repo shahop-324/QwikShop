@@ -21,6 +21,9 @@ import { AnalyticsWidgetSummary } from '../../sections/@dashboard/general/analyt
 
 import { MarketingLessons, MarketingWelcome } from '../../sections/@dashboard/general/marketing/index';
 import CreateSMSCampaign from '../../Dialogs/CreateSMSCampaign';
+import CreateWhatsAppCampaign from '../../Dialogs/CreateWhatsAppCampaign';
+import CreateGoogleAdsCampaign from '../../Dialogs/CreateGoogleAdsCampaign';
+import CreateFacebookAdsCampaign from '../../Dialogs/CreateFacebookAdsCampaign';
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +63,7 @@ export default function GeneralBooking() {
     setOpenCreateFacebookAdsCampaign(true);
   };
 
-  const handleClooseCreateFacebookAdsCampaign = () => {
+  const handleCloseCreateFacebookAdsCampaign = () => {
     setOpenCreateFacebookAdsCampaign(false);
   };
 
@@ -85,6 +88,7 @@ export default function GeneralBooking() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
+                action={handleOpenCreateWhatsAppCampaign}
                 title="Create Campaign"
                 total={'WhatsApp'}
                 color="success"
@@ -93,6 +97,7 @@ export default function GeneralBooking() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
+                action={handleOpenCreateGoogleAdsCampaign}
                 title="Create Campaign"
                 total={'Google Ads'}
                 color="error"
@@ -101,6 +106,7 @@ export default function GeneralBooking() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
+                action={handleOpenCreateFacebookAdsCampaign}
                 title="Create Campaign"
                 total={'Facebook Ads'}
                 color="info"
@@ -137,6 +143,18 @@ export default function GeneralBooking() {
 
       {openCreateSMSCampaign && (
         <CreateSMSCampaign open={openCreateSMSCampaign} handleClose={handleCloseCreateSMSCampaign} />
+      )}
+      {openCreateWhatsAppCampaign && (
+        <CreateWhatsAppCampaign open={openCreateWhatsAppCampaign} handleClose={handleCloseCreateWhatsAppCampaign} />
+      )}
+      {openCreateGoogleAdsCampaign && (
+        <CreateGoogleAdsCampaign open={openCreateGoogleAdsCampaign} handleClose={handleCloseCreateGoogleAdsCampaign} />
+      )}
+      {openCreateFacebookAdsCampaign && (
+        <CreateFacebookAdsCampaign
+          open={openCreateFacebookAdsCampaign}
+          handleClose={handleCloseCreateFacebookAdsCampaign}
+        />
       )}
     </div>
   );

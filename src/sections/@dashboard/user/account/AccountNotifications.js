@@ -12,13 +12,13 @@ import { FormProvider, RHFSwitch } from '../../../../components/hook-form';
 const ACTIVITY_OPTIONS = [
   {
     value: 'activityComments',
-    label: 'Email me when someone comments onmy article',
+    label: 'Email and WhatsApp me when an order is placed on my store',
   },
   {
     value: 'activityAnswers',
-    label: 'Email me when someone answers on my form',
+    label: 'Email & WhatsApp me when an item get low in stock',
   },
-  { value: 'activityFollows', label: 'Email me hen someone follows me' },
+  { value: 'activityFollows', label: 'Email & WhatsApp me when a cart is abondened for more than 2 days' },
 ];
 
 const APPLICATION_OPTIONS = [
@@ -74,7 +74,7 @@ export default function AccountNotifications() {
         <Stack spacing={3} alignItems="flex-end">
           <Stack spacing={2} sx={{ width: 1 }}>
             <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-              Activity
+             Store
             </Typography>
 
             <Stack spacing={1}>
@@ -86,7 +86,7 @@ export default function AccountNotifications() {
 
           <Stack spacing={2} sx={{ width: 1 }}>
             <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-              Application
+             Application
             </Typography>
             <Stack spacing={1}>
               {APPLICATION_OPTIONS.map((application) => (

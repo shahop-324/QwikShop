@@ -11,6 +11,8 @@ import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import DinnerDiningRoundedIcon from '@mui/icons-material/DinnerDiningRounded';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
+import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
+import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 
@@ -20,7 +22,15 @@ const navConfig = [
   {
     items: [
       { title: 'Home', path: PATH_DASHBOARD.general.home, icon: <HomeRoundedIcon /> },
-      { title: 'Order', path: PATH_DASHBOARD.general.order, icon: <ShoppingBagRoundedIcon /> },
+      {
+        title: 'Order',
+        path: PATH_DASHBOARD.order.root,
+        icon: <ShoppingBagRoundedIcon />,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.order.list },
+          { title: 'abondoned carts', path: PATH_DASHBOARD.order.abondonedCarts },
+        ],
+      },
       {
         title: 'Catalouge',
         path: PATH_DASHBOARD.catalouge.root,
@@ -28,6 +38,7 @@ const navConfig = [
         children: [
           { title: 'product', path: PATH_DASHBOARD.catalouge.product },
           { title: 'category', path: PATH_DASHBOARD.catalouge.category },
+          { title: 'Catalouge Builder', path: PATH_DASHBOARD.catalouge.builder },
         ],
       },
       { title: 'Delivery', path: PATH_DASHBOARD.general.delivery, icon: <LocalShippingRoundedIcon /> },
@@ -54,16 +65,27 @@ const navConfig = [
         path: PATH_DASHBOARD.store.root,
         icon: <StoreRoundedIcon />,
         children: [
-          { title: 'settings', path: PATH_DASHBOARD.store.settings },
-          { title: 'theme', path: PATH_DASHBOARD.store.theme },
-          { title: 'pages', path: PATH_DASHBOARD.store.pages },
-          { title: 'menus', path: PATH_DASHBOARD.store.menus },
+          { title: 'Profile', path: PATH_DASHBOARD.store.settings },
+          { title: 'Website', path: PATH_DASHBOARD.store.theme },
+          { title: 'Pages', path: PATH_DASHBOARD.store.pages },
+          // { title: 'Menus', path: PATH_DASHBOARD.store.menus },
         ],
       },
+     
       {
         title: 'Integrations',
         path: PATH_DASHBOARD.general.integration,
         icon: <ExtensionRoundedIcon />,
+      },
+      {
+        title: 'Reviews',
+        path: PATH_DASHBOARD.general.reviews,
+        icon: <ReviewsRoundedIcon />,
+      },
+      {
+        title: 'Academy',
+        path: PATH_DASHBOARD.general.academy,
+        icon: <SchoolRoundedIcon />,
       },
       // MANAGEMENT : E-COMMERCE
     ],

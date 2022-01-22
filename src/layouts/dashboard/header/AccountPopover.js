@@ -55,11 +55,6 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     dispatch(logout());
-    // navigate(PATH_AUTH.login, { replace: true });
-
-    // if (isMountedRef.current) {
-    //   handleClose();
-    // }
   };
 
   return (

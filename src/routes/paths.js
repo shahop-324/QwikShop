@@ -36,7 +36,6 @@ export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   general: {
     home: path(ROOTS_DASHBOARD, '/home'),
-    order: path(ROOTS_DASHBOARD, '/order'),
     delivery: path(ROOTS_DASHBOARD, '/delivery'),
     customer: path(ROOTS_DASHBOARD, '/customer'),
     dining: path(ROOTS_DASHBOARD, '/dining'),
@@ -45,6 +44,8 @@ export const PATH_DASHBOARD = {
     discount: path(ROOTS_DASHBOARD, '/discount'),
     manage: path(ROOTS_DASHBOARD, '/manage'),
     integration: path(ROOTS_DASHBOARD, '/integration'),
+    reviews: path(ROOTS_DASHBOARD, '/reviews'),
+    academy: path(ROOTS_DASHBOARD, '/academy'),
   },
 
   design: {
@@ -54,10 +55,17 @@ export const PATH_DASHBOARD = {
     whatsAppStory: path(ROOTS_DASHBOARD, '/design/whatsapp-story'),
   },
 
+  order: {
+    root: path(ROOTS_DASHBOARD, '/order'),
+    list: path(ROOTS_DASHBOARD, '/order/list'),
+    abondonedCarts: path(ROOTS_DASHBOARD, '/order/abondoned-carts'),
+  },
+
   catalouge: {
     root: path(ROOTS_DASHBOARD, '/catalouge'),
     product: path(ROOTS_DASHBOARD, '/catalouge/product'),
     category: path(ROOTS_DASHBOARD, '/catalouge/category'),
+    builder: path(ROOTS_DASHBOARD, '/catalouge/builder'),
   },
   store: {
     root: path(ROOTS_DASHBOARD, '/store'),

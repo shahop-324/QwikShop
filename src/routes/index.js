@@ -62,7 +62,14 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'home', element: <GeneralHome /> },
-        { path: 'order', element: <GeneralOrders /> },
+        {
+          path: 'order',
+          children: [
+            { element: <Navigate to="/dashbord/order/list" replace />, index: true },
+            { path: 'list', element: <GeneralOrders /> },
+            { path: 'abondoned-carts', element: <GeneralAbondonedCarts /> },
+          ],
+        },
         { path: 'delivery', element: <GeneralDelivery /> },
         { path: 'customer', element: <GeneralCustomer /> },
         { path: 'dining', element: <GeneralDining /> },
@@ -71,12 +78,15 @@ export default function Router() {
         { path: 'discount', element: <GeneralDiscount /> },
         { path: 'manage', element: <GeneralManage /> },
         { path: 'integration', element: <GeneralIntegration /> },
+        {path: 'reviews', element: <GeneralReviews />},
+        { path: 'academy', element: <GeneralAcademy /> },
         {
           path: 'catalouge',
           children: [
             { element: <Navigate to="/dashboard/catalouge/product" replace />, index: true },
             { path: 'product', element: <EcommerceProductList /> },
             { path: 'category', element: <EcommerceProductList /> },
+            { path: 'builder', element: <GeneralCatalougeBuilder /> },
           ],
         },
         {
@@ -92,10 +102,10 @@ export default function Router() {
           path: 'store',
           children: [
             { element: <Navigate to="/dashboard/store/settings" replace />, index: true },
-            { path: 'settings', element: <BlogPosts /> },
-            { path: 'theme', element: <BlogPost /> },
-            { path: 'pages', element: <BlogNewPost /> },
-            { path: 'menus', element: <BlogNewPost /> },
+            { path: 'settings', element: <StoreProfile /> },
+            { path: 'theme', element: <StoreTheme /> },
+            { path: 'pages', element: <StorePages /> },
+            { path: 'menus', element: <StoreMenus /> },
           ],
         },
       ],
@@ -114,10 +124,11 @@ export default function Router() {
           { path: 'product/*', element: <EcommerceProductDetails /> },
           { path: 'account', element: <StoreAccount /> },
           { path: 'wishlist', element: <StoreWishlist /> },
-          {path: 'offers', element: <StoreOffers />},
+          { path: 'offers', element: <StoreOffers /> },
         ],
       })),
     },
+
     // Main Routes
     {
       path: '*',
@@ -169,13 +180,12 @@ const GeneralDiscount = Loadable(lazy(() => import('../pages/dashboard/GeneralDi
 const GeneralDining = Loadable(lazy(() => import('../pages/dashboard/GeneralDining')));
 const GeneralManage = Loadable(lazy(() => import('../pages/dashboard/GeneralManage')));
 const GeneralIntegration = Loadable(lazy(() => import('../pages/dashboard/GeneralIntegration')));
+const GeneralAbondonedCarts = Loadable(lazy(() => import('../pages/dashboard/GeneralAbondonedCarts')));
+const GeneralReviews = Loadable(lazy(() => import('../pages/dashboard/GeneralReviews')));
+const GeneralAcademy = Loadable(lazy(() => import('../pages/dashboard/GeneralAcademy')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
-const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
-const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
-const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
-
 // Main
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const About = Loadable(lazy(() => import('../pages/About')));
@@ -195,3 +205,13 @@ const StoreHome = Loadable(lazy(() => import('../layouts/store/storeHome')));
 const StoreAccount = Loadable(lazy(() => import('../layouts/store/storeAccount')));
 const StoreWishlist = Loadable(lazy(() => import('../layouts/store/storeWishlist')));
 const StoreOffers = Loadable(lazy(() => import('../layouts/store/storeOffers')));
+
+//
+const GeneralCatalougeBuilder = Loadable(lazy(() => import('../pages/dashboard/GeneralCatalougeBuilder')));
+
+// Store Settings Dashboard
+
+const StoreProfile = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
+const StoreTheme = Loadable(lazy(() => import('../pages/dashboard/Store/StoreWebsite')));
+const StorePages = Loadable(lazy(() => import('../pages/dashboard/Store/StorePages')));
+const StoreMenus = Loadable(lazy(() => import('../pages/dashboard/Store/StoreMenus')));

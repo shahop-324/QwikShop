@@ -6,3 +6,7 @@ export { default as AccountChangePassword } from './AccountChangePassword';
 export { default as AccountGeneral } from './AccountGeneral';
 export { default as AccountNotifications } from './AccountNotifications';
 export { default as AccountSocialLinks } from './AccountSocialLinks';
+export { default as AccountPolicies } from './AccountPolicies';
+export {default as AccountDomain} from "./AccountDomain";
+export {default as AccountCheckout} from "./AccountCheckout";
+export {default as AccountStaff} from "./AccountStaff";

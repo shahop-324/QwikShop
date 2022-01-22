@@ -2,24 +2,29 @@ import { capitalCase } from 'change-case';
 import { useState } from 'react';
 // @mui
 import { Container, Tab, Box, Tabs } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
+import PeopleIcon from '@mui/icons-material/People';
+import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
+import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import useSettings from '../../hooks/useSettings';
 // _mock_
 import { _userPayment, _userAddressBook, _userInvoices, _userAbout } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import {
   AccountGeneral,
   AccountBilling,
   AccountSocialLinks,
   AccountNotifications,
-  AccountChangePassword,
+  AccountPolicies,
+  AccountDomain,
+  AccountCheckout,
+  AccountStaff,
 } from '../../sections/@dashboard/user/account';
+
 
 // ----------------------------------------------------------------------
 
@@ -50,24 +55,30 @@ export default function UserAccount() {
       component: <AccountSocialLinks myProfile={_userAbout} />,
     },
     {
-      value: 'change_password',
-      icon: <Iconify icon={'ic:round-vpn-key'} width={20} height={20} />,
-      component: <AccountChangePassword />,
+      value: 'staff_account',
+      icon: <PeopleIcon width={20} height={20} />,
+      component: <AccountStaff myProfile={_userAbout} />,
+    },
+    {
+      value: 'checkout',
+      icon: <ShoppingCartRoundedIcon icon={'eva:share-fill'} width={20} height={20} />,
+      component: <AccountCheckout myProfile={_userAbout} />,
+    },
+    {
+      value: 'Domain',
+      icon: <LanguageRoundedIcon icon={'eva:share-fill'} width={20} height={20} />,
+      component: <AccountDomain myProfile={_userAbout} />,
+    },
+    {
+      value: 'policies',
+      icon: <ArticleRoundedIcon  icon={'eva:share-fill'} width={20} height={20} />,
+      component: <AccountPolicies myProfile={_userAbout} />,
     },
   ];
 
   return (
     <Page title="User: Account Settings">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Account"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'Account Settings' },
-          ]}
-        />
-
         <Tabs
           value={currentTab}
           scrollButtons="auto"

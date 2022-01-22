@@ -1,36 +1,17 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Stack, Card, InputAdornment } from '@mui/material';
+import { Stack, Card, InputAdornment, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
-import Iconify from '../../../../components/Iconify';
-import { FormProvider, RHFTextField } from '../../../../components/hook-form';
 
-// ----------------------------------------------------------------------
-
-const SOCIAL_LINKS = [
-  {
-    value: 'facebookLink',
-    icon: <Iconify icon={'eva:facebook-fill'} width={24} height={24} />,
-  },
-  {
-    value: 'instagramLink',
-    icon: <Iconify icon={'ant-design:instagram-filled'} width={24} height={24} />,
-  },
-  {
-    value: 'linkedinLink',
-    icon: <Iconify icon={'eva:linkedin-fill'} width={24} height={24} />,
-  },
-  {
-    value: 'twitterLink',
-    icon: <Iconify icon={'eva:twitter-fill'} width={24} height={24} />,
-  },
-];
-
-// ----------------------------------------------------------------------
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import { FormProvider } from '../../../../components/hook-form';
 
 AccountSocialLinks.propTypes = {
   myProfile: PropTypes.shape({
@@ -50,6 +31,10 @@ export default function AccountSocialLinks({ myProfile }) {
     linkedinLink: myProfile.linkedinLink,
     twitterLink: myProfile.twitterLink,
   };
+
+  const [facebookLink, setFacebookLink] = useState('');
+  const [instagramLink, setInstagramLink] = useState('');
+  const [twitterLink, setTwitterLink] = useState('');
 
   const methods = useForm({
     defaultValues,
@@ -73,16 +58,54 @@ export default function AccountSocialLinks({ myProfile }) {
     <Card sx={{ p: 3 }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="flex-end">
-          {SOCIAL_LINKS.map((link) => (
-            <RHFTextField
-              key={link.value}
-              name={link.value}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
-              }}
-            />
-          ))}
-
+          <TextField
+            name="facebook"
+            label="Facebook"
+            fullWidth
+            value={facebookLink}
+            onChange={(e) => {
+              setFacebookLink(e.target.value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment>
+                  <FacebookOutlinedIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            name="instagram"
+            label="Instagram"
+            fullWidth
+            value={instagramLink}
+            onChange={(e) => {
+              setInstagramLink(e.target.value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment>
+                  <InstagramIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            name="twitter"
+            label="Twitter"
+            fullWidth
+            value={twitterLink}
+            onChange={(e) => {
+              setTwitterLink(e.target.value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment>
+                  <TwitterIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             Save Changes
           </LoadingButton>

@@ -2,34 +2,27 @@
 import { Stack, Button, Typography } from '@mui/material';
 // routes
 import { PATH_DOCS } from '../../../routes/paths';
-// assets
-import { DocIllustration } from '../../../assets';
 
 // ----------------------------------------------------------------------
 
 export default function NavbarDocs() {
-
-  let user;
-
   return (
-    <Stack
-      spacing={3}
-      sx={{ px: 5, pb: 5, mt: 10, width: 1, textAlign: 'center', display: 'block' }}
-    >
-      <DocIllustration sx={{ width: 1 }} />
+    <Stack spacing={3} sx={{ px: 5, pb: 5, mt: 10, width: 1, textAlign: 'center', display: 'block' }}>
+      <img
+        src="https://media.istockphoto.com/photos/shopping-cart-with-different-food-products-picture-id1306977522?b=1&k=20&m=1306977522&s=170667a&w=0&h=aCpJcpOWb3U3O6Vh5algE6PNNbgGZUocUo4tRJ3iOKQ="
+        alt="cart"
+        style={{ height: '200px' }}
+      />
 
       <div>
-        <Typography gutterBottom variant="subtitle1">
-          Hi, {user?.displayName}
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Need help?
-          <br /> Please check our docs
+        <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+          Upgrade at Just
+          <br /> Rs. 10 Per Day
         </Typography>
       </div>
 
       <Button href={PATH_DOCS} target="_blank" rel="noopener" variant="contained">
-        Documentation
+        Get Premium
       </Button>
     </Stack>
   );

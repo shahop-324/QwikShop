@@ -7,7 +7,7 @@ import Avatar from './Avatar';
 
 export default function MyAvatar({ ...other }) {
   
-  let user;
+  const user = {photoURL: 'https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/man5-512.png', displayName: 'Shreyansh shah',};
 
   return (
     <Avatar

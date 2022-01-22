@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable consistent-return */
 import React, { useState } from 'react';
-import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
@@ -53,10 +52,13 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const MessageBox = MUIStyled.div`
+
 border: ${(props) => (props && props.active ? '1px solid #2065D1' : '1px solid #cecece')};
 border-radius: 12px;
 padding: 15px 12px;
 margin-bottom: 15px;
+
+
 `;
 
 const PreviewCard = MUIStyled.div`
@@ -189,10 +191,10 @@ ColorlibStepIcon.propTypes = {
 
 const steps = ['Enter Campaign Name', 'Select Message', 'Select Audience', 'Preview & Test Campaign', 'Pay and launch'];
 
-const CreateSMSCampaign = ({ open, handleClose }) => {
+const CreateWhatsAppCampaign = ({ open, handleClose }) => {
   const [campaignName, setCampaignName] = useState('');
 
-  const [discountCode, setDiscountCode] = useState("");
+  const [discountCode, setDiscountCode] = useState('');
 
   const [selectedMessage, setSelectedMessage] = useState(0);
 
@@ -630,7 +632,6 @@ const CreateSMSCampaign = ({ open, handleClose }) => {
                   <Grid item xs={12} md={12}>
                     <Card sx={{ p: 3 }}>
                       <Box
-                     
                         sx={{
                           display: 'grid',
                           columnGap: 2,
@@ -649,18 +650,23 @@ const CreateSMSCampaign = ({ open, handleClose }) => {
                         />
                         <Button size="small">Apply Discount</Button>
                       </Box>
-                      <Divider className='my-4' />
-                      <Stack   direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                      <Divider className="my-4" />
+                      <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         <Typography variant="body2">Campaign Charges:</Typography>
                         <Typography variant="subtitle1">Rs. 435 /-</Typography>
                       </Stack>
-                      <Divider className='my-4' />
+                      <Divider className="my-4" />
                       <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         <Typography variant="body2">Discount:</Typography>
                         <Typography variant="subtitle1">Rs. 45 /-</Typography>
                       </Stack>
 
-                      <div style={{ width: '100%', height: '10px', borderBottom: '1px dashed #212121' }} className='my-4'> </div>
+                      <div
+                        style={{ width: '100%', height: '10px', borderBottom: '1px dashed #212121' }}
+                        className="my-4"
+                      >
+                        {' '}
+                      </div>
                       <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         <Typography variant="h6">Total Payable</Typography>
                         <Typography variant="subtitle1">Rs. 390 /-</Typography>
@@ -712,7 +718,7 @@ const CreateSMSCampaign = ({ open, handleClose }) => {
   );
 };
 
-export default CreateSMSCampaign;
+export default CreateWhatsAppCampaign;
 
 const customerOptions = [
   { label: 'All customers' },
