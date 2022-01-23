@@ -4,7 +4,7 @@ import { notificationActions } from '../reducers/notificationSlice';
 import history from '../history';
 
 const { REACT_APP_MY_ENV } = process.env;
-const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:5000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
+const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
 
 export const showSnackbar = (severity, message) => async (dispatch, getState) => {
   dispatch(

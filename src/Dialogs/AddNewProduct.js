@@ -28,6 +28,10 @@ import {
   Button,
   InputAdornment,
   Typography,
+  FormLabel,
+  RadioGroup,
+  Radio,
+  FormControl,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
@@ -263,6 +267,10 @@ const AddNewProduct = ({ open, handleClose }) => {
   const [quantityInStock, setQuantityInStock] = useState();
   const [productSKU, setProductSKU] = useState();
 
+  const [wholesalePrice, setWholesalePrice] = useState(null);
+
+  const [minWholesaleQuantity, setMinWholesalePrice] = useState(null);
+
   const [activeStep, setActiveStep] = useState(0);
 
   const onNext = () => {
@@ -391,6 +399,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                               )}
                             />
                             <TextField
+                              type="number"
                               name="price"
                               label="Price"
                               fullWidth
@@ -407,6 +416,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                               }}
                             />
                             <TextField
+                              type="number"
                               name="discountedPrice"
                               label="Discounted price"
                               fullWidth
@@ -422,7 +432,46 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 ),
                               }}
                             />
+                            <TextField
+                              type="number"
+                              name="wholesalePrice"
+                              label="Wholesale Price"
+                              fullWidth
+                              value={wholesalePrice}
+                              onChange={(e) => {
+                                setWholesalePrice(e.target.value);
+                              }}
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment>
+                                    <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                            <TextField
+                              type="number"
+                              name="minimumWholesaleQuantity"
+                              label="Minimum Wholesale Quantity"
+                              fullWidth
+                              value={minWholesaleQuantity}
+                              onChange={(e) => {
+                                setMinWholesalePrice(e.target.value);
+                              }}
+                            />
                           </Box>
+
+                          <FormControl className="mb-3">
+                            <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
+                            <RadioGroup
+                              row
+                              aria-labelledby="demo-row-radio-buttons-group-label"
+                              name="row-radio-buttons-group"
+                            >
+                              <FormControlLabel value="veg" control={<Radio />} label="Veg" />
+                              <FormControlLabel value="nonVeg" control={<Radio />} label="Non Veg" />
+                            </RadioGroup>
+                          </FormControl>
 
                           <Editor />
                           <FormGroup className="mt-3">
