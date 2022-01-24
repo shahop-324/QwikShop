@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const userSlice = createSlice({
-  name: 'user',
+const appSlice = createSlice({
+  name: 'app',
 
   initialState: {
-    user: {},
+    subname: [],
     error: false,
   },
 
   reducers: {
-    FetchUser(state, action) {
-      state.user = action.payload.user;
+    FetchSubnames(state, action) {
+      state.subname = action.payload.subname;
     },
   },
 });
 
-export const userActions = userSlice.actions;
-export default userSlice;
+export const appActions = appSlice.actions;
+export default appSlice;

@@ -11,6 +11,7 @@ import { LoadingButton } from '@mui/lab';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import { useSelector } from 'react-redux';
 import { FormProvider } from '../../../../components/hook-form';
 
 AccountSocialLinks.propTypes = {
@@ -22,14 +23,13 @@ AccountSocialLinks.propTypes = {
   }),
 };
 
-export default function AccountSocialLinks({ myProfile }) {
-  const { enqueueSnackbar } = useSnackbar();
+export default function AccountSocialLinks() {
+  const { user } = useSelector((state) => state.user);
 
   const defaultValues = {
-    facebookLink: myProfile.facebookLink,
-    instagramLink: myProfile.instagramLink,
-    linkedinLink: myProfile.linkedinLink,
-    twitterLink: myProfile.twitterLink,
+    facebookLink: user.facebookLink,
+    instagramLink: user.instagramLink,
+    twitterLink: user.twitterLink,
   };
 
   const [facebookLink, setFacebookLink] = useState('');
@@ -45,13 +45,8 @@ export default function AccountSocialLinks({ myProfile }) {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar('Update success!');
-    } catch (error) {
-      console.error(error);
-    }
+  const onSubmit = async (data) => {
+    console.log(facebookLink, instagramLink, twitterLink);
   };
 
   return (

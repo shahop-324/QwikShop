@@ -27,9 +27,9 @@ import { UploadAvatar } from '../components/upload';
 import { fData } from '../utils/formatNumber';
 
 const AddNewCategory = ({ open, handleClose }) => {
-  const [file, setFile] = useState();
+  const [file, setFile] = useState({ error: false, message: 'Category Image is required', value: '' });
   const [fileToPreview, setFileToPreview] = useState();
-  const [categoryName, setCategoryName] = useState();
+  const [categoryName, setCategoryName] = useState({ error: false, message: 'category name is required', value: '' });
 
   const NewCategorySchema = Yup.object().shape({
     avatarUrl: Yup.mixed().test('required', 'Category image is required', (value) => value !== ''),
@@ -50,7 +50,10 @@ const AddNewCategory = ({ open, handleClose }) => {
     const file = acceptedFiles[0];
 
     console.log(file);
-    setFile(file);
+    setFile((prev) => {
+      prev.value = file;
+      return prev;
+    });
     setFileToPreview(URL.createObjectURL(file));
   };
 
@@ -59,14 +62,14 @@ const AddNewCategory = ({ open, handleClose }) => {
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
-          <DialogTitle>Add Category</DialogTitle>
+        <DialogTitle>Add Category</DialogTitle>
         <div className="p-4">
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid className="px-4 pt-3" container spacing={3}>
               <Grid item xs={12} md={12}>
                 <Card sx={{ p: 3 }}>
                   <UploadAvatar
-                  
+                    required
                     name="avatarUrl"
                     accept="image/*"
                     maxSize={3145728}
@@ -89,13 +92,30 @@ const AddNewCategory = ({ open, handleClose }) => {
                     }
                   />
                   <TextField
-                  className="mt-4"
+                    error={categoryName.error}
+                    required
+                    helperText={categoryName.error ? "Category name is required" : ""}
+                    className="mt-4"
                     name="categoryName"
                     label="Category Name"
                     fullWidth
-                    value={categoryName}
+                    value={categoryName.value}
                     onChange={(e) => {
-                      setCategoryName(e.target.value);
+                      if (!e.target.value) {
+                        setCategoryName((prev) => {
+                          prev.error = true;
+                          return prev;
+                        });
+                      } else {
+                        setCategoryName((prev) => {
+                          prev.error = false;
+                          return prev;
+                        });
+                      }
+                      setCategoryName((prev) => {
+                        prev.value = e.target.value;
+                        return prev;
+                      });
                     }}
                   />
                 </Card>

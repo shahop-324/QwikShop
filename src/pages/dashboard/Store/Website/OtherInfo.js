@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 import React, { useState } from 'react';
 import {
   Stack,
@@ -70,18 +71,18 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const StoreOtherInfo = () => {
+  const [freeDeliveryAbove, setFreeDeliveryAbove] = useState();
+  const [shipmentTime, setShipmentTime] = useState(null);
+  const [returnAccepted, setReturnAccepted] = useState(false);
+  const [replacementAccepted, setReplacementAccepted] = useState(false);
+  const [deliverHappensWithin, setDeliveryHappensWithin] = useState('india');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
-
   const [replacementPeriod, setReplacementPeriod] = useState(null);
   const [returnPeriod, setReturnPeriod] = useState(null);
-
-  const [shipmentTime, setShipmentTime] = useState(null);
-
-  const [freeDeliveryAbove, setFreeDeliveryAbove] = useState('');
-
   const [minRange, setMinRange] = useState(1);
   const [maxRange, setMaxRange] = useState(20);
+  const [showShopInDeliveryZoneOnly, setShowShopInDeliveryZoneOnly] = useState(true);
 
   return (
     <div>
@@ -144,18 +145,18 @@ const StoreOtherInfo = () => {
                 <FormLabel id="demo-row-radio-buttons-group-label">
                   Is Return accepted (on applicable products)?
                 </FormLabel>
-                <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
-                  <FormControlLabel value="yes" control={<Radio defaultChecked />} label="Yes" />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                <RadioGroup value={returnAccepted} row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+                  <FormControlLabel value={true} control={<Radio onClick={() => {setReturnAccepted(true)}} />} label="Yes" />
+                  <FormControlLabel value={false} control={<Radio onClick={() => {setReturnAccepted(false)}} />} label="No" />
                 </RadioGroup>
               </FormControl>
               <FormControl>
                 <FormLabel id="demo-row-radio-buttons-group-label">
                   Is Replacement accepted (on applicable products)?
                 </FormLabel>
-                <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
-                  <FormControlLabel value="yes" control={<Radio defaultChecked />} label="Yes" />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
+                <RadioGroup value={replacementAccepted} row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+                  <FormControlLabel value={true} control={<Radio onClick={() => {setReplacementAccepted(true)}} />} label="Yes" />
+                  <FormControlLabel value={false} control={<Radio onClick={() => {setReplacementAccepted(false)}} />} label="No" />
                 </RadioGroup>
               </FormControl>
               <Autocomplete
@@ -203,12 +204,12 @@ const StoreOtherInfo = () => {
             </Box>
             <FormControl sx={{ mb: 3 }}>
               <FormLabel id="demo-row-radio-buttons-group-label">Delivery Happens within ?</FormLabel>
-              <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
-                <FormControlLabel value="international" control={<Radio defaultChecked />} label="International" />
-                <FormControlLabel value="india" control={<Radio />} label="India" />
-                <FormControlLabel value="state" control={<Radio defaultChecked />} label="State" />
-                <FormControlLabel value="city" control={<Radio />} label="City" />
-                <FormControlLabel value="distanceRange" control={<Radio />} label="In a fixed Distance" />
+              <RadioGroup value={deliverHappensWithin} row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
+                <FormControlLabel value="international" control={<Radio onClick={() => {setDeliveryHappensWithin("international")}} />} label="International" />
+                <FormControlLabel value="india" control={<Radio onClick={() => {setDeliveryHappensWithin("india")}} />} label="India" />
+                <FormControlLabel value="state" control={<Radio onClick={() => {setDeliveryHappensWithin("state")}} />} label="State" />
+                <FormControlLabel value="city" control={<Radio onClick={() => {setDeliveryHappensWithin("city")}} />} label="City" />
+                <FormControlLabel value="distanceRange" control={<Radio onClick={() => {setDeliveryHappensWithin("distanceRange")}} />} label="In a fixed Distance" />
               </RadioGroup>
             </FormControl>
             <Box
@@ -283,14 +284,14 @@ const StoreOtherInfo = () => {
             </Box>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography>Show my shop only to visitors in my delivery zone?</Typography>
-              <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+              <AntSwitch checked={showShopInDeliveryZoneOnly} onClick={(e) => {setShowShopInDeliveryZoneOnly(e.target.checked)}} inputProps={{ 'aria-label': 'ant design' }} />
             </Stack>
           </Card>
-          <Stack direction={"row"} alignItems={"center"} justifyContent={"end"} spacing={3} sx={{py: 3}}>
-          <Button variant="outlined" startIcon={<RestoreRoundedIcon />}>
-          Restore to default
-        </Button>
-        <Button variant="contained">Save</Button>
+          <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={3} sx={{ py: 3 }}>
+            <Button variant="outlined" startIcon={<RestoreRoundedIcon />}>
+              Restore to default
+            </Button>
+            <Button variant="contained">Save</Button>
           </Stack>
         </Grid>
       </Grid>

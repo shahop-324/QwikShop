@@ -3,9 +3,8 @@ import { Dialog, DialogTitle, Button, Stack, Grid, Card, Typography, TextField }
 import Editor from '../../../../components/editor';
 
 const QuillPageBuilder = ({ open, handleClose }) => {
-  const [templateName, setTemplateName] = useState('');
-
-  const [html, setHtml] = useState('');
+  const [templateName, setTemplateName] = useState({ error: false, message: 'Template Name is required', value: '' });
+  const [html, setHtml] = useState({ error: false, message: 'Page content is required', value: '' });
 
   return (
     <>
@@ -18,12 +17,28 @@ const QuillPageBuilder = ({ open, handleClose }) => {
                 Page Name
               </Typography>
               <TextField
+                error={templateName.error}
+                helperText={templateName.error ? 'Template Name is required' : ''}
                 name="templateName"
                 label="Template name"
                 fullWidth
-                value={templateName}
+                value={templateName.value}
                 onChange={(e) => {
-                  setTemplateName(e.target.value);
+                  if (!e.target.value) {
+                    setTemplateName((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setTemplateName((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
+                  setTemplateName((prev) => {
+                    prev.value = e.target.value;
+                    return prev;
+                  });
                 }}
               />
             </Card>
@@ -35,7 +50,28 @@ const QuillPageBuilder = ({ open, handleClose }) => {
               <Typography className="mb-3" variant="subtitle1">
                 Page Content
               </Typography>
-              <Editor />
+              <Editor
+                error={html.error}
+                helperText={html.error ? 'Page content is required' : ""}
+                value={html.value}
+                onChange={(value) => {
+                  if (!value) {
+                    setHtml((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setHtml((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
+                  setHtml((prev) => {
+                    prev.value = value;
+                    return prev;
+                  });
+                }}
+              />
             </Card>
           </Grid>
         </Grid>

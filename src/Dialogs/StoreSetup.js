@@ -453,7 +453,7 @@ const StoreSetup = ({ open, handleClose }) => {
                               }
                               setCountry(value);
                             }}
-                            id="country-select-demo"
+                            id=""
                             fullWidth
                             options={countries}
                             autoHighlight

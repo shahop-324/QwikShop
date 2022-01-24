@@ -112,8 +112,8 @@ export default function ProductListToolbar({
         <div className="d-flex flex-row align-items-center justify-content-end">
           <Button
             onClick={() => {
-              // openAddProduct();
-              openAddCategory();
+              openAddProduct();
+              // openAddCategory();
             }}
             className="me-3"
             variant="contained"

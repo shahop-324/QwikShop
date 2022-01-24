@@ -6,8 +6,7 @@ import { TwitterPicker } from 'react-color';
 import RestoreRoundedIcon from '@mui/icons-material/RestoreRounded';
 
 const StoreAmbience = () => {
-  const [mood, setMood] = useState('Light');
-
+  const [mode, setMode] = useState('light');
   const [color, setColor] = useState('#538BF7');
 
   return (
@@ -23,6 +22,7 @@ const StoreAmbience = () => {
       </Typography>
 
       <RadioGroup
+        value={mode}
         sx={{ width: '100%', mb: 4 }}
         row
         aria-labelledby="demo-row-radio-buttons-group-label"
@@ -38,11 +38,31 @@ const StoreAmbience = () => {
         >
           <Card sx={{ p: 3, width: '400px' }}>
             {' '}
-            <FormControlLabel value="female" control={<Radio />} label="Light" />
+            <FormControlLabel
+              value="light"
+              control={
+                <Radio
+                  onClick={() => {
+                    setMode('light');
+                  }}
+                />
+              }
+              label="Light"
+            />
           </Card>
           <Card sx={{ p: 3, width: '400px' }}>
             {' '}
-            <FormControlLabel value="male" control={<Radio />} label="Dark" />
+            <FormControlLabel
+              value="dark"
+              control={
+                <Radio
+                  onClick={() => {
+                    setMode('light');
+                  }}
+                />
+              }
+              label="Dark"
+            />
           </Card>
         </Box>
       </RadioGroup>

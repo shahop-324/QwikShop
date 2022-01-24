@@ -10,8 +10,17 @@ import 'react-phone-number-input/style.css';
 
 const AddStaffMember = ({ open, handleClose }) => {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [permissionList, setPermissionList] = useState([]);
+
+  const [nameError, setNameError] = useState({ error: false, message: 'Name is required' });
+  const [emailError, setEmailError] = useState({ error: false, message: 'Email is required' });
+  const [phoneError, setPhoneError] = useState({ error: false, message: 'Phone number is required' });
+  const [permissionError, setPermissionError] = useState({
+    error: false,
+    message: 'Atleast one permission is required',
+  });
 
   return (
     <>
@@ -29,27 +38,94 @@ const AddStaffMember = ({ open, handleClose }) => {
                 }}
               >
                 <TextField
+                  required
+                  error={nameError.error}
+                  helperText={nameError.error ? nameError.message : ''}
                   name="staffName"
                   label="Staff Name"
                   fullWidth
                   value={name}
+                  
                   onChange={(e) => {
+                    if (!e.target.value) {
+                      setNameError((prev) => {
+                        prev.error = true;
+                        return prev;
+                      });
+                    } else {
+                      setNameError((prev) => {
+                        prev.error = false;
+                        return prev;
+                      });
+                    }
+
                     setName(e.target.value);
                   }}
                 />
+                <TextField
+                  required
+                  error={emailError.error}
+                  helperText={emailError.error ? emailError.message : ''}
+                  name="email"
+                  label="Staff Email"
+                  fullWidth
+                  value={email}
+                  onChange={(e) => {
+                    if (!e.target.value) {
+                      setEmailError((prev) => {
+                        prev.error = true;
+                        return prev;
+                      });
+                    } else {
+                      setEmailError((prev) => {
+                        prev.error = false;
+                        return prev;
+                      });
+                    }
 
+                    setEmail(e.target.value);
+                  }}
+                />
                 <PhoneInput
+                  required
+                  error={phoneError.error}
+                  helperText={phoneError.error ? phoneError.message : ''}
                   name="phoneNumber"
                   placeholder="Staff phone number"
                   value={phone}
-                  onChange={setPhone}
+                  onChange={(value) => {
+                    if (!value) {
+                      setPhoneError((prev) => {
+                        prev.error = true;
+                        return prev;
+                      });
+                    } else {
+                      setPhoneError((prev) => {
+                        prev.error = false;
+                        return prev;
+                      });
+                    }
+                    setPhone(value);
+                  }}
                   inputComponent={CustomPhoneNumber}
                   defaultCountry="IN"
                 />
                 <Autocomplete
                   multiple
+                  required
                   value={permissionList}
                   onChange={(e, value) => {
+                    if (value.length === 0) {
+                      setPermissionError((prev) => {
+                        prev.error = true;
+                        return prev;
+                      });
+                    } else {
+                      setPermissionError((prev) => {
+                        prev.error = false;
+                        return prev;
+                      });
+                    }
                     setPermissionList(value);
                   }}
                   id=""
@@ -59,6 +135,9 @@ const AddStaffMember = ({ open, handleClose }) => {
                   getOptionLabel={(option) => option.label}
                   renderInput={(params) => (
                     <TextField
+                      required
+                      error={permissionError.error}
+                      helperText={permissionError.error ? permissionError.message : ''}
                       {...params}
                       label="Permissions"
                       inputProps={{
@@ -105,5 +184,4 @@ const permissions = [
   { label: 'Manage' },
   { label: 'Design' },
   { label: 'Integration' },
-  { label: 'Reports' },
 ];

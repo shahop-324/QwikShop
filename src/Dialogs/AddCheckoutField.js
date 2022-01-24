@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 
@@ -81,8 +82,10 @@ const AddCheckoutField = ({ open, handleClose }) => {
   const [openOptions, setOpenOptions] = useState(false);
 
   const [fieldName, setFieldName] = useState('');
-
   const [type, setType] = useState('');
+
+  const [fieldNameError, setFieldNameError] = useState({error: false, message: "Field Name is required"});
+  const [typeError, setTypeError] = useState({error: false, message: "Field type is required"});
 
   const [required, setRequired] = useState(true);
 
@@ -142,18 +145,44 @@ const AddCheckoutField = ({ open, handleClose }) => {
                 }}
               >
                 <TextField
+                  required
+                  error={fieldNameError.error}
+                  helperText={fieldNameError.error ? fieldNameError.message : ''}
                   name="fieldName"
                   label="Field Name"
                   fullWidth
                   value={fieldName}
                   onChange={(e) => {
+                    if (!e.target.value) {
+                      setFieldNameError((prev) => {
+                        prev.error = true;
+                        return prev;
+                      });
+                    } else {
+                      setFieldNameError((prev) => {
+                        prev.error = false;
+                        return prev;
+                      });
+                    }
                     setFieldName(e.target.value);
                   }}
                 />
 
                 <Autocomplete
+                  required
                   value={type || null}
                   onChange={(e, value) => {
+                    if (!value) {
+                      setTypeError((prev) => {
+                        prev.error = true;
+                        return prev;
+                      });
+                    } else {
+                      setTypeError((prev) => {
+                        prev.error = false;
+                        return prev;
+                      });
+                    }
                     setType(value);
                   }}
                   id=""
@@ -174,6 +203,9 @@ const AddCheckoutField = ({ open, handleClose }) => {
                   )}
                   renderInput={(params) => (
                     <TextField
+                      required
+                      error={typeError.error}
+                      helperText={typeError.error ? typeError.message : ''}
                       {...params}
                       label="Choose Field Type"
                       inputProps={{

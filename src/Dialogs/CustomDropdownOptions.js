@@ -9,22 +9,13 @@ import {
   Grid,
   Dialog,
   DialogTitle,
-  DialogActions,
   TextField,
-  Autocomplete,
   Stack,
-  Typography,
   Button,
   IconButton,
   InputAdornment,
 } from '@mui/material';
 
-import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
-import EventRoundedIcon from '@mui/icons-material/EventRounded';
-import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
-import TextFormatRoundedIcon from '@mui/icons-material/TextFormatRounded';
-import PhotoRoundedIcon from '@mui/icons-material/PhotoRounded';
-import ArrowDropDownCircleRoundedIcon from '@mui/icons-material/ArrowDropDownCircleRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 
 const CustomDropdownOptions = ({
@@ -53,6 +44,7 @@ const CustomDropdownOptions = ({
               {options.map((el, index) => (
                 <>
                   <TextField
+                  required
                     key={el.index}
                     sx={{ mb: 2 }}
                     name={`option${index}`}

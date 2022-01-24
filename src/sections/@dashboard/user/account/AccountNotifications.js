@@ -11,14 +11,14 @@ import { FormProvider, RHFSwitch } from '../../../../components/hook-form';
 
 const ACTIVITY_OPTIONS = [
   {
-    value: 'activityComments',
+    value: 'storeOrder',
     label: 'Email and WhatsApp me when an order is placed on my store',
   },
   {
-    value: 'activityAnswers',
+    value: 'storeStock',
     label: 'Email & WhatsApp me when an item get low in stock',
   },
-  { value: 'activityFollows', label: 'Email & WhatsApp me when a cart is abondened for more than 2 days' },
+  { value: 'storeAbondonedCart', label: 'Email & WhatsApp me when a cart is abondened for more than 2 days' },
 ];
 
 const APPLICATION_OPTIONS = [
@@ -28,9 +28,9 @@ const APPLICATION_OPTIONS = [
 ];
 
 const NOTIFICATION_SETTINGS = {
-  activityComments: true,
-  activityAnswers: true,
-  activityFollows: false,
+  storeOrder: true,
+  storeStock: true,
+  storeAbondonedCart: false,
   applicationNews: true,
   applicationProduct: false,
   applicationBlog: false,
@@ -42,9 +42,9 @@ export default function AccountNotifications() {
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = {
-    activityComments: NOTIFICATION_SETTINGS.activityComments,
-    activityAnswers: NOTIFICATION_SETTINGS.activityAnswers,
-    activityFollows: NOTIFICATION_SETTINGS.activityFollows,
+    storeOrder: NOTIFICATION_SETTINGS.storeOrder,
+    storeStock: NOTIFICATION_SETTINGS.storeStock,
+    storeAbondonedCart: NOTIFICATION_SETTINGS.storeAbondonedCart,
     applicationNews: NOTIFICATION_SETTINGS.applicationNews,
     applicationProduct: NOTIFICATION_SETTINGS.applicationProduct,
     applicationBlog: NOTIFICATION_SETTINGS.applicationBlog,
@@ -59,13 +59,8 @@ export default function AccountNotifications() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar('Update success!');
-    } catch (error) {
-      console.error(error);
-    }
+  const onSubmit = async (data) => {
+   console.log(data);
   };
 
   return (

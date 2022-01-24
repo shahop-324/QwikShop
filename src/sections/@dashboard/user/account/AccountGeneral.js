@@ -1,3 +1,4 @@
+import validator from 'validator';
 import React, { useState, useCallback } from 'react';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
@@ -21,6 +22,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 // utils
 import PhoneInput from 'react-phone-number-input';
+import { useSelector } from 'react-redux';
 import { fData } from '../../../../utils/formatNumber';
 // components
 import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
@@ -35,6 +37,8 @@ import 'react-phone-number-input/style.css';
 export default function AccountGeneral() {
   const { enqueueSnackbar } = useSnackbar();
 
+  const { subname } = useSelector((state) => state.app);
+
   const [storeName, setStoreName] = useState();
   const [country, setCountry] = useState();
   const [state, setState] = useState();
@@ -48,6 +52,18 @@ export default function AccountGeneral() {
   const [emailAddress, setEmailAddress] = useState();
 
   const [storeURL, setStoreURL] = useState();
+
+  const [storeNameError, setStoreNameError] = useState({ error: false, message: 'Store Name is required' });
+  const [countryError, setCountryError] = useState({ error: false, message: 'Country is required' });
+  const [stateError, setStateError] = useState({ error: false, message: 'State is required' });
+  const [cityError, setCityError] = useState({ error: false, message: 'City is required' });
+  const [addressError, setAddressError] = useState({ error: false, message: 'Address is required' });
+  const [pincodeError, setPincodeError] = useState({ error: false, message: 'Pincode is required' });
+  const [landmarkError, setLandmarkError] = useState({ error: false, message: 'Landmark is required' });
+  const [categoryError, setCategoryError] = useState({ error: false, message: 'Category is required' });
+  const [phoneError, setPhoneError] = useState({ error: false, message: 'Phone number is required' });
+  const [emailError, setEmailError] = useState({ error: false, message: 'Please enter a valid email address' });
+  const [storeURLError, setStoreURLError] = useState({ error: false, message: 'Store URL is required' });
 
   let user;
 
@@ -81,12 +97,7 @@ export default function AccountGeneral() {
   } = methods;
 
   const onSubmit = async () => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar('Update success!');
-    } catch (error) {
-      console.error(error);
-    }
+    //  Validate each field and if everything is fine then send to api
   };
 
   const handleDrop = useCallback(
@@ -109,7 +120,7 @@ export default function AccountGeneral() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Card sx={{ py: 10, px: 3, textAlign: 'center', mb: 3, }}>
+          <Card sx={{ py: 10, px: 3, textAlign: 'center', mb: 3 }}>
             <Typography variant="h6" className="mb-3">
               Store Logo
             </Typography>
@@ -136,21 +147,48 @@ export default function AccountGeneral() {
             />
           </Card>
           <Card sx={{ py: 10, px: 3 }}>
-            <Typography className='mb-3'>
+            <Typography className="mb-3">
               qwikshop.online/<span>{storeURL}</span>
             </Typography>
             <TextField
+              required
+              error={storeURLError.error}
+              helperText={storeURLError.error ? storeURLError.message : ''}
               name="storeURL"
               label="Store URL"
               fullWidth
               value={storeURL}
               onChange={(e) => {
+                if (!e.target.value) {
+                  setStoreURLError((prev) => {
+                    prev.error = true;
+                    prev.message = 'Shop Url is required';
+                    return prev;
+                  });
+                } 
+                else if (e.target.value === "") {
+                  setStoreURLError((prev) => {
+                    prev.error = true;
+                    prev.message = 'Shop Url is required';
+                    return prev;
+                  });
+                } 
+                
+                else if (subname.includes(e.target.value)) {
+                  setStoreURLError((prev) => {
+                    prev.error = true;
+                    prev.message = 'This url is already registered for another shop';
+                    return prev;
+                  });
+                } else {
+                  setStoreURLError((prev) => {
+                    prev.error = false;
+                    return prev;
+                  });
+                }
                 setStoreURL(e.target.value);
               }}
             />
-            <Stack sx={{py: 3}} direction={"row"} alignItems={"center"} justifyContent={"end"}>
-              <Button variant="outlined">Save</Button>
-            </Stack>
           </Card>
         </Grid>
 
@@ -165,21 +203,48 @@ export default function AccountGeneral() {
               }}
             >
               <TextField
+                required
+                error={storeNameError.error}
+                helperText={storeNameError.error ? storeNameError.message : ''}
                 name="name"
                 label="Store name"
                 fullWidth
                 value={storeName}
                 onChange={(e) => {
+                  if (!e.target.value) {
+                    setStoreNameError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setStoreNameError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
+
                   setStoreName(e.target.value);
                 }}
               />
 
               <Autocomplete
+                required
                 value={country}
                 onChange={(e, value) => {
+                  if (!value) {
+                    setCountryError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setCountryError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
                   setCountry(value);
                 }}
-                id="country-select-demo"
+                id=""
                 fullWidth
                 options={countries}
                 autoHighlight
@@ -198,6 +263,8 @@ export default function AccountGeneral() {
                 )}
                 renderInput={(params) => (
                   <TextField
+                    error={countryError.error}
+                    helperText={countryError.error ? countryError.message : ''}
                     {...params}
                     label="Choose a country"
                     inputProps={{
@@ -208,47 +275,121 @@ export default function AccountGeneral() {
                 )}
               />
               <TextField
+                error={stateError.error}
+                helperText={stateError.error ? stateError.message : ''}
+                required
                 name="state"
                 label="State/Region"
                 fullWidth
                 value={state}
                 onChange={(e) => {
+                  if (!e.target.value) {
+                    setStateError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setStateError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
                   setState(e.target.value);
                 }}
               />
               <TextField
+                required
+                error={cityError.error}
+                helperText={cityError.error ? cityError.message : ''}
                 name="city"
                 label="City"
                 fullWidth
                 value={city}
                 onChange={(e) => {
+                  if (!e.target.value) {
+                    setCityError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setCityError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
                   setCity(e.target.value);
                 }}
               />
               <TextField
+                error={addressError.error}
+                helperText={addressError.error ? addressError.message : ''}
+                required
                 name="address"
                 label="Address"
                 fullWidth
                 value={address}
                 onChange={(e) => {
+                  if (!e.target.value) {
+                    setAddressError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setAddressError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
                   setAddress(e.target.value);
                 }}
               />
               <TextField
+                required
+                error={pincodeError.error}
+                helperText={pincodeError.error ? pincodeError.message : ''}
                 name="pincode"
                 label="Pincode"
                 fullWidth
                 value={pincode}
                 onChange={(e) => {
+                  if (!e.target.value || !validator.isPostalCode(e.target.value, 'IN')) {
+                    setPincodeError((prev) => {
+                      prev.error = true;
+                      if (!validator.isPostalCode(e.target.value, 'IN')) {
+                        prev.message = 'Please provide valid 6 digit pincode';
+                      }
+                      return prev;
+                    });
+                  } else {
+                    setPincodeError((prev) => {
+                      prev.error = false;
+                      prev.message = 'Pincode is required';
+                      return prev;
+                    });
+                  }
                   setPincode(e.target.value);
                 }}
               />
               <TextField
+                required
+                error={landmarkError.error}
+                helperText={landmarkError.error ? landmarkError.message : ''}
                 name="landmark"
                 label="Landmark"
                 fullWidth
                 value={landmark}
                 onChange={(e) => {
+                  if (!e.target.value) {
+                    setLandmarkError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setLandmarkError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
                   setLandmark(e.target.value);
                 }}
               />
@@ -262,8 +403,20 @@ export default function AccountGeneral() {
                 }}
               />
               <Autocomplete
+                required
                 value={category}
                 onChange={(e, value) => {
+                  if (!value) {
+                    setCategoryError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setCategoryError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
                   setCategory(value);
                 }}
                 fullWidth
@@ -277,13 +430,39 @@ export default function AccountGeneral() {
                   </Box>
                 )}
                 options={categoryOptions}
-                renderInput={(params) => <TextField {...params} label="Category" fullWidth name="category" />}
+                renderInput={(params) => (
+                  <TextField
+                    required
+                    error={categoryError.error}
+                    helperText={categoryError.error ? categoryError.message : ''}
+                    {...params}
+                    label="Category"
+                    fullWidth
+                    name="category"
+                  />
+                )}
               />
               <PhoneInput
+                required
+                error={phoneError.error}
+                helperText={phoneError.error ? phoneError.message : ''}
+                onChange={(value) => {
+                  if (!value) {
+                    setPhoneError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setPhoneError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
+                  setPhone(value);
+                }}
                 name="phoneNumber"
                 placeholder="Enter phone number"
                 value={phone}
-                onChange={setPhone}
                 inputComponent={CustomPhoneNumber}
                 defaultCountry="IN"
               />
@@ -291,21 +470,43 @@ export default function AccountGeneral() {
 
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
               <TextField
+                required
+                error={emailError.error}
+                helperText={emailError.error ? emailError.message : ''}
                 name="email"
                 label="Email address"
                 fullWidth
                 value={emailAddress}
                 onChange={(e) => {
+                  if (e.target.value !== '' && !validator.isEmail(e.target.value)) {
+                    setEmailError((prev) => {
+                      prev.error = true;
+                      return prev;
+                    });
+                  } else {
+                    setEmailError((prev) => {
+                      prev.error = false;
+                      return prev;
+                    });
+                  }
                   setEmailAddress(e.target.value);
                 }}
               />
-              <RHFTextField name="about" multiline rows={4} label="About" />
-
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save Changes
-              </LoadingButton>
             </Stack>
           </Card>
+
+          <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+            <LoadingButton
+              onClick={() => {
+                onSubmit();
+              }}
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+            >
+              Save Changes
+            </LoadingButton>
+          </Stack>
         </Grid>
       </Grid>
     </FormProvider>

@@ -15,7 +15,7 @@ import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
 
-import {fetchUserDetails, fetchStoreDetails} from '../../actions';
+import {fetchUserDetails, fetchStoreDetails, fetchSubnames} from '../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +47,7 @@ export default function DashboardLayout() {
   const dispatch = useDispatch();
 
 useEffect(() => {
+  dispatch(fetchSubnames());
   dispatch(fetchUserDetails());
   dispatch(fetchStoreDetails());
 }, []);

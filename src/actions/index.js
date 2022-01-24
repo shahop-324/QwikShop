@@ -6,6 +6,7 @@ import history from '../history';
 import { userActions } from '../reducers/userSlice';
 import { storeActions } from '../reducers/storeSlice';
 import { orderActions } from '../reducers/orderSlice';
+import { appActions } from '../reducers/appSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -473,6 +474,44 @@ export const fetchRecentOrder = () => async (dispatch, getState) => {
     dispatch(
       orderActions.FetchRecentOrders({
         recentOrders: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const fetchSubnames = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}general/getSubnames`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      appActions.FetchSubnames({
+        subname: result.data,
       })
     );
   } catch (error) {

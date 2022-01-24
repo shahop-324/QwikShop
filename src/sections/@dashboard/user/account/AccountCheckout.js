@@ -146,7 +146,7 @@ const AccountCheckout = () => {
                 <TextField disabled name="address" label="Address" fullWidth readOnly />
                 <TextField disabled name="city" label="City" fullWidth readOnly />
                 <TextField disabled name="pincode" label="Pincode" fullWidth readOnly />
-                {/* {customFieldsList.map((el) => (
+                {customFieldsList.map((el) => (
                   <Box
                     key={el.index}
                     sx={{
@@ -169,7 +169,7 @@ const AccountCheckout = () => {
                     />
                     <MoreMenuButton />
                   </Box>
-                ))} */}
+                ))}
               </Box>
               <Stack className='mt-4' direction={"row"} alignItems={"center"} justifyContent={"center"}>
                 <Button onClick={() => {handleOpenAddCheckoutField();}} variant="outlined">Add Field</Button>

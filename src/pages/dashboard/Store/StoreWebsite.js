@@ -14,23 +14,15 @@ import { capitalCase } from 'change-case';
 import { useState } from 'react';
 // @mui
 import { Container, Tab, Box, Tabs } from '@mui/material';
-// hooks
-import PeopleIcon from '@mui/icons-material/People';
-import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
-import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
-import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 
 // sections
 
 // Icons
 import FormatColorFillRoundedIcon from '@mui/icons-material/FormatColorFillRounded';
-import ListRoundedIcon from '@mui/icons-material/ListRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import ViewCarouselRoundedIcon from '@mui/icons-material/ViewCarouselRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 
 // components
-import Iconify from '../../../components/Iconify';
 import Page from '../../../components/Page';
 import useSettings from '../../../hooks/useSettings';
 import StoreAppearance from './Website/Appearance';
