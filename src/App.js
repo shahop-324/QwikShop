@@ -1,9 +1,11 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 // routes
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { useSelector, useDispatch } from 'react-redux';
-import {snackbarActions} from "./reducers/snackbarSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import { snackbarActions } from './reducers/snackbarSlice';
 import Router from './routes';
 // theme
 import ThemeProvider from './theme';
@@ -18,6 +20,7 @@ import ThemeColorPresets from './components/ThemeColorPresets';
 import ThemeLocalization from './components/ThemeLocalization';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
 
+import 'react-toastify/dist/ReactToastify.css';
 
 const vertical = 'top';
 const horizontal = 'center';
@@ -29,6 +32,11 @@ const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref}
 export default function App() {
   const dispatch = useDispatch();
   const { severity, message, open } = useSelector((state) => state.snackbar);
+  const { toggle, toastMessage } = useSelector((state) => state.notification);
+
+  useEffect(() => {
+    // toast(toastMessage);
+  }, [toggle]);
 
   return (
     <>
@@ -50,6 +58,18 @@ export default function App() {
         </ThemeColorPresets>
       </ThemeProvider>
 
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
       {message && open ? (
         <Snackbar
           anchorOrigin={{ vertical, horizontal }}
@@ -57,14 +77,13 @@ export default function App() {
           autoHideDuration={4000}
           key={vertical + horizontal}
           onClose={() => {
-            console.log("This is clicked");
+            console.log('This is clicked');
             dispatch(snackbarActions.closeSnackBar());
-
           }}
         >
           <Alert
             onClose={() => {
-              console.log("This is clicked");
+              console.log('This is clicked');
               dispatch(snackbarActions.closeSnackBar());
             }}
             severity={severity}

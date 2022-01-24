@@ -34,7 +34,7 @@ EcommerceWidgetSummary.propTypes = {
   total: PropTypes.number,
 };
 
-export default function EcommerceWidgetSummary({ title, percent, total, chartColor, chartData }) {
+export default function EcommerceWidgetSummary({ title, percent, total, chartColor, chartData, widget }) {
   const chartOptions = merge(BaseOptionChart(), {
     colors: [chartColor],
     chart: { animations: { enabled: true }, sparkline: { enabled: true } },
@@ -61,7 +61,7 @@ export default function EcommerceWidgetSummary({ title, percent, total, chartCol
           {fNumber(total)}
         </Typography>
 
-        <Stack direction="row" alignItems="center">
+        {/* <Stack direction="row" alignItems="center">
           <IconWrapperStyle
             sx={{
               ...(percent < 0 && {
@@ -80,10 +80,11 @@ export default function EcommerceWidgetSummary({ title, percent, total, chartCol
           <Typography variant="body2" component="span" noWrap sx={{ color: 'text.secondary' }}>
             &nbsp;than last week
           </Typography>
-        </Stack>
+        </Stack> */}
       </Box>
 
-      <ReactApexChart type="line" series={[{ data: chartData }]} options={chartOptions} width={120} height={80} />
+{widget}
+      {/* <ReactApexChart type="line" series={[{ data: chartData }]} options={chartOptions} width={120} height={80} /> */}
     </Card>
   );
 }

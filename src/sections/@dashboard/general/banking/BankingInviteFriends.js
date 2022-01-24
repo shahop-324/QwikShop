@@ -1,5 +1,3 @@
-
-
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Card, Stack, Typography, Button, OutlinedInput, CardContent, IconButton } from '@mui/material';
@@ -9,9 +7,8 @@ import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
 
 // components
+import { useSelector } from 'react-redux';
 import Image from '../../../../components/Image';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +26,10 @@ const ContentStyle = styled(Card)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function BankingInviteFriends() {
+  const { user } = useSelector((state) => state.user);
+
+  const {referralCode} = user;
+
   return (
     <div>
       <Image
@@ -52,24 +53,18 @@ export default function BankingInviteFriends() {
         </Stack>
 
         <Typography variant="body2" sx={{ mt: 2, mb: 3 }}>
-          You get Rs. 100 when your friend makes sales worth Rs. 10,000
+          You and your friend both gets Rs.100, whic can be used to get QwikShop Premium and marketing.
         </Typography>
 
-        <span>Invite via</span>
+        <span style={{}} className="mb-4">
+          Your invite code
+        </span>
 
-        <Stack direction="row" spacing={2}>
-          <IconButton>
-            {' '}
-            <WhatsappRoundedIcon style={{ color: '#FFFFFF' }} />{' '}
-          </IconButton>
-          <IconButton>
-            <FacebookRoundedIcon style={{ color: '#FFFFFF' }} />
-          </IconButton>
-          <IconButton>
-            <TwitterIcon style={{ color: '#FFFFFF' }} />
-          </IconButton>
-        </Stack>
-
+        <Card sx={{ px: 2, py: 2, mt: 2 }}>
+          <Typography variant="h5" color="grey">
+            {referralCode}
+          </Typography>
+        </Card>
       </ContentStyle>
     </div>
   );

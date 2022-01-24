@@ -1,13 +1,20 @@
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 
-import WhatsappRoundedIcon from '@mui/icons-material/WhatsappRounded';
-import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
-import TwitterIcon from '@mui/icons-material/Twitter';
-
 // @mui
 import { styled } from '@mui/material/styles';
 import { Typography, Card, CardContent, IconButton } from '@mui/material';
+import {
+  FacebookShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TelegramIcon,
+  TwitterIcon,
+  WhatsappIcon,
+} from 'react-share';
+
 import { SeoIllustration } from '../../../../assets';
 
 // ----------------------------------------------------------------------
@@ -31,7 +38,7 @@ AppWelcome.propTypes = {
   displayName: PropTypes.string,
 };
 
-export default function AppWelcome({ displayName }) {
+export default function AppWelcome({ displayName, link, storeName }) {
   return (
     <RootStyle>
       <CardContent
@@ -47,21 +54,32 @@ export default function AppWelcome({ displayName }) {
         </Typography>
 
         <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          Here's your store link, <a href="#">qwikshop.online/vastralaya</a>
+          Here's your store link, <br /> <a href={`//${link}`}>{link}</a>
         </Typography>
 
         <span>Share via</span>
 
         <Stack direction="row" spacing={2}>
           <IconButton>
-            {' '}
-            <WhatsappRoundedIcon style={{ color: '#25D366' }} />{' '}
+            <WhatsappShareButton url={link} title={storeName} separator=":">
+              {' '}
+              <WhatsappIcon round size={35} />{' '}
+            </WhatsappShareButton>
           </IconButton>
           <IconButton>
-            <FacebookRoundedIcon style={{ color: '#4267B2' }} />
+            <FacebookShareButton url={link} quote={storeName}>
+              <FacebookIcon round size={35} />
+            </FacebookShareButton>
           </IconButton>
           <IconButton>
-            <TwitterIcon style={{ color: '#1DA1F2' }} />
+            <TelegramShareButton url={link} title={storeName}>
+              <TelegramIcon round size={35} />
+            </TelegramShareButton>
+          </IconButton>
+          <IconButton>
+            <TwitterShareButton url={link} title={storeName}>
+              <TwitterIcon round size={35} />
+            </TwitterShareButton>
           </IconButton>
         </Stack>
 

@@ -1,7 +1,11 @@
+/* eslint-disable prefer-destructuring */
 import { authActions } from '../reducers/authSlice';
 import { snackbarActions } from '../reducers/snackbarSlice';
 import { notificationActions } from '../reducers/notificationSlice';
 import history from '../history';
+import { userActions } from '../reducers/userSlice';
+import { storeActions } from '../reducers/storeSlice';
+import { orderActions } from '../reducers/orderSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -30,6 +34,8 @@ export const showNotification = (message) => async (dispatch, getState) => {
 export const register = (formValues, email, location) => async (dispatch, getState) => {
   // Write logic for registering a user and handle any error case
 
+  let message;
+
   dispatch(
     authActions.SetIsSubmittingRegister({
       isSubmitting: true,
@@ -37,7 +43,7 @@ export const register = (formValues, email, location) => async (dispatch, getSta
   );
 
   try {
-    let res = await fetch(
+    const res = await fetch(
       `${BaseURL}auth/register`,
 
       {
@@ -53,6 +59,10 @@ export const register = (formValues, email, location) => async (dispatch, getSta
       }
     );
 
+    const result = await res.json();
+
+    message = result.message;
+
     if (!res.ok) {
       if (!res.message) {
         throw new Error('Failed to register user. Please try again.');
@@ -61,13 +71,8 @@ export const register = (formValues, email, location) => async (dispatch, getSta
       }
     }
 
-    res = await res.json();
-
-    if (res.alreadyUsedPhone) {
-      dispatch(showSnackbar('error', 'This phone number is already registered. Use another number.'));
-    } else {
-      window.location.href = `/auth/verify/?email=${email}&ref=${location}`;
-    }
+    window.location.href = `/auth/verify/?email=${email}&ref=${location}`;
+    dispatch(showSnackbar('success', message));
 
     dispatch(
       authActions.SetIsSubmittingRegister({
@@ -76,7 +81,7 @@ export const register = (formValues, email, location) => async (dispatch, getSta
     );
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar('error', 'Failed to register user. Please try again.'));
+    dispatch(showSnackbar('error', message));
 
     dispatch(
       authActions.SetIsSubmittingRegister({
@@ -92,8 +97,11 @@ export const verifyEmail = (email, otp) => async (dispatch, getState) => {
       isSubmitting: true,
     })
   );
+
+  let message;
+
   try {
-    let res = await fetch(`${BaseURL}auth/verify-email`, {
+    const res = await fetch(`${BaseURL}auth/verify-email`, {
       method: 'POST',
 
       body: JSON.stringify({
@@ -106,6 +114,10 @@ export const verifyEmail = (email, otp) => async (dispatch, getState) => {
       },
     });
 
+    const result = await res.json();
+
+    message = result.message;
+
     if (!res.ok) {
       if (!res.message) {
         throw new Error('Failed to register user. Please try again.');
@@ -114,21 +126,36 @@ export const verifyEmail = (email, otp) => async (dispatch, getState) => {
       }
     }
 
-    res = await res.json();
-
-    dispatch(showSnackbar('success', res.message));
+    dispatch(showSnackbar('success', message));
 
     // Store token in auth state => redux store
 
+    // Store user and shop data also
+
+    console.log(result);
+
     dispatch(
       authActions.SignIn({
-        token: res.token,
+        token: result.token,
       })
     );
 
-    // Send user to dashboard
+    dispatch(
+      userActions.FetchUser({
+        user: result.user,
+      })
+    );
 
-    window.location.href = `/dashboard/home`;
+    dispatch(
+      storeActions.FetchStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    // Send user to dashboard
+    // window.location.href = `/dashboard/home`;
 
     dispatch(
       authActions.SetIsSubmittingVerify({
@@ -138,7 +165,7 @@ export const verifyEmail = (email, otp) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
 
-    dispatch(showSnackbar('error', 'Failed to verify email. Please try again.'));
+    dispatch(showSnackbar('error', message));
 
     dispatch(
       authActions.SetIsSubmittingVerify({
@@ -154,6 +181,8 @@ export const login = (email, password) => async (dispatch, getState) => {
       isSubmitting: true,
     })
   );
+
+  let message;
 
   try {
     let res = await fetch(`${BaseURL}auth/login`, {
@@ -179,6 +208,8 @@ export const login = (email, password) => async (dispatch, getState) => {
 
     res = await res.json();
 
+    message = res.message;
+
     // Store token in auth state => redux store
 
     dispatch(
@@ -189,7 +220,9 @@ export const login = (email, password) => async (dispatch, getState) => {
 
     // Send user to dashboard
 
-    window.location.href = `/dashboard/home`;
+    // window.location.href = `/dashboard/home`;
+
+    dispatch(showSnackbar('success', message));
 
     dispatch(
       authActions.SetIsSubmittingLogin({
@@ -199,7 +232,7 @@ export const login = (email, password) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
 
-    dispatch(showSnackbar('error', 'Failed to login. Please try again.'));
+    dispatch(showSnackbar('error', message));
 
     dispatch(
       authActions.SetIsSubmittingLogin({
@@ -209,12 +242,15 @@ export const login = (email, password) => async (dispatch, getState) => {
   }
 };
 
-export const logout = () => async(dispatch, getState) => {
+export const logout = () => async (dispatch, getState) => {
   dispatch(authActions.SignOut());
+  // dispatch(showSnackbar('success', 'Logged out successfully!'));
   window.location.href = `/auth/login`;
-}
+};
 
 export const resendEmailOTP = (email) => async (dispatch, getState) => {
+  let message;
+
   try {
     let res = await fetch(`${BaseURL}auth/resend-email-otp`, {
       method: 'POST',
@@ -238,18 +274,209 @@ export const resendEmailOTP = (email) => async (dispatch, getState) => {
 
     res = await res.json();
 
-    dispatch(showSnackbar('success', 'OTP sent to email successfully!'));
+    message = res.message;
+
+    dispatch(showSnackbar('success', message));
   } catch (error) {
     console.log(error);
 
-    dispatch(showSnackbar('error', 'Failed to send OTP. Please try again.'));
+    dispatch(showSnackbar('error', message));
   }
 };
 
-export const stopLoginBtnLoader = () => async(dispatch, getState) => {
+export const stopLoginBtnLoader = () => async (dispatch, getState) => {
   dispatch(
     authActions.SetIsSubmittingLogin({
       isSubmitting: false,
     })
   );
-}
+};
+
+export const setupStore = (formValues, onNext, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  dispatch(
+    storeActions.SetIsSubmittingSteup({
+      isSubmitting: true,
+    })
+  );
+
+  try {
+    const res = await fetch(`${BaseURL}store/setup`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error('Failed to setup store, Please try again!');
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    setTimeout(() => {
+      dispatch(
+        storeActions.UpdateStore({
+          store: result.data,
+        })
+      );
+    }, 6000);
+
+    dispatch(showSnackbar('success', message));
+
+    onNext();
+
+    setTimeout(() => {
+      handleClose();
+    }, 6000);
+
+    dispatch(
+      storeActions.SetIsSubmittingSteup({
+        isSubmitting: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      storeActions.SetIsSubmittingSteup({
+        isSubmitting: false,
+      })
+    );
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const fetchUserDetails = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    // Fetch current user details
+
+    const res = await fetch(`${BaseURL}user/getDetails`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      userActions.FetchUser({
+        user: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const fetchStoreDetails = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    // Fetch current store details
+
+    const res = await fetch(`${BaseURL}store/getDetails`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const fetchRecentOrder = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    // fetch recent orders
+
+    const res = await fetch(`${BaseURL}order/recent`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      orderActions.FetchRecentOrders({
+        recentOrders: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};

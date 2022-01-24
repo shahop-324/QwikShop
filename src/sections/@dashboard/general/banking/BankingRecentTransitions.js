@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 // @mui
@@ -20,8 +20,20 @@ import {
   Typography,
   IconButton,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // utils
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  FacebookShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TelegramIcon,
+  TwitterIcon,
+  WhatsappIcon,
+} from 'react-share';
 import { fCurrency } from '../../../../utils/formatNumber';
 // _mock
 import { _bankingRecentTransitions } from '../../../../_mock';
@@ -31,12 +43,22 @@ import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import MenuPopover from '../../../../components/MenuPopover';
 
+import NoOrder from "../../../../assets/shopping-basket.png";
+import {fetchRecentOrder} from "../../../../actions";
+
 // ----------------------------------------------------------------------
 
-export default function BankingRecentTransitions() {
+export default function BankingRecentTransitions({link, storeName}) {
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   const isLight = theme.palette.mode === 'light';
+
+  const { recentOrders } = useSelector((state) => state.order);
+
+  useEffect(() => {
+dispatch(fetchRecentOrder());
+  }, []);
 
   return (
     <>
@@ -55,7 +77,7 @@ export default function BankingRecentTransitions() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {_bankingRecentTransitions.map((row) => (
+                {recentOrders.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -129,6 +151,36 @@ export default function BankingRecentTransitions() {
               </TableBody>
             </Table>
           </TableContainer>
+          {!(typeof recentOrders !== 'undefined' && recentOrders.length > 0) &&  <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+            <Card sx={{p:3, my: 3}}>
+              <img style={{height: "150px", width: "150px"}} src={NoOrder} alt="no active order"/>
+            </Card>
+            <Typography sx={{mb: 3}} variant="subtitle2">Please share your store to get orders</Typography>
+            <Stack direction="row" spacing={2} sx={{mb: 3}}>
+          <IconButton>
+            <WhatsappShareButton url={link} title={storeName} separator=":">
+              {' '}
+              <WhatsappIcon round size={35} />{' '}
+            </WhatsappShareButton>
+          </IconButton>
+          <IconButton>
+            <FacebookShareButton url={link} quote={storeName}>
+              <FacebookIcon round size={35} />
+            </FacebookShareButton>
+          </IconButton>
+          <IconButton>
+            <TelegramShareButton url={link} title={storeName}>
+              <TelegramIcon round size={35} />
+            </TelegramShareButton>
+          </IconButton>
+          <IconButton>
+            <TwitterShareButton url={link} title={storeName}>
+              <TwitterIcon round size={35} />
+            </TwitterShareButton>
+          </IconButton>
+        </Stack>
+          </Stack>}
+          
         </Scrollbar>
 
         <Divider />

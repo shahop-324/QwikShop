@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 // hooks
+import { useDispatch } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 import useResponsive from '../../hooks/useResponsive';
 import useCollapseDrawer from '../../hooks/useCollapseDrawer';
@@ -13,6 +14,8 @@ import { HEADER, NAVBAR } from '../../config';
 import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
+
+import {fetchUserDetails, fetchStoreDetails} from '../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +43,14 @@ const MainStyle = styled('main', {
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
+
+  const dispatch = useDispatch();
+
+useEffect(() => {
+  dispatch(fetchUserDetails());
+  dispatch(fetchStoreDetails());
+}, []);
+
   const { collapseClick, isCollapse } = useCollapseDrawer();
 
   const { themeLayout } = useSettings();

@@ -5,13 +5,13 @@ const notificationSlice = createSlice({
 
   initialState: {
     toggle: true, // true || false
-    message: null, // Message that needs to be shown to users
+    toastMessage: null, // Message that needs to be shown to users
   },
 
   reducers: {
     setNotification(state, action) {
       state.toggle = !state.toggle;
-      state.message = action.payload.message;
+      state.toastMessage = action.payload.message;
     },
   },
 });

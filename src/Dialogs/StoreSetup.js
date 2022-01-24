@@ -1,11 +1,19 @@
+/* eslint-disable import/order */
+/* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
+import validator from 'validator';
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import useWindowSize from 'react-use/lib/useWindowSize';
+import MUIStyled from 'styled-components';
 import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import { ToastContainer, toast } from 'react-toastify';
+import { setupStore, showNotification } from '../actions';
+// utils
 // @mui
 import {
   Box,
@@ -16,18 +24,168 @@ import {
   DialogActions,
   TextField,
   Autocomplete,
+  Button,
+  Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import PhoneInput from 'react-phone-number-input';
-import { FormProvider } from '../components/hook-form';
-import CustomPhoneNumber from '../forms/PhoneNumber';
 
 // eslint-disable-next-line react/prop-types
 
 // Phone Input
 import 'react-phone-number-input/style.css';
 
-const StoreSetup = ({ open, handleClose, handleOpenStoreImage }) => {
+import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Check from '@mui/icons-material/Check';
+import SettingsIcon from '@mui/icons-material/Settings';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import VideoLabelIcon from '@mui/icons-material/VideoLabel';
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import StoreMallDirectoryRoundedIcon from '@mui/icons-material/StoreMallDirectoryRounded';
+import Confetti from 'react-confetti';
+import { UploadAvatar } from '../components/upload';
+import { fData } from '../utils/formatNumber';
+import CustomPhoneNumber from '../forms/PhoneNumber';
+import { FormProvider } from '../components/hook-form';
+
+const Container = MUIStyled.div`
+  height: 500px;
+`;
+
+const QontoConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 10,
+    left: 'calc(-50% + 16px)',
+    right: 'calc(50% + 16px)',
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: '#784af4',
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: '#784af4',
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    borderColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+    borderTopWidth: 3,
+    borderRadius: 1,
+  },
+}));
+
+const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
+  color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
+  display: 'flex',
+  height: 22,
+  alignItems: 'center',
+  ...(ownerState.active && {
+    color: '#784af4',
+  }),
+  '& .QontoStepIcon-completedIcon': {
+    color: '#784af4',
+    zIndex: 1,
+    fontSize: 18,
+  },
+  '& .QontoStepIcon-circle': {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    backgroundColor: 'currentColor',
+  },
+}));
+
+function QontoStepIcon(props) {
+  const { active, completed, className } = props;
+
+  return (
+    <QontoStepIconRoot ownerState={{ active }} className={className}>
+      {completed ? <Check className="QontoStepIcon-completedIcon" /> : <div className="QontoStepIcon-circle" />}
+    </QontoStepIconRoot>
+  );
+}
+
+QontoStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+};
+
+const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
+  zIndex: 1,
+  color: '#fff',
+  width: 50,
+  height: 50,
+  display: 'flex',
+  borderRadius: '50%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  ...(ownerState.active && {
+    backgroundImage: 'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+  }),
+  ...(ownerState.completed && {
+    backgroundImage: 'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+  }),
+}));
+
+function ColorlibStepIcon(props) {
+  const { active, completed, className } = props;
+
+  const icons = {
+    1: <SettingsIcon />,
+    2: <GroupAddIcon />,
+    3: <VideoLabelIcon />,
+  };
+
+  return (
+    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+      {icons[String(props.icon)]}
+    </ColorlibStepIconRoot>
+  );
+}
+
+ColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
+  icon: PropTypes.node,
+};
+
+const steps = ['Basic info', 'Add logo', 'Store created'];
+
+const StoreSetup = ({ open, handleClose }) => {
+  const dispatch = useDispatch();
+
+  const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
+
+  const [activeStep, setActiveStep] = useState(0);
+
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email(),
@@ -44,7 +202,7 @@ const StoreSetup = ({ open, handleClose, handleOpenStoreImage }) => {
     pincode: Yup.string().required('Pincode is required'),
   });
 
-  const [storeName, setStoreName] = useState();
+  const [storeName, setStoreName] = useState(store?.name);
   const [country, setCountry] = useState();
   const [state, setState] = useState();
   const [city, setCity] = useState();
@@ -55,13 +213,99 @@ const StoreSetup = ({ open, handleClose, handleOpenStoreImage }) => {
   const [category, setCategory] = useState();
   const [phone, setPhone] = useState();
 
+  const [storeNameError, setStoreNameError] = useState({ error: false, message: 'Store Name is required' });
+  const [countryError, setCountryError] = useState({ error: false, message: 'Country is required' });
+  const [stateError, setStateError] = useState({ error: false, message: 'State is required' });
+  const [cityError, setCityError] = useState({ error: false, message: 'City is required' });
+  const [addressError, setAddressError] = useState({ error: false, message: 'Address is required' });
+  const [pincodeError, setPincodeError] = useState({ error: false, message: 'Pincode is required' });
+  const [landmarkError, setLandmarkError] = useState({ error: false, message: 'Landmark is required' });
+  const [categoryError, setCategoryError] = useState({ error: false, message: 'Category is required' });
+  const [phoneError, setPhoneError] = useState({ error: false, message: 'Phone number is required' });
+
+  const [image, setImage] = useState();
+  const [fileToPreview, setFileToPreview] = useState();
+
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
   });
 
   const { handleSubmit } = methods;
 
-  const onSubmit = async () => {
+  const { width, height } = useWindowSize();
+
+  const onNext = () => {
+    if (activeStep <= 1) {
+      setActiveStep((prev) => prev + 1);
+    }
+  };
+
+  const onPrevious = () => {
+    if (activeStep >= 1) {
+      setActiveStep((prev) => prev - 1);
+    }
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    // validate each field
+
+    if (!storeName) {
+      setStoreNameError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+    if (!country) {
+      setCountryError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+    if (!state) {
+      setStateError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+    if (!city) {
+      setCityError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+    if (!address) {
+      setAddressError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+    if (!pincode) {
+      setPincodeError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+    if (!landmark) {
+      setLandmarkError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+    if (!category) {
+      setCategoryError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+    if (!phone) {
+      setPhoneError((prev) => {
+        prev.error = true;
+        return prev;
+      });
+    }
+
+    // e.preventDefault();
     const formValues = {
       storeName,
       country,
@@ -75,168 +319,456 @@ const StoreSetup = ({ open, handleClose, handleOpenStoreImage }) => {
       phone,
     };
 
+    if (!storeName) {
+      // toast("Store name is required")
+      dispatch(showNotification('Store name is required'));
+    }
+    if (!country) {
+      // toast("Country is required")
+      dispatch(showNotification('Country is required'));
+    }
+    if (!state) {
+      // toast("State is required")
+      dispatch(showNotification('state is required'));
+    }
+    if (!city) {
+      // toast("State is required")
+      dispatch(showNotification('City is required'));
+    }
+    if (!landmark) {
+      // toast("State is required")
+      dispatch(showNotification('Landmark is required'));
+    }
+    if (!address) {
+      // toast("State is required")
+      dispatch(showNotification('Address is required'));
+    }
+    if (!pincode) {
+      // toast("State is required")
+      dispatch(showNotification('Pincode is required'));
+    }
+    if (!category) {
+      // toast("Category is required")
+      dispatch(showNotification('Category is required'));
+    }
+    if (!phone) {
+      // toast("Phone is required")
+      dispatch(showNotification('Phone is required'));
+    }
+
+    if (storeName && country && state && city && address && pincode && landmark && category && phone) {
+      console.log(formValues);
+      onNext();
+    }
+  };
+
+  const onSubmitImage = async () => {
+    const formValues = {
+      image,
+    };
+
+    dispatch(
+      setupStore(
+        { image, storeName, country, state, city, address, pincode, landmark, category, phone, gstin },
+        onNext,
+        handleClose
+      )
+    );
     console.log(formValues);
+  };
+
+  const handleDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    console.log(file);
+    setImage(file);
+    setFileToPreview(URL.createObjectURL(file));
   };
 
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
-        <DialogTitle>Setup store</DialogTitle>
+        <Stepper className="mt-3" alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
 
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid className="px-4 pt-3" container spacing={3}>
-            <Grid item xs={12} md={12}>
-              <Card sx={{ p: 3 }}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    columnGap: 2,
-                    rowGap: 3,
-                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                  }}
-                >
-                  <TextField
-                    name="name"
-                    label="Store name"
-                    fullWidth
-                    value={storeName}
-                    onChange={(e) => {
-                      setStoreName(e.target.value);
-                    }}
-                  />
+        {(() => {
+          switch (activeStep * 1) {
+            case 0:
+              return (
+                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                  <Grid className="px-4 pt-3" container spacing={3}>
+                    <Grid item xs={12} md={12}>
+                      <Card sx={{ p: 3 }}>
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            columnGap: 2,
+                            rowGap: 3,
+                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                          }}
+                        >
+                          <TextField
+                            required
+                            error={storeNameError.error}
+                            helperText={storeNameError.error ? storeNameError.message : ''}
+                            name="name"
+                            label="Store name"
+                            fullWidth
+                            value={storeName}
+                            onChange={(e) => {
+                              if (!e.target.value) {
+                                setStoreNameError((prev) => {
+                                  prev.error = true;
+                                  return prev;
+                                });
+                              } else {
+                                setStoreNameError((prev) => {
+                                  prev.error = false;
+                                  return prev;
+                                });
+                              }
 
-                  <Autocomplete
-                    value={country}
-                    onChange={(e, value) => {
-                      setCountry(value);
-                    }}
-                    id="country-select-demo"
-                    fullWidth
-                    options={countries}
-                    autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderOption={(props, option) => (
-                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        <img
-                          loading="lazy"
-                          width="20"
-                          src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                          srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                          alt=""
-                        />
-                        {option.label} ({option.code}) +{option.phone}
-                      </Box>
-                    )}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Choose a country"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: '', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
-                  />
-                  <TextField
-                    name="state"
-                    label="State/Region"
-                    fullWidth
-                    value={state}
-                    onChange={(e) => {
-                      setState(e.target.value);
-                    }}
-                  />
-                  <TextField
-                    name="city"
-                    label="City"
-                    fullWidth
-                    value={city}
-                    onChange={(e) => {
-                      setCity(e.target.value);
-                    }}
-                  />
-                  <TextField
-                    name="address"
-                    label="Address"
-                    fullWidth
-                    value={address}
-                    onChange={(e) => {
-                      setAddress(e.target.value);
-                    }}
-                  />
-                  <TextField
-                    name="pincode"
-                    label="Pincode"
-                    fullWidth
-                    value={pincode}
-                    onChange={(e) => {
-                      setPincode(e.target.value);
-                    }}
-                  />
-                  <TextField
-                    name="landmark"
-                    label="Landmark"
-                    fullWidth
-                    value={landmark}
-                    onChange={(e) => {
-                      setLandmark(e.target.value);
-                    }}
-                  />
-                  <TextField
-                    name="GSTIN"
-                    label="GSTIN"
-                    fullWidth
-                    value={gstin}
-                    onChange={(e) => {
-                      setGstin(e.target.value);
-                    }}
-                  />
-                  <Autocomplete
-                    value={category}
-                    onChange={(e, value) => {
-                      setCategory(value);
-                    }}
-                    fullWidth
-                    disablePortal
-                    autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderOption={(props, option) => (
-                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                        {option.label}
-                      </Box>
-                    )}
-                    options={categoryOptions}
-                    renderInput={(params) => <TextField {...params} label="Category" fullWidth name="category" />}
-                  />
-                  <PhoneInput
-                    name="phoneNumber"
-                    placeholder="Enter phone number"
-                    value={phone}
-                    onChange={setPhone}
-                    inputComponent={CustomPhoneNumber}
-                    defaultCountry="IN"
-                  />
-                </Box>
-              </Card>
-            </Grid>
-          </Grid>
-          <DialogActions>
-            <LoadingButton
-              onClick={() => {
-                onSubmit();
-                handleClose();
-                handleOpenStoreImage();
-              }}
-              type="submit"
-              variant="contained"
-              loading={false}
-            >
-              Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-            </LoadingButton>
-          </DialogActions>
-        </FormProvider>
+                              setStoreName(e.target.value);
+                            }}
+                          />
+
+                          <Autocomplete
+                            required
+                            value={country}
+                            onChange={(e, value) => {
+                              if (!value) {
+                                setCountryError((prev) => {
+                                  prev.error = true;
+                                  return prev;
+                                });
+                              } else {
+                                setCountryError((prev) => {
+                                  prev.error = false;
+                                  return prev;
+                                });
+                              }
+                              setCountry(value);
+                            }}
+                            id="country-select-demo"
+                            fullWidth
+                            options={countries}
+                            autoHighlight
+                            getOptionLabel={(option) => option.label}
+                            renderOption={(props, option) => (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <img
+                                  loading="lazy"
+                                  width="20"
+                                  src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                  srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                  alt=""
+                                />
+                                {option.label} ({option.code}) +{option.phone}
+                              </Box>
+                            )}
+                            renderInput={(params) => (
+                              <TextField
+                                error={countryError.error}
+                                helperText={countryError.error ? countryError.message : ''}
+                                {...params}
+                                label="Choose a country"
+                                inputProps={{
+                                  ...params.inputProps,
+                                  autoComplete: '', // disable autocomplete and autofill
+                                }}
+                              />
+                            )}
+                          />
+                          <TextField
+                            error={stateError.error}
+                            helperText={stateError.error ? stateError.message : ''}
+                            required
+                            name="state"
+                            label="State/Region"
+                            fullWidth
+                            value={state}
+                            onChange={(e) => {
+                              if (!e.target.value) {
+                                setStateError((prev) => {
+                                  prev.error = true;
+                                  return prev;
+                                });
+                              } else {
+                                setStateError((prev) => {
+                                  prev.error = false;
+                                  return prev;
+                                });
+                              }
+                              setState(e.target.value);
+                            }}
+                          />
+                          <TextField
+                            required
+                            error={cityError.error}
+                            helperText={cityError.error ? cityError.message : ''}
+                            name="city"
+                            label="City"
+                            fullWidth
+                            value={city}
+                            onChange={(e) => {
+                              if (!e.target.value) {
+                                setCityError((prev) => {
+                                  prev.error = true;
+                                  return prev;
+                                });
+                              } else {
+                                setCityError((prev) => {
+                                  prev.error = false;
+                                  return prev;
+                                });
+                              }
+                              setCity(e.target.value);
+                            }}
+                          />
+                          <TextField
+                            error={addressError.error}
+                            helperText={addressError.error ? addressError.message : ''}
+                            required
+                            name="address"
+                            label="Address"
+                            fullWidth
+                            value={address}
+                            onChange={(e) => {
+                              if (!e.target.value) {
+                                setAddressError((prev) => {
+                                  prev.error = true;
+                                  return prev;
+                                });
+                              } else {
+                                setAddressError((prev) => {
+                                  prev.error = false;
+                                  return prev;
+                                });
+                              }
+                              setAddress(e.target.value);
+                            }}
+                          />
+                          <TextField
+                            required
+                            error={pincodeError.error}
+                            helperText={pincodeError.error ? pincodeError.message : ''}
+                            name="pincode"
+                            label="Pincode"
+                            fullWidth
+                            value={pincode}
+                            onChange={(e) => {
+                              if (!e.target.value || !validator.isPostalCode(e.target.value, 'IN')) {
+                                setPincodeError((prev) => {
+                                  prev.error = true;
+                                  if (!validator.isPostalCode(e.target.value, 'IN')) {
+                                    prev.message = 'Please provide valid 6 digit pincode';
+                                  }
+                                  return prev;
+                                });
+                              } else {
+                                setPincodeError((prev) => {
+                                  prev.error = false;
+                                  prev.message = 'Pincode is required';
+                                  return prev;
+                                });
+                              }
+                              setPincode(e.target.value);
+                            }}
+                          />
+                          <TextField
+                            required
+                            error={landmarkError.error}
+                            helperText={landmarkError.error ? landmarkError.message : ''}
+                            name="landmark"
+                            label="Landmark"
+                            fullWidth
+                            value={landmark}
+                            onChange={(e) => {
+                              if (!e.target.value) {
+                                setLandmarkError((prev) => {
+                                  prev.error = true;
+                                  return prev;
+                                });
+                              } else {
+                                setLandmarkError((prev) => {
+                                  prev.error = false;
+                                  return prev;
+                                });
+                              }
+                              setLandmark(e.target.value);
+                            }}
+                          />
+                          <TextField
+                            name="GSTIN"
+                            label="GSTIN"
+                            fullWidth
+                            value={gstin}
+                            onChange={(e) => {
+                              setGstin(e.target.value);
+                            }}
+                          />
+                          <Autocomplete
+                            required
+                            value={category}
+                            onChange={(e, value) => {
+                              if (!value) {
+                                setCategoryError((prev) => {
+                                  prev.error = true;
+                                  return prev;
+                                });
+                              } else {
+                                setCategoryError((prev) => {
+                                  prev.error = false;
+                                  return prev;
+                                });
+                              }
+                              setCategory(value);
+                            }}
+                            fullWidth
+                            disablePortal
+                            autoHighlight
+                            getOptionLabel={(option) => option.label}
+                            renderOption={(props, option) => (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <img
+                                  loading="lazy"
+                                  width="50"
+                                  src={option.image}
+                                  srcSet={`${option.image} 2x`}
+                                  alt=""
+                                />
+                                {option.label}
+                              </Box>
+                            )}
+                            options={categoryOptions}
+                            renderInput={(params) => (
+                              <TextField
+                                required
+                                error={categoryError.error}
+                                helperText={categoryError.error ? categoryError.message : ''}
+                                {...params}
+                                label="Category"
+                                fullWidth
+                                name="category"
+                              />
+                            )}
+                          />
+                          <PhoneInput
+                            required
+                            error={phoneError.error}
+                            helperText={phoneError.error ? phoneError.message : ''}
+                            name="phoneNumber"
+                            placeholder="Enter phone number"
+                            value={phone}
+                            onChange={(value) => {
+                              if (!value) {
+                                setPhoneError((prev) => {
+                                  prev.error = true;
+                                  return prev;
+                                });
+                              } else {
+                                setPhoneError((prev) => {
+                                  prev.error = false;
+                                  return prev;
+                                });
+                              }
+                              setPhone(value);
+                            }}
+                            inputComponent={CustomPhoneNumber}
+                            defaultCountry="IN"
+                          />
+                        </Box>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                  <DialogActions>
+                    <LoadingButton
+                      onClick={(e) => {
+                        onSubmit(e);
+                      }}
+                      type="submit"
+                      variant="contained"
+                      loading={false}
+                    >
+                      Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                    </LoadingButton>
+                  </DialogActions>
+                </FormProvider>
+              );
+
+            case 1:
+              return (
+                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                  <Grid className="px-4 pt-3" container spacing={3}>
+                    <Grid item xs={12} md={12}>
+                      <Card sx={{ py: 10, px: 3 }}>
+                        <Typography className="mb-4 text-center" variant="h6">
+                          Image
+                        </Typography>
+                        <Box sx={{ mb: 5 }}>
+                          <UploadAvatar
+                            name="avatarUrl"
+                            accept="image/*"
+                            maxSize={3145728}
+                            onDrop={handleDrop}
+                            file={fileToPreview}
+                            helperText={
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  mt: 2,
+                                  mx: 'auto',
+                                  display: 'block',
+                                  textAlign: 'center',
+                                  color: 'text.secondary',
+                                }}
+                              >
+                                Allowed *.jpeg, *.jpg, *.png, *.gif
+                                <br /> max size of {fData(3145728)}
+                              </Typography>
+                            }
+                          />
+                        </Box>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                  <DialogActions>
+                    <LoadingButton
+                      onClick={() => {
+                        onSubmitImage();
+                      }}
+                      type="submit"
+                      variant="contained"
+                      loading={isSubmittingStoreSetup}
+                    >
+                      Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                    </LoadingButton>
+                  </DialogActions>
+                </FormProvider>
+              );
+
+            case 2:
+              return (
+                <>
+                  <Confetti width={width} height={height} />
+                  <DialogTitle className="text-center">Store Created</DialogTitle>
+                  <Container className="d-flex flex-column align-items-center justify-content-center">
+                    <StoreMallDirectoryRoundedIcon className="mb-3" style={{ fontSize: '200', color: 'green' }} />
+                    <Typography variant="p2">
+                      Now, you can easily run your business online with 0% commision.
+                    </Typography>
+                  </Container>
+                </>
+              );
+
+            default:
+              break;
+          }
+        })()}
       </Dialog>
     </>
   );
