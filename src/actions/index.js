@@ -1,4 +1,6 @@
 /* eslint-disable prefer-destructuring */
+import AWS from 'aws-sdk';
+import { v4 as uuidv4 } from 'uuid';
 import { authActions } from '../reducers/authSlice';
 import { snackbarActions } from '../reducers/snackbarSlice';
 import { notificationActions } from '../reducers/notificationSlice';
@@ -8,8 +10,16 @@ import { storeActions } from '../reducers/storeSlice';
 import { orderActions } from '../reducers/orderSlice';
 import { appActions } from '../reducers/appSlice';
 
+
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
+
+const s3 = new AWS.S3({
+  signatureVersion: "v4",
+  region: "us-west-1",
+  accessKeyId: "AKIA3EQQNGREDXST6CHF",
+  secretAccessKey: "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",
+});
 
 export const showSnackbar = (severity, message) => async (dispatch, getState) => {
   dispatch(
