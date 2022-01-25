@@ -17,7 +17,7 @@ ProductMoreMenu.propTypes = {
   productName: PropTypes.string,
 };
 
-export default function ProductMoreMenu({ onDelete, productName }) {
+export default function ProductMoreMenu({ onDelete, productName, onEdit }) {
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -58,7 +58,7 @@ export default function ProductMoreMenu({ onDelete, productName }) {
           Delete
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.catalouge.root}/product/${paramCase(productName)}/edit`}>
+        <MenuItem onClick={onEdit} >
           <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
           Edit
         </MenuItem>

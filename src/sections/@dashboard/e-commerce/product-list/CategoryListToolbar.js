@@ -1,8 +1,23 @@
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, Button } from '@mui/material';
-
+import {
+  Toolbar,
+  Tooltip,
+  IconButton,
+  Typography,
+  Button,
+  ButtonGroup,
+  Paper,
+  Popper,
+  MenuItem,
+  MenuList,
+  Grow,
+  ClickAwayListener,
+  Portal,
+} from '@mui/material';
+import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 // ----------------------------------------------------------------------
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
@@ -69,14 +84,57 @@ CategoryListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
+const options = ['Add Category', 'Bulk Upload category', 'Export to excel'];
+
 export default function CategoryListToolbar({
   numSelected,
   filterName,
   onFilterName,
   onDeleteProducts,
-  openAddProduct,
+  openBulkImport,
   openAddCategory,
 }) {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleClick = () => {
+    console.info(`You clicked ${options[selectedIndex]}`);
+    switch (selectedIndex * 1) {
+      case 0:
+        openAddCategory();
+        break;
+
+      case 1:
+        openBulkImport();
+        break;
+
+      case 2:
+        // Run logic to export all categories to excel
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setOpen(false);
+  };
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
@@ -110,21 +168,47 @@ export default function CategoryListToolbar({
         </Tooltip>
       ) : (
         <div className="d-flex flex-row align-items-center justify-content-end">
-          <Button
-            onClick={() => {
-              openAddCategory();
-            }}
-            className="me-3"
-            variant="contained"
-          >
-            Add category
-          </Button>
-
-          <Tooltip title="Filter list">
-            <IconButton>
-              <Iconify icon={'ic:round-filter-list'} />
-            </IconButton>
-          </Tooltip>
+          <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+            <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+            <Button
+              size="small"
+              aria-controls={open ? 'split-button-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-label="select merge strategy"
+              aria-haspopup="menu"
+              onClick={handleToggle}
+            >
+              <ArrowDropDownRoundedIcon />
+            </Button>
+          </ButtonGroup>
+          <Portal>
+            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList id="split-button-menu">
+                        {options.map((option, index) => (
+                          <MenuItem
+                            key={option}
+                            selected={index === selectedIndex}
+                            onClick={(event) => handleMenuItemClick(event, index)}
+                          >
+                            <Typography variant="subtitle2">{option}</Typography>
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </Portal>
         </div>
       )}
     </RootStyle>

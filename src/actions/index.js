@@ -9,16 +9,16 @@ import { userActions } from '../reducers/userSlice';
 import { storeActions } from '../reducers/storeSlice';
 import { orderActions } from '../reducers/orderSlice';
 import { appActions } from '../reducers/appSlice';
-
+import { categoryActions } from '../reducers/categorySlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
 
 const s3 = new AWS.S3({
-  signatureVersion: "v4",
-  region: "us-west-1",
-  accessKeyId: "AKIA3EQQNGREDXST6CHF",
-  secretAccessKey: "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",
+  signatureVersion: 'v4',
+  region: 'ap-south-1',
+  accessKeyId: 'AKIA3EQQNGREDXST6CHF',
+  secretAccessKey: '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',
 });
 
 export const showSnackbar = (severity, message) => async (dispatch, getState) => {
@@ -524,6 +524,321 @@ export const fetchSubnames = () => async (dispatch, getState) => {
         subname: result.data,
       })
     );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const fetchCatgory = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}category/getAll`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      categoryActions.FetchCategories({
+        categories: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const createCategory = (file, name, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  const key = `category/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+
+  dispatch(categoryActions.SetIsCreating({ state: true }));
+
+  try {
+    // Upload image then send data to backend
+
+    s3.getSignedUrl(
+      'putObject',
+      { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+      async (err, presignedURL) => {
+        await fetch(presignedURL, {
+          method: 'PUT',
+
+          body: file,
+
+          headers: {
+            'Content-Type': file.type,
+          },
+        });
+
+        // Send category name and image with auth token to backend
+
+        const res = await fetch(`${BaseURL}category/create`, {
+          method: 'POST',
+
+          body: JSON.stringify({
+            image: key,
+            name,
+          }),
+
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        });
+
+        const result = await res.json();
+
+        message = result.message;
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error(message);
+          } else {
+            throw new Error(res.message);
+          }
+        }
+
+        console.log(result);
+
+        dispatch(
+          categoryActions.CreateCategory({
+            category: result.data,
+          })
+        );
+
+        dispatch(showSnackbar('success', message));
+
+        handleClose();
+
+        dispatch(categoryActions.SetIsCreating({ state: false }));
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(categoryActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateCategory = (file, name, id, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  const key = `category/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+
+  dispatch(categoryActions.SetIsUpdating({ state: true }));
+
+  try {
+    if (file) {
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        async (err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: file,
+
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+
+          // Send category name and image with auth token to backend
+
+          const res = await fetch(`${BaseURL}category/update/${id}`, {
+            method: 'PATCH',
+
+            body: JSON.stringify({
+              image: key,
+              name,
+            }),
+
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${getState().auth.token}`,
+            },
+          });
+
+          const result = await res.json();
+
+          message = result.message;
+
+          if (!res.ok) {
+            if (!res.message) {
+              throw new Error(message);
+            } else {
+              throw new Error(res.message);
+            }
+          }
+
+          console.log(result);
+
+          dispatch(
+            categoryActions.UpdateCategory({
+              category: result.data,
+            })
+          );
+
+          dispatch(showSnackbar('success', message));
+
+          handleClose();
+
+          dispatch(categoryActions.SetIsUpdating({ state: false }));
+        }
+      );
+    } else {
+      const res = await fetch(`${BaseURL}category/update/${id}`, {
+        method: 'PATCH',
+
+        body: JSON.stringify({
+          name,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(message);
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      dispatch(
+        categoryActions.UpdateCategory({
+          category: result.data,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+
+      handleClose();
+
+      dispatch(categoryActions.SetIsUpdating({ state: false }));
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(categoryActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteCategory = (categoryId, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(categoryActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}category/delete/${categoryId}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      categoryActions.DeleteCategory({
+        categoryId,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
+    dispatch(categoryActions.SetIsDeleting({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(categoryActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const updateCategoryStock = (id, formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}category/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      categoryActions.UpdateCategory({
+        category: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    handleClose();
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));

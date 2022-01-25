@@ -40,7 +40,7 @@ export default function ProductListHead({
   };
 
   return (
-    <TableHead>
+    <TableHead sx={{zIndex: 1}}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox

@@ -125,6 +125,7 @@
     "simplebar": "^5.3.6",
     "simplebar-react": "^2.3.6",
     "slick-carousel": "^1.8.1",
+    "slugify": "^1.6.5",
     "styled-components": "^5.3.3",
     "stylis": "^4.0.13",
     "stylis-plugin-rtl": "^2.1.1",

@@ -1,3 +1,6 @@
+.clickable:hover {
+    cursor: pointer;
+}
 .ticket {
     width: 100%;
     position: relative;

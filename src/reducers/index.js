@@ -7,6 +7,7 @@ import userSlice from "./userSlice";
 import storeSlice from "./storeSlice";
 import orderSlice from "./orderSlice";
 import appSlice from "./appSlice";
+import categorySlice from "./categorySlice";
 
 export default combineReducers({
     auth: authSlice.reducer,
@@ -17,4 +18,5 @@ export default combineReducers({
     store: storeSlice.reducer,
     order: orderSlice.reducer,
     app: appSlice.reducer,
+    category: categorySlice.reducer,
 });

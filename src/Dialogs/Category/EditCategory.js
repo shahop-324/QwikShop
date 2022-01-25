@@ -21,19 +21,25 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider } from '../components/hook-form';
-import { UploadAvatar } from '../components/upload';
+import { FormProvider } from '../../components/hook-form';
+import { UploadAvatar } from '../../components/upload';
 
 // utils
-import { fData } from '../utils/formatNumber';
-import { createCategory } from '../actions';
+import { fData } from '../../utils/formatNumber';
+import { updateCategory } from '../../actions';
 
-const AddNewCategory = ({ open, handleClose }) => {
-  const  dispatch = useDispatch();
-  const {isCreating} = useSelector((state) => state.category);
+const EditCategory = ({ open, handleClose, id }) => {
+  const { categories, isUpdating } = useSelector((state) => state.category);
+
+  const category = categories.find((el) => el._id === id);
+
+  const { name, image } = category;
+
+  const dispatch = useDispatch();
+  const { isCreating } = useSelector((state) => state.category);
   const [file, setFile] = useState({ error: false, message: 'Category Image is required', value: '' });
-  const [fileToPreview, setFileToPreview] = useState();
-  const [categoryName, setCategoryName] = useState();
+  const [fileToPreview, setFileToPreview] = useState(`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`);
+  const [categoryName, setCategoryName] = useState(name);
 
   const NewCategorySchema = Yup.object().shape({
     avatarUrl: Yup.mixed().test('required', 'Category image is required', (value) => value !== ''),
@@ -63,7 +69,7 @@ const AddNewCategory = ({ open, handleClose }) => {
 
   const onSubmit = () => {
     console.log(file.value, categoryName);
-    dispatch(createCategory(file.value, categoryName, handleClose))
+    dispatch(updateCategory(file.value, categoryName, id, handleClose));
   };
 
   return (
@@ -120,9 +126,9 @@ const AddNewCategory = ({ open, handleClose }) => {
             }}
             type="submit"
             variant="contained"
-            loading={isCreating}
+            loading={isUpdating}
           >
-            Create category
+            Update Category
           </LoadingButton>
           <Button
             onClick={() => {
@@ -137,4 +143,4 @@ const AddNewCategory = ({ open, handleClose }) => {
   );
 };
 
-export default AddNewCategory;
+export default EditCategory;
