@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState, useCallback } from 'react';
@@ -32,6 +33,8 @@ import {
   RadioGroup,
   Radio,
   FormControl,
+  IconButton,
+  Stack,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
@@ -50,6 +53,7 @@ import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRounded';
 import CurrencyRupeeRoundedIcon from '@mui/icons-material/CurrencyRupeeRounded';
+import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import Editor from '../components/editor/index';
 
 import { RHFUploadMultiFile, FormProvider } from '../components/hook-form';
@@ -195,6 +199,75 @@ const AddNewProduct = ({ open, handleClose }) => {
 
   const [addOnList, setAddOnList] = useState([{ index: '', name: '', price: '', discountedPrice: '' }]);
 
+  const [customVariants, setCustomVariants] = useState([
+    { index: uuidv4(), title: '', options: [{ name: '', price: '', discountedPrice: '', index: uuidv4() }] },
+  ]);
+
+  const addCustomVariant = () => {
+    setCustomVariants((prev) => [
+      ...prev,
+      { index: uuidv4(), title: '', options: [{ name: '', price: '', discountedPrice: '', index: uuidv4() }] },
+    ]);
+  };
+
+  const deleteCustomVariant = (index) => {
+    setCustomVariants((prev) => prev.filter((el) => el.index !== index));
+  };
+
+  const updateCustomVariantTitle = (index, value) => {
+    setCustomVariants((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el.title = value;
+        return el;
+      })
+    );
+  };
+
+  const updateCustomVariantOption = (index, optionIndex, field, value) => {
+    setCustomVariants((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el.options = el.options.map((elm) => {
+          if (elm.index !== optionIndex) {
+            return elm;
+          }
+          elm[field] = value;
+          return elm;
+        });
+        return el;
+      })
+    );
+  };
+
+  const addCustomVariantOptionRow = (index) => {
+    setCustomVariants((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el.options = [...el.options, { name: '', price: '', discountedPrice: '', index: uuidv4() }];
+        return el;
+      })
+    );
+  };
+
+  const deleteCustomVariantOptionRow = (index, optionsIndex) => {
+    setCustomVariants((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el.options = el.options.filter((elm) => elm.index !== optionsIndex);
+        return el;
+      })
+    );
+  };
+
   const addAddOnRow = () => {
     setAddOnList((prev) => [...prev, { index: uuidv4(), name: '', price: '', discountedPrice: '' }]);
   };
@@ -272,6 +345,39 @@ const AddNewProduct = ({ open, handleClose }) => {
   const [minWholesaleQuantity, setMinWholesalePrice] = useState(null);
 
   const [activeStep, setActiveStep] = useState(0);
+
+  const [dimensions, setDimensions] = useState({ length: '', width: '', height: '' });
+  const [dimensionUnit, setDimensionUnit] = useState({ label: 'cm' });
+
+  const [isFragile, setIsFragile] = useState(false);
+  const [InTheBox, setInTheBox] = useState([{ index: uuidv4(), label: '' }]);
+
+  const updateDimensions = (field, value) => {
+    setDimensions((prev) => {
+      prev[field] = value;
+      return prev;
+    });
+  };
+
+  const addInTheBox = () => {
+    setInTheBox((prev) => [...prev, { index: uuidv4(), label: '' }]);
+  };
+
+  const deleteInTheBox = (index) => {
+    setInTheBox((prev) => prev.filter((el) => el.index !== index));
+  };
+
+  const updateInTheBox = (index, value) => {
+    setInTheBox((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el.label = value;
+        return el;
+      })
+    );
+  };
 
   const onNext = () => {
     // eslint-disable-next-line consistent-return
@@ -461,22 +567,47 @@ const AddNewProduct = ({ open, handleClose }) => {
                             />
                           </Box>
 
-                          <FormControl className="mb-3">
-                            <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
-                            <RadioGroup
-                              row
-                              aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                            >
-                              <FormControlLabel value="veg" control={<Radio />} label="Veg" />
-                              <FormControlLabel value="nonVeg" control={<Radio />} label="Non Veg" />
-                            </RadioGroup>
-                          </FormControl>
-
                           <Editor />
-                          <FormGroup className="mt-3">
-                            <FormControlLabel control={<Switch defaultChecked />} label="Accept Cash on delivery" />
-                          </FormGroup>
+
+                          <Box
+                            className="mb-4"
+                            sx={{
+                              mt: 3,
+                              display: 'grid',
+                              columnGap: 2,
+                              rowGap: 3,
+                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                            }}
+                          >
+                            <FormControl className="mb-3">
+                              <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
+                              <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                              >
+                                <FormControlLabel value="veg" control={<Radio />} label="Veg" />
+                                <FormControlLabel value="nonVeg" control={<Radio />} label="Non Veg" />
+                              </RadioGroup>
+                            </FormControl>
+
+                            <FormControl className="mb-3">
+                              <FormLabel id="demo-row-radio-buttons-group-label">
+                                Is Fragile (something which easily breaks or gets damaged) ?
+                              </FormLabel>
+                              <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                              >
+                                <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                                <FormControlLabel value={false} control={<Radio />} label="No" />
+                              </RadioGroup>
+                            </FormControl>
+                            <FormGroup className="mt-3">
+                              <FormControlLabel control={<Switch defaultChecked />} label="Accept Cash on delivery" />
+                            </FormGroup>
+                          </Box>
                         </Card>
                       </Grid>
                     </Grid>
@@ -555,7 +686,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                   <>
                     <Grid className="px-4 pt-3" container spacing={3}>
                       <Grid item xs={12} md={12}>
-                        <Card sx={{ p: 3 }}>
+                        <Card sx={{ p: 3, mb: 3 }}>
                           <Box
                             sx={{
                               display: 'grid',
@@ -585,7 +716,6 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 />
                               )}
                             />
-
                             <TextField
                               type="number"
                               name="minQuantitySold"
@@ -627,6 +757,120 @@ const AddNewProduct = ({ open, handleClose }) => {
                               }}
                             />
                           </Box>
+                        </Card>
+                        <Card sx={{ p: 3, mb: 3 }}>
+                          <Box
+                            sx={{
+                              display: 'grid',
+                              columnGap: 2,
+                              rowGap: 3,
+                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                            }}
+                          >
+                            <Autocomplete
+                              value={dimensionUnit}
+                              onChange={(e, value) => {
+                                setDimensionUnit(value);
+                              }}
+                              id=""
+                              fullWidth
+                              options={dimensionUnitOptions}
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Dimension unit"
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: '', // disable autocomplete and autofill
+                                  }}
+                                />
+                              )}
+                            />
+                            <TextField
+                              type="length"
+                              name="length"
+                              label="Length"
+                              fullWidth
+                              value={dimensions.length}
+                              onChange={(e) => {
+                                updateDimensions('length', e.target.value);
+                              }}
+                            />
+                            <TextField
+                              type="width"
+                              name="width"
+                              label="Width"
+                              fullWidth
+                              value={dimensions.length}
+                              onChange={(e) => {
+                                updateDimensions('width', e.target.value);
+                              }}
+                            />
+                            <TextField
+                              type="height"
+                              name="height"
+                              label="Height"
+                              fullWidth
+                              value={dimensions.height}
+                              onChange={(e) => {
+                                updateDimensions('height', e.target.value);
+                              }}
+                            />
+                          </Box>
+                        </Card>
+                        <Card sx={{ p: 3, mb: 3 }}>
+                          <Typography sx={{ mb: 3 }} variant="subtitle1">
+                            What's included in Box
+                          </Typography>
+                          <Box
+                            sx={{
+                              mb: 3,
+                              display: 'grid',
+                              columnGap: 2,
+                              rowGap: 3,
+                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                            }}
+                          >
+                            {InTheBox.map((el, index) => (
+                              <TextField
+                                key={el.index}
+                                name="item"
+                                label={`Item ${index + 1}`}
+                                fullWidth
+                                value={el.label}
+                                onChange={(e) => {
+                                  updateInTheBox(el.index, e.target.value);
+                                }}
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment>
+                                      <Button
+                                        color="error"
+                                        onClick={() => {
+                                          deleteInTheBox(el.index);
+                                        }}
+                                      >
+                                        Remove
+                                      </Button>
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              />
+                            ))}
+                          </Box>
+
+                          <Stack direction="row" alignItems="center" justifyContent="center">
+                            <Button
+                              variant="outlined"
+                              onClick={() => {
+                                addInTheBox();
+                              }}
+                            >
+                              Add Item
+                            </Button>
+                          </Stack>
                         </Card>
                       </Grid>
                     </Grid>
@@ -758,7 +1002,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                     }}
                                     variant="outlined"
                                   >
-                                    Add Variant
+                                    Add
                                   </Button>
                                 </div>
                               </Card>
@@ -836,6 +1080,137 @@ const AddNewProduct = ({ open, handleClose }) => {
                               </Card>
                             </AccordionDetails>
                           </Accordion>
+                          {customVariants.map((el) => (
+                            <Accordion key={el.index}>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel2a-content"
+                                id="panel2a-header"
+                              >
+                                <Stack direction="row" alignItems="center" spacing={3}>
+                                  <TextField
+                                    className="mb-2"
+                                    type="text"
+                                    label={`Name of variant`}
+                                    name="name"
+                                    value={el.title}
+                                    onChange={(e) => {
+                                      updateCustomVariantTitle(el.index, e.target.value);
+                                    }}
+                                  />
+                                  <IconButton
+                                    onClick={() => {
+                                      deleteCustomVariant(el.index);
+                                    }}
+                                  >
+                                    <DeleteRounded />
+                                  </IconButton>
+                                </Stack>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Card sx={{ p: 3 }}>
+                                  {el.options.map((elm, index) => (
+                                    <div className="d-flex flex-column mb-3" key={elm.index}>
+                                      <Box
+                                        className="mb-2"
+                                        sx={{
+                                          display: 'grid',
+                                          columnGap: 2,
+                                          rowGap: 3,
+                                          gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+                                        }}
+                                      >
+                                        <TextField
+                                          className="mb-2"
+                                          type="text"
+                                          label={`Type ${index + 1}`}
+                                          name="name"
+                                          fullWidth
+                                          value={elm.name}
+                                          onChange={(e) => {
+                                            updateCustomVariantOption(el.index, elm.index, 'name', e.target.value);
+                                          }}
+                                        />
+                                        <TextField
+                                          className="mb-2"
+                                          type="text"
+                                          label={`Price ${index + 1}`}
+                                          name="price"
+                                          fullWidth
+                                          value={elm.price}
+                                          onChange={(e) => {
+                                            updateCustomVariantOption(el.index, elm.index, 'price', e.target.value);
+                                          }}
+                                          InputProps={{
+                                            startAdornment: (
+                                              <InputAdornment>
+                                                <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
+                                              </InputAdornment>
+                                            ),
+                                          }}
+                                        />
+                                        <TextField
+                                          className="mb-2"
+                                          type="text"
+                                          label={`Discounted price ${index + 1}`}
+                                          name="discountedPrice"
+                                          fullWidth
+                                          value={elm.discountedPrice}
+                                          onChange={(e) => {
+                                            updateCustomVariantOption(
+                                              el.index,
+                                              elm.index,
+                                              'discountedPrice',
+                                              e.target.value
+                                            );
+                                          }}
+                                          InputProps={{
+                                            startAdornment: (
+                                              <InputAdornment>
+                                                <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
+                                              </InputAdornment>
+                                            ),
+                                          }}
+                                        />
+                                      </Box>
+                                      <div className="d-flex flex-row align-items-center justify-content-end">
+                                        <Button
+                                          onClick={() => {
+                                            deleteCustomVariantOptionRow(el.index, elm.index);
+                                          }}
+                                          size="small"
+                                          color="error"
+                                        >
+                                          Remove
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  <div className="d-flex flex-row align-items-center justify-content-center">
+                                    <Button
+                                      onClick={() => {
+                                        addCustomVariantOptionRow(el.index);
+                                      }}
+                                      variant="outlined"
+                                    >
+                                      Add variant row
+                                    </Button>
+                                  </div>
+                                </Card>
+                              </AccordionDetails>
+                            </Accordion>
+                          ))}
+                          <div className="d-flex flex-row align-items-center justify-content-center">
+                            <Button
+                              onClick={() => {
+                                addCustomVariant();
+                              }}
+                              variant="outlined"
+                            >
+                              Add variant
+                            </Button>
+                          </div>
                         </div>
                       </Grid>
                     </Grid>
@@ -1094,6 +1469,37 @@ const AddNewProduct = ({ open, handleClose }) => {
 };
 
 export default AddNewProduct;
+
+const dimensionUnitOptions = [
+  {
+    label: 'meter',
+    value: 'm',
+  },
+  {
+    label: 'centimeter',
+    value: 'cm',
+  },
+  {
+    label: 'miliimeter',
+    value: 'mm',
+  },
+  {
+    label: 'inch',
+    value: 'in',
+  },
+  {
+    label: 'foot',
+    value: 'ft',
+  },
+  {
+    label: 'kilometer',
+    value: 'km',
+  },
+  {
+    label: 'yard',
+    value: 'yd',
+  },
+];
 
 const productUnitOptions = [
   {

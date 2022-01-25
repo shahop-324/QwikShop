@@ -29,7 +29,7 @@ import { fData } from '../utils/formatNumber';
 const AddNewCategory = ({ open, handleClose }) => {
   const [file, setFile] = useState({ error: false, message: 'Category Image is required', value: '' });
   const [fileToPreview, setFileToPreview] = useState();
-  const [categoryName, setCategoryName] = useState({ error: false, message: 'category name is required', value: '' });
+  const [categoryName, setCategoryName] = useState();
 
   const NewCategorySchema = Yup.object().shape({
     avatarUrl: Yup.mixed().test('required', 'Category image is required', (value) => value !== ''),
@@ -57,7 +57,9 @@ const AddNewCategory = ({ open, handleClose }) => {
     setFileToPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    console.log(file.value, categoryName);
+  };
 
   return (
     <>
@@ -92,30 +94,13 @@ const AddNewCategory = ({ open, handleClose }) => {
                     }
                   />
                   <TextField
-                    error={categoryName.error}
-                    required
-                    helperText={categoryName.error ? "Category name is required" : ""}
                     className="mt-4"
                     name="categoryName"
                     label="Category Name"
                     fullWidth
-                    value={categoryName.value}
+                    value={categoryName}
                     onChange={(e) => {
-                      if (!e.target.value) {
-                        setCategoryName((prev) => {
-                          prev.error = true;
-                          return prev;
-                        });
-                      } else {
-                        setCategoryName((prev) => {
-                          prev.error = false;
-                          return prev;
-                        });
-                      }
-                      setCategoryName((prev) => {
-                        prev.value = e.target.value;
-                        return prev;
-                      });
+                      setCategoryName(e.target.value);
                     }}
                   />
                 </Card>
@@ -126,7 +111,7 @@ const AddNewCategory = ({ open, handleClose }) => {
         <DialogActions>
           <LoadingButton
             onClick={() => {
-              //   onNext();
+              onSubmit();
             }}
             type="submit"
             variant="contained"

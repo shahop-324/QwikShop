@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import '../../index.css';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
@@ -14,8 +14,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import PercentIcon from '@mui/icons-material/Percent';
 
+import DateTimePicker from '@mui/lab/DateTimePicker';
+
 // @mui
-import { Grid, Container, Typography, Button, Divider } from '@mui/material';
+import { Grid, Container, Typography, Button, Divider, Box, Autocomplete } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -70,13 +72,26 @@ export default function GeneralDiscount() {
 
   const [discountType, setDiscountType] = useState('percentage');
 
+  const [type, setType] = useState('regular');
+
+  const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
+
+  const [applicableCategories, setApplicableCategoories] = useState([]);
+  const [applicableProducts, setApplicableProducts] = useState([]);
+  const [boughtProduct, setBoughtProduct] = useState(null);
+  const [givenProduct, setGivenProduct] = useState(null);
+
+  const handleChange = (newValue) => {
+    setValue(newValue);
+  };
+
   const { themeStretch } = useSettings();
 
   return (
     <Page title="General: Analytics">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Setup QwikShop Delivery
+          Boost sales with discounts
         </Typography>
 
         <Grid container spacing={3}>
@@ -90,15 +105,41 @@ export default function GeneralDiscount() {
           <Grid item xs={12} md={8}>
             <div className="mt-5 px-4">
               <form>
-                <TextField className="mb-4" fullWidth id="outlined-basic" label="Discount code" variant="outlined" />
-                <TextField
-                  type="number"
+                <FormLabel component="legend">Type</FormLabel>
+                <RadioGroup
+                  defaultValue={type}
                   className="mb-4"
-                  fullWidth
-                  id="outlined-basic"
-                  label="Uses per customer"
-                  variant="outlined"
-                />
+                  row
+                  aria-label="Discount type"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="regular"
+                    control={<Radio onClick={() => setType('regular')} />}
+                    label="Regular"
+                  />
+                  <FormControlLabel
+                    value="selectedCategory"
+                    control={<Radio onClick={() => setType('selectedCategory')} />}
+                    label="Selected category"
+                  />
+                  <FormControlLabel
+                    value="selectedProducts"
+                    control={<Radio onClick={() => setType('selctedProducts')} />}
+                    label="Selected products"
+                  />
+                  <FormControlLabel
+                    value="buyXGetYFree"
+                    control={<Radio onClick={() => setType('buyXGetYFree')} />}
+                    label="Buy X get Y free"
+                  />
+                  <FormControlLabel
+                    value="firstPurchase"
+                    control={<Radio onClick={() => setType('firstPurchase')} />}
+                    label="First Purchase"
+                  />
+                </RadioGroup>
+                <Stack>
                 <FormLabel component="legend">Discount type</FormLabel>
                 <RadioGroup
                   defaultValue={discountType}
@@ -118,6 +159,185 @@ export default function GeneralDiscount() {
                     label="Flat"
                   />
                 </RadioGroup>
+                </Stack>
+                <Box
+                          sx={{
+                            display: 'grid',
+                            columnGap: 2,
+                            rowGap: 3,
+                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                          }}
+                        >
+
+<DateTimePicker
+                  label="Applicable from"
+                  value={value}
+                  onChange={handleChange}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+                <DateTimePicker
+                  label="Applicable till"
+                  value={value}
+                  onChange={handleChange}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+
+<TextField className="mb-4" fullWidth id="outlined-basic" label="Buy X" variant="outlined" />
+                <TextField className="mb-4" fullWidth id="outlined-basic" label="Get Y" variant="outlined" />
+
+                <Autocomplete
+                            required
+                            value={boughtProduct}
+                            onChange={(e, value) => {
+   
+                              setBoughtProduct(value);
+                            }}
+                            fullWidth
+                            disablePortal
+                            autoHighlight
+                            getOptionLabel={(option) => option.label}
+                            renderOption={(props, option) => (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <img
+                                  loading="lazy"
+                                  width="50"
+                                  src={option.image}
+                                  srcSet={`${option.image} 2x`}
+                                  alt=""
+                                />
+                                {option.label}
+                              </Box>
+                            )}
+                            options={productOptions}
+                            renderInput={(params) => (
+                              <TextField
+                                
+                                {...params}
+                                label="Bought Product"
+                                fullWidth
+                                name="boughtProduct"
+                              />
+                            )}
+                          />
+                <Autocomplete
+                            required
+                            value={givenProduct}
+                            onChange={(e, value) => {
+                              setGivenProduct(value);
+                            }}
+                            fullWidth
+                            disablePortal
+                            autoHighlight
+                            getOptionLabel={(option) => option.label}
+                            renderOption={(props, option) => (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <img
+                                  loading="lazy"
+                                  width="50"
+                                  src={option.image}
+                                  srcSet={`${option.image} 2x`}
+                                  alt=""
+                                />
+                                {option.label}
+                              </Box>
+                            )}
+                            options={productOptions}
+                            renderInput={(params) => (
+                              <TextField
+                                
+                                {...params}
+                                label="Given Product"
+                                fullWidth
+                                name="givenProduct"
+                              />
+                            )}
+                          />
+                <Autocomplete
+                            required
+                            value={applicableCategories}
+                            onChange={(e, value) => {
+   
+                             setApplicableCategoories(value);
+                            }}
+                            fullWidth
+                            disablePortal
+                            autoHighlight
+                            getOptionLabel={(option) => option.label}
+                            renderOption={(props, option) => (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <img
+                                  loading="lazy"
+                                  width="50"
+                                  src={option.image}
+                                  srcSet={`${option.image} 2x`}
+                                  alt=""
+                                />
+                                {option.label}
+                              </Box>
+                            )}
+                            options={categoryOptions}
+                            renderInput={(params) => (
+                              <TextField
+                                
+                                {...params}
+                                label="Applicable categories"
+                                fullWidth
+                                name="applicableCategories"
+                              />
+                            )}
+                          />
+                <Autocomplete
+                            required
+                            value={applicableProducts}
+                            onChange={(e, value) => {
+                              setApplicableProducts(value);
+                            }}
+                            fullWidth
+                            disablePortal
+                            autoHighlight
+                            getOptionLabel={(option) => option.label}
+                            renderOption={(props, option) => (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <img
+                                  loading="lazy"
+                                  width="50"
+                                  src={option.image}
+                                  srcSet={`${option.image} 2x`}
+                                  alt=""
+                                />
+                                {option.label}
+                              </Box>
+                            )}
+                            options={productOptions}
+                            renderInput={(params) => (
+                              <TextField
+                                
+                                {...params}
+                                label="Applicable Products"
+                                fullWidth
+                                name="applicableProducts"
+                              />
+                            )}
+                          />
+
+                <TextField className="mb-4" fullWidth id="outlined-basic" label="Number of coupons" variant="outlined" />
+                <TextField className="mb-4" fullWidth id="outlined-basic" label="Discount code" variant="outlined" />
+
+                <TextField
+                  type="number"
+                  className="mb-4"
+                  fullWidth
+                  id="outlined-basic"
+                  label="Uses per customer"
+                  variant="outlined"
+                />
+               
+                
+
+
+
+               
+                
 
                 {discountType !== 'flat' && (
                   <TextField
@@ -184,6 +404,12 @@ export default function GeneralDiscount() {
                   />
                 )}
 
+                        </Box>
+                
+
+               
+
+
                 <Stack direction="row" spacing={4} alignItems="center">
                   <Typography>Show discount coupon on shop to customers?</Typography>
                   <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
@@ -235,3 +461,119 @@ export default function GeneralDiscount() {
     </Page>
   );
 }
+
+const productOptions = [
+  {
+    label: 'Aloo paratha',
+    id: '123',
+    image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/08/aloo-paratha-recipe.jpg',
+  },
+  { label: 'Masala Dosa', id: '1234', image: 'https://i.ytimg.com/vi/CCab5oh0ZOc/maxresdefault.jpg' },
+  {
+    label: 'Chole Bhature',
+    id: '12345678',
+    image: 'https://bigoven-res.cloudinary.com/image/upload/t_recipe-1280/chana-bhatura-0ee3ab7d0f229c6b0bd89cdc.jpg',
+  },
+];
+
+const categoryOptions = [
+  {
+    label: 'Kirana store, Grocery & FMCG',
+    image: 'https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2021-12/211213-wee-groceries-se-405p-a36212.jpg',
+  },
+  {
+    label: 'Restaurants & Hotels',
+    image: 'https://media-cdn.tripadvisor.com/media/photo-s/09/37/8b/94/metro-lounge.jpg',
+  },
+  {
+    label: 'Fashion, Apparel, Shoes & Accessories',
+    image: 'https://mms-images.out.customink.com/mms/images/catalog/categories/13_large.jpg',
+  },
+  {
+    label: 'Fruits & vegetables',
+    image: 'https://static.scientificamerican.com/sciam/cache/file/528E0B49-CDD0-42D4-B5BAA3EBAEC01AE6_source.jpg',
+  },
+  {
+    label: 'Mobile, Computers & Other Accessories',
+    image:
+      'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pink-select-2021?wid=940&hei=1112&fmt=png-alpha&.v=1629842709000',
+  },
+  {
+    label: 'Books & Stationary products',
+    image: 'https://m.media-amazon.com/images/I/717EIB64t7L._SL1500_.jpg',
+  },
+  {
+    label: 'Beauty & Cosmetics',
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmncqVXZMJkFNp6-OOjCKUl_kxiuWm4AjvG_lKKqzAq956scFZERXWq56fXUEWYqC0WM&usqp=CAU',
+  },
+  {
+    label: 'Electronic appliances',
+    image:
+      'https://cdn.vox-cdn.com/thumbor/Atvpj5tUuIgLq55pPrG2-A-MHF8=/0x389:8426x7181/1200x800/filters:focal(3671x2467:5117x3913)/cdn.vox-cdn.com/uploads/chorus_image/image/62795169/samsung_fridge.0.jpg',
+  },
+  {
+    label: 'Home decoration',
+    image: 'https://www.mymove.com/wp-content/uploads/2021/03/Home-decorating_Followtheflow_Shutterstock.jpg',
+  },
+  {
+    label: 'Furniture',
+    image: 'https://www.ikea.com/in/en/images/products/ektorp-2-seat-sofa__0818550_pe774481_s5.jpg?f=s',
+  },
+  {
+    label: 'Pharmacy & Medical Care',
+    image:
+      'https://i.guim.co.uk/img/media/65d68c03a1e035d0670711a642f7a272d3e660eb/0_1216_3063_1838/master/3063.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=3056330a3a98cf23d2dfcbe60ba711ad',
+  },
+  {
+    label: 'Bakery & Cake shops',
+    image: 'https://preppykitchen.com/wp-content/uploads/2019/06/Chocolate-cake-recipe-1200a.jpg',
+  },
+  {
+    label: 'Fresh chicken, Fish & Meat',
+    image:
+      'https://static.freshtohome.com/media/catalog/product/cache/1/image/600x400/18ae109e34f485bd0b0c075abec96b2e/c/h/chicken-breast.jpg',
+  },
+  {
+    label: 'Local & Online services',
+    image:
+      'https://www.schroederplumbing.com/wp-content/uploads/2020/10/Modern-Plumbing-Technology-Old-School-Experience-And-Integrity-From-Your-Plumber-_-Mesa-AZ.jpg',
+  },
+  {
+    label: 'Jwellery, Gold and Gems',
+    image:
+      'https://www.candere.com/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/n/m/nmne3517-a.jpg',
+  },
+  {
+    label: 'Insurance & Financial services',
+    image:
+      'https://m.economictimes.com/thumb/msid-72304068,width-1200,height-900,resizemode-4,imgsize-191408/money10-getty.jpg',
+  },
+  {
+    label: 'Paan shop',
+    image: 'http://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
+  },
+  {
+    label: 'Gym & Sports equipment',
+    image: 'https://content.presspage.com/uploads/2110/1920_gym-covid-19-mask-risk-gettyimages.jpg?10000',
+  },
+  {
+    label: 'Educational institute, Schools & teachers',
+    image:
+      'https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F60cb2948d2b1ff3c9b86dc9c%2FBlack-teacher-wearing-face-mask-while-explaining-math-lesson-in-the-classroom-%2F960x0.jpg%3Ffit%3Dscale',
+  },
+  {
+    label: 'Hardware & Construction tools',
+    image: 'https://laysantechnologies.com/CKeditor/Images/hardwares.png',
+  },
+  {
+    label: 'Transportation, Taxi, Travel & Tourism',
+    image:
+      'https://media.wired.com/photos/5cf832279c2a7cd3975976ca/2:1/w_2000,h_1000,c_limit/Transpo_XcelsiorChargeCharging_TA.jpg',
+  },
+  {
+    label: 'Car, bike, Tractor & vehicle accessories',
+    image:
+      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2019-honda-civic-sedan-1558453497.jpg?crop=1xw:0.9997727789138833xh;center,top&resize=480:*',
+  },
+];

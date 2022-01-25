@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 // @mui
-import {
-  Grid,
-  Container,
-  Box,
-  Card,
-  TextField,
-  Autocomplete,
-} from '@mui/material';
+import { Grid, Container, Box, Card, TextField, Autocomplete, InputAdornment, Stack, Typography } from '@mui/material';
+
+import { styled } from '@mui/material/styles';
 
 import Switch from '@mui/material/Switch';
 
@@ -20,12 +15,54 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
 import { LoadingButton } from '@mui/lab';
+import PercentRoundedIcon from '@mui/icons-material/PercentRounded';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import { PaymentsLessons, PaymentsWelcome } from '../../sections/@dashboard/general/payments/index';
 // sections
 // @mui
+
+const AntSwitch = styled(Switch)(({ theme }) => ({
+  width: 28,
+  height: 16,
+  padding: 0,
+  display: 'flex',
+  '&:active': {
+    '& .MuiSwitch-thumb': {
+      width: 15,
+    },
+    '& .MuiSwitch-switchBase.Mui-checked': {
+      transform: 'translateX(9px)',
+    },
+  },
+  '& .MuiSwitch-switchBase': {
+    padding: 2,
+    '&.Mui-checked': {
+      transform: 'translateX(12px)',
+      color: '#fff',
+      '& + .MuiSwitch-track': {
+        opacity: 1,
+        backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
+      },
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    transition: theme.transitions.create(['width'], {
+      duration: 200,
+    }),
+  },
+  '& .MuiSwitch-track': {
+    borderRadius: 16 / 2,
+    opacity: 1,
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
+    boxSizing: 'border-box',
+  },
+}));
 
 export default function GeneralPayment() {
   const { themeStretch } = useSettings();
@@ -36,6 +73,9 @@ export default function GeneralPayment() {
   const [bank, setBank] = useState();
   const [accountNumber, setAccountNumber] = useState('');
   const [IFSCCode, setIFSCCode] = useState('');
+
+  const [enablePartialCOD, setEnabledPartialCOD] = useState(false);
+  const [partialCODPercentage, setPartialCODPercentage] = useState(10);
 
   return (
     <Page title="General: Banking">
@@ -52,10 +92,48 @@ export default function GeneralPayment() {
               <Grid className="px-4 pt-3" container spacing={3}>
                 <Grid item xs={12} md={12}>
                   <Card sx={{ p: 3 }}>
-                  <FormGroup className="mb-4">
-  <FormControlLabel control={<Switch defaultChecked />} label="Accept Cash on delivery" />
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        mb: 3,
+                        columnGap: 2,
+                        rowGap: 3,
+                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                      }}
+                    >
+                      <FormGroup className="mb-4">
+                        <FormControlLabel control={<Switch defaultChecked />} label="Accept Cash on delivery" />
+                      </FormGroup>
 
-</FormGroup>
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <Typography>Enable partial COD</Typography>
+                        <AntSwitch
+                          checked={enablePartialCOD}
+                          onClick={(e) => {
+                            setEnabledPartialCOD(e.target.checked);
+                          }}
+                          inputProps={{ 'aria-label': 'ant design' }}
+                        />
+                      </Stack>
+
+                      <TextField
+                        name="percentage"
+                        label="Partial COD Percentage"
+                        fullWidth
+                        value={partialCODPercentage}
+                        onChange={(e) => {
+                          setPartialCODPercentage(e.target.value);
+                        }}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment>
+                              <PercentRoundedIcon style={{ fontSize: '20px' }} />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Box>
+
                     <FormControl component="fieldset" className="mb-3">
                       <FormLabel component="legend">Accept Payments via</FormLabel>
                       <RadioGroup

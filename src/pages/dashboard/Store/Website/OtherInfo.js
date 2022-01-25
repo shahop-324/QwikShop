@@ -104,6 +104,7 @@ const StoreOtherInfo = () => {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
+               
               <TextField
                 name="freeDeliveryAbove"
                 label="Free Delivery Above"

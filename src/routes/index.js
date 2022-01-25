@@ -85,7 +85,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/catalouge/product" replace />, index: true },
             { path: 'product', element: <EcommerceProductList /> },
-            { path: 'category', element: <EcommerceProductList /> },
+            { path: 'category', element: <GeneralCategory /> },
             { path: 'builder', element: <GeneralCatalougeBuilder /> },
           ],
         },
@@ -184,6 +184,7 @@ const GeneralAbondonedCarts = Loadable(lazy(() => import('../pages/dashboard/Gen
 const GeneralReviews = Loadable(lazy(() => import('../pages/dashboard/GeneralReviews')));
 const GeneralAcademy = Loadable(lazy(() => import('../pages/dashboard/GeneralAcademy')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
+const GeneralCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralCategory')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 // Main

@@ -147,15 +147,6 @@ export default function GeneralManage() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
-                title="Generate"
-                action={handleOpenMarketingDesignOptions}
-                total={'Marketing Designs'}
-                icon={<DesignServicesRoundedIcon />}
-                color={'primary'}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
                 title="Edit"
                 action={handleOpenDeliveryZones}
                 total={'Self Delivery zones'}
