@@ -1,13 +1,15 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import PropTypes from 'prop-types';
 import isString from 'lodash/isString';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { List, Stack, Button, IconButton, ListItemText, ListItem } from '@mui/material';
+import { List, Stack, Button, IconButton, ListItemText, ListItem, Typography } from '@mui/material';
 // utils
 import { fData } from '../../utils/formatNumber';
 //
 import Image from '../Image';
+import Video from '../Video';
 import Iconify from '../Iconify';
 import { varFade } from '../animate';
 
@@ -64,7 +66,18 @@ export default function MultiFilePreview({ showPreview = false, files, onRemove,
                     border: (theme) => `solid 1px ${theme.palette.divider}`,
                   }}
                 >
-                  <Image alt="preview" src={isString(file) ? file : preview} ratio="1/1" />
+                  {/* <Typography>{file.type}</Typography>    */}
+
+                  {file.type === 'video/mp4' ? (
+                    <video
+                      style={{ height: '78px', width: '78px' }}
+                      src={isString(file) ? file : preview}
+                      alt={'preview'}
+                    />
+                  ) : (
+                    <Image alt="preview" src={isString(file) ? file : preview} ratio="1/1" />
+                  )}
+
                   <IconButton
                     size="small"
                     onClick={() => onRemove(file)}
@@ -116,17 +129,6 @@ export default function MultiFilePreview({ showPreview = false, files, onRemove,
           })}
         </AnimatePresence>
       </List>
-
-      {hasFile && (
-        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-          <Button color="inherit" size="small" onClick={onRemoveAll}>
-            Remove all
-          </Button>
-          <Button size="small" variant="contained">
-            Upload files
-          </Button>
-        </Stack>
-      )}
     </>
   );
 }

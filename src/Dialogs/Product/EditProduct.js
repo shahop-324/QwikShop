@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable consistent-return */
@@ -38,6 +39,7 @@ import {
   FormControl,
   IconButton,
   Stack,
+  Tooltip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
@@ -58,10 +60,44 @@ import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRound
 import CurrencyRupeeRoundedIcon from '@mui/icons-material/CurrencyRupeeRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import { useDispatch, useSelector } from 'react-redux';
-import Editor from '../components/editor/index';
-import { fetchCatgory, createNewProduct } from '../actions';
+import MUIStyled from 'styled-components';
+import DoNotDisturbOnRoundedIcon from '@mui/icons-material/DoNotDisturbOnRounded';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import Editor from '../../components/editor/index';
+import { fetchCatgory, updateProduct } from '../../actions';
 
-import { RHFUploadMultiFile, FormProvider } from '../components/hook-form';
+import { RHFUploadMultiFile, FormProvider } from '../../components/hook-form';
+
+// create your forceUpdate hook
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => value + 1); // update the state to force render
+}
+
+const ImagePreview = MUIStyled.img`
+
+border: 1px solid #cecece;
+border-radius: 10px;
+height: 78px;
+width: 78px;
+object-fit: contain;
+
+`;
+
+const VideoPreview = MUIStyled.video`
+
+border: 1px solid #cecece;
+border-radius: 10px;
+height: 78px;
+width: 78px;
+object-fit: contain;
+
+`;
+
+const Container = MUIStyled.div`
+height: 78px;
+width: 78px;
+`;
 
 const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
@@ -200,51 +236,35 @@ const steps = [
 ];
 
 // eslint-disable-next-line no-unused-vars
-const AddNewProduct = ({ open, handleClose }) => {
+const EditProduct = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
+
+  // call your hook here
+  const forceUpdate = useForceUpdate();
 
   useEffect(() => {
     dispatch(fetchCatgory());
   }, []);
 
+  const { products, isUpdating } = useSelector((state) => state.product);
+
+  const product = products.find((el) => el._id === id);
+
   const { categories } = useSelector((state) => state.category);
-  const { isCreating } = useSelector((state) => state.product);
 
-  const [metaTitle, setMetaTitle] = useState('');
+  const [metaTitle, setMetaTitle] = useState(product.metaTitle);
 
-  const [metaKeyword, setMetaKeyword] = useState('');
+  const [metaKeyword, setMetaKeyword] = useState(product.metaKeyword);
 
-  const [metaDescription, setMetaDescription] = useState('');
+  const [metaDescription, setMetaDescription] = useState(product.metaDescription);
 
-  const [variantList, setVariantList] = useState([]);
+  const [variantList, setVariantList] = useState(product.variantList);
 
-  const [colorsList, setColorsList] = useState([]);
+  const [colorsList, setColorsList] = useState(product.colorsList);
 
-  const [addOnList, setAddOnList] = useState([]);
+  const [addOnList, setAddOnList] = useState(product.addOnList);
 
-  const [customVariants, setCustomVariants] = useState([]);
-
-  const [specifications, setSpecifications] = useState([{ index: uuidv4(), property: '', value: '' }]);
-
-  const addSpecificationRow = () => {
-    setSpecifications((prev) => [...prev, { index: uuidv4(), property: '', value: '' }]);
-  };
-
-  const deleteSpecificationRow = (index) => {
-    setSpecifications((prev) => prev.filter((el) => el.index !== index));
-  };
-
-  const updateSpecification = (index, value, field) => {
-    setSpecifications((prev) => {
-      prev.map((el) => {
-        if (el.index !== index) {
-          return el;
-        }
-        el[field] = value;
-        return el;
-      });
-    });
-  };
+  const [customVariants, setCustomVariants] = useState(product.customVariants);
 
   const addCustomVariant = () => {
     setCustomVariants((prev) => [
@@ -371,43 +391,73 @@ const AddNewProduct = ({ open, handleClose }) => {
     );
   };
 
-  const [weight, setWeight] = useState('');
-  const [productName, setProductName] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState();
-  const [productType, setProductType] = useState(null);
-  const [price, setPrice] = useState();
-  const [discountedPrice, setDiscountedPrice] = useState('');
+  const [weight, setWeight] = useState(product.weight);
+  const [productName, setProductName] = useState(product.productName);
+  const [description, setDescription] = useState(product.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+  const [category, setCategory] = useState(product.category);
+  const [productType, setProductType] = useState(product.productType);
+  const [price, setPrice] = useState(product.price);
+  const [discountedPrice, setDiscountedPrice] = useState(product.discountedPrice);
 
-  const [minQuantitySold, setMinQuantitySold] = useState('');
-  const [productUnit, setProductUnit] = useState({
-    label: 'piece',
-  });
+  const [minQuantitySold, setMinQuantitySold] = useState(product.minQuantitySold);
+  const [productUnit, setProductUnit] = useState(product.productUnit);
 
-  const [quantityInStock, setQuantityInStock] = useState('');
-  const [productSKU, setProductSKU] = useState('');
+  const [quantityInStock, setQuantityInStock] = useState(product.quantityInStock);
+  const [productSKU, setProductSKU] = useState(product.productSKU);
 
-  const [wholesalePrice, setWholesalePrice] = useState(null);
+  const [wholesalePrice, setWholesalePrice] = useState(product.wholesalePrice);
 
-  const [minWholesaleQuantity, setMinWholesalePrice] = useState(null);
+  const [minWholesaleQuantity, setMinWholesalePrice] = useState(product.minWholesaleQuantity);
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const [length, setLength] = useState();
-  const [width, setWidth] = useState();
-  const [height, setHeight] = useState();
-  const [dimensionUnit, setDimensionUnit] = useState({
-    label: 'centimeter',
-    value: 'cm',
-  });
+  const [length, setLength] = useState(product.length);
+  const [width, setWidth] = useState(product.width);
+  const [height, setHeight] = useState(product.height);
+  const [dimensionUnit, setDimensionUnit] = useState(product.dimensionUnit);
 
-  const [isFragile, setIsFragile] = useState(false);
-  const [isVeg, setIsVeg] = useState(true);
-  const [InTheBox, setInTheBox] = useState([{ index: uuidv4(), label: '' }]);
-  const [acceptCOD, setAcceptCOD] = useState(false);
+  const [isFragile, setIsFragile] = useState(product.isFragile);
+  const [isVeg, setIsVeg] = useState(product.isVeg);
+  const [InTheBox, setInTheBox] = useState(product.InTheBox);
+  const [acceptCOD, setAcceptCOD] = useState(product.acceptCOD);
 
   const [videoFiles, setVideoFiles] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
+
+  const [excludedImages, setExcludedImages] = useState([]);
+  const [excludedVideos, setExcludedVideos] = useState([]);
+
+  const excludeImage = (img) => {
+    setExcludedImages((prev) => {
+      prev.push(img);
+      return prev;
+    });
+    forceUpdate();
+  };
+
+  const includeImage = (img) => {
+    setExcludedImages((prev) => {
+      prev = prev.filter((el) => el !== img);
+      return prev;
+    });
+    forceUpdate();
+  };
+
+  const excludeVideo = (img) => {
+    setExcludedVideos((prev) => {
+      prev.push(img);
+      return prev;
+    });
+    forceUpdate();
+  };
+
+  const includeVideo = (img) => {
+    setExcludedVideos((prev) => {
+      prev = prev.filter((el) => el !== img);
+      return prev;
+    });
+    forceUpdate();
+  };
 
   const addInTheBox = () => {
     setInTheBox((prev) => [...prev, { index: uuidv4(), label: '' }]);
@@ -427,6 +477,28 @@ const AddNewProduct = ({ open, handleClose }) => {
         return el;
       })
     );
+  };
+
+  const [specifications, setSpecifications] = useState([{ index: uuidv4(), property: '', value: '' }]);
+
+  const addSpecificationRow = () => {
+    setSpecifications((prev) => [...prev, { index: uuidv4(), property: '', value: '' }]);
+  };
+
+  const deleteSpecificationRow = (index) => {
+    setSpecifications((prev) => prev.filter((el) => el.index !== index));
+  };
+
+  const updateSpecification = (index, value, field) => {
+    setSpecifications((prev) => {
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el[field] = value;
+        return el;
+      });
+    });
   };
 
   const onNext = () => {
@@ -473,15 +545,27 @@ const AddNewProduct = ({ open, handleClose }) => {
       acceptedFiles.map((el) => {
         if (el.type === 'video/mp4') {
           // setVideoFiles
+
           setVideoFiles((prev) => {
-            prev.push(el);
-            return prev;
+            const newArray = prev.map((item) => ({
+              ...item,
+              selected: false,
+            }));
+
+            newArray.push(el);
+            return newArray;
           });
         } else {
           // setImageFiles
+
           setImageFiles((prev) => {
-            prev.push(el);
-            return prev;
+            const newArray = prev.map((item) => ({
+              ...item,
+              selected: false,
+            }));
+
+            newArray.push(el);
+            return newArray;
           });
         }
       });
@@ -531,7 +615,7 @@ const AddNewProduct = ({ open, handleClose }) => {
       addOnList,
     };
 
-    dispatch(createNewProduct(formValues, imageFiles, videoFiles, handleClose));
+    dispatch(updateProduct(id, formValues, imageFiles, videoFiles, excludedImages, excludedVideos, handleClose));
   };
 
   const categoryOptions = categories.map((category) => ({
@@ -864,6 +948,81 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 onRemoveAll={handleRemoveAll}
                               />
                             </Card>
+                            <div
+                              className="d-flex flex-row align-items-center my-3"
+                              direction={'row'}
+                              alignItems={'center'}
+                              style={{ flexWrap: 'nowrap' }}
+                            >
+                              {product.images.map((el) => {
+                                const isExcluded = excludedImages.includes(el);
+
+                                return (
+                                  <Container
+                                    className="me-3 mb-3"
+                                    style={{ height: '78px !important', width: '78px !important' }}
+                                  >
+                                    <ImagePreview src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`} />
+
+                                    {excludedImages.includes(el) ? (
+                                      <Tooltip title="Include Image">
+                                        <IconButton
+                                          onClick={() => {
+                                            includeImage(el);
+                                          }}
+                                        >
+                                          <AddCircleRoundedIcon color="success" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    ) : (
+                                      <Tooltip title="Exclude Image">
+                                        <IconButton
+                                          onClick={() => {
+                                            excludeImage(el);
+                                          }}
+                                        >
+                                          <DoNotDisturbOnRoundedIcon color="error" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    )}
+                                  </Container>
+                                );
+                              })}
+                              {product.videos.map((el) => {
+                                const isExcluded = excludedVideos.includes(el);
+
+                                return (
+                                  <Container
+                                    className="me-3 mb-3"
+                                    style={{ height: '78px !important', width: '78px !important' }}
+                                  >
+                                    <VideoPreview src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`} />
+
+                                    {excludedVideos.includes(el) ? (
+                                      <Tooltip title="Include video">
+                                        <IconButton
+                                          onClick={() => {
+                                            includeVideo(el);
+                                          }}
+                                        >
+                                          <AddCircleRoundedIcon color="success" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    ) : (
+                                      <Tooltip title="Exclude video">
+                                        <IconButton
+                                          onClick={() => {
+                                            excludeVideo(el);
+                                          }}
+                                        >
+                                          <DoNotDisturbOnRoundedIcon color="error" />
+                                        </IconButton>
+                                      </Tooltip>
+                                    )}
+                                  </Container>
+                                );
+                              })}
+                            </div>
                           </Grid>
                         </Grid>
                       </FormProvider>
@@ -900,7 +1059,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                   </>
                 );
 
-              case 3:
+                case 3:
                 return (
                   <>
                     <Grid className="px-4 pt-3" container spacing={3}>
@@ -1747,9 +1906,9 @@ const AddNewProduct = ({ open, handleClose }) => {
                         }}
                         type="submit"
                         variant="contained"
-                        loading={isCreating}
+                        loading={isUpdating}
                       >
-                        Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        Update <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
                       </LoadingButton>
                       <Button
                         onClick={() => {
@@ -1772,7 +1931,7 @@ const AddNewProduct = ({ open, handleClose }) => {
   );
 };
 
-export default AddNewProduct;
+export default EditProduct;
 
 const dimensionUnitOptions = [
   {
@@ -1975,13 +2134,7 @@ const productTypeOptions = [
     label: 'Medicine',
     image: 'https://sfenvironment.org/sites/default/files/styles/large/public/detail_th_medicine_0_0.jpg?itok=ynMwtFQd',
   },
-  {
-    label: 'Paints',
-    image:
-      'https://hgtvhome.sndimg.com/content/dam/images/hgtv/fullset/2016/8/31/1/iStock_23034199_malerapaso-paint-cans-XXXLARGE.jpg.rend.hgtvcom.616.462.suffix/1472661947179.jpeg',
-  },
-  { lable: 'Tiles', image: 'https://wallnut.co.in/wp-content/uploads/2020/12/Tiles-Design.png' },
-  { label: 'Sanitary ware', image: 'https://4.imimg.com/data4/TW/FM/ANDROID-9129727/product-500x500.jpeg' },
+
   { label: 'Footwear', image: 'https://m.media-amazon.com/images/I/71D9ImsvEtL._UL1500_.jpg' },
   { label: 'Travel essentials', image: 'https://5.imimg.com/data5/GV/NI/MY-6348933/travel-bags-1-500x500.jpg' },
   {

@@ -6,15 +6,13 @@ import Stack from '@mui/material/Stack';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import PercentIcon from '@mui/icons-material/Percent';
 
-import DateTimePicker from '@mui/lab/DateTimePicker';
+import {MobileDateTimePicker} from '@mui/lab';
 
 // @mui
 import { Grid, Container, Typography, Button, Divider, Box, Autocomplete } from '@mui/material';
@@ -80,10 +78,6 @@ export default function GeneralDiscount() {
   const [applicableProducts, setApplicableProducts] = useState([]);
   const [boughtProduct, setBoughtProduct] = useState(null);
   const [givenProduct, setGivenProduct] = useState(null);
-
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
 
   const { themeStretch } = useSettings();
 
@@ -168,19 +162,31 @@ export default function GeneralDiscount() {
                             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                           }}
                         >
+<MobileDateTimePicker
+          value={value}
+          onChange={(newValue) => {
+            setValue(newValue);
+          }}
+          label="Applicable from"
+          onError={console.log}
+          minDate={new Date('2018-01-01T00:00')}
+          inputFormat="yyyy/MM/dd hh:mm a"
+          mask="___/__/__ __:__ _M"
+          renderInput={(params) => <TextField {...params} />}
+        />
+        <MobileDateTimePicker
+          value={value}
+          onChange={(newValue) => {
+            setValue(newValue);
+          }}
+          label="Applicable till"
+          onError={console.log}
+          minDate={new Date('2018-01-01T00:00')}
+          inputFormat="yyyy/MM/dd hh:mm a"
+          mask="___/__/__ __:__ _M"
+          renderInput={(params) => <TextField {...params} />}
+        />
 
-<DateTimePicker
-                  label="Applicable from"
-                  value={value}
-                  onChange={handleChange}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <DateTimePicker
-                  label="Applicable till"
-                  value={value}
-                  onChange={handleChange}
-                  renderInput={(params) => <TextField {...params} />}
-                />
 
 <TextField className="mb-4" fullWidth id="outlined-basic" label="Buy X" variant="outlined" />
                 <TextField className="mb-4" fullWidth id="outlined-basic" label="Get Y" variant="outlined" />

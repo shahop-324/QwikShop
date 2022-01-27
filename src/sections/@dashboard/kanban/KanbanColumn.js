@@ -72,7 +72,7 @@ export default function KanbanColumn({ column, index }) {
         <Paper
           {...provided.draggableProps}
           ref={provided.innerRef}
-          variant="outlined"
+          variant={"outlined"}
           sx={{ px: 2, bgcolor: 'grey.5008' }}
         >
           <Stack spacing={3} {...provided.dragHandleProps}>

@@ -3,14 +3,14 @@ import { Typography, Button, Dialog, DialogActions, DialogTitle } from '@mui/mat
 import { LoadingButton } from '@mui/lab';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteCategory } from '../../actions';
+import { deleteSubCategory } from '../../actions';
 
-const DeleteCategory = ({ open, handleClose, id }) => {
+const DeleteSubCategory = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
 
-  const { categories, isDeleting } = useSelector((state) => state.category);
+  const { subCategories, isDeleting } = useSelector((state) => state.subCategory);
 
-  const category = categories.find((el) => el._id === id);
+  const category = subCategories.find((el) => el._id === id);
 
   let name;
   let image;
@@ -21,13 +21,13 @@ const DeleteCategory = ({ open, handleClose, id }) => {
   }
    
   const onSubmit = () => {
-    dispatch(deleteCategory(id, handleClose));
+    dispatch(deleteSubCategory(id, handleClose));
   };
 
   return (
     <>
       <Dialog fullWidth maxWidth="sm" open={open}>
-        <DialogTitle>Delete category</DialogTitle>
+        <DialogTitle>Delete sub category</DialogTitle>
 
         <Typography className='px-4 mt-2'>Are you sure you want to delete {name}?</Typography>
 
@@ -56,4 +56,4 @@ const DeleteCategory = ({ open, handleClose, id }) => {
   );
 };
 
-export default DeleteCategory;
+export default DeleteSubCategory;

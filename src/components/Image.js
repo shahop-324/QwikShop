@@ -71,6 +71,7 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
   );
 }
 
+
 // ----------------------------------------------------------------------
 
 function getRatio(ratio = '1/1') {

@@ -36,19 +36,20 @@ import {
   CategoryListHead,
   CategoryListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
-import AddNewCategory from '../../Dialogs/AddNewCategory';
-import { fetchCatgory, updateCategoryStock, reorderCategories } from '../../actions';
+import { fetchCatgory, updateSubCategoryStock, reorderSubCategories } from '../../actions';
 
-import EditCategory from '../../Dialogs/Category/EditCategory';
-import DeleteCategory from '../../Dialogs/Category/DeleteCategory';
-import ShareCategory from '../../Dialogs/Category/ShareCategory';
-import AlterCategoryStock from '../../Dialogs/Category/AlterCategoryStock';
-import BulkUploadCategory from '../../Dialogs/Category/BulkUploadCategory';
-import BulkDeleteCategory from '../../Dialogs/Category/BulkDeleteCategories';
+import AlterSubCategoryStock from '../../Dialogs/SubCategory/AlterSubCategoryStock';
+import ShareSubCategory from '../../Dialogs/SubCategory/ShareSubCategory';
+import DeleteSubCategory from '../../Dialogs/SubCategory/DeleteSubCategory';
+import EditSubCategory from '../../Dialogs/SubCategory/EditSubCategory';
+import AddSubCategory from '../../Dialogs/AddSubCategory';
+import BulkDeleteSubCategory from '../../Dialogs/SubCategory/BulkDeleteSubCategories';
+import SubCategoryListToolbar from '../../sections/@dashboard/e-commerce/product-list/SubCategoryListToolbar';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'subCategory', label: 'Sub Category', alignRight: false },
   { id: 'category', label: 'Category', alignRight: false },
   { id: 'products', label: 'Products', alignRight: false },
   { id: 'stock', label: 'Stock', alignRight: false },
@@ -106,22 +107,12 @@ const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVis
 
 // ----------------------------------------------------------------------
 
-export default function GeneralCategory() {
+export default function GeneralSubCategory() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const [openAddCategory, setOpenAddcategory] = useState(false);
-
-  const [openBulkImport, setOpenBulkImport] = useState(false);
-
-  const handleOpenBulkImport = () => {
-    setOpenBulkImport(true);
-  };
-
-  const handleCloseBulkImport = () => {
-    setOpenBulkImport(false);
-  };
+  const [openAddSubCategory, setOpenAddSubCategory] = useState(false);
 
   const [term, setTerm] = useState('');
 
@@ -188,23 +179,23 @@ export default function GeneralCategory() {
     setOpenDelete(false);
   };
 
-  const handleCloseAddCategory = () => {
-    setOpenAddcategory(false);
+  const handleCloseAddSubCategory = () => {
+    setOpenAddSubCategory(false);
   };
 
-  const handleOpenAddcategory = () => {
-    setOpenAddcategory(true);
+  const handleOpenAddSubCategory = () => {
+    setOpenAddSubCategory(true);
   };
 
-  const { categories } = useSelector((state) => state.category);
+  const { subCategories } = useSelector((state) => state.subCategory);
 
   const handleDragEnd = (result) => {
     console.log(result);
-    const items = Array.from(categories);
+    const items = Array.from(subCategories);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    dispatch(reorderCategories(items));
+    dispatch(reorderSubCategories(items));
   };
 
   const [page, setPage] = useState(0);
@@ -222,7 +213,7 @@ export default function GeneralCategory() {
 
   const handleSelectAllClick = (checked) => {
     if (checked) {
-      const selected = categories.map((n) => n._id);
+      const selected = subCategories.map((n) => n._id);
       setSelected(selected);
     } else {
       setSelected([]);
@@ -262,16 +253,16 @@ export default function GeneralCategory() {
     setOpenShare(false);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - categories.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - subCategories.length) : 0;
 
-  const filteredCategories = applySortFilter(categories, getComparator(order, orderBy), filterName);
+  const filteredCategories = applySortFilter(subCategories, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredCategories.length && Boolean(filterName);
 
-  const processCategoriesData = () => {
+  const processSubCategoriesData = () => {
     const processedArray = [];
 
-    categories.map((category) => {
+    subCategories.map((category) => {
       const array = Object.entries(category);
 
       const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
@@ -297,12 +288,12 @@ export default function GeneralCategory() {
     const hiddenElement = document.createElement('a');
     hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
     hiddenElement.target = '_blank';
-    hiddenElement.download = 'categories.csv';
+    hiddenElement.download = 'subCategories.csv';
     hiddenElement.click();
   };
 
-  const handleExportCategories = () => {
-    CreateAndDownloadCSV(processCategoriesData());
+  const handleExportSubCategories = () => {
+    CreateAndDownloadCSV(processSubCategoriesData());
   };
 
   return (
@@ -310,15 +301,14 @@ export default function GeneralCategory() {
       <Page title="Category">
         <Container maxWidth={themeStretch ? false : 'lg'}>
           <Card>
-            <CategoryListToolbar
+            <SubCategoryListToolbar
               setTerm={setTerm}
-              openBulkImport={handleOpenBulkImport}
-              openAddCategory={handleOpenAddcategory}
+              openAddSubCategory={handleOpenAddSubCategory}
               numSelected={selected.length}
               filterName={filterName}
               onFilterName={handleFilterByName}
-              onDeleteCategories={() => handleOpenBulkDelete()}
-              handleExportCategories={handleExportCategories}
+              onDeleteSubCategories={() => handleOpenBulkDelete()}
+              handleExportSubCategories={handleExportSubCategories}
             />
 
             <Scrollbar>
@@ -328,7 +318,7 @@ export default function GeneralCategory() {
                     order={order}
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
-                    rowCount={categories.length}
+                    rowCount={subCategories.length}
                     numSelected={selected.length}
                     onRequestSort={handleRequestSort}
                     onSelectAllClick={handleSelectAllClick}
@@ -338,94 +328,109 @@ export default function GeneralCategory() {
                     <Droppable droppableId="list">
                       {(provided) => (
                         <TableBody {...provided.droppableProps} ref={provided.innerRef}>
-                          {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                            const { _id, name, image, products, outOfStock, hidden, totalSales } = row;
+                          {subCategories
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((row, index) => {
+                              const { _id, name, image, products, outOfStock, hidden, totalSales, category } = row;
 
-                            const isItemSelected = selected.indexOf(_id) !== -1;
+                              const isItemSelected = selected.indexOf(_id) !== -1;
 
-                            return (
-                              <Draggable key={_id} draggableId={_id} index={index}>
-                                {(provided) => (
-                                  <TableRow
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    ref={provided.innerRef}
-                                    hover
-                                    tabIndex={-1}
-                                    role="checkbox"
-                                    selected={isItemSelected}
-                                    aria-checked={isItemSelected}
-                                  >
-                                    <TableCell padding="checkbox">
-                                      <Checkbox checked={isItemSelected} onClick={() => handleClick(_id)} />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Stack direction={'row'} alignItems={'center'}>
-                                        <Image
-                                          disabledEffect
-                                          alt={name}
-                                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`}
-                                          sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
-                                        />
-                                        <Typography variant="subtitle2" noWrap>
-                                          {name}
-                                        </Typography>
-                                      </Stack>
-                                    </TableCell>
-                                    <TableCell style={{ minWidth: 160 }}>{products.length}</TableCell>
-                                    <TableCell style={{ minWidth: 160 }}>
-                                      <FormControlLabel
-                                        control={
-                                          <IOSSwitch
-                                            sx={{ m: 1 }}
-                                            checked={!outOfStock}
-                                            onClick={(e) => {
-                                              if (!outOfStock) {
-                                                handleOpenStock(_id);
-                                              } else {
-                                                dispatch(
-                                                  updateCategoryStock(
-                                                    _id,
-                                                    { hidden: false, outOfStock: false },
-                                                    handleCloseStock
-                                                  )
-                                                );
-                                              }
-                                            }}
+                              return (
+                                <Draggable key={_id} draggableId={_id} index={index}>
+                                  {(provided) => (
+                                    <TableRow
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      ref={provided.innerRef}
+                                      hover
+                                      tabIndex={-1}
+                                      role="checkbox"
+                                      selected={isItemSelected}
+                                      aria-checked={isItemSelected}
+                                    >
+                                      <TableCell padding="checkbox">
+                                        <Checkbox checked={isItemSelected} onClick={() => handleClick(_id)} />
+                                      </TableCell>
+                                      <TableCell>
+                                        <Stack direction={'row'} alignItems={'center'}>
+                                          <Image
+                                            disabledEffect
+                                            alt={name}
+                                            src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`}
+                                            sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
                                           />
-                                        }
-                                        label=""
-                                      />
-                                      <Label
-                                        variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                                        color={(outOfStock && 'error') || 'success'}
-                                      >
-                                        {!outOfStock ? 'In stock' : 'Out of stock'}
-                                      </Label>
-                                    </TableCell>
-                                    <TableCell align="left">{`Rs. ${totalSales}`}</TableCell>
-                                    <TableCell align="right">
-                                      <IconButton
-                                        onClick={() => {
-                                          handleOpenShare(_id);
-                                        }}
-                                        className="me-2"
-                                      >
-                                        <ShareRoundedIcon style={{ fontSize: '20px' }} />
-                                      </IconButton>
-                                      <ProductMoreMenu
-                                        productName={name}
-                                        onDelete={() => handleOpenDelete(_id)}
-                                        onEdit={() => {
-                                          handleOpenUpdate(_id);
-                                        }}
-                                      />
-                                    </TableCell>
-                                  </TableRow>
-                                )}
-                              </Draggable>
-                            );
-                          })}
+                                          <Typography variant="subtitle2" noWrap>
+                                            {name}
+                                          </Typography>
+                                        </Stack>
+                                      </TableCell>
+                                      <TableCell>
+                                        <Stack direction={'row'} alignItems={'center'}>
+                                          <Image
+                                            disabledEffect
+                                            alt={category.label}
+                                            src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${category.image}`}
+                                            sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
+                                          />
+                                          <Typography variant="subtitle2" noWrap>
+                                            {category.label}
+                                          </Typography>
+                                        </Stack>
+                                      </TableCell>
+                                      <TableCell style={{ minWidth: 160 }}>{products.length}</TableCell>
+                                      <TableCell style={{ minWidth: 160 }}>
+                                        <FormControlLabel
+                                          control={
+                                            <IOSSwitch
+                                              sx={{ m: 1 }}
+                                              checked={!outOfStock}
+                                              onClick={(e) => {
+                                                if (!outOfStock) {
+                                                  handleOpenStock(_id);
+                                                } else {
+                                                  dispatch(
+                                                    updateSubCategoryStock(
+                                                      _id,
+                                                      { hidden: false, outOfStock: false },
+                                                      handleCloseStock
+                                                    )
+                                                  );
+                                                }
+                                              }}
+                                            />
+                                          }
+                                          label=""
+                                        />
+                                        <Label
+                                          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                          color={(outOfStock && 'error') || 'success'}
+                                        >
+                                          {!outOfStock ? 'In stock' : 'Out of stock'}
+                                        </Label>
+                                      </TableCell>
+                                      <TableCell align="left">{`Rs. ${totalSales}`}</TableCell>
+                                      <TableCell align="right">
+                                        <IconButton
+                                          onClick={() => {
+                                            handleOpenShare(_id);
+                                          }}
+                                          className="me-2"
+                                        >
+                                          <ShareRoundedIcon style={{ fontSize: '20px' }} />
+                                        </IconButton>
+                                        <ProductMoreMenu
+                                          productName={name}
+                                          onDelete={() => handleOpenDelete(_id)}
+                                          onEdit={() => {
+                                            handleOpenUpdate(_id);
+                                          }}
+                                        />
+                                      </TableCell>
+                                    </TableRow>
+                                  )}
+                                </Draggable>
+                              );
+                            })}
                           {provided.placeholder}
                         </TableBody>
                       )}
@@ -456,7 +461,7 @@ export default function GeneralCategory() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={categories.length}
+              count={subCategories.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={(event, value) => setPage(value)}
@@ -467,19 +472,18 @@ export default function GeneralCategory() {
       </Page>
 
       {openBulkDelete && (
-        <BulkDeleteCategory
+        <BulkDeleteSubCategory
           open={openBulkDelete}
           handleClose={handleCloseBulkDelete}
           setSelected={setSelected}
           selected={selected}
         />
       )}
-      {openStock && <AlterCategoryStock open={openStock} handleClose={handleCloseStock} id={stockId} />}
-      {openShare && <ShareCategory open={openShare} handleClose={handleCloseShare} id={IdToShare} />}
-      {openDelete && <DeleteCategory open={openDelete} handleClose={handleCloseDelete} id={IdToDelete} />}
-      {openUpdate && <EditCategory open={openUpdate} handleClose={handleCloseUpdate} id={IdToEdit} />}
-      {openBulkImport && <BulkUploadCategory open={openBulkImport} handleClose={handleCloseBulkImport} />}
-      {openAddCategory && <AddNewCategory open={openAddCategory} handleClose={handleCloseAddCategory} />}
+      {openStock && <AlterSubCategoryStock open={openStock} handleClose={handleCloseStock} id={stockId} />}
+      {openShare && <ShareSubCategory open={openShare} handleClose={handleCloseShare} id={IdToShare} />}
+      {openDelete && <DeleteSubCategory open={openDelete} handleClose={handleCloseDelete} id={IdToDelete} />}
+      {openUpdate && <EditSubCategory open={openUpdate} handleClose={handleCloseUpdate} id={IdToEdit} />}
+      {openAddSubCategory && <AddSubCategory open={openAddSubCategory} handleClose={handleCloseAddSubCategory} />}
     </>
   );
 }

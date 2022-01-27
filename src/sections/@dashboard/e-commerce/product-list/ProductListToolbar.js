@@ -1,9 +1,24 @@
 import PropTypes from 'prop-types';
-
+import React, { useRef, useState } from 'react';
 import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, Typography, Button } from '@mui/material';
+import {
+  Toolbar,
+  Tooltip,
+  IconButton,
+  Typography,
+  Button,
+  ButtonGroup,
+  Popper,
+  MenuItem,
+  MenuList,
+  Grow,
+  ClickAwayListener,
+  Portal,
+  Paper,
+} from '@mui/material';
 
 // ----------------------------------------------------------------------
+import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 // components
@@ -69,16 +84,61 @@ ProductListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
+const options = ['Add Product', 'Export to excel'];
+
 export default function ProductListToolbar({
   numSelected,
   filterName,
   onFilterName,
   onDeleteProducts,
   openAddProduct,
-  openAddCategory,
+  setTerm,
+  handleExportProducts,
 }) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
+
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleClick = () => {
+    console.info(`You clicked ${options[selectedIndex]}`);
+    switch (selectedIndex * 1) {
+      case 0:
+        openAddProduct();
+        break;
+
+      // case 1:
+      //   openBulkImport();
+      //   break;
+
+      case 1:
+        // Run logic to export all categories to excel
+        handleExportProducts();
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setOpen(false);
+  };
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   return (
     <RootStyle
@@ -98,7 +158,11 @@ export default function ProductListToolbar({
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
-          <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ 'aria-label': 'search' }}
+            onChange={(e) => setTerm(e.target.value)}
+          />
         </Search>
       )}
 
@@ -110,22 +174,48 @@ export default function ProductListToolbar({
         </Tooltip>
       ) : (
         <div className="d-flex flex-row align-items-center justify-content-end">
-          <Button
-            onClick={() => {
-              openAddProduct();
-              // openAddCategory();
-            }}
-            className="me-3"
-            variant="contained"
-          >
-            Add product
-          </Button>
+          <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+            <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+            <Button
+              size="small"
+              aria-controls={open ? 'split-button-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-label="select merge strategy"
+              aria-haspopup="menu"
+              onClick={handleToggle}
+            >
+              <ArrowDropDownRoundedIcon />
+            </Button>
+          </ButtonGroup>
 
-          <Tooltip title="Filter list">
-            <IconButton>
-              <Iconify icon={'ic:round-filter-list'} />
-            </IconButton>
-          </Tooltip>
+          <Portal>
+            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList id="split-button-menu">
+                        {options.map((option, index) => (
+                          <MenuItem
+                            key={option}
+                            selected={index === selectedIndex}
+                            onClick={(event) => handleMenuItemClick(event, index)}
+                          >
+                            <Typography variant="subtitle2">{option}</Typography>
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </Portal>
         </div>
       )}
     </RootStyle>

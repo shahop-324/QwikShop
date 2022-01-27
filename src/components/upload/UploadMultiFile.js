@@ -45,6 +45,8 @@ export default function UploadMultiFile({
     ...other,
   });
 
+  console.log(files, "This is upload multi files");
+
   return (
     <Box sx={{ width: '100%', ...sx }}>
       <DropZoneStyle

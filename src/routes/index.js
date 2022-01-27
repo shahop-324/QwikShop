@@ -72,11 +72,13 @@ export default function Router() {
         },
         { path: 'delivery', element: <GeneralDelivery /> },
         { path: 'customer', element: <GeneralCustomer /> },
-        { path: 'dining', element: <GeneralDining /> },
+        
         { path: 'marketing', element: <GeneralMarketing /> },
         { path: 'payment', element: <GeneralPayment /> },
         { path: 'discount', element: <GeneralDiscount /> },
         { path: 'manage', element: <GeneralManage /> },
+        { path: 'questions', element: <GeneralManage /> },
+        { path: 'refferal', element: <GeneralManage /> },
         { path: 'integration', element: <GeneralIntegration /> },
         {path: 'reviews', element: <GeneralReviews />},
         { path: 'academy', element: <GeneralAcademy /> },
@@ -86,18 +88,11 @@ export default function Router() {
             { element: <Navigate to="/dashboard/catalouge/product" replace />, index: true },
             { path: 'product', element: <EcommerceProductList /> },
             { path: 'category', element: <GeneralCategory /> },
+            { path: 'sub-category', element: <GeneralSubCategory /> },
             { path: 'builder', element: <GeneralCatalougeBuilder /> },
           ],
         },
-        {
-          path: 'design',
-          children: [
-            { element: <Navigate to="/design/business-card" replace />, index: true },
-            { path: 'business-card', element: <GeneralBusinessCard /> },
-            { path: 'store-banner', element: <GeneralStoreBanner /> },
-            { path: 'whatsapp-story', element: <GeneralWhatsAppStory /> },
-          ],
-        },
+       
         {
           path: 'store',
           children: [
@@ -185,6 +180,7 @@ const GeneralReviews = Loadable(lazy(() => import('../pages/dashboard/GeneralRev
 const GeneralAcademy = Loadable(lazy(() => import('../pages/dashboard/GeneralAcademy')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const GeneralCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralCategory')));
+const GeneralSubCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralSubCategory')))
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 // Main

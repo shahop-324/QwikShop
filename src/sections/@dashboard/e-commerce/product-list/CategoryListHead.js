@@ -16,7 +16,7 @@ const visuallyHidden = {
   width: '1px',
 };
 
-ProductListHead.propTypes = {
+CategoryListHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']),
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,
@@ -26,7 +26,7 @@ ProductListHead.propTypes = {
   onSelectAllClick: PropTypes.func,
 };
 
-export default function ProductListHead({
+export default function CategoryListHead({
   order,
   orderBy,
   rowCount,
@@ -40,13 +40,13 @@ export default function ProductListHead({
   };
 
   return (
-    <TableHead sx={{ zIndex: 1 }}>
+    <TableHead sx={{zIndex: 1}}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
-            onChange={(e) => onSelectAllClick(e.target.checked)}
+            onChange={ (e) => onSelectAllClick(e.target.checked)}
           />
         </TableCell>
         {headLabel.map((headCell) => (

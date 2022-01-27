@@ -77,24 +77,24 @@ const RootStyle = styled(Toolbar)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-CategoryListToolbar.propTypes = {
+SubCategoryListToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
   onDeleteProducts: PropTypes.func,
 };
 
-const options = ['Add Category', 'Export to excel'];
+const options = ['Add Sub Category', 'Export to excel'];
 
-export default function CategoryListToolbar({
+export default function SubCategoryListToolbar({
   numSelected,
   filterName,
   onFilterName,
-  onDeleteCategories,
+  onDeleteSubCategories,
   openBulkImport,
-  openAddCategory,
+  openAddSubCategory,
   setTerm,
-  handleExportCategories,
+  handleExportSubCategories,
 }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -104,7 +104,7 @@ export default function CategoryListToolbar({
     console.info(`You clicked ${options[selectedIndex]}`);
     switch (selectedIndex * 1) {
       case 0:
-        openAddCategory();
+        openAddSubCategory();
         break;
 
       // case 1:
@@ -112,8 +112,8 @@ export default function CategoryListToolbar({
       //   break;
 
       case 1:
-        // Run logic to export all categories to excel
-        handleExportCategories();
+        // Run logic to export all sub categories to excel
+        handleExportSubCategories();
         break;
 
       default:
@@ -169,7 +169,7 @@ export default function CategoryListToolbar({
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={onDeleteCategories}>
+          <IconButton onClick={onDeleteSubCategories}>
             <Iconify icon={'eva:trash-2-outline'} />
           </IconButton>
         </Tooltip>

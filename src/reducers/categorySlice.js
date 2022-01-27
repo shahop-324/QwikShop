@@ -33,6 +33,9 @@ const categorySlice = createSlice({
     },
     DeleteCategory(state, action) {
       state.categories = state.categories.filter((el) => el._id !== action.payload.categoryId);
+    },
+    DeleteMultipleCategory(state, action) {
+        state.categories = state.categories.filter((el) => !action.payload.ids.includes(el._id));
     }
   },
 });

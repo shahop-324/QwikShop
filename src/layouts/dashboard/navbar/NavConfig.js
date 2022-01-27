@@ -13,6 +13,8 @@ import DinnerDiningRoundedIcon from '@mui/icons-material/DinnerDiningRounded';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
+import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
+import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 
@@ -38,28 +40,19 @@ const navConfig = [
         children: [
           { title: 'product', path: PATH_DASHBOARD.catalouge.product },
           { title: 'category', path: PATH_DASHBOARD.catalouge.category },
+          { title: 'sub category', path: PATH_DASHBOARD.catalouge.subcategory },
           { title: 'Catalouge Builder', path: PATH_DASHBOARD.catalouge.builder },
         ],
       },
       { title: 'Delivery', path: PATH_DASHBOARD.general.delivery, icon: <LocalShippingRoundedIcon /> },
       { title: 'Customer', path: PATH_DASHBOARD.general.customer, icon: <GroupsRoundedIcon /> },
-      { title: 'Dining', path: PATH_DASHBOARD.general.dining, icon: <DinnerDiningRoundedIcon /> },
       { title: 'Marketing', path: PATH_DASHBOARD.general.marketing, icon: <CampaignRoundedIcon /> },
       { title: 'Payment', path: PATH_DASHBOARD.general.payment, icon: <AccountBalanceWalletRoundedIcon /> },
       { title: 'Discount', path: PATH_DASHBOARD.general.discount, icon: <LocalOfferRoundedIcon /> },
       { title: 'Manage', path: PATH_DASHBOARD.general.manage, icon: <ManageAccountsRoundedIcon /> },
+      { title: 'Questions', path: PATH_DASHBOARD.general.questions, icon: <QuestionMarkRoundedIcon /> },
+      { title: 'Refferal', path: PATH_DASHBOARD.general.referral, icon: <ConnectWithoutContactRoundedIcon /> },
       //  **************** Marketing Design Pages **************** //
-      {
-        title: 'Design',
-        path: PATH_DASHBOARD.design.root,
-        icon: <ColorLensIcon />,
-        children: [
-          { title: 'Business Card', path: PATH_DASHBOARD.design.businessCard },
-          { title: 'Store Banner', path: PATH_DASHBOARD.design.storeBanner },
-          { title: 'WhatsApp Story', path: PATH_DASHBOARD.design.whatsAppStory },
-        ],
-      },
-      //
       {
         title: 'Store',
         path: PATH_DASHBOARD.store.root,

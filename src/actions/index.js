@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable prefer-destructuring */
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,6 +11,8 @@ import { storeActions } from '../reducers/storeSlice';
 import { orderActions } from '../reducers/orderSlice';
 import { appActions } from '../reducers/appSlice';
 import { categoryActions } from '../reducers/categorySlice';
+import { productActions } from '../reducers/productSlice';
+import { subCategoryActions } from '../reducers/subCategorySlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -21,7 +24,7 @@ const s3 = new AWS.S3({
   secretAccessKey: '8hB4QBZ6oHR8+x8XawY6+5MGVV06u1Pv31zabqBh',
 });
 
-export const showSnackbar = (severity, message) => async (dispatch, getState) => {
+export const showSnackbar = (severity, message) => async (dispatch, _getState) => {
   dispatch(
     snackbarActions.openSnackBar({
       message,
@@ -34,7 +37,7 @@ export const showSnackbar = (severity, message) => async (dispatch, getState) =>
   }, 6000);
 };
 
-export const showNotification = (message) => async (dispatch, getState) => {
+export const showNotification = (message) => async (dispatch, _getState) => {
   dispatch(
     notificationActions.setNotification({
       message,
@@ -42,7 +45,7 @@ export const showNotification = (message) => async (dispatch, getState) => {
   );
 };
 
-export const register = (formValues, email, location) => async (dispatch, getState) => {
+export const register = (formValues, email, location) => async (dispatch, _getState) => {
   // Write logic for registering a user and handle any error case
 
   let message;
@@ -102,7 +105,7 @@ export const register = (formValues, email, location) => async (dispatch, getSta
   }
 };
 
-export const verifyEmail = (email, otp) => async (dispatch, getState) => {
+export const verifyEmail = (email, otp) => async (dispatch, _getState) => {
   dispatch(
     authActions.SetIsSubmittingVerify({
       isSubmitting: true,
@@ -186,7 +189,7 @@ export const verifyEmail = (email, otp) => async (dispatch, getState) => {
   }
 };
 
-export const login = (email, password) => async (dispatch, getState) => {
+export const login = (email, password) => async (dispatch, _getState) => {
   dispatch(
     authActions.SetIsSubmittingLogin({
       isSubmitting: true,
@@ -253,13 +256,13 @@ export const login = (email, password) => async (dispatch, getState) => {
   }
 };
 
-export const logout = () => async (dispatch, getState) => {
+export const logout = () => async (dispatch, _getState) => {
   dispatch(authActions.SignOut());
   // dispatch(showSnackbar('success', 'Logged out successfully!'));
   window.location.href = `/auth/login`;
 };
 
-export const resendEmailOTP = (email) => async (dispatch, getState) => {
+export const resendEmailOTP = (email) => async (dispatch, _getState) => {
   let message;
 
   try {
@@ -295,7 +298,7 @@ export const resendEmailOTP = (email) => async (dispatch, getState) => {
   }
 };
 
-export const stopLoginBtnLoader = () => async (dispatch, getState) => {
+export const stopLoginBtnLoader = () => async (dispatch, _getState) => {
   dispatch(
     authActions.SetIsSubmittingLogin({
       isSubmitting: false,
@@ -530,11 +533,26 @@ export const fetchSubnames = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchCatgory = () => async (dispatch, getState) => {
+// ********************************************* Categories ********************************************* //
+
+export const fetchCatgory = (term) => async (dispatch, getState) => {
   let message;
 
   try {
-    const res = await fetch(`${BaseURL}category/getAll`, {
+    const fullLocation = `${BaseURL}category/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
       method: 'GET',
 
       headers: {
@@ -581,7 +599,7 @@ export const createCategory = (file, name, handleClose) => async (dispatch, getS
     s3.getSignedUrl(
       'putObject',
       { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
-      async (err, presignedURL) => {
+      async (_err, presignedURL) => {
         await fetch(presignedURL, {
           method: 'PUT',
 
@@ -654,7 +672,7 @@ export const updateCategory = (file, name, id, handleClose) => async (dispatch, 
       s3.getSignedUrl(
         'putObject',
         { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
-        async (err, presignedURL) => {
+        async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
 
@@ -800,6 +818,50 @@ export const deleteCategory = (categoryId, handleClose) => async (dispatch, getS
   }
 };
 
+export const deleteMultipleCategories = (ids, handleClose) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}category/deleteMultiple`, {
+      method: 'DELETE',
+
+      body: JSON.stringify({
+        categoryIds: ids,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      categoryActions.DeleteMultipleCategory({
+        ids,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 export const updateCategoryStock = (id, formValues, handleClose) => async (dispatch, getState) => {
   let message;
   try {
@@ -839,6 +901,916 @@ export const updateCategoryStock = (id, formValues, handleClose) => async (dispa
     dispatch(showSnackbar('success', message));
 
     handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const reorderCategories = (items) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}category/reorder/`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        categories: items,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      categoryActions.FetchCategories({
+        categories: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+// ********************************************* Product ********************************************* //
+
+export const createNewProduct = (formValues, images, videos, handleClose) => async (dispatch, getState) => {
+  const imageKeys = [];
+  const videoKeys = [];
+
+  dispatch(productActions.SetIsCreating({ state: true }));
+
+  let message;
+
+  try {
+    // Upload images
+
+    for (const _element of images) {
+      const key = `product/image/${getState().store.store._id}/${uuidv4()}.${_element.type}`;
+      imageKeys.push(key);
+
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: _element,
+
+            headers: {
+              'Content-Type': _element.type,
+            },
+          });
+        }
+      );
+    }
+
+    for (const _element of videos) {
+      const key = `product/video/${getState().store.store._id}/${uuidv4()}.${_element.type}`;
+      videoKeys.push(key);
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: _element,
+
+            headers: {
+              'Content-Type': _element.type,
+            },
+          });
+        }
+      );
+    }
+
+    // Upload videos
+    // Send data back to api
+
+    const res = await fetch(`${BaseURL}product/create/`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+        images: imageKeys,
+        videos: videoKeys,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.CreateProduct({
+        product: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(productActions.SetIsCreating({ state: false }));
+
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(productActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateProduct = (
+  productId,
+  formValues,
+  images,
+  videos,
+  excludedImages,
+  excludedVideos,
+  handleClose
+) => async (dispatch, getState) => {
+  let message;
+  const imageKeys = [];
+  const videoKeys = [];
+  dispatch(productActions.SetIsUpdating({ state: true }));
+  try {
+    const newImages = images || [];
+    for (const _element of newImages) {
+      const key = `product/image/${getState().store.store._id}/${uuidv4()}.${_element.type}`;
+      imageKeys.push(key);
+
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: _element,
+
+            headers: {
+              'Content-Type': _element.type,
+            },
+          });
+        }
+      );
+    }
+
+    const newVideos = videos || [];
+    for (const _element of newVideos) {
+      const key = `product/video/${getState().store.store._id}/${uuidv4()}.${_element.type}`;
+      videoKeys.push(key);
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: _element,
+
+            headers: {
+              'Content-Type': _element.type,
+            },
+          });
+        }
+      );
+    }
+
+    // Upload videos
+    // Send data back to api
+
+    const res = await fetch(`${BaseURL}product/update/${productId}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+        imageKeys: imageKeys || [],
+        videoKeys: videoKeys || [],
+        excludedImages: excludedImages || [],
+        excludedVideos: excludedVideos || [],
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.UpdateProduct({
+        product: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(productActions.SetIsUpdating({ state: false }));
+
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(productActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const fetchProducts = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    //
+    const fullLocation = `${BaseURL}product/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.FetchProducts({
+        products: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const updateProductStock = (id, formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}product/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+        imageKeys: [],
+        videoKeys: [],
+        excludedImages: [],
+        excludedVideos: [],
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.UpdateProduct({
+        product: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const reorderProducts = (items) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}product/reorder/`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        products: items,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.FetchProducts({
+        products: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const deleteProduct = (productId, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(productActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}product/delete/${productId}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.DeleteProduct({
+        productId,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
+    dispatch(productActions.SetIsDeleting({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(productActions.SetIsDeleting({ state: false }));
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const deleteMultipleProducts = (ids, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(productActions.SetIsDeleting({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}product/deleteMultiple`, {
+      method: 'DELETE',
+
+      body: JSON.stringify({
+        productIds: ids,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.DeleteMultipleProduct({
+        ids,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    handleClose();
+    dispatch(productActions.SetIsDeleting({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(productActions.SetIsDeleting({ state: false }));
+  }
+};
+
+
+// ********************************************* Sub categories ********************************************* //
+
+export const fetchSubCatgory = (term) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const fullLocation = `${BaseURL}subCategory/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      subCategoryActions.FetchSubCategories({
+        subCategories: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const createSubCategory = (file, name, category, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  const key = `subCategory/${category.value}/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+
+  dispatch(subCategoryActions.SetIsCreating({ state: true }));
+
+  try {
+    // Upload image then send data to backend
+
+    s3.getSignedUrl(
+      'putObject',
+      { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+      async (_err, presignedURL) => {
+        await fetch(presignedURL, {
+          method: 'PUT',
+
+          body: file,
+
+          headers: {
+            'Content-Type': file.type,
+          },
+        });
+
+        // Send subCategory name and image with auth token to backend
+
+        const res = await fetch(`${BaseURL}subCategory/create`, {
+          method: 'POST',
+
+          body: JSON.stringify({
+            image: key,
+            name,
+            category,
+          }),
+
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        });
+
+        const result = await res.json();
+
+        message = result.message;
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error(message);
+          } else {
+            throw new Error(res.message);
+          }
+        }
+
+        console.log(result);
+
+        dispatch(
+          subCategoryActions.CreateSubCategory({
+            subCategory: result.data,
+          })
+        );
+
+        dispatch(showSnackbar('success', message));
+
+        handleClose();
+
+        dispatch(subCategoryActions.SetIsCreating({ state: false }));
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(subCategoryActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateSubCategory = (file, name, category, id, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  const key = `subCategory/${category.value}/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+
+  dispatch(subCategoryActions.SetIsUpdating({ state: true }));
+
+  try {
+    if (file) {
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: file,
+
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+
+          // Send category name and image with auth token to backend
+
+          const res = await fetch(`${BaseURL}subCategory/update/${id}`, {
+            method: 'PATCH',
+
+            body: JSON.stringify({
+              image: key,
+              name,
+              category,
+            }),
+
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${getState().auth.token}`,
+            },
+          });
+
+          const result = await res.json();
+
+          message = result.message;
+
+          if (!res.ok) {
+            if (!res.message) {
+              throw new Error(message);
+            } else {
+              throw new Error(res.message);
+            }
+          }
+
+          console.log(result);
+
+          dispatch(
+            subCategoryActions.UpdateSubCategory({
+              subCategory: result.data,
+            })
+          );
+
+          dispatch(showSnackbar('success', message));
+
+          handleClose();
+
+          dispatch(subCategoryActions.SetIsUpdating({ state: false }));
+        }
+      );
+    } else {
+      const res = await fetch(`${BaseURL}subCategory/update/${id}`, {
+        method: 'PATCH',
+
+        body: JSON.stringify({
+          name,
+          category,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(message);
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      dispatch(
+        subCategoryActions.UpdateSubCategory({
+          subCategory: result.data,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+
+      handleClose();
+
+      dispatch(subCategoryActions.SetIsUpdating({ state: false }));
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(subCategoryActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteSubCategory = (subCategoryId, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(subCategoryActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}subCategory/delete/${subCategoryId}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      subCategoryActions.DeleteSubCategory({
+        subCategoryId,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
+    dispatch(subCategoryActions.SetIsDeleting({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(subCategoryActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const deleteMultipleSubCategories = (ids, handleClose) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}subCategory/deleteMultiple`, {
+      method: 'DELETE',
+
+      body: JSON.stringify({
+        subCategoryIds: ids,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      subCategoryActions.DeleteMultipleSubCategory({
+        ids,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const updateSubCategoryStock = (id, formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}subCategory/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      subCategoryActions.UpdateSubCategory({
+        subCategory: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const reorderSubCategories = (items) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}subCategory/reorder/`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        subCategories: items,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      subCategoryActions.FetchSubCategories({
+        subCategories: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));

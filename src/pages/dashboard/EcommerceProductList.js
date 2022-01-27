@@ -1,7 +1,7 @@
-import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 // @mui
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import {
   Box,
   Card,
@@ -14,13 +14,14 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  Switch,
+  FormControlLabel,
+  Stack,
+  IconButton,
 } from '@mui/material';
 // redux
+import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts } from '../../redux/slices/product';
-// utils
-import { fDate } from '../../utils/formatTime';
-import { fCurrency } from '../../utils/formatNumber';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -36,50 +37,134 @@ import {
   ProductListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
 import AddNewProduct from '../../Dialogs/AddNewProduct';
-import AddNewCategory from '../../Dialogs/AddNewCategory';
+import { fetchProducts, updateProductStock, reorderProducts } from '../../actions';
+import ShareProduct from '../../Dialogs/Product/ShareProduct';
+import EditProduct from '../../Dialogs/Product/EditProduct';
+import DeleteProduct from '../../Dialogs/Product/DeleteProduct';
+import BulkDeleteProducts from '../../Dialogs/Product/BulkDeleteProducts';
+import AlterProductStock from '../../Dialogs/Product/AlterProductStock';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Product', alignRight: false },
-  { id: 'createdAt', label: 'Create at', alignRight: false },
+  { id: 'category', label: 'Category', alignRight: false },
   { id: 'inventoryType', label: 'Status', alignRight: false },
   { id: 'price', label: 'Price', alignRight: true },
-  { id: '' },
+  { id: 'actions', label: 'Actions', alignRight: true },
 ];
+
+const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
+  ({ theme }) => ({
+    width: 42,
+    height: 26,
+    padding: 0,
+    '& .MuiSwitch-switchBase': {
+      padding: 0,
+      margin: 2,
+      transitionDuration: '300ms',
+      '&.Mui-checked': {
+        transform: 'translateX(16px)',
+        color: '#fff',
+        '& + .MuiSwitch-track': {
+          backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
+          opacity: 1,
+          border: 0,
+        },
+        '&.Mui-disabled + .MuiSwitch-track': {
+          opacity: 0.5,
+        },
+      },
+      '&.Mui-focusVisible .MuiSwitch-thumb': {
+        color: '#33cf4d',
+        border: '6px solid #fff',
+      },
+      '&.Mui-disabled .MuiSwitch-thumb': {
+        color: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
+      },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+      },
+    },
+    '& .MuiSwitch-thumb': {
+      boxSizing: 'border-box',
+      width: 22,
+      height: 22,
+    },
+    '& .MuiSwitch-track': {
+      borderRadius: 26 / 2,
+      backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+      opacity: 1,
+      transition: theme.transitions.create(['background-color'], {
+        duration: 500,
+      }),
+    },
+  })
+);
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceProductList() {
+  const { products } = useSelector((state) => state.product);
+
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
 
+  const [term, setTerm] = useState('');
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      dispatch(fetchProducts(term));
+    }, 800);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [term]);
+
   const [openAddProduct, setOpenAddproduct] = useState(false);
 
-  const [openAddCategory, setOpenAddcategory] = useState(false);
+  const [openBulkImport, setOpenBulkImport] = useState(false);
 
-  const handleCloseAddCategory = () => {
-    setOpenAddcategory(false);
-  }
+  const [IdToShare, setIdToShare] = useState();
+  const [openShare, setOpenShare] = useState(false);
 
-  const handleOpenAddcategory = () => {
-    setOpenAddcategory(true);
-  }
+  const handleOpenShare = (id) => {
+    setIdToShare(id);
+    setOpenShare(true);
+  };
+
+  const handleCloseShare = () => {
+    setOpenShare(false);
+  };
+
+  const handleOpenBulkImport = () => {
+    setOpenBulkImport(true);
+  };
+
+  const handleCloseBulkImport = () => {
+    setOpenBulkImport(false);
+  };
 
   const handleCloseAddProduct = () => {
     setOpenAddproduct(false);
-  }
+  };
 
   const handleOpenAddProduct = () => {
     setOpenAddproduct(true);
-  }
+  };
 
-  // const { products } = useSelector((state) => state.product);
+  const [openBulkDelete, setOpenBulkDelete] = useState(false);
 
-  const products = [];
+  const handleOpenBulkDelete = () => {
+    setOpenBulkDelete(true);
+  };
 
-  const [productList, setProductList] = useState([]);
+  const handleCloseBulkDelete = () => {
+    setOpenBulkDelete(false);
+  };
+
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -87,15 +172,35 @@ export default function EcommerceProductList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState('createdAt');
 
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [IdToEdit, setIdToEdit] = useState();
+  const [IdToDelete, setIdToDelete] = useState();
+  const [openDelete, setOpenDelete] = useState(false);
+
+  const [openStock, setOpenStock] = useState(false);
+  const [stockId, setStockId] = useState('');
+
+  const handleOpenUpdate = (id) => {
+    setIdToEdit(id);
+    setOpenUpdate(true);
+  };
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
+  };
+
+  const handleOpenStock = (id) => {
+    setStockId(id);
+    setOpenStock(true);
+  };
+
+  const handleCloseStock = () => {
+    setOpenStock(false);
+  };
+
   useEffect(() => {
     // dispatch(getProducts());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (products.length) {
-      setProductList(products);
-    }
-  }, [products]);
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -105,18 +210,18 @@ export default function EcommerceProductList() {
 
   const handleSelectAllClick = (checked) => {
     if (checked) {
-      const selected = productList.map((n) => n.name);
+      const selected = products.map((n) => n._id);
       setSelected(selected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -137,138 +242,267 @@ export default function EcommerceProductList() {
   };
 
   const handleDeleteProduct = (productId) => {
-    const deleteProduct = productList.filter((product) => product.id !== productId);
+    const deleteProduct = products.filter((product) => product.id !== productId);
     setSelected([]);
-    setProductList(deleteProduct);
   };
 
   const handleDeleteProducts = (selected) => {
-    const deleteProducts = productList.filter((product) => !selected.includes(product.name));
+    const deleteProducts = products.filter((product) => !selected.includes(product.name));
     setSelected([]);
-    setProductList(deleteProducts);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - productList.length) : 0;
+  const handleOpenDelete = (id) => {
+    setIdToDelete(id);
+    setOpenDelete(true);
+  };
 
-  const filteredProducts = applySortFilter(productList, getComparator(order, orderBy), filterName);
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0;
+
+  const filteredProducts = applySortFilter(products, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredProducts.length && Boolean(filterName);
 
+  const processProductsData = () => {
+    const processedArray = [];
+
+    products.map((category) => {
+      const array = Object.entries(category);
+
+      const filtered = array.filter(
+        ([key, value]) =>
+          key === 'productName' ||
+          key === 'price' ||
+          key === 'discountedPrice' ||
+          key === 'wholesalePrice' ||
+          key === 'minWholesaleQuantity' ||
+          key === 'isFragile' ||
+          key === 'acceptCOD' ||
+          key === 'outOfStock' ||
+          key === 'totalSales' ||
+          key === 'totalOrders' ||
+          key === 'minQuantitySold'
+      );
+
+      const asObject = Object.fromEntries(filtered);
+
+      return processedArray.push(asObject);
+    });
+
+    const finalArray = processedArray.map((obj) => Object.values(obj));
+
+    return finalArray;
+  };
+
+  const CreateAndDownloadCSV = (data) => {
+    let csv =
+      'total_sales, total_orders, name, maximum_retail_price, discounted_price, wholesale_price, minimum_wholesale_quantity,  is_fragile, accept_cod, minimum_quantity_sold, out_of_stock, \n';
+    data.forEach((row) => {
+      csv += row.join(',');
+      csv += '\n';
+    });
+
+    console.log(csv);
+    const hiddenElement = document.createElement('a');
+    hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'products.csv';
+    hiddenElement.click();
+  };
+
+  const handleExportProducts = () => {
+    CreateAndDownloadCSV(processProductsData());
+  };
+
+  const handleDragEnd = (result) => {
+    console.log(result);
+    const items = Array.from(products);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    dispatch(reorderProducts(items));
+  };
+
   return (
-<>
-<Page title="Product List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Card>
-          <ProductListToolbar
-          openAddProduct={handleOpenAddProduct}
-          openAddCategory={handleOpenAddcategory}
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-            onDeleteProducts={() => handleDeleteProducts(selected)}
-          />
+    <>
+      <Page title="Product List">
+        <Container maxWidth={themeStretch ? false : 'lg'}>
+          <Card>
+            <ProductListToolbar
+              setTerm={setTerm}
+              openBulkImport={handleOpenBulkImport}
+              openAddProduct={handleOpenAddProduct}
+              numSelected={selected.length}
+              filterName={filterName}
+              onFilterName={handleFilterByName}
+              onDeleteProducts={() => {
+                handleOpenBulkDelete();
+              }}
+              handleExportProducts={handleExportProducts}
+            />
 
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <ProductListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={productList.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
+            <Scrollbar>
+              <TableContainer sx={{ minWidth: 800 }}>
+                <Table>
+                  <ProductListHead
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={products.length}
+                    numSelected={selected.length}
+                    onRequestSort={handleRequestSort}
+                    onSelectAllClick={handleSelectAllClick}
+                  />
 
-                <TableBody>
-                  {filteredProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, cover, price, createdAt, inventoryType } = row;
+                  <DragDropContext onDragEnd={handleDragEnd}>
+                    <Droppable droppableId="list">
+                      {(provided) => (
+                        <TableBody {...provided.droppableProps} ref={provided.innerRef}>
+                          {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                            const { _id, productName, category, discountedPrice, outOfStock, images } = row;
 
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                            const isItemSelected = selected.indexOf(_id) !== -1;
 
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
-                        </TableCell>
-                        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Image
-                            disabledEffect
-                            alt={name}
-                            src={cover}
-                            sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
-                          />
-                          <Typography variant="subtitle2" noWrap>
-                            {name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell style={{ minWidth: 160 }}>{fDate(createdAt)}</TableCell>
-                        <TableCell style={{ minWidth: 160 }}>
-                          <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={
-                              (inventoryType === 'out_of_stock' && 'error') ||
-                              (inventoryType === 'low_stock' && 'warning') ||
-                              'success'
-                            }
-                          >
-                            {inventoryType ? sentenceCase(inventoryType) : ''}
-                          </Label>
-                        </TableCell>
-                        <TableCell align="right">{fCurrency(price)}</TableCell>
-                        <TableCell align="right">
-                          <ProductMoreMenu productName={name} onDelete={() => handleDeleteProduct(id)} />
+                            return (
+                              <Draggable key={_id} draggableId={_id} index={index}>
+                                {(provided) => (
+                                  <TableRow
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    ref={provided.innerRef}
+                                    hover
+                                    key={_id}
+                                    tabIndex={-1}
+                                    role="checkbox"
+                                    selected={isItemSelected}
+                                    aria-checked={isItemSelected}
+                                  >
+                                    <TableCell padding="checkbox">
+                                      <Checkbox checked={isItemSelected} onClick={() => handleClick(_id)} />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Stack direction={'row'} alignItems={'center'}>
+                                        <Image
+                                          disabledEffect
+                                          alt={productName}
+                                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${images[0]}`}
+                                          sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
+                                        />
+                                        <Typography variant="subtitle2" noWrap>
+                                          {productName}
+                                        </Typography>
+                                      </Stack>
+                                    </TableCell>
+                                    <TableCell style={{ minWidth: 160 }}>{category.label}</TableCell>
+                                    <TableCell style={{ minWidth: 160 }}>
+                                      {' '}
+                                      <FormControlLabel
+                                        control={
+                                          <IOSSwitch
+                                            sx={{ m: 1 }}
+                                            checked={!outOfStock}
+                                            onClick={(e) => {
+                                              if (!outOfStock) {
+                                                handleOpenStock(_id);
+                                              } else {
+                                                dispatch(
+                                                  updateProductStock(
+                                                    _id,
+                                                    { hidden: false, outOfStock: false },
+                                                    handleCloseStock
+                                                  )
+                                                );
+                                              }
+                                            }}
+                                          />
+                                        }
+                                        label=""
+                                      />{' '}
+                                      <Label
+                                        variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                        color={(outOfStock && 'error') || 'success'}
+                                      >
+                                        {outOfStock ? 'Out of stock' : 'In stock'}
+                                      </Label>
+                                    </TableCell>
+                                    <TableCell align="right">{`Rs.${discountedPrice}`}</TableCell>
+                                    <TableCell align="right">
+                                      <IconButton
+                                        onClick={() => {
+                                          handleOpenShare(_id);
+                                        }}
+                                        className="me-2"
+                                      >
+                                        <ShareRoundedIcon style={{ fontSize: '20px' }} />
+                                      </IconButton>
+                                      <ProductMoreMenu
+                                        productName={productName}
+                                        onDelete={() => handleOpenDelete(_id)}
+                                        onEdit={() => {
+                                          handleOpenUpdate(_id);
+                                        }}
+                                      />
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                              </Draggable>
+                            );
+                          })}
+                          {emptyRows > 0 && (
+                            <TableRow style={{ height: 53 * emptyRows }}>
+                              <TableCell colSpan={6} />
+                            </TableRow>
+                          )}
+                          {provided.placeholder}
+                        </TableBody>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+
+                  {isNotFound && (
+                    <TableBody>
+                      <TableRow>
+                        <TableCell align="center" colSpan={6}>
+                          <Box sx={{ py: 3 }}>
+                            <SearchNotFound searchQuery={filterName} />
+                          </Box>
                         </TableCell>
                       </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
+                    </TableBody>
                   )}
-                </TableBody>
+                </Table>
+              </TableContainer>
+            </Scrollbar>
 
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6}>
-                        <Box sx={{ py: 3 }}>
-                          <SearchNotFound searchQuery={filterName} />
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </Table>
-            </TableContainer>
-          </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={productList.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(event, value) => setPage(value)}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Card>
-      </Container>
-    </Page>
-
-{openAddCategory && <AddNewCategory open={openAddCategory} handleClose={handleCloseAddCategory} />}
-    {openAddProduct && <AddNewProduct open={openAddProduct} handleClose={handleCloseAddProduct} />}
-</>
-    
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={products.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={(event, value) => setPage(value)}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Card>
+        </Container>
+      </Page>
+      {openStock && <AlterProductStock open={openStock} handleClose={handleCloseStock} id={stockId} />}
+      {openDelete && <DeleteProduct open={openDelete} handleClose={handleCloseDelete} id={IdToDelete} />}
+      {openShare && <ShareProduct open={openShare} handleClose={handleCloseShare} id={IdToShare} />}
+      {openAddProduct && <AddNewProduct open={openAddProduct} handleClose={handleCloseAddProduct} />}
+      {openUpdate && <EditProduct open={openUpdate} handleClose={handleCloseUpdate} id={IdToEdit} />}
+      {openBulkDelete && (
+        <BulkDeleteProducts
+          open={openBulkDelete}
+          handleClose={handleCloseBulkDelete}
+          setSelected={setSelected}
+          selected={selected}
+        />
+      )}
+    </>
   );
 }
 
