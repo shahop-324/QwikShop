@@ -2790,3 +2790,421 @@ export const updateStoreTiming = (formValues, handleClose) => async (dispatch, g
     handleClose();
   }
 };
+
+// *************************************** Policy ********************************** //
+
+export const updatePolicy = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingPolicy({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/policy/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingPolicy({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingPolicy({ state: false }));
+  }
+};
+
+// ***************************************** Notification ************************************** //
+
+export const updateNotification = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingNotification({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/notification/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingNotification({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingNotification({ state: false }));
+  }
+};
+
+// ***************************************** Update Social Links ************************************** //
+
+export const updateSocialLinks = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingSocialLinks({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}storeu/social-links/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingSocialLinks({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingSocialLinks({ state: false }));
+  }
+};
+
+// ***************************************** Update Store General Info ************************************** //
+
+export const updateStoreGeneralInfo = (formValues, subName, file) => async (dispatch, getState) => {
+  let message;
+  let key;
+  dispatch(storeActions.SetIsSubmittingSteup({ state: true }));
+  try {
+    if (file) {
+      key = `store/logo/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+
+      // Upload to aws
+
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: file,
+
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+        }
+      );
+    }
+
+    // If(image) => upload image and send to api
+
+    const res = await fetch(`${BaseURL}store/general/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+        subName,
+        key,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsSubmittingSteup({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsSubmittingSteup({ state: false }));
+  }
+};
+
+// ************************************************* Store Other Info ************************************************ //
+
+export const updateStoreOtherInfo = () => async (dispatch, getState) => {
+  try {
+    //
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// ************************************************* Store Ambience ************************************************ //
+
+export const updateStoreAmbience = () => async (dispatch, getState) => {
+  try {
+    //
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// ************************************************* Store pages ************************************************* //
+
+// Fetch, Add, Update, Delete
+
+export const addStorePage = () => async (dispatch, getState) => {};
+
+export const getStorePages = () => async (dispatch, getState) => {};
+
+export const updateStorePage = () => async (dispatch, getState) => {};
+
+export const deleteStorePage = () => async (dispatch, getState) => {};
+
+// ************************************************* Checkout Field ************************************************* //
+
+// Fetch, Add, Update, Delete
+
+export const getCheckoutFields = () => async (dispatch, getState) => {};
+
+export const addCheckoutField = () => async (dispatch, getState) => {};
+
+export const updateCheckoutField = () => async (dispatch, getState) => {};
+
+export const deleteCheckoutField = () => async (dispatch, getState) => {};
+
+// **************************************************** Staff *************************************************************** //
+
+// Add, update, delete
+
+export const addStaffMember = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsCreatingStaff({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/staff/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(storeActions.SetIsCreatingStaff({ state: false }));
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsCreatingStaff({ state: false }));
+    handleClose();
+  }
+};
+
+export const updateStaffMember = (formValues, email, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingStaff({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/staff/update/${email}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(storeActions.SetIsUpdatingStaff({ state: false }));
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingStaff({ state: false }));
+    handleClose();
+  }
+};
+
+export const removeStaffMember = (email, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsDeletingStaff({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/staff/update/${email}`, {
+      method: 'PATCH',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(storeActions.SetIsDeletingStaff({ state: false }));
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsDeletingStaff({ state: false }));
+    handleClose();
+  }
+};
+
+// Order
+// Customer
+// Review
+// Marketing

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSnackbar } from 'notistack';
+import { useSelector, useDispatch } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
@@ -11,8 +11,8 @@ import { LoadingButton } from '@mui/lab';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { useSelector } from 'react-redux';
 import { FormProvider } from '../../../../components/hook-form';
+import { updateSocialLinks } from '../../../../actions';
 
 AccountSocialLinks.propTypes = {
   myProfile: PropTypes.shape({
@@ -24,6 +24,8 @@ AccountSocialLinks.propTypes = {
 };
 
 export default function AccountSocialLinks() {
+  const dispatch = useDispatch();
+  const { store, isUpdatingSocialLinks } = useSelector((state) => state.store);
   const { user } = useSelector((state) => state.user);
 
   const defaultValues = {
@@ -32,9 +34,9 @@ export default function AccountSocialLinks() {
     twitterLink: user.twitterLink,
   };
 
-  const [facebookLink, setFacebookLink] = useState('');
-  const [instagramLink, setInstagramLink] = useState('');
-  const [twitterLink, setTwitterLink] = useState('');
+  const [facebookLink, setFacebookLink] = useState(store.facebookLink);
+  const [instagramLink, setInstagramLink] = useState(store.instagramLink);
+  const [twitterLink, setTwitterLink] = useState(store.twitterLink);
 
   const methods = useForm({
     defaultValues,
@@ -45,8 +47,9 @@ export default function AccountSocialLinks() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     console.log(facebookLink, instagramLink, twitterLink);
+    dispatch(updateSocialLinks({ facebookLink, instagramLink, twitterLink }));
   };
 
   return (
@@ -101,7 +104,7 @@ export default function AccountSocialLinks() {
               ),
             }}
           />
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton type="submit" variant="contained" loading={isUpdatingSocialLinks}>
             Save Changes
           </LoadingButton>
         </Stack>

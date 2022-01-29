@@ -1,14 +1,20 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PhoneInput from 'react-phone-number-input';
-import { Box, Card, Grid, Dialog, DialogTitle, DialogActions, TextField, Autocomplete, Button } from '@mui/material';
+import { Box, Card, Grid, Dialog, DialogTitle, TextField, Autocomplete, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CustomPhoneNumber from '../forms/PhoneNumber';
 // @mui
 // Phone Input
 import 'react-phone-number-input/style.css';
+import { addStaffMember } from '../actions';
 
 const AddStaffMember = ({ open, handleClose }) => {
+  const dispatch = useDispatch();
+
+  const { isCreatingStaff } = useSelector((state) => state.store);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -21,6 +27,17 @@ const AddStaffMember = ({ open, handleClose }) => {
     error: false,
     message: 'Atleast one permission is required',
   });
+
+  const onSubmit = () => {
+    const formValues = {
+      name,
+      email,
+      phone,
+      permissions: permissionList.map((el) => el.label),
+    };
+
+    dispatch(addStaffMember(formValues, handleClose));
+  };
 
   return (
     <>
@@ -45,7 +62,6 @@ const AddStaffMember = ({ open, handleClose }) => {
                   label="Staff Name"
                   fullWidth
                   value={name}
-                  
                   onChange={(e) => {
                     if (!e.target.value) {
                       setNameError((prev) => {
@@ -149,7 +165,14 @@ const AddStaffMember = ({ open, handleClose }) => {
                 />
               </Box>
               <div className="d-flex flex-row align-items-center justify-content-end  mt-4">
-                <LoadingButton onClick={() => {}} type="submit" variant="contained" loading={false}>
+                <LoadingButton
+                  onClick={() => {
+                    onSubmit();
+                  }}
+                  type="submit"
+                  variant="contained"
+                  loading={isCreatingStaff}
+                >
                   Add Member
                 </LoadingButton>
                 <Button

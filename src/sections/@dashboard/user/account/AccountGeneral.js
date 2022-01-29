@@ -1,57 +1,47 @@
 import validator from 'validator';
 import React, { useState, useCallback } from 'react';
 import * as Yup from 'yup';
-import { useSnackbar } from 'notistack';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import {
-  Box,
-  Card,
-  Grid,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  TextField,
-  Autocomplete,
-  Stack,
-  Button,
-  Typography,
-} from '@mui/material';
+import { Box, Card, Grid, TextField, Autocomplete, Stack, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
 import PhoneInput from 'react-phone-number-input';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fData } from '../../../../utils/formatNumber';
 // components
-import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
+import { FormProvider, RHFUploadAvatar } from '../../../../components/hook-form';
 
 import CustomPhoneNumber from '../../../../forms/PhoneNumber';
 
 // Phone Input
 import 'react-phone-number-input/style.css';
+import { UploadAvatar } from '../../../../components/upload';
+import { updateStoreGeneralInfo } from '../../../../actions';
 
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
-  const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
 
   const { subname } = useSelector((state) => state.app);
 
-  const [storeName, setStoreName] = useState();
-  const [country, setCountry] = useState();
-  const [state, setState] = useState();
-  const [city, setCity] = useState();
-  const [address, setAddress] = useState();
-  const [pincode, setPincode] = useState();
-  const [landmark, setLandmark] = useState();
-  const [gstin, setGstin] = useState();
-  const [category, setCategory] = useState();
-  const [phone, setPhone] = useState();
-  const [emailAddress, setEmailAddress] = useState();
+  const [storeName, setStoreName] = useState(store.storeName);
+  const [country, setCountry] = useState(store.country);
+  const [state, setState] = useState(store.state);
+  const [city, setCity] = useState(store.city);
+  const [address, setAddress] = useState(store.address);
+  const [pincode, setPincode] = useState(store.pincode);
+  const [landmark, setLandmark] = useState(store.landmark);
+  const [gstin, setGstin] = useState(store.gstin);
+  const [category, setCategory] = useState(store.category);
+  const [phone, setPhone] = useState(store.phone);
+  const [emailAddress, setEmailAddress] = useState(store.emailAddress);
 
-  const [storeURL, setStoreURL] = useState();
+  const [storeURL, setStoreURL] = useState(store.subName);
 
   const [storeNameError, setStoreNameError] = useState({ error: false, message: 'Store Name is required' });
   const [countryError, setCountryError] = useState({ error: false, message: 'Country is required' });
@@ -65,25 +55,16 @@ export default function AccountGeneral() {
   const [emailError, setEmailError] = useState({ error: false, message: 'Please enter a valid email address' });
   const [storeURLError, setStoreURLError] = useState({ error: false, message: 'Store URL is required' });
 
-  let user;
+  const [file, setFile] = useState();
+  const [fileToPreview, setFileToPreview] = useState(
+    store.logo && `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`
+  );
 
   const UpdateUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Name is required'),
   });
 
-  const defaultValues = {
-    displayName: user?.displayName || '',
-    email: user?.email || '',
-    photoURL: user?.photoURL || '',
-    phoneNumber: user?.phoneNumber || '',
-    country: user?.country || '',
-    address: user?.address || '',
-    state: user?.state || '',
-    city: user?.city || '',
-    zipCode: user?.zipCode || '',
-    about: user?.about || '',
-    isPublic: user?.isPublic || '',
-  };
+  const defaultValues = {};
 
   const methods = useForm({
     resolver: yupResolver(UpdateUserSchema),
@@ -98,6 +79,22 @@ export default function AccountGeneral() {
 
   const onSubmit = async () => {
     //  Validate each field and if everything is fine then send to api
+
+    const formValues = {
+      storeName,
+      country,
+      state,
+      city,
+      address,
+      pincode,
+      landmark,
+      gstin,
+      category,
+      phone,
+      emailAddress,
+    };
+
+    dispatch(updateStoreGeneralInfo(formValues, storeURL, file));
   };
 
   const handleDrop = useCallback(
@@ -105,6 +102,8 @@ export default function AccountGeneral() {
       const file = acceptedFiles[0];
 
       if (file) {
+        setFile(file);
+        setFileToPreview(URL.createObjectURL(file));
         setValue(
           'photoURL',
           Object.assign(file, {
@@ -124,11 +123,12 @@ export default function AccountGeneral() {
             <Typography variant="h6" className="mb-3">
               Store Logo
             </Typography>
-            <RHFUploadAvatar
+            <UploadAvatar
               name="photoURL"
               accept="image/*"
               maxSize={3145728}
               onDrop={handleDrop}
+              file={fileToPreview}
               helperText={
                 <Typography
                   variant="caption"
@@ -165,16 +165,13 @@ export default function AccountGeneral() {
                     prev.message = 'Shop Url is required';
                     return prev;
                   });
-                } 
-                else if (e.target.value === "") {
+                } else if (e.target.value === '') {
                   setStoreURLError((prev) => {
                     prev.error = true;
                     prev.message = 'Shop Url is required';
                     return prev;
                   });
-                } 
-                
-                else if (subname.includes(e.target.value)) {
+                } else if (subname.includes(e.target.value)) {
                   setStoreURLError((prev) => {
                     prev.error = true;
                     prev.message = 'This url is already registered for another shop';
@@ -502,7 +499,7 @@ export default function AccountGeneral() {
               }}
               type="submit"
               variant="contained"
-              loading={isSubmitting}
+              loading={isSubmittingStoreSetup}
             >
               Save Changes
             </LoadingButton>

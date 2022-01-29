@@ -44,10 +44,10 @@ export const PATH_DASHBOARD = {
     discount: path(ROOTS_DASHBOARD, '/discount'),
     manage: path(ROOTS_DASHBOARD, '/manage'),
     // questions: path(ROOTS_DASHBOARD, '/questions'),
-    referral: path(ROOTS_DASHBOARD, '/refferal'),
-    integration: path(ROOTS_DASHBOARD, '/integration'),
+    // referral: path(ROOTS_DASHBOARD, '/refferal'),
+    // integration: path(ROOTS_DASHBOARD, '/integration'),
     reviews: path(ROOTS_DASHBOARD, '/reviews'),
-    academy: path(ROOTS_DASHBOARD, '/academy'),
+    // academy: path(ROOTS_DASHBOARD, '/academy'),
   },
 
   order: {

@@ -51,7 +51,7 @@ const navConfig = [
       { title: 'Discount', path: PATH_DASHBOARD.general.discount, icon: <LocalOfferRoundedIcon /> },
       { title: 'Manage', path: PATH_DASHBOARD.general.manage, icon: <ManageAccountsRoundedIcon /> },
       // { title: 'Questions', path: PATH_DASHBOARD.general.questions, icon: <QuestionMarkRoundedIcon /> },
-      { title: 'Refferal', path: PATH_DASHBOARD.general.referral, icon: <ConnectWithoutContactRoundedIcon /> },
+      // { title: 'Refferal', path: PATH_DASHBOARD.general.referral, icon: <ConnectWithoutContactRoundedIcon /> },
       //  **************** Marketing Design Pages **************** //
       {
         title: 'Store',
@@ -65,21 +65,21 @@ const navConfig = [
         ],
       },
      
-      {
-        title: 'Integrations',
-        path: PATH_DASHBOARD.general.integration,
-        icon: <ExtensionRoundedIcon />,
-      },
+      // {
+      //   title: 'Integrations',
+      //   path: PATH_DASHBOARD.general.integration,
+      //   icon: <ExtensionRoundedIcon />,
+      // },
       {
         title: 'Reviews',
         path: PATH_DASHBOARD.general.reviews,
         icon: <ReviewsRoundedIcon />,
       },
-      {
-        title: 'Academy',
-        path: PATH_DASHBOARD.general.academy,
-        icon: <SchoolRoundedIcon />,
-      },
+      // {
+      //   title: 'Academy',
+      //   path: PATH_DASHBOARD.general.academy,
+      //   icon: <SchoolRoundedIcon />,
+      // },
       // MANAGEMENT : E-COMMERCE
     ],
   },

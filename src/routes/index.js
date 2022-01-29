@@ -78,10 +78,10 @@ export default function Router() {
         { path: 'discount', element: <GeneralDiscount /> },
         { path: 'manage', element: <GeneralManage /> },
         // { path: 'questions', element: <GeneralManage /> },
-        { path: 'refferal', element: <GeneralManage /> },
-        { path: 'integration', element: <GeneralIntegration /> },
+        // { path: 'refferal', element: <GeneralManage /> },
+        // { path: 'integration', element: <GeneralIntegration /> },
         {path: 'reviews', element: <GeneralReviews />},
-        { path: 'academy', element: <GeneralAcademy /> },
+        // { path: 'academy', element: <GeneralAcademy /> },
         {
           path: 'catalouge',
           children: [
@@ -92,7 +92,6 @@ export default function Router() {
             // { path: 'builder', element: <GeneralCatalougeBuilder /> },
           ],
         },
-       
         {
           path: 'store',
           children: [
