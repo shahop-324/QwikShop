@@ -63,12 +63,15 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export default function EditDiscount({ open, handleClose, id }) {
-
   const dispatch = useDispatch();
 
   const { categories } = useSelector((state) => state.category);
   const { subCategories } = useSelector((state) => state.subCategory);
   const { products } = useSelector((state) => state.product);
+
+  const { discounts } = useSelector((state) => state.discount);
+
+  const discount = discounts.find((el) => el._id === id);
 
   useEffect(() => {
     dispatch(fetchCategory());
@@ -76,26 +79,29 @@ export default function EditDiscount({ open, handleClose, id }) {
     dispatch(fetchProducts());
   }, []);
 
-  const [discountType, setDiscountType] = useState('percentage');
-  const [type, setType] = useState('regular');
-  const [buyX, setBuyX] = useState();
-  const [getY, setGetY] = useState();
-  const [applicableOn, setApplicableOn] = useState('allProducts');
-  const [applicableFromDateTime, setApplicableFromDateTime] = React.useState(new Date());
-  const [applicableTillDateTime, setApplicableTillDateTime] = React.useState(new Date());
-  const [applicableCategories, setApplicableCategoories] = useState();
-  const [applicableSubCategories, setApplicableSubCategories] = useState();
-  const [applicableProducts, setApplicableProducts] = useState();
-  const [boughtProduct, setBoughtProduct] = useState(null);
-  const [givenProduct, setGivenProduct] = useState(null);
-  const [numberOfCoupons, setNumberOfCoupons] = useState();
-  const [discountCode, setDiscountCode] = useState();
-  const [usesPerCustomer, setUsesPerCustomer] = useState();
-  const [discountPercentage, setDiscountPercentage] = useState();
-  const [discountAmount, setDiscountAmount] = useState();
-  const [minOrderValue, setMinOrderValue] = useState();
-  const [maxDiscount, setMaxDiscount] = useState();
-  const [showToCustomer, setShowToCustomer] = useState();
+  const [discountType, setDiscountType] = useState(discount?.discountType);
+  const [type, setType] = useState(discount?.type);
+  const [buyX, setBuyX] = useState(discount?.buyX);
+  const [getY, setGetY] = useState(discount?.getY);
+  const [applicableOn, setApplicableOn] = useState(discount?.applicableOn);
+  const [applicableFromDateTime, setApplicableFromDateTime] = useState(discount?.applicableFromDateTime);
+  const [applicableTillDateTime, setApplicableTillDateTime] = useState(discount?.applicableTillDateTime);
+  const [applicableCategories, setApplicableCategoories] = useState( typeof discount?.applicableCategories !== "undefined" &&
+  discount?.applicableCategories.length > 0 ? discount?.applicableCategories : []);
+  const [applicableSubCategories, setApplicableSubCategories] = useState(  typeof discount?.applicableSubCategories !== "undefined" &&
+  discount?.applicableSubCategories.length > 0 ? discount?.applicableSubCategories : []);
+  const [applicableProducts, setApplicableProducts] = useState( typeof discount?.applicableProducts !== "undefined" &&
+  discount?.applicableProducts.length > 0 ? discount?.applicableProducts :  []);
+  const [boughtProduct, setBoughtProduct] = useState(discount?.boughtProduct);
+  const [givenProduct, setGivenProduct] = useState(discount?.givenProduct);
+  const [numberOfCoupons, setNumberOfCoupons] = useState(discount?.numberOfCoupons);
+  const [discountCode, setDiscountCode] = useState(discount?.discountCode);
+  const [usesPerCustomer, setUsesPerCustomer] = useState(discount?.usesPerCustomer);
+  const [discountPercentage, setDiscountPercentage] = useState(discount?.discountPercentage);
+  const [discountAmount, setDiscountAmount] = useState(discount?.discountAmount);
+  const [minOrderValue, setMinOrderValue] = useState(discount?.minOrderValue);
+  const [maxDiscount, setMaxDiscount] = useState(discount?.maxDiscount);
+  const [showToCustomer, setShowToCustomer] = useState(discount?.showToCustomer);
 
   const onSubmit = () => {
     const formValues = {
@@ -121,7 +127,7 @@ export default function EditDiscount({ open, handleClose, id }) {
       showToCustomer,
     };
 
-    dispatchEvent(updateDiscount(formValues, id, handleClose));
+    dispatch(updateDiscount(formValues, id, handleClose));
   };
 
   const categoryOptions = categories.map((el) => ({
@@ -137,7 +143,7 @@ export default function EditDiscount({ open, handleClose, id }) {
   }));
 
   const subCategoryOptions = subCategories
-    .filter((el) => applicableCategories.includes(el.category))
+    .filter((el) => applicableCategories.map((el) => el.value).includes(el.category.value))
     .map((subCategory) => ({
       label: subCategory.name,
       value: subCategory._id,

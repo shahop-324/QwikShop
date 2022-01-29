@@ -86,9 +86,9 @@ export default function AddNewDiscount({ open, handleClose }) {
   const [applicableOn, setApplicableOn] = useState('allProducts');
   const [applicableFromDateTime, setApplicableFromDateTime] = React.useState(new Date());
   const [applicableTillDateTime, setApplicableTillDateTime] = React.useState(new Date());
-  const [applicableCategories, setApplicableCategoories] = useState();
-  const [applicableSubCategories, setApplicableSubCategories] = useState();
-  const [applicableProducts, setApplicableProducts] = useState();
+  const [applicableCategories, setApplicableCategoories] = useState([]);
+  const [applicableSubCategories, setApplicableSubCategories] = useState([]);
+  const [applicableProducts, setApplicableProducts] = useState([]);
   const [boughtProduct, setBoughtProduct] = useState(null);
   const [givenProduct, setGivenProduct] = useState(null);
   const [numberOfCoupons, setNumberOfCoupons] = useState();
@@ -140,7 +140,7 @@ export default function AddNewDiscount({ open, handleClose }) {
   }));
 
   const subCategoryOptions = subCategories
-    .filter((el) => applicableCategories.includes(el.category))
+    .filter((el) => applicableCategories.map((el) => el.value).includes(el.category.value))
     .map((subCategory) => ({
       label: subCategory.name,
       value: subCategory._id,
@@ -201,27 +201,30 @@ export default function AddNewDiscount({ open, handleClose }) {
                 label="Selected products"
               />
             </RadioGroup>
-            <Stack>
-              <FormLabel component="legend">Discount type</FormLabel>
-              <RadioGroup
-                defaultValue={discountType}
-                className="mb-4"
-                row
-                aria-label="Discount type"
-                name="row-radio-buttons-group"
-              >
-                <FormControlLabel
-                  value="percentage"
-                  control={<Radio onClick={() => setDiscountType('percentage')} />}
-                  label="Percentage"
-                />
-                <FormControlLabel
-                  value="flat"
-                  control={<Radio onClick={() => setDiscountType('flat')} />}
-                  label="Flat"
-                />
-              </RadioGroup>
-            </Stack>
+            {type !== 'buyXGetYFree' && (
+              <Stack>
+                <FormLabel component="legend">Discount type</FormLabel>
+                <RadioGroup
+                  defaultValue={discountType}
+                  className="mb-4"
+                  row
+                  aria-label="Discount type"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="percentage"
+                    control={<Radio onClick={() => setDiscountType('percentage')} />}
+                    label="Percentage"
+                  />
+                  <FormControlLabel
+                    value="flat"
+                    control={<Radio onClick={() => setDiscountType('flat')} />}
+                    label="Flat"
+                  />
+                </RadioGroup>
+              </Stack>
+            )}
+
             <Box
               sx={{
                 display: 'grid',
@@ -439,7 +442,7 @@ export default function AddNewDiscount({ open, handleClose }) {
                 label="Uses per customer"
                 variant="outlined"
               />
-              {discountType !== 'flat' && (
+              {discountType !== 'flat' && type !== 'buyXGetYFree' && (
                 <TextField
                   value={discountPercentage}
                   onChange={(e) => {
@@ -460,7 +463,7 @@ export default function AddNewDiscount({ open, handleClose }) {
                 />
               )}
 
-              {discountType === 'flat' && (
+              {discountType === 'flat' && type !== 'buyXGetYFree' && (
                 <TextField
                   value={discountAmount}
                   onChange={(e) => {
@@ -481,25 +484,28 @@ export default function AddNewDiscount({ open, handleClose }) {
                 />
               )}
 
-              <TextField
-                value={minOrderValue}
-                onChange={(e) => {
-                  setMinOrderValue(e.target.value);
-                }}
-                className="mb-4"
-                fullWidth
-                id="outlined-basic"
-                label="Minimum order value"
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment>
-                      <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              {discountType !== 'flat' && (
+              {type !== 'buyXGetYFree' && (
+                <TextField
+                  value={minOrderValue}
+                  onChange={(e) => {
+                    setMinOrderValue(e.target.value);
+                  }}
+                  className="mb-4"
+                  fullWidth
+                  id="outlined-basic"
+                  label="Minimum order value"
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment>
+                        <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
+
+              {discountType !== 'flat' && type !== 'buyXGetYFree' && (
                 <TextField
                   value={maxDiscount}
                   onChange={(e) => {

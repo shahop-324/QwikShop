@@ -23,6 +23,7 @@ import {
   Typography,
   Divider,
   Button,
+  Stack,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CurrencyRupeeRoundedIcon from '@mui/icons-material/CurrencyRupeeRounded';
@@ -32,6 +33,8 @@ import Checkbox from '@mui/material/Checkbox';
 
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateManageCharges } from '../actions';
 
 const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
   ({ theme }) => ({
@@ -82,24 +85,19 @@ const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVis
 );
 
 const ManageCharges = ({ open, handleClose }) => {
-  const [deliveryChargePerOrder, setDeliveryChargePerOrder] = useState();
-  const [freeDeliveryAbove, setFreeDeliveryAbove] = useState();
-  const [diffDeliveryChargeForOnlinePaidOrder, setDiffDeliveryChargeForOnlinePaidOrder] = useState();
+  const dispatch = useDispatch();
+  const { store, isUpdatingManageCharges } = useSelector((state) => state.store);
 
-  const [deliveryChargeForOnlinePaidOrder, setDeliveryChargeForOnlinePaidOrder] = useState();
+  const [gstEnabled, setGSTEnabled] = useState(store.gstEnabled);
+  const [gstNumber, setGSTNumber] = useState(store.gstNumber);
+  const [gstPercentage, setGSTPercentage] = useState(store.gstPercentage);
 
-  const [gstEnabled, setGSTEnabled] = useState(false);
-  const [gstNumber, setGSTNumber] = useState();
-  const [gstPercentage, setGSTPercentage] = useState();
-
-  const [extraCharges, setExtraCharges] = useState([
-    { index: '', name: '', type: 'flat', percentage: '', flatFees: '' },
-  ]);
+  const [extraCharges, setExtraCharges] = useState(store.extraCharges);
 
   const addChargeRow = () => {
     setExtraCharges((prev) => [
       ...prev,
-      { index: uuidv4(), name: '', type: 'percentage', percentage: '', flatFees: '' },
+      { index: uuidv4(), chargeName: '', type: 'flat', chargePercentage: '', chargeAmount: '' },
     ]);
   };
 
@@ -120,117 +118,40 @@ const ManageCharges = ({ open, handleClose }) => {
     );
   };
 
+  const onSubmit = () => {
+    const formValues = {
+      extraCharges,
+      gstEnabled,
+      gstNumber,
+      gstPercentage,
+    };
+
+    dispatch(updateManageCharges(formValues, handleClose));
+  };
+
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
         <div className="d-flex flex-row align-items-center justify-content-between">
           <DialogTitle>Manage charges</DialogTitle>
-
-          <Button
-            onClick={() => {
-              handleClose();
-            }}
-            variant="contained"
-            className="me-4"
-          >
-            Save
-          </Button>
+          <Stack sx={{ mr: 4 }} direction="row" alignItems="center">
+            <LoadingButton
+              loading={isUpdatingManageCharges}
+              onClick={() => {
+                onSubmit();
+              }}
+              variant="contained"
+              className="me-4"
+            >
+              Save
+            </LoadingButton>
+            <Button onClick={handleClose} variant="outlined">
+              Close
+            </Button>
+          </Stack>
         </div>
-
         <Grid className="px-4 pt-3" container spacing={3}>
           <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3 }} className="mb-4">
-              <div className="mb-3">
-                <Typography variant="h8" className="">
-                  Delivery Charges
-                </Typography>
-              </div>
-
-              <Box
-                sx={{
-                  display: 'grid',
-                  columnGap: 2,
-                  rowGap: 3,
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                }}
-              >
-                <TextField
-                  type="number"
-                  name="deliveryChargePerOrder"
-                  label="Delivery charge per order"
-                  fullWidth
-                  value={deliveryChargePerOrder}
-                  onChange={(e) => {
-                    setDeliveryChargePerOrder(e.target.value);
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment>
-                        <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  type="number"
-                  name="freeDeliveryAbove"
-                  label="Free Delivery above"
-                  fullWidth
-                  value={freeDeliveryAbove}
-                  onChange={(e) => {
-                    setFreeDeliveryAbove(e.target.value);
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment>
-                        <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
-              <FormGroup className="my-3">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={diffDeliveryChargeForOnlinePaidOrder}
-                      onChange={(e, value) => {
-                        setDiffDeliveryChargeForOnlinePaidOrder(value);
-                      }}
-                    />
-                  }
-                  label="Offer different charges for online paid orders."
-                />
-              </FormGroup>
-              {diffDeliveryChargeForOnlinePaidOrder && (
-                <Box
-                  sx={{
-                    display: 'grid',
-                    columnGap: 2,
-                    rowGap: 3,
-                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                  }}
-                >
-                  <TextField
-                    type="number"
-                    name="deliveryChargeForOnlinePaidOrder"
-                    label="Delivery charge for online paid order"
-                    fullWidth
-                    value={deliveryChargeForOnlinePaidOrder}
-                    onChange={(e) => {
-                      setDeliveryChargeForOnlinePaidOrder(e.target.value);
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment>
-                          <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Box>
-              )}
-            </Card>
             <Card sx={{ p: 3 }} className="mb-4">
               <div className="d-flex flex-row align-items-center justify-content-between mb-4">
                 <Typography variant="h8" className="mb-3">
@@ -334,24 +255,24 @@ const ManageCharges = ({ open, handleClose }) => {
                   >
                     <TextField
                       type="text"
-                      name="gstNumber"
-                      label="GSTIN Number"
+                      name="chargeName"
+                      label="Charge Name"
                       fullWidth
-                      value={gstNumber}
+                      value={el.chargeName}
                       onChange={(e) => {
-                        setGSTNumber(e.target.value);
+                        updateChargeRow(e.target.value, el.index, 'chargeName');
                       }}
                     />
 
                     {el.type === 'flat' && (
                       <TextField
                         type="number"
-                        name="gstPercentage"
-                        label="GST Percentage"
+                        name="chargeAmount"
+                        label="Charge Amount"
                         fullWidth
-                        value={gstPercentage}
+                        value={el.chargeAmount}
                         onChange={(e) => {
-                          setGSTPercentage(e.target.value);
+                          updateChargeRow(e.target.value, el.index, 'chargeAmount');
                         }}
                         InputProps={{
                           startAdornment: (
@@ -366,12 +287,12 @@ const ManageCharges = ({ open, handleClose }) => {
                     {el.type === 'percentage' && (
                       <TextField
                         type="number"
-                        name="gstPercentage"
-                        label="GST Percentage"
+                        name="chargePercentage"
+                        label="Charge Percentage"
                         fullWidth
-                        value={gstPercentage}
+                        value={el.chargePercentage}
                         onChange={(e) => {
-                          setGSTPercentage(e.target.value);
+                          updateChargeRow(e.target.value, el.index, 'chargePercentage');
                         }}
                         InputProps={{
                           endAdornment: (
@@ -411,17 +332,6 @@ const ManageCharges = ({ open, handleClose }) => {
             </Card>
           </Grid>
         </Grid>
-        <div className="d-flex flex-row align-items-center justify-content-end my-3">
-          <Button
-            onClick={() => {
-              handleClose();
-            }}
-            variant="contained"
-            className="me-4"
-          >
-            Save
-          </Button>
-        </div>
       </Dialog>
     </>
   );

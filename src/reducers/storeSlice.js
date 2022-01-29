@@ -8,6 +8,11 @@ const storeSlice = createSlice({
     error: false,
     isSubmittingStoreSetup: false,
     isUpdatingPaymentSettings: false,
+    isUpdatingFavicon: false,
+    isUpdatingStoreSEO: false,
+    isUpdatingSelfDeliveryZone: false,
+    isUpdatingManageCharges: false,
+    isUpdatingStoreTimings: false,
   },
 
   reducers: {
@@ -22,7 +27,22 @@ const storeSlice = createSlice({
     },
     SetIsSubmittingSteup(state, action){
       state.isSubmittingStoreSetup = action.payload.isSubmitting;
-    }
+    },
+    SetIsUpdatingFavicon(state, action) {
+      state.isUpadtingFavicon = action.payload.state;
+    },
+    SetIsUpdatingStoreSEO(state, action) {
+      state.isUpdatingStoreSEO = action.payload.state;
+    },
+    SetIsUpdatingSelfDeliveryZone(state, action){
+      state.isUpadtingSelfDeliveryZone = action.payload.state;
+    },
+    SetIsUpdatingManageCharges(state, action) {
+      state.isUpdatingManageCharges = action.payload.state;
+    },
+    SetIsUpdatingStoreTimings(state, action) {
+      state.isUpdatingStoreTimings = action.payload.state;
+    } 
   },
 });
 

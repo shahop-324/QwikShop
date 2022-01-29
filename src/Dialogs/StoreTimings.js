@@ -1,20 +1,11 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
-import {
-  Typography,
-  Box,
-  Card,
-  Grid,
-  Dialog,
-  DialogTitle,
-  TextField,
-  Autocomplete,
-  Button,
-  Divider,
-  Stack,
-} from '@mui/material';
+import TimePicker from '@mui/lab/TimePicker';
+import { Typography, Box, Card, Grid, Dialog, DialogTitle, TextField, Button, Divider, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateStoreTiming } from '../actions';
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 28,
@@ -58,15 +49,87 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const StoreTimings = ({ open, handleClose }) => {
-  const [timing, setTiming] = useState([
-    { index: '0', day: 'Sunday', open: true, openTime: '12:00 AM', closeTime: '12:30 AM', allDay: true },
-    { index: '1', day: 'Monday', open: true, openTime: '12:00 AM', closeTime: '12:30 AM', allDay: true },
-    { index: '2', day: 'Tuesday', open: true, openTime: '12:00 AM', closeTime: '12:30 AM', allDay: true },
-    { index: '3', day: 'Wednesday', open: true, openTime: '12:00 AM', closeTime: '12:30 AM', allDay: true },
-    { index: '4', day: 'Thrusday', open: true, openTime: '12:00 AM', closeTime: '12:30 AM', allDay: true },
-    { index: '5', day: 'Friday', open: true, openTime: '12:00 AM', closeTime: '12:30 AM', allDay: true },
-    { index: '6', day: 'Saturday', open: true, openTime: '12:00 AM', closeTime: '12:30 AM', allDay: true },
-  ]);
+  const dispatch = useDispatch();
+  const { store, isUpdatingStoreTimings } = useSelector((state) => state.store);
+
+  const [timing, setTiming] = useState(
+    store.storeTimings.length > 0
+      ? store.storeTimings
+      : [
+          {
+            index: '0',
+            day: 'Sunday',
+            open: true,
+            openTime: new Date('2022-01-29T08:00:00'),
+            closeTime: new Date('2022-01-29T22:30:00'),
+            allDay: true,
+          },
+          {
+            index: '1',
+            day: 'Monday',
+            open: true,
+            openTime: new Date('2022-01-29T08:00:00'),
+            closeTime: new Date('2022-01-29T22:30:00'),
+            allDay: true,
+          },
+          {
+            index: '2',
+            day: 'Tuesday',
+            open: true,
+            openTime: new Date('2022-01-29T08:00:00'),
+            closeTime: new Date('2022-01-29T22:30:00'),
+            allDay: true,
+          },
+          {
+            index: '3',
+            day: 'Wednesday',
+            open: true,
+            openTime: new Date('2022-01-29T08:00:00'),
+            closeTime: new Date('2022-01-29T22:30:00'),
+            allDay: true,
+          },
+          {
+            index: '4',
+            day: 'Thrusday',
+            open: true,
+            openTime: new Date('2022-01-29T08:00:00'),
+            closeTime: new Date('2022-01-29T22:30:00'),
+            allDay: true,
+          },
+          {
+            index: '5',
+            day: 'Friday',
+            open: true,
+            openTime: new Date('2022-01-29T08:00:00'),
+            closeTime: new Date('2022-01-29T22:30:00'),
+            allDay: true,
+          },
+          {
+            index: '6',
+            day: 'Saturday',
+            open: true,
+            openTime: new Date('2022-01-29T08:00:00'),
+            closeTime: new Date('2022-01-29T22:30:00'),
+            allDay: true,
+          },
+        ]
+  );
+
+  const updateTiming = (index, field, value) => {
+    setTiming((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el[field] = value;
+        return el;
+      })
+    );
+  };
+
+  const onSubmit = () => {
+    dispatch(updateStoreTiming({ storeTimings: timing }, handleClose));
+  };
 
   return (
     <>
@@ -88,58 +151,38 @@ const StoreTimings = ({ open, handleClose }) => {
                       display: 'grid',
                       columnGap: 2,
                       rowGap: 3,
-                      alignItems: "center",
+                      alignItems: 'center',
                       gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: '1fr 1fr 1.5fr 0.1fr 1.5fr' },
                     }}
                   >
                     <Typography>{el.day}</Typography>
                     <Stack direction="row" spacing={4} alignItems="center">
-                      <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
-                      <Typography>Open</Typography>
+                      <AntSwitch
+                        checked={el.open}
+                        onChange={(e) => updateTiming(el.index, 'open', e.target.checked)}
+                        inputProps={{ 'aria-label': 'ant design' }}
+                      />
+                      <Typography>{el.open ? 'Open' : 'Closed'}</Typography>
                     </Stack>
 
-                    <Autocomplete
-                      // value={country}
-                      // onChange={(e, value) => {
-                      //   setCountry(value);
-                      // }}
-                      fullWidth
-                      id="select-time"
-                      options={timingOptions}
-                      autoHighlight
-                      getOptionLabel={(option) => option.label}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Choose time"
-                          inputProps={{
-                            ...params.inputProps,
-                            autoComplete: '', // disable autocomplete and autofill
-                          }}
-                        />
-                      )}
+                    <TimePicker
+                      disabled={!el.open}
+                      label="Opens at"
+                      value={el.openTime}
+                      onChange={(value) => {
+                        updateTiming(el.index, 'openTime', value);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
                     />
                     <Typography>-</Typography>
-                    <Autocomplete
-                      // value={country}
-                      // onChange={(e, value) => {
-                      //   setCountry(value);
-                      // }}
-                      fullWidth
-                      id="select-time"
-                      options={timingOptions}
-                      autoHighlight
-                      getOptionLabel={(option) => option.label}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Choose time"
-                          inputProps={{
-                            ...params.inputProps,
-                            autoComplete: '', // disable autocomplete and autofill
-                          }}
-                        />
-                      )}
+                    <TimePicker
+                      disabled={!el.open}
+                      label="Closes at"
+                      value={el.closeTime}
+                      onChange={(value) => {
+                        updateTiming(el.index, 'closeTime', value);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
                     />
                   </Box>
 
@@ -151,7 +194,14 @@ const StoreTimings = ({ open, handleClose }) => {
         </Grid>
 
         <div className="d-flex flex-row align-items-center justify-content-end px-4 my-4">
-          <LoadingButton onClick={() => {}} type="submit" variant="contained" loading={false}>
+          <LoadingButton
+            onClick={() => {
+              onSubmit();
+            }}
+            type="submit"
+            variant="contained"
+            loading={isUpdatingStoreTimings}
+          >
             Save
           </LoadingButton>
           <Button
@@ -169,54 +219,3 @@ const StoreTimings = ({ open, handleClose }) => {
 };
 
 export default StoreTimings;
-
-const timingOptions = [
-  { label: '24 Hours' },
-  { label: '12:00 AM' },
-  { label: '12:30 AM' },
-  { label: '01:00 AM' },
-  { label: '01:30 AM' },
-  { label: '02:00 AM' },
-  { label: '02:30 AM' },
-  { label: '03:00 AM' },
-  { label: '03:30 AM' },
-  { label: '04:00 AM' },
-  { label: '04:30 AM' },
-  { label: '05:00 AM' },
-  { label: '05:30 AM' },
-  { label: '06:00 AM' },
-  { label: '06:30 AM' },
-  { label: '07:00 AM' },
-  { label: '07:30 AM' },
-  { label: '08:00 AM' },
-  { label: '08:30 AM' },
-  { label: '09:00 AM' },
-  { label: '09:30 AM' },
-  { label: '10:00 AM' },
-  { label: '10:30 AM' },
-  { label: '11:30 AM' },
-  { label: '12:00 PM' },
-  { label: '12:30 PM' },
-  { label: '01:00 PM' },
-  { label: '01:30 PM' },
-  { label: '02:00 PM' },
-  { label: '02:30 PM' },
-  { label: '03:00 PM' },
-  { label: '03:30 PM' },
-  { label: '04:00 PM' },
-  { label: '04:30 PM' },
-  { label: '05:00 PM' },
-  { label: '05:30 PM' },
-  { label: '06:00 PM' },
-  { label: '06:30 PM' },
-  { label: '07:00 PM' },
-  { label: '07:30 PM' },
-  { label: '08:00 PM' },
-  { label: '08:30 PM' },
-  { label: '09:00 PM' },
-  { label: '09:30 PM' },
-  { label: '10:00 PM' },
-  { label: '10:30 PM' },
-  { label: '11:00 PM' },
-  { label: '11:30 PM' },
-];

@@ -2394,7 +2394,7 @@ export const updateDiscount = (formValues, id, handleClose) => async (dispatch, 
       })
     );
 
-    dispatch(showSnackbar('error', message));
+    dispatch(showSnackbar('success', message));
     dispatch(discountActions.SetIsUpdating({ state: false }));
     handleClose();
   } catch (error) {
@@ -2445,8 +2445,8 @@ export const fetchDiscounts = (term) => async (dispatch, getState) => {
     console.log(result);
 
     dispatch(
-      discountActions.CreateDiscount({
-        discount: result.data,
+      discountActions.FetchDiscounts({
+        discounts: result.data,
       })
     );
   } catch (error) {
@@ -2496,6 +2496,297 @@ export const deleteDiscount = (id, handleClose) => async (dispatch, getState) =>
     console.log(error);
     dispatch(discountActions.SetIsDeleting({ state: false }));
     dispatch(showSnackbar('error', message));
+    handleClose();
+  }
+};
+
+// ********************************************* Manage Store *********************************** //
+
+export const updateStoreFavicon = (file, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  dispatch(storeActions.SetIsUpdatingFavicon({ state: true }));
+
+  try {
+    // Upload to aws and send to api
+
+    const key = `store/favicon/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+
+    s3.getSignedUrl(
+      'putObject',
+      { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+      async (_err, presignedURL) => {
+        await fetch(presignedURL, {
+          method: 'PUT',
+
+          body: file,
+
+          headers: {
+            'Content-Type': file.type,
+          },
+        });
+      }
+    );
+
+    const res = await fetch(`${BaseURL}store/manage/favicon`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        favicon: key,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingFavicon({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingFavicon({ state: false }));
+    handleClose();
+  }
+};
+
+export const updateStoreSEO = (formValues, file, handleClose) => async (dispatch, getState) => {
+  let message;
+  let key;
+  dispatch(storeActions.SetIsUpdatingStoreSEO({ state: true }));
+
+  try {
+    if (file) {
+      key = `store/seo/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+      // Upload to aws
+
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: file,
+
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+        }
+      );
+    }
+
+    const res = await fetch(`${BaseURL}store/manage/seo`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        seoImagePreview: key,
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingStoreSEO({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingStoreSEO({ state: false }));
+    handleClose();
+  }
+};
+
+export const updateSelfDeliveryZone = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingSelfDeliveryZone({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/manage/self-delivery-zone`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingSelfDeliveryZone({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingSelfDeliveryZone({ state: false }));
+    handleClose();
+  }
+};
+
+export const updateManageCharges = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingManageCharges({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/manage/manage-charges`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingManageCharges({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingManageCharges({ state: false }));
+    handleClose();
+  }
+};
+
+export const updateStoreTiming = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingStoreTimings({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/manage/store-timing`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingStoreTimings({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingStoreTimings({ state: false }));
     handleClose();
   }
 };

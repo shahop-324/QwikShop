@@ -4,6 +4,7 @@ import QrCode2RoundedIcon from '@mui/icons-material/QrCode2Rounded';
 import PointOfSaleRoundedIcon from '@mui/icons-material/PointOfSaleRounded';
 import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
 import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
+import WebAssetIcon from '@mui/icons-material/WebAsset';
 import PhoneAndroidRoundedIcon from '@mui/icons-material/PhoneAndroidRounded';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
@@ -24,6 +25,7 @@ import DeliveryZones from '../../Dialogs/DeliveryZones';
 import SEOSettings from '../../Dialogs/SEOSettings';
 import CreateInvoice from '../../Dialogs/CreateInvoice';
 import MarketingDesignOptions from '../../Dialogs/MarketingDesignOptions';
+import FaviconSettings from '../../Dialogs/Manage/FaviconSettings';
 
 export default function GeneralManage() {
   const { themeStretch } = useSettings();
@@ -41,6 +43,8 @@ export default function GeneralManage() {
   const [openCreateInvoice, setOpenCreateInvoice] = useState(false);
 
   const [openMarketingDesignOptions, setOpenMarketingDesignOptions] = useState(false);
+
+  const [openFaviconSetting, setOpenFaviconSetting] = useState(false);
 
   const handleOpenStoreTimings = () => {
     setOpenStoreTimings(true);
@@ -93,6 +97,14 @@ export default function GeneralManage() {
   const handleOpenMarketingDesignOptions = () => {
     setOpenMarketingDesignOptions(true);
   };
+
+  const handleCloseFaviconSetting = () => {
+    setOpenFaviconSetting(false);
+  }
+
+  const handleOpenFaviconSettings = () => {
+    setOpenFaviconSetting(true);
+  }
 
   const handleCloseMarketingDesignOptions = () => {
     setOpenMarketingDesignOptions(false);
@@ -165,6 +177,15 @@ export default function GeneralManage() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
+                title="Edit"
+                action={handleOpenFaviconSettings}
+                total={'Store Favicon'}
+                icon={<WebAssetIcon />}
+                color={'warning'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
                 title="Get Mobile App"
                 action={handleOpenSEOSettings}
                 total={'Android App'}
@@ -184,6 +205,7 @@ export default function GeneralManage() {
       {openMarketingDesignOptions && (
         <MarketingDesignOptions open={openMarketingDesignOptions} handleClose={handleCloseMarketingDesignOptions} />
       )}
+      {openFaviconSetting && <FaviconSettings open={openFaviconSetting} handleClose={handleCloseFaviconSetting} />}
     </>
   );
 }

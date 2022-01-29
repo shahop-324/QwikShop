@@ -10,8 +10,11 @@ import {
   IconButton,
   Grid,
   FormControlLabel,
+  Chip,
 } from '@mui/material';
 import dateFormat, { masks } from 'dateformat';
+import { useDispatch } from 'react-redux';
+import { updateDiscount } from '../actions';
 import { ProductMoreMenu } from '../sections/@dashboard/e-commerce/product-list';
 import EditDiscount from '../Dialogs/Discount/EditDiscount';
 import DeleteDiscount from '../Dialogs/Discount/DeleteDiscount';
@@ -64,7 +67,24 @@ const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVis
   })
 );
 
-const DiscountCard = () => {
+const DiscountCard = ({
+  id,
+  code,
+  discountType,
+  applicableFromDateTime,
+  applicableTillDateTime,
+  type,
+  numberOfCoupons,
+  totalUsed,
+  buyX,
+  getY,
+  discountPercentage,
+  discountAmount,
+  minOrderValue,
+  maxDiscount,
+  active,
+}) => {
+  const dispatch = useDispatch();
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -84,11 +104,15 @@ const DiscountCard = () => {
     setOpenEdit(false);
   };
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
     <>
       <Card sx={{ px: 3, py: 2 }}>
         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-          <Typography variant="h6">{'HAPPY60'}</Typography>
+          <Typography variant="h6">{code}</Typography>
           <ProductMoreMenu
             onDelete={() => {
               handleOpenDelete();
@@ -101,34 +125,73 @@ const DiscountCard = () => {
         </Stack>
         <Divider className="my-3" variant="dashed" />
         <Typography sx={{ textAlign: 'center' }} variant="subtitle2">
-          15% off upto Rs.500 above Rs.4000
+          {(() => {
+            switch (type) {
+              case 'regular':
+                if (discountType === 'percentage') {
+                  // Percentage
+                  return `${discountPercentage}% off upto Rs.${maxDiscount} above Rs.${minOrderValue}`;
+                }
+                // Flat
+                return `Flat Rs.${discountAmount} Off above Rs.${minOrderValue}`;
+
+              case 'buyXGetYFree':
+                return `Buy ${buyX} get ${getY} Free`;
+
+              case 'firstPurchase':
+                if (discountType === 'percentage') {
+                  // Percentage
+                  return `${discountPercentage}% off upto Rs.${maxDiscount} above Rs.${minOrderValue}`;
+                }
+                // Flat
+                return `Flat Rs.${discountAmount} Off above Rs.${minOrderValue}`;
+
+              default:
+                break;
+            }
+          })()}
         </Typography>
         <Divider className="my-3" variant="dashed" />
         <Stack className="my-2" direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
           <Typography variant="caption">Applicable From</Typography>
-          <Typography variant="caption">{dateFormat(new Date(), 'ddd, mmm dS, yy, h:MM')}</Typography>
+          <Typography variant="caption">{dateFormat(applicableFromDateTime, 'ddd, mmm dS, yy, h:MM')}</Typography>
         </Stack>
         <Stack className="my-2" direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
           <Typography variant="caption">Applicable till</Typography>
-          <Typography variant="caption">{dateFormat(new Date(), 'ddd, mmm dS, yy, h:MM')}</Typography>
+          <Typography variant="caption">{dateFormat(applicableTillDateTime, 'ddd, mmm dS, yy, h:MM')}</Typography>
         </Stack>
         <Divider className="my-3" variant="dashed" />
         <Stack className="my-2" direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
           <Typography variant="caption">Total coupons</Typography>
-          <Typography variant="caption">{5000}</Typography>
+          <Typography variant="caption">{numberOfCoupons}</Typography>
         </Stack>
         <Stack className="my-2" direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
           <Typography variant="caption">Total Remaining</Typography>
-          <Typography variant="caption">{45}</Typography>
+          <Typography variant="caption">{numberOfCoupons - totalUsed}</Typography>
         </Stack>
         <Divider className="my-3" variant="dashed" />
         <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
           <Typography variant="subtitle2">Status</Typography>
-          <FormControlLabel control={<IOSSwitch sx={{ m: 1 }} defaultChecked />} label="" />
+          <FormControlLabel
+            control={
+              <IOSSwitch
+                sx={{ m: 1 }}
+                checked={active}
+                onChange={(e) => {
+                  dispatch(updateDiscount({ active: e.target.checked }, id, () => {}));
+                }}
+              />
+            }
+            label=""
+          />
+        </Stack>
+        <Divider className="my-3" variant="dashed" />
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'center'}>
+          <Chip color={'primary'} label={`${capitalizeFirstLetter(type)} Discount`} variant="outlined" />
         </Stack>
       </Card>
-      {openEdit && <EditDiscount open={openEdit} handleClose={handleCloseEdit} id={''} />}
-      {openDelete && <DeleteDiscount open={openDelete} handleClose={handleCloseDelete} id={''} />}
+      {openEdit && <EditDiscount open={openEdit} handleClose={handleCloseEdit} id={id} />}
+      {openDelete && <DeleteDiscount open={openDelete} handleClose={handleCloseDelete} id={id} />}
     </>
   );
 };

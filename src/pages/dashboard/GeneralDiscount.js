@@ -25,7 +25,7 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import { DiscountWelcome, DiscountLessons } from '../../sections/@dashboard/general/discount/index';
 import DiscountCard from '../../components/DiscountCard';
-import AddNewDiscount from "../../Dialogs/Discount/AddNewDiscount";
+import AddNewDiscount from '../../Dialogs/Discount/AddNewDiscount';
 
 // ----------------------------------------------------------------------
 
@@ -120,13 +120,15 @@ export default function GeneralDiscount() {
   const { subCategories } = useSelector((state) => state.subCategory);
   const { products } = useSelector((state) => state.product);
 
+  const { discounts } = useSelector((state) => state.discount);
+
   const [openCreateDiscount, setOpenCreateDiscount] = useState(false);
 
-  const [term, setTerm] = useState("");
+  const [term, setTerm] = useState('');
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      dispatch(fetchDiscounts(term))
+      dispatch(fetchDiscounts(term));
     }, 800);
 
     return () => {
@@ -149,9 +151,9 @@ export default function GeneralDiscount() {
   const [applicableOn, setApplicableOn] = useState('allProducts');
   const [applicableFromDateTime, setApplicableFromDateTime] = React.useState(new Date());
   const [applicableTillDateTime, setApplicableTillDateTime] = React.useState(new Date());
-  const [applicableCategories, setApplicableCategoories] = useState();
-  const [applicableSubCategories, setApplicableSubCategories] = useState();
-  const [applicableProducts, setApplicableProducts] = useState();
+  const [applicableCategories, setApplicableCategoories] = useState([]);
+  const [applicableSubCategories, setApplicableSubCategories] = useState([]);
+  const [applicableProducts, setApplicableProducts] = useState([]);
   const [boughtProduct, setBoughtProduct] = useState(null);
   const [givenProduct, setGivenProduct] = useState(null);
   const [numberOfCoupons, setNumberOfCoupons] = useState();
@@ -179,6 +181,14 @@ export default function GeneralDiscount() {
       applicableCategories,
       applicableSubCategories,
       applicableProducts,
+      numberOfCoupons,
+      discountCode,
+      usesPerCustomer,
+      discountPercentage,
+      discountAmount,
+      minOrderValue,
+      maxDiscount,
+      showToCustomer,
     };
 
     dispatch(createNewDiscount(formValues));
@@ -197,7 +207,7 @@ export default function GeneralDiscount() {
   }));
 
   const subCategoryOptions = subCategories
-    .filter((el) => applicableCategories.includes(el.category))
+    .filter((el) => applicableCategories.map((el) => el.value).includes(el.category.value))
     .map((subCategory) => ({
       label: subCategory.name,
       value: subCategory._id,
@@ -206,382 +216,444 @@ export default function GeneralDiscount() {
 
   return (
     <>
-    <Page title="Discount">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Boost sales with discounts
-        </Typography>
+      <Page title="Discount">
+        <Container maxWidth={themeStretch ? false : 'xl'}>
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            Boost sales with discounts
+          </Typography>
 
-        <Stack sx={{ mb: 3 }} direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search…"
-            inputProps={{ 'aria-label': 'search' }}
-            onChange={(e) => setTerm(e.target.value)}
-          />
-        </Search>
-          <Button
-            variant="contained"
-            onClick={() => {
-              handleOpenCreateDiscount();
-            }}
-          >
-            Add Discount
-          </Button>
-        </Stack>
-
-        <Box
-          sx={{
-            display: 'grid',
-            gap: 3,
-            mb: 4,
-            gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)',
-            },
-          }}
-        >
-          <DiscountCard />
-        </Box>
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <DiscountWelcome displayName={user?.displayName} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <DiscountLessons />
+          <Grid container spacing={3} className="mb-4">
+            <Grid item xs={12} md={8}>
+              <DiscountWelcome displayName={user?.displayName} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <DiscountLessons />
+            </Grid>
           </Grid>
 
-          <Grid item xs={12} md={12}>
-            <div className="mt-5 px-4">
-             
-                <FormLabel component="legend">Type</FormLabel>
-                <RadioGroup
-                  defaultValue={type}
-                  className="mb-4"
-                  row
-                  aria-label="Discount type"
-                  name="row-radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="regular"
-                    control={<Radio onClick={() => setType('regular')} />}
-                    label="Regular Discount"
+          {discounts.length * 1 !== 0 ? (
+            <>
+              <Stack sx={{ mb: 3 }} direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                <Search>
+                  <SearchIconWrapper>
+                    <SearchIcon />
+                  </SearchIconWrapper>
+                  <StyledInputBase
+                    placeholder="Search…"
+                    inputProps={{ 'aria-label': 'search' }}
+                    onChange={(e) => setTerm(e.target.value)}
                   />
+                </Search>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    handleOpenCreateDiscount();
+                  }}
+                >
+                  Add Discount
+                </Button>
+              </Stack>
 
-                  <FormControlLabel
-                    value="buyXGetYFree"
-                    control={<Radio onClick={() => setType('buyXGetYFree')} />}
-                    label="Buy X get Y free"
-                  />
-                  <FormControlLabel
-                    value="firstPurchase"
-                    control={<Radio onClick={() => setType('firstPurchase')} />}
-                    label="First Purchase"
-                  />
-                </RadioGroup>
-                <FormLabel component="legend">Applicable on</FormLabel>
-                <RadioGroup
-                  defaultValue={applicableOn}
-                  className="mb-4"
-                  row
-                  aria-label="Discount type"
-                  name="row-radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="allProducts"
-                    control={<Radio onClick={() => setApplicableOn('regular')} />}
-                    label="All Products"
-                  />
-                  <FormControlLabel
-                    value="selectedCategory"
-                    control={<Radio onClick={() => setApplicableOn('selectedCategory')} />}
-                    label="Selected category"
-                  />
-                  <FormControlLabel
-                    value="selectedProducts"
-                    control={<Radio onClick={() => setApplicableOn('selectedProducts')} />}
-                    label="Selected products"
-                  />
-                </RadioGroup>
-                <Stack>
-                  <FormLabel component="legend">Discount type</FormLabel>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 3,
+                  mb: 4,
+                  gridTemplateColumns: {
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                    md: 'repeat(3, 1fr)',
+                  },
+                }}
+              >
+                {discounts.map((el) => {
+                  const {
+                    discountCode,
+                    _id,
+                    discountType,
+                    applicableFromDateTime,
+                    applicableTillDateTime,
+                    type,
+                    numberOfCoupons,
+                    totalUsed,
+                    buyX,
+                    getY,
+                    discountPercentage,
+                    discountAmount,
+                    minOrderValue,
+                    maxDiscount,
+                    active,
+                  } = el;
+                  return (
+                    <DiscountCard
+                      key={_id}
+                      id={_id}
+                      code={discountCode}
+                      discountType={discountType}
+                      applicableFromDateTime={applicableFromDateTime}
+                      applicableTillDateTime={applicableTillDateTime}
+                      type={type}
+                      numberOfCoupons={numberOfCoupons}
+                      totalUsed={totalUsed}
+                      buyX={buyX}
+                      getY={getY}
+                      discountPercentage={discountPercentage}
+                      discountAmount={discountAmount}
+                      minOrderValue={minOrderValue}
+                      maxDiscount={maxDiscount}
+                      active={active}
+                    />
+                  );
+                })}
+              </Box>
+            </>
+          ) : (
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={12}>
+                <div className="mt-5 px-4">
+                  <FormLabel component="legend">Type</FormLabel>
                   <RadioGroup
-                    defaultValue={discountType}
+                    defaultValue={type}
                     className="mb-4"
                     row
                     aria-label="Discount type"
                     name="row-radio-buttons-group"
                   >
                     <FormControlLabel
-                      value="percentage"
-                      control={<Radio onClick={() => setDiscountType('percentage')} />}
-                      label="Percentage"
+                      value="regular"
+                      control={<Radio onClick={() => setType('regular')} />}
+                      label="Regular Discount"
+                    />
+
+                    <FormControlLabel
+                      value="buyXGetYFree"
+                      control={<Radio onClick={() => setType('buyXGetYFree')} />}
+                      label="Buy X get Y free"
                     />
                     <FormControlLabel
-                      value="flat"
-                      control={<Radio onClick={() => setDiscountType('flat')} />}
-                      label="Flat"
+                      value="firstPurchase"
+                      control={<Radio onClick={() => setType('firstPurchase')} />}
+                      label="First Purchase"
                     />
                   </RadioGroup>
-                </Stack>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    columnGap: 2,
-                    rowGap: 3,
-                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                  }}
-                >
-                  <MobileDateTimePicker
-                    value={applicableFromDateTime}
-                    onChange={(newValue) => {
-                      setApplicableFromDateTime(newValue);
+                  <FormLabel component="legend">Applicable on</FormLabel>
+                  <RadioGroup
+                    defaultValue={applicableOn}
+                    className="mb-4"
+                    row
+                    aria-label="Discount type"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value="allProducts"
+                      control={<Radio onClick={() => setApplicableOn('regular')} />}
+                      label="All Products"
+                    />
+                    <FormControlLabel
+                      value="selectedCategory"
+                      control={<Radio onClick={() => setApplicableOn('selectedCategory')} />}
+                      label="Selected category"
+                    />
+                    <FormControlLabel
+                      value="selectedProducts"
+                      control={<Radio onClick={() => setApplicableOn('selectedProducts')} />}
+                      label="Selected products"
+                    />
+                  </RadioGroup>
+                  <Stack>
+                    <FormLabel component="legend">Discount type</FormLabel>
+                    <RadioGroup
+                      defaultValue={discountType}
+                      className="mb-4"
+                      row
+                      aria-label="Discount type"
+                      name="row-radio-buttons-group"
+                    >
+                      <FormControlLabel
+                        value="percentage"
+                        control={<Radio onClick={() => setDiscountType('percentage')} />}
+                        label="Percentage"
+                      />
+                      <FormControlLabel
+                        value="flat"
+                        control={<Radio onClick={() => setDiscountType('flat')} />}
+                        label="Flat"
+                      />
+                    </RadioGroup>
+                  </Stack>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      columnGap: 2,
+                      rowGap: 3,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                     }}
-                    label="Applicable from Date & Time"
-                    minDate={new Date('2018-01-01T00:00')}
-                    inputFormat="yyyy/MM/dd hh:mm a"
-                    mask="___/__/__ __:__ _M"
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                  <MobileDateTimePicker
-                    value={applicableTillDateTime}
-                    onChange={(newValue) => {
-                      setApplicableTillDateTime(newValue);
-                    }}
-                    label="Applicable till Date & Time"
-                    minDate={new Date('2018-01-01T00:00')}
-                    inputFormat="yyyy/MM/dd hh:mm a"
-                    mask="___/__/__ __:__ _M"
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                  >
+                    <MobileDateTimePicker
+                      value={applicableFromDateTime}
+                      onChange={(newValue) => {
+                        setApplicableFromDateTime(newValue);
+                      }}
+                      label="Applicable from Date & Time"
+                      minDate={new Date('2018-01-01T00:00')}
+                      inputFormat="yyyy/MM/dd hh:mm a"
+                      mask="___/__/__ __:__ _M"
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <MobileDateTimePicker
+                      value={applicableTillDateTime}
+                      onChange={(newValue) => {
+                        setApplicableTillDateTime(newValue);
+                      }}
+                      label="Applicable till Date & Time"
+                      minDate={new Date('2018-01-01T00:00')}
+                      inputFormat="yyyy/MM/dd hh:mm a"
+                      mask="___/__/__ __:__ _M"
+                      renderInput={(params) => <TextField {...params} />}
+                    />
 
-                  {type === 'buyXGetYFree' && (
+                    {type === 'buyXGetYFree' && (
+                      <TextField
+                        value={buyX}
+                        onChange={(e) => {
+                          setBuyX(e.target.value);
+                        }}
+                        className="mb-4"
+                        fullWidth
+                        id="outlined-basic"
+                        label="Buy X"
+                        variant="outlined"
+                      />
+                    )}
+
+                    {type === 'buyXGetYFree' && (
+                      <TextField
+                        value={getY}
+                        onChange={(e) => {
+                          setGetY(e.target.value);
+                        }}
+                        className="mb-4"
+                        fullWidth
+                        id="outlined-basic"
+                        label="Get Y"
+                        variant="outlined"
+                      />
+                    )}
+
+                    {type === 'buyXGetYFree' && (
+                      <Autocomplete
+                        required
+                        value={boughtProduct}
+                        onChange={(e, value) => {
+                          setBoughtProduct(value);
+                        }}
+                        fullWidth
+                        disablePortal
+                        autoHighlight
+                        getOptionLabel={(option) => option.label}
+                        renderOption={(props, option) => (
+                          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                            <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                            {option.label}
+                          </Box>
+                        )}
+                        options={productOptions}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Bought Product" fullWidth name="boughtProduct" />
+                        )}
+                      />
+                    )}
+
+                    {type === 'buyXGetYFree' && (
+                      <Autocomplete
+                        required
+                        value={givenProduct}
+                        onChange={(e, value) => {
+                          setGivenProduct(value);
+                        }}
+                        fullWidth
+                        disablePortal
+                        autoHighlight
+                        getOptionLabel={(option) => option.label}
+                        renderOption={(props, option) => (
+                          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                            <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                            {option.label}
+                          </Box>
+                        )}
+                        options={productOptions}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Given Product" fullWidth name="givenProduct" />
+                        )}
+                      />
+                    )}
+
+                    {applicableOn === 'selectedCategory' && (
+                      <Autocomplete
+                        multiple
+                        required
+                        value={applicableCategories}
+                        onChange={(e, value) => {
+                          setApplicableCategoories(value);
+                        }}
+                        fullWidth
+                        disablePortal
+                        autoHighlight
+                        getOptionLabel={(option) => option.label}
+                        renderOption={(props, option) => (
+                          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                            <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                            {option.label}
+                          </Box>
+                        )}
+                        options={categoryOptions}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Applicable categories" fullWidth name="applicableCategories" />
+                        )}
+                      />
+                    )}
+
+                    {applicableOn === 'selectedCategory' && (
+                      <Autocomplete
+                        multiple
+                        required
+                        value={applicableSubCategories}
+                        onChange={(e, value) => {
+                          setApplicableSubCategories(value);
+                        }}
+                        fullWidth
+                        disablePortal
+                        autoHighlight
+                        getOptionLabel={(option) => option.label}
+                        renderOption={(props, option) => (
+                          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                            <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                            {option.label}
+                          </Box>
+                        )}
+                        options={subCategoryOptions}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Applicable Sub Categories"
+                            fullWidth
+                            name="applicableSubCategories"
+                          />
+                        )}
+                      />
+                    )}
+
+                    {applicableOn === 'selectedProducts' && (
+                      <Autocomplete
+                        multiple
+                        required
+                        value={applicableProducts}
+                        onChange={(e, value) => {
+                          setApplicableProducts(value);
+                        }}
+                        fullWidth
+                        disablePortal
+                        autoHighlight
+                        getOptionLabel={(option) => option.label}
+                        renderOption={(props, option) => (
+                          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                            <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                            {option.label}
+                          </Box>
+                        )}
+                        options={productOptions}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Applicable Products" fullWidth name="applicableProducts" />
+                        )}
+                      />
+                    )}
+
                     <TextField
-                      value={buyX}
+                      value={numberOfCoupons}
                       onChange={(e) => {
-                        setBuyX(e.target.value);
+                        setNumberOfCoupons(e.target.value);
                       }}
                       className="mb-4"
                       fullWidth
                       id="outlined-basic"
-                      label="Buy X"
+                      label="Number of coupons"
                       variant="outlined"
                     />
-                  )}
-
-                  {type === 'buyXGetYFree' && (
                     <TextField
-                      value={getY}
+                      value={discountCode}
                       onChange={(e) => {
-                        setGetY(e.target.value);
+                        setDiscountCode(e.target.value);
                       }}
                       className="mb-4"
                       fullWidth
                       id="outlined-basic"
-                      label="Get Y"
+                      label="Discount code"
                       variant="outlined"
                     />
-                  )}
 
-                  {type === 'buyXGetYFree' && (
-                    <Autocomplete
-                      required
-                      value={boughtProduct}
-                      onChange={(e, value) => {
-                        setBoughtProduct(value);
-                      }}
-                      fullWidth
-                      disablePortal
-                      autoHighlight
-                      getOptionLabel={(option) => option.label}
-                      renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                          <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                          {option.label}
-                        </Box>
-                      )}
-                      options={productOptions}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Bought Product" fullWidth name="boughtProduct" />
-                      )}
-                    />
-                  )}
-
-                  {type === 'buyXGetYFree' && (
-                    <Autocomplete
-                      required
-                      value={givenProduct}
-                      onChange={(e, value) => {
-                        setGivenProduct(value);
-                      }}
-                      fullWidth
-                      disablePortal
-                      autoHighlight
-                      getOptionLabel={(option) => option.label}
-                      renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                          <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                          {option.label}
-                        </Box>
-                      )}
-                      options={productOptions}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Given Product" fullWidth name="givenProduct" />
-                      )}
-                    />
-                  )}
-
-                  {applicableOn === 'selectedCategory' && (
-                    <Autocomplete
-                      multiple
-                      required
-                      value={applicableCategories}
-                      onChange={(e, value) => {
-                        setApplicableCategoories(value);
-                      }}
-                      fullWidth
-                      disablePortal
-                      autoHighlight
-                      getOptionLabel={(option) => option.label}
-                      renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                          <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                          {option.label}
-                        </Box>
-                      )}
-                      options={categoryOptions}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Applicable categories" fullWidth name="applicableCategories" />
-                      )}
-                    />
-                  )}
-
-                  {applicableOn === 'selectedCategory' && (
-                    <Autocomplete
-                      multiple
-                      required
-                      value={applicableSubCategories}
-                      onChange={(e, value) => {
-                        setApplicableSubCategories(value);
-                      }}
-                      fullWidth
-                      disablePortal
-                      autoHighlight
-                      getOptionLabel={(option) => option.label}
-                      renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                          <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                          {option.label}
-                        </Box>
-                      )}
-                      options={subCategoryOptions}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Applicable Sub Categories"
-                          fullWidth
-                          name="applicableSubCategories"
-                        />
-                      )}
-                    />
-                  )}
-
-                  {applicableOn === 'selectedProducts' && (
-                    <Autocomplete
-                      multiple
-                      required
-                      value={applicableProducts}
-                      onChange={(e, value) => {
-                        setApplicableProducts(value);
-                      }}
-                      fullWidth
-                      disablePortal
-                      autoHighlight
-                      getOptionLabel={(option) => option.label}
-                      renderOption={(props, option) => (
-                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                          <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                          {option.label}
-                        </Box>
-                      )}
-                      options={productOptions}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Applicable Products" fullWidth name="applicableProducts" />
-                      )}
-                    />
-                  )}
-
-                  <TextField
-                    value={numberOfCoupons}
-                    onChange={(e) => {
-                      setNumberOfCoupons(e.target.value);
-                    }}
-                    className="mb-4"
-                    fullWidth
-                    id="outlined-basic"
-                    label="Number of coupons"
-                    variant="outlined"
-                  />
-                  <TextField
-                    value={discountCode}
-                    onChange={(e) => {
-                      setDiscountCode(e.target.value);
-                    }}
-                    className="mb-4"
-                    fullWidth
-                    id="outlined-basic"
-                    label="Discount code"
-                    variant="outlined"
-                  />
-
-                  <TextField
-                    value={usesPerCustomer}
-                    onChange={(e) => {
-                      setUsesPerCustomer(e.target.value);
-                    }}
-                    type="number"
-                    className="mb-4"
-                    fullWidth
-                    id="outlined-basic"
-                    label="Uses per customer"
-                    variant="outlined"
-                  />
-                  {discountType !== 'flat' && (
                     <TextField
-                      value={discountPercentage}
+                      value={usesPerCustomer}
                       onChange={(e) => {
-                        setDiscountPercentage(e.target.value);
+                        setUsesPerCustomer(e.target.value);
                       }}
+                      type="number"
                       className="mb-4"
                       fullWidth
                       id="outlined-basic"
-                      label="Discount Percentage"
+                      label="Uses per customer"
                       variant="outlined"
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment>
-                            <PercentIcon style={{ fontSize: '20px' }} />
-                          </InputAdornment>
-                        ),
-                      }}
                     />
-                  )}
+                    {discountType !== 'flat' && (
+                      <TextField
+                        value={discountPercentage}
+                        onChange={(e) => {
+                          setDiscountPercentage(e.target.value);
+                        }}
+                        className="mb-4"
+                        fullWidth
+                        id="outlined-basic"
+                        label="Discount Percentage"
+                        variant="outlined"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment>
+                              <PercentIcon style={{ fontSize: '20px' }} />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    )}
 
-                  {discountType === 'flat' && (
+                    {discountType === 'flat' && (
+                      <TextField
+                        value={discountAmount}
+                        onChange={(e) => {
+                          setDiscountAmount(e.target.value);
+                        }}
+                        className="mb-4"
+                        fullWidth
+                        id="outlined-basic"
+                        label="Discount amount"
+                        variant="outlined"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment>
+                              <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    )}
+
                     <TextField
-                      value={discountAmount}
+                      value={minOrderValue}
                       onChange={(e) => {
-                        setDiscountAmount(e.target.value);
+                        setMinOrderValue(e.target.value);
                       }}
                       className="mb-4"
                       fullWidth
                       id="outlined-basic"
-                      label="Discount amount"
+                      label="Minimum order value"
                       variant="outlined"
                       InputProps={{
                         startAdornment: (
@@ -591,72 +663,52 @@ export default function GeneralDiscount() {
                         ),
                       }}
                     />
-                  )}
+                    {discountType !== 'flat' && (
+                      <TextField
+                        value={maxDiscount}
+                        onChange={(e) => {
+                          setMaxDiscount(e.target.value);
+                        }}
+                        className="mb-4"
+                        fullWidth
+                        id="outlined-basic"
+                        label="Maximum discount"
+                        variant="outlined"
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment>
+                              <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    )}
+                  </Box>
 
-                  <TextField
-                    value={minOrderValue}
-                    onChange={(e) => {
-                      setMinOrderValue(e.target.value);
-                    }}
-                    className="mb-4"
-                    fullWidth
-                    id="outlined-basic"
-                    label="Minimum order value"
-                    variant="outlined"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment>
-                          <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {discountType !== 'flat' && (
-                    <TextField
-                      value={maxDiscount}
+                  <Stack direction="row" spacing={4} alignItems="center">
+                    <Typography>Show discount coupon on shop to customers?</Typography>
+                    <AntSwitch
+                      checked={showToCustomer}
                       onChange={(e) => {
-                        setMaxDiscount(e.target.value);
+                        setShowToCustomer(e.target.checked);
                       }}
-                      className="mb-4"
-                      fullWidth
-                      id="outlined-basic"
-                      label="Maximum discount"
-                      variant="outlined"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment>
-                            <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
-                          </InputAdornment>
-                        ),
-                      }}
+                      inputProps={{ 'aria-label': 'ant design' }}
                     />
-                  )}
-                </Box>
+                  </Stack>
 
-                <Stack direction="row" spacing={4} alignItems="center">
-                  <Typography>Show discount coupon on shop to customers?</Typography>
-                  <AntSwitch
-                    checked={showToCustomer}
-                    onChange={(e) => {
-                      setShowToCustomer(e.target.checked);
-                    }}
-                    inputProps={{ 'aria-label': 'ant design' }}
-                  />
-                </Stack>
-
-                <div className="d-flex flex-row align-items-center justify-content-end">
-                  <Button onClick={onSubmit} type="button" variant="outlined">
-                    {' '}
-                    Create discount{' '}
-                  </Button>
+                  <div className="d-flex flex-row align-items-center justify-content-end">
+                    <Button onClick={onSubmit} type="button" variant="outlined">
+                      {' '}
+                      Create discount{' '}
+                    </Button>
+                  </div>
                 </div>
-             
-            </div>
-          </Grid>
-        </Grid>
-      </Container>
-    </Page>
-    {openCreateDiscount && <AddNewDiscount open={openCreateDiscount} handleClose={handleCloseCreateDiscount} /> }
+              </Grid>
+            </Grid>
+          )}
+        </Container>
+      </Page>
+      {openCreateDiscount && <AddNewDiscount open={openCreateDiscount} handleClose={handleCloseCreateDiscount} />}
     </>
   );
 }

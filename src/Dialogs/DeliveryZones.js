@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -8,22 +10,11 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import FormLabel from '@mui/material/FormLabel';
 // @mui
-import {
-  Box,
-  Card,
-  Grid,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  TextField,
-  Autocomplete,
-  Button,
-  Typography,
-} from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Box, Card, Grid, Dialog, DialogTitle, TextField, Button, Typography } from '@mui/material';
 
 import Slider from '@mui/material/Slider';
-import { el } from 'date-fns/locale';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateSelfDeliveryZone } from '../actions';
 
 function valuetext(value) {
   return `${value}°C`;
@@ -119,8 +110,9 @@ const marks = [
 ];
 
 const DeliveryZones = ({ open, handleClose }) => {
-  const [storePincode, setStorePincode] = useState();
-
+  const dispatch = useDispatch();
+  const { store, isUpadtingSelfDeliveryZone } = useSelector((state) => state.store);
+  const [storePincode, setStorePincode] = useState(store.storePincode);
   const [value, setValue] = React.useState([0, 300]);
 
   const handleChange = (event, newValue, activeThumb, index) => {
@@ -144,21 +136,13 @@ const DeliveryZones = ({ open, handleClose }) => {
     }
   };
 
-  const [deliveryZones, setDeliveryZones] = useState([
-    {
-      differentChargeForOnlinePaidOrders: false,
-      chargeForOnlinePaidOrders: '',
-      deliveryCharge: '',
-      distance: [],
-      pincodes: [],
-      type: 'distance',
-    },
-  ]);
+  const [deliveryZones, setDeliveryZones] = useState(store.deliveryZones);
 
   const addDeliveryZone = () => {
     setDeliveryZones((prev) => [
       ...prev,
       {
+        index: uuidv4(),
         differentChargeForOnlinePaidOrders: false,
         chargeForOnlinePaidOrders: '',
         deliveryCharge: '',
@@ -185,15 +169,24 @@ const DeliveryZones = ({ open, handleClose }) => {
     );
   };
 
+  const onSubmit = () => {
+    const formValues = {
+      storePincode,
+      deliveryZones,
+    };
+
+    dispatch(updateSelfDeliveryZone(formValues, handleClose));
+  };
+
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
         <div className="d-flex flex-row align-items-center justify-content-between mx-3">
           <DialogTitle className="me-3">Pincode / Distance Based Delivery</DialogTitle>
           <div className="d-flex flex-row align-items-center">
-            <Button variant="contained" className="me-3">
+            <LoadingButton onClick={onSubmit} loading={isUpadtingSelfDeliveryZone} variant="contained" className="me-3">
               Save
-            </Button>
+            </LoadingButton>
             <Button
               onClick={() => {
                 handleClose();
