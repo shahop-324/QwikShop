@@ -3,33 +3,33 @@ import { Typography, Button, Dialog, DialogActions, DialogTitle, Avatar, Stack }
 import { LoadingButton } from '@mui/lab';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteMultipleCategories } from '../../actions';
+import { deleteMultiplePickupPoint } from '../../actions';
 
-const BulkDeleteCategory = ({ open, handleClose, selected, setSelected }) => {
+const BulkDeletePickupPoint = ({ open, handleClose, selected, setSelected }) => {
   const dispatch = useDispatch();
 
-  const { categories, isDeleting } = useSelector((state) => state.category);
+  const { pickupPoints, isDeletingPickupPoint } = useSelector((state) => state.delivery);
 
-  const selectedCategories = categories.filter((el) => selected.includes(el._id));
+  const selectedPickupPoints = pickupPoints.filter((el) => selected.includes(el._id));
 
   const onSubmit = () => {
-    dispatch(deleteMultipleCategories(selected, handleClose));
+    dispatch(deleteMultiplePickupPoint(selected, handleClose));
     setSelected([]);
   };
 
   return (
     <>
       <Dialog fullWidth maxWidth="sm" open={open}>
-        <DialogTitle>Delete category</DialogTitle>
+        <DialogTitle>Delete Pickup Points</DialogTitle>
 
-        <Typography className="px-4 my-2">Are you sure you want to delete these categories?</Typography>
-        <Typography className="px-4 mt-2 mb-3" variant="caption">Note: All of the products in these categories will also be deleted.</Typography>
+        <Typography className="px-4 my-2">Are you sure you want to delete these pickup points?</Typography>
+        <Typography className="px-4 mt-2 mb-3" variant="caption">Note: All of the shipments assigned to them cannot be changed (if any).</Typography>
 
-        {selectedCategories.map((el, index) => (
+        {selectedPickupPoints.map((el, index) => (
           <Stack sx={{px: 4, my: 2,}} key={el._id} direction="row" alignItems={'center'} spacing={2}>
             <Typography variant="subtitle2">{index + 1}</Typography>
-            <Avatar src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`} alt={''} />
-            <Typography variant="subtitle1">{el.name}</Typography>
+           
+            <Typography variant="subtitle1">{el.pickupPointName}</Typography>
           </Stack>
         ))}
 
@@ -41,7 +41,7 @@ const BulkDeleteCategory = ({ open, handleClose, selected, setSelected }) => {
             }}
             type="submit"
             variant="contained"
-            loading={isDeleting}
+            loading={isDeletingPickupPoint}
           >
             Delete
           </LoadingButton>
@@ -58,4 +58,4 @@ const BulkDeleteCategory = ({ open, handleClose, selected, setSelected }) => {
   );
 };
 
-export default BulkDeleteCategory;
+export default BulkDeletePickupPoint;

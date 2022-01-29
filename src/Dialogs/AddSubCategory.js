@@ -26,15 +26,15 @@ import { UploadAvatar } from '../components/upload';
 
 // utils
 import { fData } from '../utils/formatNumber';
-import { createSubCategory, fetchCatgory } from '../actions';
+import { createSubCategory, fetchCategory } from '../actions';
 
 const AddSubCategory = ({ open, handleClose }) => {
     useEffect(() => {
-        dispatch(fetchCatgory());
+        dispatch(fetchCategory());
       }, []);
   const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
-  const { isCreating } = useSelector((state) => state.category);
+  const { isCreating } = useSelector((state) => state.subCategory);
   const [file, setFile] = useState({ error: false, message: 'Sub Category Image is required', value: '' });
   const [fileToPreview, setFileToPreview] = useState();
   const [subCategoryName, setSubCategoryName] = useState();

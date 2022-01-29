@@ -43,7 +43,7 @@ export const PATH_DASHBOARD = {
     payment: path(ROOTS_DASHBOARD, '/payment'),
     discount: path(ROOTS_DASHBOARD, '/discount'),
     manage: path(ROOTS_DASHBOARD, '/manage'),
-    questions: path(ROOTS_DASHBOARD, '/questions'),
+    // questions: path(ROOTS_DASHBOARD, '/questions'),
     referral: path(ROOTS_DASHBOARD, '/refferal'),
     integration: path(ROOTS_DASHBOARD, '/integration'),
     reviews: path(ROOTS_DASHBOARD, '/reviews'),
@@ -61,7 +61,7 @@ export const PATH_DASHBOARD = {
     product: path(ROOTS_DASHBOARD, '/catalouge/product'),
     category: path(ROOTS_DASHBOARD, '/catalouge/category'),
     subcategory: path(ROOTS_DASHBOARD, '/catalouge/sub-category'),
-    builder: path(ROOTS_DASHBOARD, '/catalouge/builder'),
+    // builder: path(ROOTS_DASHBOARD, '/catalouge/builder'),
   },
   store: {
     root: path(ROOTS_DASHBOARD, '/store'),

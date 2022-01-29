@@ -1,94 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-// @mui
-import { Grid, Container, Typography, Box, Card, TextField, Autocomplete } from '@mui/material';
-// _mock_
-import PhoneInput from 'react-phone-number-input';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+
+import { Box, Card, Grid, Dialog, DialogActions, TextField, Autocomplete, Button, DialogTitle } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { useDispatch, useSelector } from 'react-redux';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { LoadingButton } from '@mui/lab';
-// hooks
-import { useDispatch, useSelector } from 'react-redux';
-import useSettings from '../../hooks/useSettings';
-// components
-import Page from '../../components/Page';
-import { DeliveryOverview, DeliveryFeatured } from '../../sections/@dashboard/general/delivery/index';
+import PhoneInput from 'react-phone-number-input';
+
 // sections
 import 'react-phone-number-input/style.css';
 import CustomPhoneNumber from '../../forms/PhoneNumber';
-import { addPickupPoint, fetchPickupPoints } from '../../actions';
-import GeneralPickupPoints from './GeneralPickupPoints';
-import GeneralShipments from './GeneralShipments';
-// ----------------------------------------------------------------------
+import { updatePickupPoint } from '../../actions';
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-export default function GeneralAnalytics() {
+const AddNewPickupPoint = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
+
+  const { isUpdatingPickupPoint } = useSelector((state) => state.delivery);
 
   const { pickupPoints } = useSelector((state) => state.delivery);
 
-  const [value, setValue] = React.useState(0);
+  const pickupPoint = pickupPoints.find((el) => el._id === id);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  useEffect(() => {
-    dispatch(fetchPickupPoints());
-  }, []);
-
-  const { user } = useSelector((state) => state.user);
-
-  const [addressType, setAddressType] = useState('shop');
-  const [contactPersonName, setContactPersonName] = useState();
-  const [contactEmail, setContactEmail] = useState();
-  const [pickupPointName, setPickupPointName] = useState();
-  const [country, setCountry] = useState();
-  const [state, setState] = useState();
-  const [city, setCity] = useState();
-  const [address, setAddress] = useState();
-  const [pincode, setPincode] = useState();
-  const [landmark, setLandmark] = useState();
-  const [phone, setPhone] = useState();
-
-  const { themeStretch } = useSettings();
+  const [addressType, setAddressType] = useState(pickupPoint.addressType);
+  const [contactPersonName, setContactPersonName] = useState(pickupPoint.contactPersonName);
+  const [contactEmail, setContactEmail] = useState(pickupPoint.contactEmail);
+  const [pickupPointName, setPickupPointName] = useState(pickupPoint.pickupPointName);
+  const [country, setCountry] = useState(pickupPoint.country);
+  const [state, setState] = useState(pickupPoint.state);
+  const [city, setCity] = useState(pickupPoint.city);
+  const [address, setAddress] = useState(pickupPoint.address);
+  const [pincode, setPincode] = useState(pickupPoint.pincode);
+  const [landmark, setLandmark] = useState(pickupPoint.landmark);
+  const [phone, setPhone] = useState(pickupPoint.phone);
 
   const onSubmit = () => {
     const formValues = {
@@ -104,243 +52,217 @@ export default function GeneralAnalytics() {
       contactPersonName,
       contactEmail,
     };
-    dispatch(addPickupPoint(formValues));
+    dispatch(updatePickupPoint(formValues, id, handleClose));
   };
 
   return (
-    <Page title="Delivery">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Setup QwikShop Delivery
-        </Typography>
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <DeliveryOverview displayName={user?.firstName} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <DeliveryFeatured />
-          </Grid>
-
-          {pickupPoints.length === 0 ? (
-            <Grid item xs={12} md={12}>
-              <div className="mt-5">
-                <Grid className="px-4 pt-3" container spacing={3}>
-                  <Grid item xs={12} md={12}>
-                    <Card sx={{ p: 3 }}>
-                      <FormControl component="fieldset" className="mb-3">
-                        <FormLabel component="legend">Address type</FormLabel>
-                        <RadioGroup
-                          value={addressType}
-                          defaultValue={'shop'}
-                          row
-                          aria-label="gender"
-                          name="row-radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            value="office"
-                            control={
-                              <Radio
-                                onClick={() => {
-                                  setAddressType('office');
-                                }}
-                              />
-                            }
-                            label="Office"
+    <>
+      <Dialog fullWidth maxWidth="md" open={open}>
+        <DialogTitle>Update Pickup Point</DialogTitle>
+        <Grid item xs={12} md={12}>
+          <div className="mt-5">
+            <Grid className="px-4 pt-3" container spacing={3}>
+              <Grid item xs={12} md={12}>
+                <Card sx={{ p: 3 }}>
+                  <FormControl component="fieldset" className="mb-3">
+                    <FormLabel component="legend">Address type</FormLabel>
+                    <RadioGroup
+                      value={addressType}
+                      defaultValue={'shop'}
+                      row
+                      aria-label="gender"
+                      name="row-radio-buttons-group"
+                    >
+                      <FormControlLabel
+                        value="office"
+                        control={
+                          <Radio
+                            onClick={() => {
+                              setAddressType('office');
+                            }}
                           />
-                          <FormControlLabel
-                            value="shop"
-                            control={
-                              <Radio
-                                onClick={() => {
-                                  setAddressType('shop');
-                                }}
-                              />
-                            }
-                            label="Shop"
+                        }
+                        label="Office"
+                      />
+                      <FormControlLabel
+                        value="shop"
+                        control={
+                          <Radio
+                            onClick={() => {
+                              setAddressType('shop');
+                            }}
                           />
-                          <FormControlLabel
-                            value="residence"
-                            control={
-                              <Radio
-                                onClick={() => {
-                                  setAddressType('residence');
-                                }}
-                              />
-                            }
-                            label="Residence"
+                        }
+                        label="Shop"
+                      />
+                      <FormControlLabel
+                        value="residence"
+                        control={
+                          <Radio
+                            onClick={() => {
+                              setAddressType('residence');
+                            }}
                           />
-                        </RadioGroup>
-                      </FormControl>
-                      <Box
-                        sx={{
-                          display: 'grid',
-                          columnGap: 2,
-                          rowGap: 3,
-                          gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                        }}
-                      >
-                        <TextField
-                          name="name"
-                          label="Pickup Point Name"
-                          fullWidth
-                          value={pickupPointName}
-                          onChange={(e) => {
-                            setPickupPointName(e.target.value);
-                          }}
-                        />
+                        }
+                        label="Residence"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      columnGap: 2,
+                      rowGap: 3,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
+                  >
+                    <TextField
+                      name="name"
+                      label="Pickup Point Name"
+                      fullWidth
+                      value={pickupPointName}
+                      onChange={(e) => {
+                        setPickupPointName(e.target.value);
+                      }}
+                    />
 
-                        <Autocomplete
-                          value={country}
-                          onChange={(e, value) => {
-                            setCountry(value);
+                    <Autocomplete
+                      value={country}
+                      onChange={(e, value) => {
+                        setCountry(value);
+                      }}
+                      id=""
+                      fullWidth
+                      options={countries}
+                      autoHighlight
+                      getOptionLabel={(option) => option.label}
+                      renderOption={(props, option) => (
+                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                          <img
+                            loading="lazy"
+                            width="20"
+                            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                            alt=""
+                          />
+                          {option.label} ({option.code}) +{option.phone}
+                        </Box>
+                      )}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Choose a country"
+                          inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'new-password', // disable autocomplete and autofill
                           }}
-                          id=""
-                          fullWidth
-                          options={countries}
-                          autoHighlight
-                          getOptionLabel={(option) => option.label}
-                          renderOption={(props, option) => (
-                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                              <img
-                                loading="lazy"
-                                width="20"
-                                src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                                srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                                alt=""
-                              />
-                              {option.label} ({option.code}) +{option.phone}
-                            </Box>
-                          )}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Choose a country"
-                              inputProps={{
-                                ...params.inputProps,
-                                autoComplete: 'new-password', // disable autocomplete and autofill
-                              }}
-                            />
-                          )}
                         />
+                      )}
+                    />
 
-                        <TextField
-                          name="state"
-                          label="State/Region"
-                          fullWidth
-                          value={state}
-                          onChange={(e) => {
-                            setState(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          name="city"
-                          label="City"
-                          fullWidth
-                          value={city}
-                          onChange={(e) => {
-                            setCity(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          name="address"
-                          label="Address"
-                          fullWidth
-                          value={address}
-                          onChange={(e) => {
-                            setAddress(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          name="pincode"
-                          label="Pincode"
-                          fullWidth
-                          value={pincode}
-                          onChange={(e) => {
-                            setPincode(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          name="landmark"
-                          label="Landmark"
-                          fullWidth
-                          value={landmark}
-                          onChange={(e) => {
-                            setLandmark(e.target.value);
-                          }}
-                        />
-                        <PhoneInput
-                          name="phoneNumber"
-                          placeholder="Enter phone number"
-                          value={phone}
-                          onChange={setPhone}
-                          inputComponent={CustomPhoneNumber}
-                          defaultCountry="IN"
-                        />
-                        <TextField
-                          name="contactPersonName"
-                          label="Contact Person Name"
-                          fullWidth
-                          value={contactPersonName}
-                          onChange={(e) => {
-                            setContactPersonName(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          type="email"
-                          name="contactEmail"
-                          label="Contact Email"
-                          fullWidth
-                          value={contactEmail}
-                          onChange={(e) => {
-                            setContactEmail(e.target.value);
-                          }}
-                        />
-                      </Box>
-                      <div className="d-flex flex-row align-items-center justify-content-end mt-4">
-                        <LoadingButton
-                          onClick={() => {
-                            onSubmit();
-                          }}
-                          type="submit"
-                          variant="contained"
-                          loading={false}
-                        >
-                          Add pickup point
-                        </LoadingButton>
-                      </div>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </div>
-            </Grid>
-          ) : (
-            <Grid item xs={12} md={12}>
-              <div className="mt-5">
-                <Grid className="px-5 pt-3" container spacing={3}>
-                  <Box sx={{ width: '100%' }}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="Shipments" {...a11yProps(0)} />
-                        <Tab label="Pickup Points" {...a11yProps(1)} />
-                      </Tabs>
-                    </Box>
-                    <TabPanel value={value} index={0}>
-                     <GeneralShipments />
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                     <GeneralPickupPoints />
-                    </TabPanel>
+                    <TextField
+                      name="state"
+                      label="State/Region"
+                      fullWidth
+                      value={state}
+                      onChange={(e) => {
+                        setState(e.target.value);
+                      }}
+                    />
+                    <TextField
+                      name="city"
+                      label="City"
+                      fullWidth
+                      value={city}
+                      onChange={(e) => {
+                        setCity(e.target.value);
+                      }}
+                    />
+                    <TextField
+                      name="address"
+                      label="Address"
+                      fullWidth
+                      value={address}
+                      onChange={(e) => {
+                        setAddress(e.target.value);
+                      }}
+                    />
+                    <TextField
+                      name="pincode"
+                      label="Pincode"
+                      fullWidth
+                      value={pincode}
+                      onChange={(e) => {
+                        setPincode(e.target.value);
+                      }}
+                    />
+                    <TextField
+                      name="landmark"
+                      label="Landmark"
+                      fullWidth
+                      value={landmark}
+                      onChange={(e) => {
+                        setLandmark(e.target.value);
+                      }}
+                    />
+                    <PhoneInput
+                      name="phoneNumber"
+                      placeholder="Enter phone number"
+                      value={phone}
+                      onChange={setPhone}
+                      inputComponent={CustomPhoneNumber}
+                      defaultCountry="IN"
+                    />
+                    <TextField
+                      name="contactPersonName"
+                      label="Contact Person Name"
+                      fullWidth
+                      value={contactPersonName}
+                      onChange={(e) => {
+                        setContactPersonName(e.target.value);
+                      }}
+                    />
+                    <TextField
+                      type="email"
+                      name="contactEmail"
+                      label="Contact Email"
+                      fullWidth
+                      value={contactEmail}
+                      onChange={(e) => {
+                        setContactEmail(e.target.value);
+                      }}
+                    />
                   </Box>
-                </Grid>
-              </div>
+                </Card>
+              </Grid>
             </Grid>
-          )}
+          </div>
         </Grid>
-      </Container>
-    </Page>
+        <DialogActions>
+          <LoadingButton
+            onClick={() => {
+              onSubmit();
+            }}
+            type="submit"
+            variant="contained"
+            loading={isUpdatingPickupPoint}
+          >
+            Update Pickup Point
+          </LoadingButton>
+          <Button
+            onClick={() => {
+              handleClose();
+            }}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
-}
+};
+
+export default AddNewPickupPoint;
 
 const countries = [
   { code: 'AD', label: 'Andorra', phone: '376' },

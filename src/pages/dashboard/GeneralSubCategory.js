@@ -36,7 +36,7 @@ import {
   CategoryListHead,
   CategoryListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
-import { fetchCatgory, updateSubCategoryStock, reorderSubCategories } from '../../actions';
+import { fetchSubCategory, updateSubCategoryStock, reorderSubCategories } from '../../actions';
 
 import AlterSubCategoryStock from '../../Dialogs/SubCategory/AlterSubCategoryStock';
 import ShareSubCategory from '../../Dialogs/SubCategory/ShareSubCategory';
@@ -118,7 +118,7 @@ export default function GeneralSubCategory() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      dispatch(fetchCatgory(term));
+      dispatch(fetchSubCategory(term));
     }, 800);
 
     return () => {

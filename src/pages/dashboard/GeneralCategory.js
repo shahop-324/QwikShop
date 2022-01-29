@@ -37,7 +37,7 @@ import {
   CategoryListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
 import AddNewCategory from '../../Dialogs/AddNewCategory';
-import { fetchCatgory, updateCategoryStock, reorderCategories } from '../../actions';
+import { fetchCategory, updateCategoryStock, reorderCategories } from '../../actions';
 
 import EditCategory from '../../Dialogs/Category/EditCategory';
 import DeleteCategory from '../../Dialogs/Category/DeleteCategory';
@@ -127,7 +127,7 @@ export default function GeneralCategory() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      dispatch(fetchCatgory(term));
+      dispatch(fetchCategory(term));
     }, 800);
 
     return () => {

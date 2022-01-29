@@ -7,6 +7,7 @@ const storeSlice = createSlice({
     store: {},
     error: false,
     isSubmittingStoreSetup: false,
+    isUpdatingPaymentSettings: false,
   },
 
   reducers: {
@@ -15,6 +16,9 @@ const storeSlice = createSlice({
     },
     UpdateStore(state, action) {
       state.store = action.payload.store;
+    },
+    SetIsUpdatingPaymentSettings(state, action){
+      state.isUpdatingPaymentSettings = action.payload.state;
     },
     SetIsSubmittingSteup(state, action){
       state.isSubmittingStoreSetup = action.payload.isSubmitting;

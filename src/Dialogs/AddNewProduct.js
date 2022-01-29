@@ -59,7 +59,7 @@ import CurrencyRupeeRoundedIcon from '@mui/icons-material/CurrencyRupeeRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import Editor from '../components/editor/index';
-import { fetchCatgory, createNewProduct } from '../actions';
+import { fetchCategory, fetchSubCategory, createNewProduct } from '../actions';
 
 import { RHFUploadMultiFile, FormProvider } from '../components/hook-form';
 
@@ -204,9 +204,13 @@ const AddNewProduct = ({ open, handleClose }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchCatgory());
+    dispatch(fetchCategory());
+  }, []);
+  useEffect(() => {
+    dispatch(fetchSubCategory());
   }, []);
 
+  const { subCategories } = useSelector((state) => state.subCategory);
   const { categories } = useSelector((state) => state.category);
   const { isCreating } = useSelector((state) => state.product);
 
@@ -375,6 +379,7 @@ const AddNewProduct = ({ open, handleClose }) => {
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState();
+  const [subCategory, setSubCategory] = useState();
   const [productType, setProductType] = useState(null);
   const [price, setPrice] = useState();
   const [discountedPrice, setDiscountedPrice] = useState('');
@@ -402,7 +407,7 @@ const AddNewProduct = ({ open, handleClose }) => {
   });
 
   const [isFragile, setIsFragile] = useState(false);
-  const [isVeg, setIsVeg] = useState(true);
+  const [isVeg, setIsVeg] = useState(productType?.label !== 'Meat & Fish');
   const [InTheBox, setInTheBox] = useState([{ index: uuidv4(), label: '' }]);
   const [acceptCOD, setAcceptCOD] = useState(false);
 
@@ -502,6 +507,7 @@ const AddNewProduct = ({ open, handleClose }) => {
     const formValues = {
       productType,
       productName,
+      subCategory,
       category,
       price,
       discountedPrice,
@@ -539,6 +545,14 @@ const AddNewProduct = ({ open, handleClose }) => {
     value: category._id,
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${category.image}`,
   }));
+
+  const subCategoryOptions = subCategories
+    .filter((el) => el.category?.value === category?.value)
+    .map((subCategory) => ({
+      label: subCategory.name,
+      value: subCategory._id,
+      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
+    }));
 
   return (
     <>
@@ -646,6 +660,39 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 />
                               )}
                             />
+                            <Autocomplete
+                              value={subCategory}
+                              onChange={(e, value) => {
+                                setSubCategory(value);
+                              }}
+                              id=""
+                              fullWidth
+                              options={subCategoryOptions}
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderOption={(props, option) => (
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                  <img
+                                    loading="lazy"
+                                    width="20"
+                                    src={`${option.image}`}
+                                    srcSet={`${option.image} 2x`}
+                                    alt=""
+                                  />
+                                  {option.label}
+                                </Box>
+                              )}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Choose a sub category"
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: '', // disable autocomplete and autofill
+                                  }}
+                                />
+                              )}
+                            />
                             <TextField
                               type="number"
                               name="price"
@@ -710,7 +757,6 @@ const AddNewProduct = ({ open, handleClose }) => {
                           </Box>
 
                           <Box
-                            className="mb-4"
                             sx={{
                               mt: 3,
                               display: 'grid',
@@ -719,8 +765,13 @@ const AddNewProduct = ({ open, handleClose }) => {
                               gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                             }}
                           >
-                            {(productType?.label === 'Kirana store, Grocery & FMCG' ||
-                              productType?.label === 'Restaurants & Hotels') && (
+                            {(productType?.label === 'Grocery' ||
+                              productType?.label === 'Bakery Item' ||
+                              productType?.label === 'Fast Food' ||
+                              productType?.label === 'Indian Food' ||
+                              productType?.label === 'Chocolate' ||
+                              productType?.label === 'Medicine' ||
+                              productType?.label === 'Pet supplies') && (
                               <FormControl className="mb-3">
                                 <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
                                 <RadioGroup
@@ -1975,13 +2026,6 @@ const productTypeOptions = [
     label: 'Medicine',
     image: 'https://sfenvironment.org/sites/default/files/styles/large/public/detail_th_medicine_0_0.jpg?itok=ynMwtFQd',
   },
-  {
-    label: 'Paints',
-    image:
-      'https://hgtvhome.sndimg.com/content/dam/images/hgtv/fullset/2016/8/31/1/iStock_23034199_malerapaso-paint-cans-XXXLARGE.jpg.rend.hgtvcom.616.462.suffix/1472661947179.jpeg',
-  },
-  { lable: 'Tiles', image: 'https://wallnut.co.in/wp-content/uploads/2020/12/Tiles-Design.png' },
-  { label: 'Sanitary ware', image: 'https://4.imimg.com/data4/TW/FM/ANDROID-9129727/product-500x500.jpeg' },
   { label: 'Footwear', image: 'https://m.media-amazon.com/images/I/71D9ImsvEtL._UL1500_.jpg' },
   { label: 'Travel essentials', image: 'https://5.imimg.com/data5/GV/NI/MY-6348933/travel-bags-1-500x500.jpg' },
   {

@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 // @mui
-import { Grid, Container, Box, Card, TextField, Autocomplete, InputAdornment, Stack, Typography } from '@mui/material';
+import {
+  Grid,
+  Container,
+  Box,
+  Card,
+  TextField,
+  Autocomplete,
+  InputAdornment,
+  Stack,
+  Typography,
+  Tabs,
+  Tab,
+} from '@mui/material';
 
 import { styled } from '@mui/material/styles';
 
@@ -16,12 +29,48 @@ import FormLabel from '@mui/material/FormLabel';
 
 import { LoadingButton } from '@mui/lab';
 import PercentRoundedIcon from '@mui/icons-material/PercentRounded';
+import { useDispatch, useSelector } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import { PaymentsLessons, PaymentsWelcome } from '../../sections/@dashboard/general/payments/index';
 // sections
 // @mui
+import { updatePaymentSettings } from '../../actions';
+import GeneralTransaction from './GeneralTransaction';
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 28,
@@ -65,20 +114,45 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export default function GeneralPayment() {
+  const dispatch = useDispatch();
   const { themeStretch } = useSettings();
 
-  const [upiId, setUpiId] = useState('');
-  const [paymentMode, setPaymentMode] = useState('upi');
-  const [accountHolderName, setAccountHolderName] = useState('');
-  const [bank, setBank] = useState();
-  const [accountNumber, setAccountNumber] = useState('');
-  const [IFSCCode, setIFSCCode] = useState('');
+  const { isUpdatingPaymentSettings, store } = useSelector((state) => state.store);
 
-  const [enablePartialCOD, setEnabledPartialCOD] = useState(false);
-  const [partialCODPercentage, setPartialCODPercentage] = useState(10);
+  const [upiId, setUpiId] = useState(store.upiId);
+  const [paymentMode, setPaymentMode] = useState(store.paymentMode);
+  const [accountHolderName, setAccountHolderName] = useState(store.accountHolderName);
+  const [bank, setBank] = useState(store.bank);
+  const [accountNumber, setAccountNumber] = useState(store.accountNumber);
+  const [IFSCCode, setIFSCCode] = useState(store.IFSCCode);
+
+  const [enableCOD, setEnableCOD] = useState(store.enableCOD);
+  const [enablePartialCOD, setEnabledPartialCOD] = useState(store.enablePartialCOD);
+  const [partialCODPercentage, setPartialCODPercentage] = useState(store.partialCODPercentage);
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const onSubmit = () => {
+    const formValues = {
+      enableCOD,
+      enablePartialCOD,
+      partialCODPercentage,
+      paymentMode,
+      upiId,
+      bank,
+      accountNumber,
+      accountHolderName,
+      IFSCCode,
+    };
+    dispatch(updatePaymentSettings(formValues));
+  };
 
   return (
-    <Page title="General: Banking">
+    <Page title="Payments">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
@@ -87,189 +161,225 @@ export default function GeneralPayment() {
           <Grid item xs={12} md={4}>
             <PaymentsLessons />
           </Grid>
+
           <Grid item xs={12} md={12}>
-            <div className="mt-5 px-4">
-              <Grid className="px-4 pt-3" container spacing={3}>
-                <Grid item xs={12} md={12}>
-                  <Card sx={{ p: 3 }}>
-                    <Box
-                      sx={{
-                        display: 'grid',
-                        mb: 3,
-                        columnGap: 2,
-                        rowGap: 3,
-                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                      }}
-                    >
-                      <FormGroup className="mb-4">
-                        <FormControlLabel control={<Switch defaultChecked />} label="Accept Cash on delivery" />
-                      </FormGroup>
-
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        <Typography>Enable partial COD</Typography>
-                        <AntSwitch
-                          checked={enablePartialCOD}
-                          onClick={(e) => {
-                            setEnabledPartialCOD(e.target.checked);
+            <Grid className="px-4 pt-3" container spacing={3}>
+              <Grid item xs={12} md={12}>
+                <Box sx={{ width: '100%' }}>
+                  <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                      <Tab label="Transactions" {...a11yProps(0)} />
+                      <Tab label="Payout settings" {...a11yProps(1)} />
+                    </Tabs>
+                  </Box>
+                  <TabPanel value={value} index={0}>
+                    <GeneralTransaction />
+                  </TabPanel>
+                  <TabPanel value={value} index={1}>
+                    <Grid item xs={12} md={12}>
+                      <Card sx={{ p: 3, mb: 3 }}>
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            mb: 3,
+                            columnGap: 2,
+                            rowGap: 4,
+                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                           }}
-                          inputProps={{ 'aria-label': 'ant design' }}
-                        />
-                      </Stack>
-
-                      <TextField
-                        name="percentage"
-                        label="Partial COD Percentage"
-                        fullWidth
-                        value={partialCODPercentage}
-                        onChange={(e) => {
-                          setPartialCODPercentage(e.target.value);
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment>
-                              <PercentRoundedIcon style={{ fontSize: '20px' }} />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Box>
-
-                    <FormControl component="fieldset" className="mb-3">
-                      <FormLabel component="legend">Accept Payments via</FormLabel>
-                      <RadioGroup
-                        defaultValue={paymentMode}
-                        row
-                        aria-label="payment mode"
-                        name="row-radio-buttons-group"
-                      >
-                        <FormControlLabel
-                          value="upi"
-                          control={
-                            <Radio
-                              onClick={() => {
-                                setPaymentMode('upi');
-                              }}
-                            />
-                          }
-                          label="UPI"
-                        />
-                        <FormControlLabel
-                          value="bank"
-                          control={
-                            <Radio
-                              onClick={() => {
-                                setPaymentMode('bank');
-                              }}
-                            />
-                          }
-                          label="Bank"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                    <Box
-                      sx={{
-                        display: 'grid',
-                        columnGap: 2,
-                        rowGap: 3,
-                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                      }}
-                    >
-                      {paymentMode === 'upi' ? (
-                        <TextField
-                          name="upiId"
-                          label="UPI Id"
-                          fullWidth
-                          value={upiId}
-                          onChange={(e) => {
-                            setUpiId(e.target.value);
-                          }}
-                        />
-                      ) : (
-                        <>
-                          <Autocomplete
-                            value={bank}
-                            onChange={(e, value) => {
-                              setBank(value);
-                            }}
-                            id="bank"
-                            fullWidth
-                            options={banksOption}
-                            autoHighlight
-                            getOptionLabel={(option) => option.label}
-                            renderOption={(props, option) => (
-                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                <img
-                                  loading="lazy"
-                                  width="20"
-                                  src={`${option.image}`}
-                                  srcSet={`${option.image} 2x`}
-                                  alt=""
+                        >
+                          <FormGroup className="">
+                            <FormControlLabel
+                              control={
+                                <Switch
+                                  checked={enableCOD}
+                                  onChange={(e) => {
+                                    setEnableCOD(e.target.checked);
+                                  }}
                                 />
-                                {option.label}
-                              </Box>
-                            )}
-                            renderInput={(params) => (
+                              }
+                              label="Accept Cash on delivery"
+                            />
+                          </FormGroup>
+
+                          {enableCOD && (
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Typography>Enforce partial COD</Typography>
+                              <AntSwitch
+                                checked={enablePartialCOD}
+                                onClick={(e) => {
+                                  setEnabledPartialCOD(e.target.checked);
+                                }}
+                                inputProps={{ 'aria-label': 'ant design' }}
+                              />
+                            </Stack>
+                          )}
+
+                          {enablePartialCOD && enableCOD && (
+                            <TextField
+                              name="percentage"
+                              label="Partial COD Percentage"
+                              fullWidth
+                              value={partialCODPercentage}
+                              onChange={(e) => {
+                                setPartialCODPercentage(e.target.value);
+                              }}
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment>
+                                    <PercentRoundedIcon style={{ fontSize: '20px' }} />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          )}
+                        </Box>
+                      </Card>
+                      <Card sx={{ p: 3 }}>
+                        <FormControl component="fieldset" className="mb-3">
+                          <FormLabel component="legend">Accept Payments via</FormLabel>
+                          <RadioGroup
+                            defaultValue={paymentMode}
+                            row
+                            aria-label="payment mode"
+                            name="row-radio-buttons-group"
+                          >
+                            <FormControlLabel
+                              value="upi"
+                              control={
+                                <Radio
+                                  onClick={() => {
+                                    setPaymentMode('upi');
+                                  }}
+                                />
+                              }
+                              label="UPI"
+                            />
+                            <FormControlLabel
+                              value="bank"
+                              control={
+                                <Radio
+                                  onClick={() => {
+                                    setPaymentMode('bank');
+                                  }}
+                                />
+                              }
+                              label="Bank"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            columnGap: 2,
+                            rowGap: 3,
+                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                          }}
+                        >
+                          {paymentMode === 'upi' ? (
+                            <TextField
+                              name="upiId"
+                              label="UPI Id"
+                              fullWidth
+                              value={upiId}
+                              onChange={(e) => {
+                                setUpiId(e.target.value);
+                              }}
+                            />
+                          ) : (
+                            <>
+                              <Autocomplete
+                                value={bank}
+                                onChange={(e, value) => {
+                                  setBank(value);
+                                }}
+                                id="bank"
+                                fullWidth
+                                options={banksOption}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                renderOption={(props, option) => (
+                                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                    <img
+                                      loading="lazy"
+                                      width="20"
+                                      src={`${option.image}`}
+                                      srcSet={`${option.image} 2x`}
+                                      alt=""
+                                    />
+                                    {option.label}
+                                  </Box>
+                                )}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label="Select your bank"
+                                    inputProps={{
+                                      ...params.inputProps,
+                                      autoComplete: '', // disable autocomplete and autofill
+                                    }}
+                                  />
+                                )}
+                              />
                               <TextField
-                                {...params}
-                                label="Select your bank"
-                                inputProps={{
-                                  ...params.inputProps,
-                                  autoComplete: '', // disable autocomplete and autofill
+                                name="accountHolderName"
+                                label="Account Holder Name"
+                                fullWidth
+                                value={accountHolderName}
+                                onChange={(e) => {
+                                  setAccountHolderName(e.target.value);
                                 }}
                               />
-                            )}
+                              <TextField
+                                name="accountNumber"
+                                label="Account Number"
+                                fullWidth
+                                value={accountNumber}
+                                onChange={(e) => {
+                                  setAccountNumber(e.target.value);
+                                }}
+                              />
+                              <TextField
+                                name="ifscCode"
+                                label="IFSC Code"
+                                fullWidth
+                                value={IFSCCode}
+                                onChange={(e) => {
+                                  setIFSCCode(e.target.value);
+                                }}
+                              />
+                            </>
+                          )}
+                        </Box>
+                        <FormGroup className="mt-3">
+                          <FormControlLabel
+                            control={<Checkbox defaultChecked />}
+                            label={
+                              <span>
+                                {' '}
+                                I hereby confirm that above information is absolutely correct and I agree to QwikShop{' '}
+                                <a href="#">Terms of service. </a>{' '}
+                              </span>
+                            }
                           />
-                          <TextField
-                            name="accountHolderName"
-                            label="Account Holder Name"
-                            fullWidth
-                            value={accountHolderName}
-                            onChange={(e) => {
-                              setAccountHolderName(e.target.value);
-                            }}
-                          />
-                          <TextField
-                            name="accountNumber"
-                            label="Account Number"
-                            fullWidth
-                            value={accountNumber}
-                            onChange={(e) => {
-                              setAccountNumber(e.target.value);
-                            }}
-                          />
-                          <TextField
-                            name="ifscCode"
-                            label="IFSC Code"
-                            fullWidth
-                            value={IFSCCode}
-                            onChange={(e) => {
-                              setIFSCCode(e.target.value);
-                            }}
-                          />
-                        </>
-                      )}
-                    </Box>
-                    <FormGroup className="mt-3">
-                      <FormControlLabel
-                        control={<Checkbox defaultChecked />}
-                        label={
-                          <span>
-                            {' '}
-                            I hereby confirm that above information is absolutely correct and I agree to QwikShop{' '}
-                            <a href="#">Terms of service. </a>{' '}
-                          </span>
-                        }
-                      />
-                    </FormGroup>
-                    <div className="d-flex flex-row align-items-center justify-content-end mt-4">
-                      <LoadingButton onClick={() => {}} type="submit" variant="contained" loading={false}>
-                        Verify Payment method
-                      </LoadingButton>
-                    </div>
-                  </Card>
-                </Grid>
+                        </FormGroup>
+                      </Card>
+                      <div className="d-flex flex-row align-items-center justify-content-end mt-4">
+                        <LoadingButton
+                          onClick={() => {
+                            onSubmit();
+                          }}
+                          type="submit"
+                          variant="contained"
+                          loading={isUpdatingPaymentSettings}
+                        >
+                          Save
+                        </LoadingButton>
+                      </div>
+                    </Grid>
+                  </TabPanel>
+                </Box>
               </Grid>
-            </div>
+            </Grid>
           </Grid>
         </Grid>
       </Container>

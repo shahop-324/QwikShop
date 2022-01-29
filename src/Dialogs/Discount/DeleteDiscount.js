@@ -3,33 +3,23 @@ import { Typography, Button, Dialog, DialogActions, DialogTitle } from '@mui/mat
 import { LoadingButton } from '@mui/lab';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteCategory } from '../../actions';
+import { deleteDiscount } from '../../actions';
 
-const DeleteCategory = ({ open, handleClose, id }) => {
+const DeleteDiscount = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
 
-  const { categories, isDeleting } = useSelector((state) => state.category);
+  const { isDeleting } = useSelector((state) => state.category);
 
-  const category = categories.find((el) => el._id === id);
-
-  let name;
-  let image;
-
-  if(category) {
-    name = category.name;
-    image = category.image;
-  }
-   
   const onSubmit = () => {
-    dispatch(deleteCategory(id, handleClose));
+    dispatch(deleteDiscount(id, handleClose));
   };
 
   return (
     <>
       <Dialog fullWidth maxWidth="sm" open={open}>
-        <DialogTitle>Delete category</DialogTitle>
+        <DialogTitle>Delete Discount</DialogTitle>
 
-        <Typography className='px-4 mt-2'>Are you sure you want to delete {name}?</Typography>
+        <Typography className="px-4 mt-2">Are you sure you want to delete this Discount code ?</Typography>
 
         <DialogActions>
           <LoadingButton
@@ -56,4 +46,4 @@ const DeleteCategory = ({ open, handleClose, id }) => {
   );
 };
 
-export default DeleteCategory;
+export default DeleteDiscount;

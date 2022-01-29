@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { authActions } from '../reducers/authSlice';
 import { snackbarActions } from '../reducers/snackbarSlice';
 import { notificationActions } from '../reducers/notificationSlice';
-import history from '../history';
 import { userActions } from '../reducers/userSlice';
 import { storeActions } from '../reducers/storeSlice';
 import { orderActions } from '../reducers/orderSlice';
@@ -13,6 +12,10 @@ import { appActions } from '../reducers/appSlice';
 import { categoryActions } from '../reducers/categorySlice';
 import { productActions } from '../reducers/productSlice';
 import { subCategoryActions } from '../reducers/subCategorySlice';
+import { deliveryActions } from '../reducers/deliverySlice';
+import { shipmentActions } from '../reducers/shipmentSlice';
+import { transactionActions } from '../reducers/transactionSlice';
+import { discountActions } from '../reducers/discountSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -535,7 +538,7 @@ export const fetchSubnames = () => async (dispatch, getState) => {
 
 // ********************************************* Categories ********************************************* //
 
-export const fetchCatgory = (term) => async (dispatch, getState) => {
+export const fetchCategory = (term) => async (dispatch, getState) => {
   let message;
 
   try {
@@ -1396,10 +1399,9 @@ export const deleteMultipleProducts = (ids, handleClose) => async (dispatch, get
   }
 };
 
-
 // ********************************************* Sub categories ********************************************* //
 
-export const fetchSubCatgory = (term) => async (dispatch, getState) => {
+export const fetchSubCategory = (term) => async (dispatch, getState) => {
   let message;
 
   try {
@@ -1814,5 +1816,686 @@ export const reorderSubCategories = (items) => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
+  }
+};
+
+// ********************************************* Delivery ********************************************* //
+
+export const addPickupPoint = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(deliveryActions.SetIsCreatingPickupPoint({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}delivery/pickupPoint/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      deliveryActions.CreatePickupPoint({
+        pickupPoint: result.data,
+      })
+    );
+
+    dispatch(deliveryActions.SetIsCreatingPickupPoint({ state: false }));
+    if (handleClose) {
+      handleClose();
+    }
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(deliveryActions.SetIsCreatingPickupPoint({ state: false }));
+  }
+};
+
+export const updatePickupPoint = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(deliveryActions.SetIsUpdatingPickupPoint({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}delivery/pickupPoint/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      deliveryActions.UpdatePickupPoint({
+        pickupPoint: result.data,
+      })
+    );
+
+    dispatch(deliveryActions.SetIsUpdatingPickupPoint({ state: false }));
+    handleClose();
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(deliveryActions.SetIsUpdatingPickupPoint({ state: false }));
+  }
+};
+
+export const deletePickupPoint = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(deliveryActions.SetIsUpdatingPickupPoint({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}delivery/pickupPoint/delete/${id}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      deliveryActions.DeletePickupPoint({
+        pickupPointId: id,
+      })
+    );
+
+    dispatch(deliveryActions.SetIsDeletingPickupPoint({ state: false }));
+    handleClose();
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(deliveryActions.SetIsDeletingPickupPoint({ state: false }));
+  }
+};
+
+export const fetchPickupPoints = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}delivery/pickupPoint/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      deliveryActions.FetchPickupPoints({
+        pickupPoints: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const updatePickupPointStatus = (id, formValues) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}delivery/pickupPoint/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      deliveryActions.UpdatePickupPoint({
+        pickupPoint: result.data,
+      })
+    );
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const deleteMultiplePickupPoint = (ids, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(deliveryActions.SetIsDeletingPickupPoint({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}delivery/pickupPoint/deleteMultiple`, {
+      method: 'DELETE',
+
+      body: JSON.stringify({
+        pickupPointIds: ids,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      deliveryActions.DeleteMultiplePickupPoints({
+        ids,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    handleClose();
+    dispatch(deliveryActions.SetIsDeletingPickupPoint({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    handleClose();
+    dispatch(deliveryActions.SetIsDeletingPickupPoint({ state: false }));
+  }
+};
+
+// ********************************************************* Shipment ********************************************************* //
+
+export const fetchShipments = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}delivery/shipment/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      shipmentActions.FetchShipments({
+        shipments: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const updateShipment = (formValues, id) => async (dispatch, getState) => {
+  let message;
+  dispatch(shipmentActions.SetIsUpdating({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}delivery/shipment/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      shipmentActions.UpdateShipment({
+        shipment: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(shipmentActions.SetIsUpdating({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(shipmentActions.SetIsUpdating({ state: false }));
+  }
+};
+
+// ****************************************************** Transactions *************************************************** //
+
+export const fetchTransactions = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}transaction/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      transactionActions.FetchTransactions({
+        transactions: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+// ********************************************** Payment Settings ************************************************** //
+
+export const updatePaymentSettings = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingPaymentSettings({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}store/update/paymentSettings`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingPaymentSettings({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingPaymentSettings({ state: false }));
+  }
+};
+
+// ************************************************* Discount *************************************************** //
+
+// Create, Update, Read, Delete
+
+export const createNewDiscount = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(discountActions.SetIsCreating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}discount/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      discountActions.CreateDiscount({
+        discount: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(discountActions.SetIsCreating({ state: false }));
+
+    if (handleClose) {
+      handleClose();
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(discountActions.SetIsCreating({ state: false }));
+    if (handleClose) {
+      handleClose();
+    }
+  }
+};
+
+export const updateDiscount = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(discountActions.SetIsUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}discount/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      discountActions.UpdateDiscount({
+        discount: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('error', message));
+    dispatch(discountActions.SetIsUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(discountActions.SetIsUpdating({ state: false }));
+    handleClose();
+  }
+};
+
+export const fetchDiscounts = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}discount/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      discountActions.CreateDiscount({
+        discount: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const deleteDiscount = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(discountActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}discount/delete/${id}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      discountActions.DeleteDiscount({
+        discountId: id,
+      })
+    );
+
+    dispatch(discountActions.SetIsDeleting({ state: false }));
+    handleClose();
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(discountActions.SetIsDeleting({ state: false }));
+    dispatch(showSnackbar('error', message));
+    handleClose();
   }
 };

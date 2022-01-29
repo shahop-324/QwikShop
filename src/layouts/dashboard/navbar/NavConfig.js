@@ -41,7 +41,7 @@ const navConfig = [
           { title: 'product', path: PATH_DASHBOARD.catalouge.product },
           { title: 'category', path: PATH_DASHBOARD.catalouge.category },
           { title: 'sub category', path: PATH_DASHBOARD.catalouge.subcategory },
-          { title: 'Catalouge Builder', path: PATH_DASHBOARD.catalouge.builder },
+          // { title: 'Catalouge Builder', path: PATH_DASHBOARD.catalouge.builder },
         ],
       },
       { title: 'Delivery', path: PATH_DASHBOARD.general.delivery, icon: <LocalShippingRoundedIcon /> },
@@ -50,7 +50,7 @@ const navConfig = [
       { title: 'Payment', path: PATH_DASHBOARD.general.payment, icon: <AccountBalanceWalletRoundedIcon /> },
       { title: 'Discount', path: PATH_DASHBOARD.general.discount, icon: <LocalOfferRoundedIcon /> },
       { title: 'Manage', path: PATH_DASHBOARD.general.manage, icon: <ManageAccountsRoundedIcon /> },
-      { title: 'Questions', path: PATH_DASHBOARD.general.questions, icon: <QuestionMarkRoundedIcon /> },
+      // { title: 'Questions', path: PATH_DASHBOARD.general.questions, icon: <QuestionMarkRoundedIcon /> },
       { title: 'Refferal', path: PATH_DASHBOARD.general.referral, icon: <ConnectWithoutContactRoundedIcon /> },
       //  **************** Marketing Design Pages **************** //
       {

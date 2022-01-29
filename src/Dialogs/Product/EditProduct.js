@@ -64,7 +64,7 @@ import MUIStyled from 'styled-components';
 import DoNotDisturbOnRoundedIcon from '@mui/icons-material/DoNotDisturbOnRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import Editor from '../../components/editor/index';
-import { fetchCatgory, updateProduct } from '../../actions';
+import { fetchCategory, fetchSubCategory, updateProduct } from '../../actions';
 
 import { RHFUploadMultiFile, FormProvider } from '../../components/hook-form';
 
@@ -243,7 +243,10 @@ const EditProduct = ({ open, handleClose, id }) => {
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    dispatch(fetchCatgory());
+    dispatch(fetchCategory());
+  }, []);
+  useEffect(() => {
+    dispatch(fetchSubCategory());
   }, []);
 
   const { products, isUpdating } = useSelector((state) => state.product);
@@ -251,6 +254,7 @@ const EditProduct = ({ open, handleClose, id }) => {
   const product = products.find((el) => el._id === id);
 
   const { categories } = useSelector((state) => state.category);
+  const { subCategories } = useSelector((state) => state.subCategory);
 
   const [metaTitle, setMetaTitle] = useState(product.metaTitle);
 
@@ -395,6 +399,7 @@ const EditProduct = ({ open, handleClose, id }) => {
   const [productName, setProductName] = useState(product.productName);
   const [description, setDescription] = useState(product.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
   const [category, setCategory] = useState(product.category);
+  const [subCategory, setSubCategory] = useState(product.subCategory);
   const [productType, setProductType] = useState(product.productType);
   const [price, setPrice] = useState(product.price);
   const [discountedPrice, setDiscountedPrice] = useState(product.discountedPrice);
@@ -417,7 +422,7 @@ const EditProduct = ({ open, handleClose, id }) => {
   const [dimensionUnit, setDimensionUnit] = useState(product.dimensionUnit);
 
   const [isFragile, setIsFragile] = useState(product.isFragile);
-  const [isVeg, setIsVeg] = useState(product.isVeg);
+  const [isVeg, setIsVeg] = useState(productType?.label !== 'Meat & Fish');
   const [InTheBox, setInTheBox] = useState(product.InTheBox);
   const [acceptCOD, setAcceptCOD] = useState(product.acceptCOD);
 
@@ -587,6 +592,7 @@ const EditProduct = ({ open, handleClose, id }) => {
       productType,
       productName,
       category,
+      subCategory,
       price,
       discountedPrice,
       wholesalePrice,
@@ -622,6 +628,14 @@ const EditProduct = ({ open, handleClose, id }) => {
     label: category.name,
     value: category._id,
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${category.image}`,
+  }));
+
+  const subCategoryOptions = subCategories
+  .filter((el) => el.category?.value === category?.value)
+  .map((subCategory) => ({
+    label: subCategory.name,
+    value: subCategory._id,
+    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
   }));
 
   return (
@@ -730,6 +744,39 @@ const EditProduct = ({ open, handleClose, id }) => {
                                 />
                               )}
                             />
+                            <Autocomplete
+                              value={subCategory}
+                              onChange={(e, value) => {
+                                setSubCategory(value);
+                              }}
+                              id=""
+                              fullWidth
+                              options={subCategoryOptions}
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderOption={(props, option) => (
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                  <img
+                                    loading="lazy"
+                                    width="20"
+                                    src={`${option.image}`}
+                                    srcSet={`${option.image} 2x`}
+                                    alt=""
+                                  />
+                                  {option.label}
+                                </Box>
+                              )}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Choose a sub category"
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: '', // disable autocomplete and autofill
+                                  }}
+                                />
+                              )}
+                            />
                             <TextField
                               type="number"
                               name="price"
@@ -794,7 +841,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                           </Box>
 
                           <Box
-                            className="mb-4"
+                            
                             sx={{
                               mt: 3,
                               display: 'grid',
@@ -803,8 +850,11 @@ const EditProduct = ({ open, handleClose, id }) => {
                               gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                             }}
                           >
-                            {(productType?.label === 'Kirana store, Grocery & FMCG' ||
-                              productType?.label === 'Restaurants & Hotels') && (
+                            {(productType?.label === 'Grocery' ||
+                              productType?.label === 'Bakery Item'  || productType?.label === 'Fast Food' || productType?.label === "Indian Food" || productType?.label === "Chocolate" 
+                              || productType?.label === "Medicine" 
+                              || productType?.label === "Pet supplies" 
+                              ) && (
                               <FormControl className="mb-3">
                                 <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
                                 <RadioGroup

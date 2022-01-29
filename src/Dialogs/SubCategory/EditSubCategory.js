@@ -26,11 +26,11 @@ import { UploadAvatar } from '../../components/upload';
 
 // utils
 import { fData } from '../../utils/formatNumber';
-import { fetchCatgory, updateSubCategory } from '../../actions';
+import { fetchCategory, updateSubCategory } from '../../actions';
 
 const EditSubCategory = ({ open, handleClose, id }) => {
   useEffect(() => {
-    dispatch(fetchCatgory());
+    dispatch(fetchCategory());
   }, []);
   const { subCategories, isUpdating } = useSelector((state) => state.subCategory);
   const { categories } = useSelector((state) => state.category);
@@ -118,7 +118,7 @@ const EditSubCategory = ({ open, handleClose, id }) => {
                     id=""
                     fullWidth
                     options={categories.map((el) => ({
-                      label: el.label,
+                      label: el.name,
                       image: el.image,
                       value: el._id,
                     }))}
