@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { Grid, Container } from '@mui/material';
 // Icons
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 // hooks
+import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -21,7 +21,7 @@ import { AnalyticsWidgetSummary } from '../../sections/@dashboard/general/analyt
 
 import { MarketingLessons, MarketingWelcome } from '../../sections/@dashboard/general/marketing/index';
 import CreateSMSCampaign from '../../Dialogs/CreateSMSCampaign';
-import CreateWhatsAppCampaign from '../../Dialogs/CreateWhatsAppCampaign';
+import CreateEmailCampaign from '../../Dialogs/CreateEmailCampaign';
 import CreateGoogleAdsCampaign from '../../Dialogs/CreateGoogleAdsCampaign';
 import CreateFacebookAdsCampaign from '../../Dialogs/CreateFacebookAdsCampaign';
 
@@ -31,7 +31,7 @@ export default function GeneralBooking() {
   const { themeStretch } = useSettings();
 
   const [openCreateSMSCampaign, setOpenCreateSMSCampaign] = useState(false);
-  const [openCreateWhatsAppCampaign, setOpenCreateWhatsAppCampaign] = useState(false);
+  const [openCreateEmailCampaign, setOpenCreateEmailCampaign] = useState(false);
   const [openCreateGoogleAdsCampaign, setOpenCreateGoogleAdsCampaign] = useState(false);
   const [openCreateFacebookAdsCampaign, setOpenCreateFacebookAdsCampaign] = useState(false);
 
@@ -43,12 +43,12 @@ export default function GeneralBooking() {
     setOpenCreateSMSCampaign(false);
   };
 
-  const handleOpenCreateWhatsAppCampaign = () => {
-    setOpenCreateWhatsAppCampaign(true);
+  const handleOpenCreateEmailCampaign = () => {
+    setOpenCreateEmailCampaign(true);
   };
 
-  const handleCloseCreateWhatsAppCampaign = () => {
-    setOpenCreateWhatsAppCampaign(false);
+  const handleCloseCreateEmailCampaign = () => {
+    setOpenCreateEmailCampaign(false);
   };
 
   const handleOpenCreateGoogleAdsCampaign = () => {
@@ -88,11 +88,11 @@ export default function GeneralBooking() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
-                action={handleOpenCreateWhatsAppCampaign}
+                action={handleOpenCreateEmailCampaign}
                 title="Create Campaign"
-                total={'WhatsApp'}
-                color="success"
-                icon={<WhatsAppIcon />}
+                total={'Email'}
+                color="warning"
+                icon={<MailRoundedIcon />}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
@@ -144,8 +144,8 @@ export default function GeneralBooking() {
       {openCreateSMSCampaign && (
         <CreateSMSCampaign open={openCreateSMSCampaign} handleClose={handleCloseCreateSMSCampaign} />
       )}
-      {openCreateWhatsAppCampaign && (
-        <CreateWhatsAppCampaign open={openCreateWhatsAppCampaign} handleClose={handleCloseCreateWhatsAppCampaign} />
+      {openCreateEmailCampaign && (
+        <CreateEmailCampaign open={openCreateEmailCampaign} handleClose={handleCloseCreateEmailCampaign} />
       )}
       {openCreateGoogleAdsCampaign && (
         <CreateGoogleAdsCampaign open={openCreateGoogleAdsCampaign} handleClose={handleCloseCreateGoogleAdsCampaign} />

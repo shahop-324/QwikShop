@@ -3,12 +3,12 @@ import EmailEditor from 'react-email-editor';
 import { Dialog, AppBar, Toolbar, Typography, Slide, TextField, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
-import template from '../../../../design.json';
-import { addStorePage, updateStorePage } from '../../../../actions';
+import template from '../../design.json';
+import { addStorePage, updateStorePage } from '../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const DnDPageBuilder = ({ open, handleClose, isEdit, id }) => {
+const DesignEmailCampaign = ({ open, handleClose, isEdit, id }) => {
   const dispatch = useDispatch();
 
   const { pages } = useSelector((state) => state.page);
@@ -19,8 +19,8 @@ const DnDPageBuilder = ({ open, handleClose, isEdit, id }) => {
   if (isEdit) {
     page = pages.find((el) => el._id === id);
 
-   let stringified = JSON.stringify(page.designJSON);
-   stringified = stringified.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    let stringified = JSON.stringify(page.designJSON);
+    stringified = stringified.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
     design = JSON.parse(stringified);
     console.log(design);
@@ -55,7 +55,7 @@ const DnDPageBuilder = ({ open, handleClose, isEdit, id }) => {
     emailEditorRef.current.editor.exportHtml((data) => {
       const { html, design } = data;
 
-      const formValues = { name: templateName, html, type: 'dnd', designJSON: design, };
+      const formValues = { name: templateName, html, type: 'dnd', designJSON: design };
 
       if (isEdit) {
         dispatch(updateStorePage(formValues, id, handleClose));
@@ -110,4 +110,4 @@ const DnDPageBuilder = ({ open, handleClose, isEdit, id }) => {
   );
 };
 
-export default DnDPageBuilder;
+export default DesignEmailCampaign;

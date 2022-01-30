@@ -17,6 +17,8 @@ import { shipmentActions } from '../reducers/shipmentSlice';
 import { transactionActions } from '../reducers/transactionSlice';
 import { discountActions } from '../reducers/discountSlice';
 import { pageActions } from '../reducers/pagesSlice';
+import { referralActions } from '../reducers/referralSlice';
+import { marketingActions } from '../reducers/marketingSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -3058,7 +3060,7 @@ export const updateStoreOtherInfo = (formValues) => async (dispatch, getState) =
     dispatch(storeActions.SetIsUpdatingOtherInfo({ state: false }));
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("error", message));
+    dispatch(showSnackbar('error', message));
     dispatch(storeActions.SetIsUpdatingOtherInfo({ state: false }));
   }
 };
@@ -3639,6 +3641,437 @@ export const removeStaffMember = (email, handleClose) => async (dispatch, getSta
     dispatch(showSnackbar('error', message));
     dispatch(storeActions.SetIsDeletingStaff({ state: false }));
     handleClose();
+  }
+};
+
+// ******************************************************** Referral ********************************************************** //
+
+export const fetchReferrals = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}referral/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.FetchReferrals({
+        referrals: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const addNewReferrer = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(referralActions.SetIsCreating({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}referral/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.CreateReferral({
+        referral: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(referralActions.SetIsCreating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(referralActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const editReferrer = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(referralActions.SetIsUpdating({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}referral/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.UpdateReferral({
+        referral: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(referralActions.SetIsUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(referralActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteReferrer = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(referralActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}referral/delete/${id}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.DeleteReferral({
+        referralId: id,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(referralActions.SetIsDeleting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(referralActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const deleteMultipleReferrers = (ids, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(referralActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}referral/deleteMultiple`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ids,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.DeleteMultipleReferral({
+        ids,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(referralActions.SetIsDeleting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(referralActions.SetIsDeleting({ state: false }));
+  }
+};
+
+// ************************************************* Marketing ********************************************** //
+
+export const creatEmailCampaign = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(marketingActions.SetIsCreating({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}marketing/create/email`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      marketingActions.CreateCampaign({
+        campaign: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(marketingActions.SetIsCreating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(marketingActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateEmailCampaign = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(marketingActions.SetIsUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}marketing/update/email/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      marketingActions.UpdateCampaign({
+        campaign: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(marketingActions.SetIsUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(marketingActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const testEmailCampaign = () => async(dispatch, getState) => {
+  
+}
+
+export const createSMSCampaign = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(marketingActions.SetIsCreating({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}marketing/create/sms`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      marketingActions.CreateCampaign({
+        campaign: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(marketingActions.SetIsCreating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(marketingActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const createGoogleAdsCampaign = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(marketingActions.SetIsCreating({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}marketing/create/google`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(showSnackbar('success', message));
+    dispatch(marketingActions.SetIsCreating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(marketingActions.SetIsCreating({ state: false }));
   }
 };
 

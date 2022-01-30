@@ -52,13 +52,10 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const MessageBox = MUIStyled.div`
-
 border: ${(props) => (props && props.active ? '1px solid #2065D1' : '1px solid #cecece')};
 border-radius: 12px;
 padding: 15px 12px;
 margin-bottom: 15px;
-
-
 `;
 
 const PreviewCard = MUIStyled.div`

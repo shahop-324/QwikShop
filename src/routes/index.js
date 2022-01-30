@@ -77,8 +77,8 @@ export default function Router() {
         { path: 'payment', element: <GeneralPayment /> },
         { path: 'discount', element: <GeneralDiscount /> },
         { path: 'manage', element: <GeneralManage /> },
-        { path: 'questions', element: <GeneralManage /> },
-        { path: 'refferal', element: <GeneralManage /> },
+        { path: 'questions', element: <GeneralQuestion /> },
+        { path: 'refferal', element: <GeneralReferral /> },
         { path: 'integration', element: <GeneralIntegration /> },
         {path: 'reviews', element: <GeneralReviews />},
         { path: 'academy', element: <GeneralAcademy /> },
@@ -172,6 +172,8 @@ const GeneralMarketing = Loadable(lazy(() => import('../pages/dashboard/GeneralM
 const GeneralPayment = Loadable(lazy(() => import('../pages/dashboard/GeneralPayment')));
 const GeneralDiscount = Loadable(lazy(() => import('../pages/dashboard/GeneralDiscount')));
 const GeneralDining = Loadable(lazy(() => import('../pages/dashboard/GeneralDining')));
+const GeneralReferral = Loadable(lazy(() => import('../pages/dashboard/GeneralRefferal')));
+const GeneralQuestion = Loadable(lazy(() => import('../pages/dashboard/GeneralQuestions')));
 const GeneralManage = Loadable(lazy(() => import('../pages/dashboard/GeneralManage')));
 const GeneralIntegration = Loadable(lazy(() => import('../pages/dashboard/GeneralIntegration')));
 const GeneralAbondonedCarts = Loadable(lazy(() => import('../pages/dashboard/GeneralAbondonedCarts')));
