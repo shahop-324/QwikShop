@@ -77,11 +77,11 @@ export default function Router() {
         { path: 'payment', element: <GeneralPayment /> },
         { path: 'discount', element: <GeneralDiscount /> },
         { path: 'manage', element: <GeneralManage /> },
-        // { path: 'questions', element: <GeneralManage /> },
-        // { path: 'refferal', element: <GeneralManage /> },
-        // { path: 'integration', element: <GeneralIntegration /> },
+        { path: 'questions', element: <GeneralManage /> },
+        { path: 'refferal', element: <GeneralManage /> },
+        { path: 'integration', element: <GeneralIntegration /> },
         {path: 'reviews', element: <GeneralReviews />},
-        // { path: 'academy', element: <GeneralAcademy /> },
+        { path: 'academy', element: <GeneralAcademy /> },
         {
           path: 'catalouge',
           children: [
@@ -89,7 +89,7 @@ export default function Router() {
             { path: 'product', element: <EcommerceProductList /> },
             { path: 'category', element: <GeneralCategory /> },
             { path: 'sub-category', element: <GeneralSubCategory /> },
-            // { path: 'builder', element: <GeneralCatalougeBuilder /> },
+            { path: 'builder', element: <GeneralCatalougeBuilder /> },
           ],
         },
         {

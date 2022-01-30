@@ -140,7 +140,7 @@ export default function EcommerceShop() {
                 &nbsp;Products found
               </Typography>
 
-              <ShopTagFiltered
+              {/* <ShopTagFiltered
                 filters={filters}
                 isShowReset={!isDefault && !openFilter}
                 onRemoveGender={handleRemoveGender}
@@ -149,7 +149,7 @@ export default function EcommerceShop() {
                 onRemovePrice={handleRemovePrice}
                 onRemoveRating={handleRemoveRating}
                 onResetAll={handleResetFilter}
-              />
+              /> */}
             </>
           )}
         </Stack>

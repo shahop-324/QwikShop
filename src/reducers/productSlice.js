@@ -8,6 +8,27 @@ const productSlice = createSlice({
     isCreating: false,
     isUpdating: false,
     isDeleting: false,
+    subtotal: 0,
+      total: 2,
+      discount: 0,
+      shipping: 0,
+      billing: null,
+      filters: {
+        gender: [],
+        category: 'All',
+        colors: [],
+        priceRange: '',
+        rating: '',
+      },
+      checkout: {
+        activeStep: 0,
+        cart: [],
+        subtotal: 0,
+        total: 0,
+        discount: 0,
+        shipping: 0,
+        billing: null,
+      },
   },
 
   reducers: {

@@ -41,7 +41,7 @@ const navConfig = [
           { title: 'product', path: PATH_DASHBOARD.catalouge.product },
           { title: 'category', path: PATH_DASHBOARD.catalouge.category },
           { title: 'sub category', path: PATH_DASHBOARD.catalouge.subcategory },
-          // { title: 'Catalouge Builder', path: PATH_DASHBOARD.catalouge.builder },
+          { title: 'Catalouge Builder', path: PATH_DASHBOARD.catalouge.builder },
         ],
       },
       { title: 'Delivery', path: PATH_DASHBOARD.general.delivery, icon: <LocalShippingRoundedIcon /> },
@@ -50,8 +50,8 @@ const navConfig = [
       { title: 'Payment', path: PATH_DASHBOARD.general.payment, icon: <AccountBalanceWalletRoundedIcon /> },
       { title: 'Discount', path: PATH_DASHBOARD.general.discount, icon: <LocalOfferRoundedIcon /> },
       { title: 'Manage', path: PATH_DASHBOARD.general.manage, icon: <ManageAccountsRoundedIcon /> },
-      // { title: 'Questions', path: PATH_DASHBOARD.general.questions, icon: <QuestionMarkRoundedIcon /> },
-      // { title: 'Refferal', path: PATH_DASHBOARD.general.referral, icon: <ConnectWithoutContactRoundedIcon /> },
+      { title: 'Questions', path: PATH_DASHBOARD.general.questions, icon: <QuestionMarkRoundedIcon /> },
+      { title: 'Refferal', path: PATH_DASHBOARD.general.referral, icon: <ConnectWithoutContactRoundedIcon /> },
       //  **************** Marketing Design Pages **************** //
       {
         title: 'Store',
@@ -65,21 +65,21 @@ const navConfig = [
         ],
       },
      
-      // {
-      //   title: 'Integrations',
-      //   path: PATH_DASHBOARD.general.integration,
-      //   icon: <ExtensionRoundedIcon />,
-      // },
+      {
+        title: 'Integrations',
+        path: PATH_DASHBOARD.general.integration,
+        icon: <ExtensionRoundedIcon />,
+      },
       {
         title: 'Reviews',
         path: PATH_DASHBOARD.general.reviews,
         icon: <ReviewsRoundedIcon />,
       },
-      // {
-      //   title: 'Academy',
-      //   path: PATH_DASHBOARD.general.academy,
-      //   icon: <SchoolRoundedIcon />,
-      // },
+      {
+        title: 'Academy',
+        path: PATH_DASHBOARD.general.academy,
+        icon: <SchoolRoundedIcon />,
+      },
       // MANAGEMENT : E-COMMERCE
     ],
   },

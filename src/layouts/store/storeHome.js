@@ -308,7 +308,7 @@ const StoreHome = () => {
                 &nbsp;Products found
               </Typography>
 
-              <ShopTagFiltered
+              {/* <ShopTagFiltered
                 filters={filters}
                 isShowReset={!isDefault && !openFilter}
                 onRemoveGender={handleRemoveGender}
@@ -317,7 +317,7 @@ const StoreHome = () => {
                 onRemovePrice={handleRemovePrice}
                 onRemoveRating={handleRemoveRating}
                 onResetAll={handleResetFilter}
-              />
+              /> */}
             </>
           )}
         </Stack>
