@@ -1,13 +1,37 @@
+/* eslint-disable react/jsx-key */
 import React, { useState } from 'react';
-import { Grid, Card, Stack, Typography, Box, Button, IconButton } from '@mui/material';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import { Grid, Card, Stack, Typography, Box, Button } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import Chip from '@mui/material/Chip';
+import { useSelector } from 'react-redux';
 import AddStaffMember from '../../../../Dialogs/AddStaffMember';
+import { ProductMoreMenu } from '../../e-commerce/product-list';
+import UpdateStaffMember from '../../../../Dialogs/Staff/updateStaff';
+import RemoveStaff from '../../../../Dialogs/Staff/removeStaff';
 
 const AccountStaff = () => {
-  const [state, setState] = useState('');
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openRemove, setOpenRemove] = useState(false);
+  const [id, setId] = useState('');
+
+  const handleOpenUpdate = () => {
+    setOpenUpdate(true);
+  };
+
+  const handleOpenRemove = () => {
+    setOpenRemove(true);
+  };
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
+  };
+
+  const handleCloseRemove = () => {
+    setOpenRemove(false);
+  };
+
+  const { store } = useSelector((state) => state.store);
 
   const [open, setOpen] = useState(false);
 
@@ -18,6 +42,10 @@ const AccountStaff = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  function getStaffId(params) {
+    return params.row.id;
+  }
 
   const columns = [
     {
@@ -33,9 +61,15 @@ const AccountStaff = () => {
     {
       field: 'mobile',
       headerName: 'Mobile Number',
-      width: 250,
+      width: 200,
       editable: false,
       renderCell: (params) => <Typography variant="subtitle1">{params.value}</Typography>,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 250,
+      editable: false,
     },
     {
       field: 'permissions',
@@ -51,55 +85,66 @@ const AccountStaff = () => {
             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
           }}
         >
-          {params.value.map((el) => (
-            <Chip key={el.index} label={el.label} color="primary" variant="outlined" />
+          {params.value?.map((el) => (
+            <Chip label={el?.label || el} color="primary" variant="outlined" />
           ))}
         </Box>
       ),
     },
-    {
-      field: 'lastLoggedIn',
-      headerName: 'Last Logged In',
-      width: 200,
-      editable: false,
-    },
+
     {
       field: 'action',
       headerName: 'Action',
       width: 100,
       editable: false,
+      valueGetter: getStaffId,
       renderCell: (params) => (
-        <IconButton>
-          <DeleteRoundedIcon />
-        </IconButton>
+        <ProductMoreMenu
+          onDelete={() => {
+            console.log(params.value);
+            setId(params.value);
+            handleOpenRemove();
+          }}
+          onEdit={() => {
+            setId(params.value);
+            handleOpenUpdate();
+          }}
+          productName=""
+        />
+        // <IconButton
+        //   onClick={() => {
+        //     console.log(params.value);
+        //   }}
+        // >
+        //   <DeleteRoundedIcon />
+        // </IconButton>
       ),
     },
   ];
 
-  const rows = [
-    {
-      id: '17282-dhuiwi992-2hjj2729',
-      name: 'Harsh Mishra',
-      mobile: '+91 9770668454',
-      permissions: [
-        { index: '1223', label: 'Orders' },
-        { index: '12727', label: 'Marketing' },
-        { index: '3782', label: 'Management' },
-        { index: '28892', label: 'Delivery' },
-        { index: '1382893', label: 'Payments' },
-      ],
-      lastLoggedIn: '12 min Ago',
-    },
-  ];
+  console.log(store.team);
+
+  // const rows = [];
+
+  const rows = store.team.map((el) => ({
+    id: el.email,
+    name: el.name,
+    mobile: el.phone,
+    permissions: el.permissions,
+    email: el.email,
+  }));
 
   return (
     <>
       <Grid item xs={12} md={12}>
         <Card sx={{ p: 3, position: 'relative' }}>
           <Stack sx={{ mb: 3 }} direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-            <Button variant="outlined">Export in Excel</Button>
+            <div>
+              {
+                ""
+              }
+            </div>
             <Stack direction={'row'} spacing={3} alignItems={'center'}>
-              <Button variant="outlined">Import Staff</Button>
               <Button
                 variant="contained"
                 onClick={() => {
@@ -110,13 +155,15 @@ const AccountStaff = () => {
               </Button>
             </Stack>
           </Stack>
-          <Box sx={{ height: 400, width: '100%' }}>
+          <Box sx={{ height: 1200, width: '100%' }}>
             <DataGrid rowHeight={200} rows={rows} columns={columns} />
           </Box>
         </Card>
       </Grid>
 
       {open && <AddStaffMember open={open} handleClose={handleClose} />}
+      {openUpdate && <UpdateStaffMember open={openUpdate} handleClose={handleCloseUpdate} id={id} />}
+      {openRemove && <RemoveStaff open={openRemove} handleClose={handleCloseRemove} id={id} />}
     </>
   );
 };

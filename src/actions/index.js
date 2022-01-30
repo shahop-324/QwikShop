@@ -16,6 +16,7 @@ import { deliveryActions } from '../reducers/deliverySlice';
 import { shipmentActions } from '../reducers/shipmentSlice';
 import { transactionActions } from '../reducers/transactionSlice';
 import { discountActions } from '../reducers/discountSlice';
+import { pageActions } from '../reducers/pagesSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -3015,21 +3016,98 @@ export const updateStoreGeneralInfo = (formValues, subName, file) => async (disp
 
 // ************************************************* Store Other Info ************************************************ //
 
-export const updateStoreOtherInfo = () => async (dispatch, getState) => {
+export const updateStoreOtherInfo = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingOtherInfo({ state: true }));
+
   try {
-    //
+    const res = await fetch(`${BaseURL}store/other-info/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingOtherInfo({ state: false }));
   } catch (error) {
     console.log(error);
+    dispatch(showSnackbar("error", message));
+    dispatch(storeActions.SetIsUpdatingOtherInfo({ state: false }));
   }
 };
 
 // ************************************************* Store Ambience ************************************************ //
 
-export const updateStoreAmbience = () => async (dispatch, getState) => {
+export const updateStoreAmbience = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingAmbience({ state: true }));
   try {
-    //
+    const res = await fetch(`${BaseURL}store/ambience/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingAmbience({ state: false }));
   } catch (error) {
     console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingAmbience({ state: false }));
   }
 };
 
@@ -3037,25 +3115,385 @@ export const updateStoreAmbience = () => async (dispatch, getState) => {
 
 // Fetch, Add, Update, Delete
 
-export const addStorePage = () => async (dispatch, getState) => {};
+export const addStorePage = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  console.log(formValues);
+  dispatch(pageActions.SetIsCreating({ state: true }));
 
-export const getStorePages = () => async (dispatch, getState) => {};
+  try {
+    const res = await fetch(`${BaseURL}pages/create`, {
+      method: 'POST',
 
-export const updateStorePage = () => async (dispatch, getState) => {};
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-export const deleteStorePage = () => async (dispatch, getState) => {};
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      pageActions.CreatePage({
+        page: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(pageActions.SetIsCreating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(pageActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const getStorePages = (term) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const fullLocation = `${BaseURL}pages/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      pageActions.FetchPages({
+        pages: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const updateStorePage = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(pageActions.SetIsUpdating({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}pages/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      pageActions.UpdatePage({
+        page: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(pageActions.SetIsUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(pageActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteStorePage = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(pageActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}pages/delete/${id}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      pageActions.DeletePage({
+        pageId: id,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(pageActions.SetIsDeleting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(pageActions.SetIsDeleting({ state: false }));
+    handleClose();
+  }
+};
 
 // ************************************************* Checkout Field ************************************************* //
 
-// Fetch, Add, Update, Delete
+// Add, Update, Delete
 
-export const getCheckoutFields = () => async (dispatch, getState) => {};
+export const toggleGuestCheckout = (state) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}store/general/guest-checkout`, {
+      method: 'PATCH',
 
-export const addCheckoutField = () => async (dispatch, getState) => {};
+      body: JSON.stringify({
+        guestCheckout: state,
+      }),
 
-export const updateCheckoutField = () => async (dispatch, getState) => {};
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
 
-export const deleteCheckoutField = () => async (dispatch, getState) => {};
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const addCheckoutField = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsCreatingCheckoutField({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}store/checkout-form/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsCreatingCheckoutField({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsCreatingCheckoutField({ state: false }));
+    handleClose();
+  }
+};
+
+export const updateCheckoutField = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingCheckoutField({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}store/checkout-form/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingCheckoutField({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingCheckoutField({ state: false }));
+    handleClose();
+  }
+};
+
+export const deleteCheckoutField = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingCheckoutField({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}store/checkout-form/delete/${id}`, {
+      method: 'PATCH',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingCheckoutField({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingCheckoutField({ state: false }));
+    handleClose();
+  }
+};
 
 // **************************************************** Staff *************************************************************** //
 
@@ -3164,7 +3602,7 @@ export const removeStaffMember = (email, handleClose) => async (dispatch, getSta
   dispatch(storeActions.SetIsDeletingStaff({ state: true }));
 
   try {
-    const res = await fetch(`${BaseURL}store/staff/update/${email}`, {
+    const res = await fetch(`${BaseURL}store/staff/delete/${email}`, {
       method: 'PATCH',
 
       headers: {

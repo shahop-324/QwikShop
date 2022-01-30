@@ -1,15 +1,34 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, Button, Stack, Grid, Card, Typography, TextField } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { LoadingButton } from '@mui/lab';
 import Editor from '../../../../components/editor';
+import { addStorePage, updateStorePage } from '../../../../actions';
 
-const QuillPageBuilder = ({ open, handleClose }) => {
-  const [templateName, setTemplateName] = useState({ error: false, message: 'Template Name is required', value: '' });
-  const [html, setHtml] = useState({ error: false, message: 'Page content is required', value: '' });
+const QuillPageBuilder = ({ open, handleClose, isEdit, id }) => {
+  const dispatch = useDispatch();
+
+  const { isCreatingPage, isUpdatingPage, pages } = useSelector((state) => state.page);
+
+  const page = pages.find((el) => el._id === id);
+
+  const [templateName, setTemplateName] = useState(isEdit && page.name);
+  const [html, setHtml] = useState(isEdit && page.html.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+
+  const onSubmit = () => {
+    const formValues = { name: templateName, html, type: 'quill' };
+
+    if (isEdit) {
+      dispatch(updateStorePage(formValues, id, handleClose));
+    } else {
+      dispatch(addStorePage(formValues, handleClose));
+    }
+  };
 
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
-        <DialogTitle>Create Page</DialogTitle>
+        <DialogTitle>{isEdit ? 'Edit Page' : 'Create Page'}</DialogTitle>
         <Grid className="px-4 pt-3" container spacing={3} sx={{ mb: 2 }}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
@@ -17,28 +36,12 @@ const QuillPageBuilder = ({ open, handleClose }) => {
                 Page Name
               </Typography>
               <TextField
-                error={templateName.error}
-                helperText={templateName.error ? 'Template Name is required' : ''}
                 name="templateName"
                 label="Template name"
                 fullWidth
-                value={templateName.value}
+                value={templateName}
                 onChange={(e) => {
-                  if (!e.target.value) {
-                    setTemplateName((prev) => {
-                      prev.error = true;
-                      return prev;
-                    });
-                  } else {
-                    setTemplateName((prev) => {
-                      prev.error = false;
-                      return prev;
-                    });
-                  }
-                  setTemplateName((prev) => {
-                    prev.value = e.target.value;
-                    return prev;
-                  });
+                  setTemplateName(e.target.value);
                 }}
               />
             </Card>
@@ -51,25 +54,9 @@ const QuillPageBuilder = ({ open, handleClose }) => {
                 Page Content
               </Typography>
               <Editor
-                error={html.error}
-                helperText={html.error ? 'Page content is required' : ""}
-                value={html.value}
+                value={html}
                 onChange={(value) => {
-                  if (!value) {
-                    setHtml((prev) => {
-                      prev.error = true;
-                      return prev;
-                    });
-                  } else {
-                    setHtml((prev) => {
-                      prev.error = false;
-                      return prev;
-                    });
-                  }
-                  setHtml((prev) => {
-                    prev.value = value;
-                    return prev;
-                  });
+                  setHtml(value);
                 }}
               />
             </Card>
@@ -77,9 +64,9 @@ const QuillPageBuilder = ({ open, handleClose }) => {
         </Grid>
 
         <Stack spacing={3} direction="row" alignItems="center" justifyContent="end" sx={{ px: 4, py: 3 }}>
-          <Button variant="contained">Save & Publish</Button>
-          <Button variant="outlined">Save as draft</Button>
-          <Button onClick={handleClose}>Close</Button>
+          <LoadingButton loading={isEdit ? isCreatingPage : isUpdatingPage} onClick={onSubmit} variant="contained">
+            Save & Publish
+          </LoadingButton>
         </Stack>
       </Dialog>
     </>

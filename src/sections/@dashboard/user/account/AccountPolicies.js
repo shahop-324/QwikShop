@@ -87,7 +87,7 @@ const AccountPolicies = () => {
                 value={value}
                 onChange={handleChange}
                 aria-label="Vertical tabs example"
-                sx={{ borderRight: 1, borderColor: 'divider' }}
+                sx={{ borderRight: 1, borderColor: 'divider', width: "250px" }}
               >
                 <Tab label="Terms" {...a11yProps(0)} />
                 <Tab label="Privacy Policy" {...a11yProps(1)} />

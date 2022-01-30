@@ -20,6 +20,8 @@ import {
   InputAdornment,
 } from '@mui/material';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import EventRoundedIcon from '@mui/icons-material/EventRounded';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
@@ -28,10 +30,14 @@ import PhotoRoundedIcon from '@mui/icons-material/PhotoRounded';
 import ArrowDropDownCircleRoundedIcon from '@mui/icons-material/ArrowDropDownCircleRounded';
 
 import { styled } from '@mui/material/styles';
+import EditRounded from '@mui/icons-material/EditRounded';
+import { toggleGuestCheckout } from '../../../../actions';
 
 import Iconify from '../../../../components/Iconify';
 import MenuPopover from '../../../../components/MenuPopover';
 import AddCheckoutField from '../../../../Dialogs/AddCheckoutField';
+import EditCheckoutField from '../../../../Dialogs/CheckoutField.js/EditCheckoutField';
+import DeleteCheckoutField from '../../../../Dialogs/CheckoutField.js/DeleteCheckoutField';
 
 const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
   ({ theme }) => ({
@@ -82,19 +88,41 @@ const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVis
 );
 
 const AccountCheckout = () => {
-  const [state, setState] = useState('');
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
-  const [guestCheckout, setGuestCheckout] = useState(true);
+  const [id, setId] = useState('');
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleOpenDelete = () => {
+    setOpenDelete(true);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+  const dispatch = useDispatch();
+  const { store } = useSelector((state) => state.store);
+
+  console.log(store.formFields);
+
+  console.log(store.guestCheckout);
 
   const [openAddCheckoutField, setOpenAddCheckoutField] = useState(false);
 
   const handleOpenAddCheckoutField = () => {
     setOpenAddCheckoutField(true);
-  }
+  };
 
   const handleCloseAddCheckoutField = () => {
     setOpenAddCheckoutField(false);
-  }
+  };
 
   return (
     <>
@@ -111,13 +139,12 @@ const AccountCheckout = () => {
               <FormControlLabel
                 control={
                   <IOSSwitch
-                    checked={guestCheckout}
-                    onChange={(e, value) => setGuestCheckout(value)}
+                    checked={store.guestCheckout}
+                    onChange={(e, value) => dispatch(toggleGuestCheckout(value))}
                     sx={{ m: 1 }}
-                    defaultChecked
                   />
                 }
-                label="Enabled"
+                label={store.guestCheckout ? 'Enabled' : 'Disabled'}
               />
             </Stack>
           </Card>
@@ -146,9 +173,9 @@ const AccountCheckout = () => {
                 <TextField disabled name="address" label="Address" fullWidth readOnly />
                 <TextField disabled name="city" label="City" fullWidth readOnly />
                 <TextField disabled name="pincode" label="Pincode" fullWidth readOnly />
-                {customFieldsList.map((el) => (
+                {store.formFields.map((el) => (
                   <Box
-                    key={el.index}
+                    key={el._id}
                     sx={{
                       display: 'grid',
                       columnGap: 2,
@@ -159,42 +186,80 @@ const AccountCheckout = () => {
                   >
                     <TextField
                       disabled
-                      name={el.name}
-                      label={el.label}
+                      name={el.fieldName}
+                      label={el.fieldName}
                       fullWidth
                       readOnly
                       InputProps={{
-                        startAdornment: <InputAdornment>{el.icon}</InputAdornment>,
+                        startAdornment: (
+                          <InputAdornment>
+                            {(() => {
+                              switch (el.type.title) {
+                                case 'Email':
+                                  return <EmailRoundedIcon style={{ fontSize: '24' }} />;
+
+                                case 'Date Picker':
+                                  return <EventRoundedIcon style={{ fontSize: '24' }} />;
+
+                                case 'Time Picker':
+                                  return <AccessTimeRoundedIcon style={{ fontSize: '24' }} />;
+
+                                case 'Image Picker':
+                                  return <PhotoRoundedIcon style={{ fontSize: '24' }} />;
+
+                                case 'Text Field':
+                                  return <TextFormatRoundedIcon style={{ fontSize: '24' }} />;
+
+                                case 'Custom Dropdown':
+                                  return <ArrowDropDownCircleRoundedIcon style={{ fontSize: '24' }} />;
+
+                                default:
+                                  break;
+                              }
+                            })()}
+                          </InputAdornment>
+                        ),
                       }}
                     />
-                    <MoreMenuButton />
+                    <MoreMenuButton
+                      onEdit={() => {
+                        setId(el._id);
+                        handleOpenEdit();
+                      }}
+                      onDelete={() => {
+                        setId(el._id);
+                        handleOpenDelete();
+                      }}
+                    />
                   </Box>
                 ))}
               </Box>
-              <Stack className='mt-4' direction={"row"} alignItems={"center"} justifyContent={"center"}>
-                <Button onClick={() => {handleOpenAddCheckoutField();}} variant="outlined">Add Field</Button>
+              <Stack className="mt-4" direction={'row'} alignItems={'center'} justifyContent={'center'}>
+                <Button
+                  onClick={() => {
+                    handleOpenAddCheckoutField();
+                  }}
+                  variant="outlined"
+                >
+                  Add Field
+                </Button>
               </Stack>
             </Card>
           </Grid>
         </Grid>
       </Stack>
-      {openAddCheckoutField && <AddCheckoutField open={openAddCheckoutField} handleClose={handleCloseAddCheckoutField} />}
+      {openAddCheckoutField && (
+        <AddCheckoutField open={openAddCheckoutField} handleClose={handleCloseAddCheckoutField} />
+      )}
+      {openEdit && <EditCheckoutField open={openEdit} handleClose={handleCloseEdit} id={id} />}
+      {openDelete && <DeleteCheckoutField open={openDelete} handleClose={handleCloseDelete} id={id} />}
     </>
   );
 };
 
-const customFieldsList = [
-  { icon: <EmailRoundedIcon />, name: '', label: '', index: '123' },
-  { icon: <EventRoundedIcon />, name: 'Date', label: 'Date', index: '567' },
-  { icon: <AccessTimeRoundedIcon />, name: 'Time', label: 'Time', index: '399' },
-  { icon: <TextFormatRoundedIcon />, name: 'Text', label: 'Text', index: '6627' },
-  { icon: <PhotoRoundedIcon />, name: 'Image', label: 'Image', index: '2663' },
-  { icon: <ArrowDropDownCircleRoundedIcon />, name: 'customDropdown', label: 'Custom Dropdown', index: '2772' },
-];
-
 export default AccountCheckout;
 
-function MoreMenuButton() {
+function MoreMenuButton({ onEdit, onDelete }) {
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -230,24 +295,15 @@ function MoreMenuButton() {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem>
-          <Iconify icon={'eva:download-fill'} sx={{ ...ICON }} />
-          Download
-        </MenuItem>
-
-        <MenuItem>
-          <Iconify icon={'eva:printer-fill'} sx={{ ...ICON }} />
-          Print
-        </MenuItem>
-
-        <MenuItem>
-          <Iconify icon={'eva:share-fill'} sx={{ ...ICON }} />
-          Share
+        <MenuItem onClick={onEdit}>
+          
+          <EditRounded className="me-3" style={{fontSize: "20px"}} />
+          Edit
         </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
           Delete
         </MenuItem>

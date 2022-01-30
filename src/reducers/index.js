@@ -13,6 +13,7 @@ import deliverySlice from "./deliverySlice";
 import shipmentSlice from "./shipmentSlice";
 import transactionSlice from "./transactionSlice";
 import discountSlice from "./discountSlice";
+import pageSlice from "./pagesSlice";
 
 export default combineReducers({
     auth: authSlice.reducer,
@@ -29,4 +30,5 @@ export default combineReducers({
     shipment: shipmentSlice.reducer,
     transaction: transactionSlice.reducer,
     discount: discountSlice.reducer,
+    page: pageSlice.reducer,
 });

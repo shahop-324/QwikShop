@@ -29,8 +29,8 @@ import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import CustomDropdownOptions from './CustomDropdownOptions';
-import { addCheckoutField } from '../actions';
+import CustomDropdownOptions from '../CustomDropdownOptions';
+import { updateCheckoutField } from '../../actions';
 
 const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
   ({ theme }) => ({
@@ -80,23 +80,23 @@ const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVis
   })
 );
 
-const AddCheckoutField = ({ open, handleClose }) => {
-  const { store, isCreatingCheckoutField } = useSelector((state) => state.store);
+const EditCheckoutField = ({ open, handleClose, id }) => {
+  const { store, isUpdatingCheckoutField } = useSelector((state) => state.store);
+
+  const formField = store.formFields.find((el) => el._id === id);
+
   const dispatch = useDispatch();
   const [openOptions, setOpenOptions] = useState(false);
 
-  const [fieldName, setFieldName] = useState('');
-  const [type, setType] = useState();
+  const [fieldName, setFieldName] = useState(formField.fieldName);
+  const [type, setType] = useState(formField.type);
 
   const [fieldNameError, setFieldNameError] = useState({ error: false, message: 'Field Name is required' });
   const [typeError, setTypeError] = useState({ error: false, message: 'Field type is required' });
 
-  const [required, setRequired] = useState(true);
+  const [required, setRequired] = useState(formField.required);
 
-  const [options, setOptions] = useState([
-    { index: uuidv4(), value: '' },
-    { index: uuidv4(), value: '' },
-  ]);
+  const [options, setOptions] = useState(formField.options);
 
   const handleOpenOptions = () => {
     setOpenOptions(true);
@@ -135,7 +135,7 @@ const AddCheckoutField = ({ open, handleClose }) => {
       required,
     };
 
-    dispatch(addCheckoutField(formValues, handleClose));
+    dispatch(updateCheckoutField(formValues, id, handleClose));
   };
 
   return (
@@ -264,8 +264,8 @@ const AddCheckoutField = ({ open, handleClose }) => {
             </Card>
 
             <Stack sx={{ px: 4, py: 3 }} direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={3}>
-              <LoadingButton loading={isCreatingCheckoutField} onClick={onSubmit} variant="contained">
-                Add Field
+              <LoadingButton loading={isUpdatingCheckoutField} onClick={onSubmit} variant="contained">
+                Update Field
               </LoadingButton>
               <Button onClick={handleClose}>Close</Button>
             </Stack>
@@ -286,7 +286,7 @@ const AddCheckoutField = ({ open, handleClose }) => {
   );
 };
 
-export default AddCheckoutField;
+export default EditCheckoutField;
 
 const fieldTypes = [
   {

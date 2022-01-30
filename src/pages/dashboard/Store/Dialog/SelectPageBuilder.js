@@ -14,6 +14,7 @@ const SelectPageBuilder = ({ open, handleClose }) => {
 
   const handleOpenDnD = () => {
     setOpenDnD(true);
+
   };
 
   const handleCloseDnD = () => {

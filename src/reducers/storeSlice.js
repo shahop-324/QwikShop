@@ -22,6 +22,9 @@ const storeSlice = createSlice({
     isCreatingStaff: false,
     isUpdatingStaff: false,
     isDeletingStaff: false,
+
+    isUpdatingAmbience: false,
+    isUpdatingOtherInfo: false,
   },
 
   reducers: {
@@ -78,6 +81,12 @@ const storeSlice = createSlice({
     },
     SetIsDeletingStaff(state, action) {
       state.isDeletingStaff = action.payload.state;
+    },
+    SetIsUpdatingAmbience(state, action) {
+      state.isUpdatingAmbience = action.payload.state;
+    },
+    SetIsUpdatingOtherInfo(state, action) {
+      state.isUpdatingOtherInfo = action.payload.state;
     },
   },
 });

@@ -83,7 +83,7 @@ const CustomDropdownOptions = ({
                 Add Option
               </Button>
               <Stack sx={{ pt: 3 }} direction={'row'} alignItems={'center'} justifyContent={'center'}>
-                <Button variant="contained">Save Options</Button>
+                <Button onClick={handleClose} variant="contained">Save Options</Button>
               </Stack>
             </Card>
           </Grid>

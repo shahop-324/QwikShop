@@ -1,39 +1,68 @@
 import React, { useState, useRef } from 'react';
 import EmailEditor from 'react-email-editor';
-import { Dialog, AppBar, Toolbar, Typography, Slide, Button, TextField, Stack } from '@mui/material';
+import { Dialog, AppBar, Toolbar, Typography, Slide, TextField, Stack } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { useSelector, useDispatch } from 'react-redux';
 import template from '../../../../design.json';
+import { addStorePage, updateStorePage } from '../../../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const DnDPageBuilder = ({ open, handleClose }) => {
+const DnDPageBuilder = ({ open, handleClose, isEdit, id }) => {
+  const dispatch = useDispatch();
+
+  const { pages } = useSelector((state) => state.page);
+
+  let design;
+  let page;
+
+  if (isEdit) {
+    page = pages.find((el) => el._id === id);
+
+   let stringified = JSON.stringify(page.designJSON);
+   stringified = stringified.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+
+    design = JSON.parse(stringified);
+    console.log(design);
+  }
+
+  const { isCreating, isUpdating } = useSelector((state) => state.page);
+
   const emailEditorRef = useRef(null);
 
-  const [templateName, setTemplateName] = useState('');
-
-  const [state, setState] = useState('');
-
-  const exportHtml = () => {
-    emailEditorRef.current.editor.exportHtml((data) => {
-      const { design, html } = data;
-      console.log('exportHtml', html);
-    });
-  };
+  const [templateName, setTemplateName] = useState(isEdit && page?.name);
 
   const onLoad = () => {
     // editor instance is created
     // you can load your template here;
-    let design;
-    const templateJson = template;
-    if (design) {
-      emailEditorRef.current.editor.loadDesign(design);
-    } else {
-      emailEditorRef.current.editor.loadDesign(templateJson);
-    }
+
+    setTimeout(() => {
+      const templateJson = template;
+      if (design) {
+        emailEditorRef.current.editor.loadDesign(design);
+      } else {
+        emailEditorRef.current.editor.loadDesign(templateJson);
+      }
+    }, 2000);
   };
 
   const onReady = () => {
     // editor is ready
     console.log('onReady');
+  };
+
+  const onSubmit = () => {
+    emailEditorRef.current.editor.exportHtml((data) => {
+      const { html, design } = data;
+
+      const formValues = { name: templateName, html, type: 'dnd', designJSON: design, };
+
+      if (isEdit) {
+        dispatch(updateStorePage(formValues, id, handleClose));
+      } else {
+        dispatch(addStorePage(formValues, handleClose));
+      }
+    });
   };
 
   return (
@@ -42,7 +71,7 @@ const DnDPageBuilder = ({ open, handleClose }) => {
         <AppBar sx={{ position: 'relative', backgroundColor: '#212121' }}>
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Create Page
+              {isEdit ? 'Edit Page' : 'Create Page'}
             </Typography>
 
             <Stack direction="row" alignItems="center" spacing={3}>
@@ -56,16 +85,14 @@ const DnDPageBuilder = ({ open, handleClose }) => {
                 }}
               />
 
-              <Button variant='contained'
-                onClick={() => {
-                  exportHtml();
-                  handleClose();
-                }}
-                className="btn btn-light btn-outline-text me-3"
+              <LoadingButton
+                loading={isEdit ? isUpdating : isCreating}
+                onClick={onSubmit}
+                variant="contained"
+                color="primary"
               >
-                <span> Save & close </span>
-              </Button>
-              <Button onClick={handleClose} variant='outlined' color="primary">Save as draft</Button>
+                Save as draft
+              </LoadingButton>
             </Stack>
           </Toolbar>
         </AppBar>

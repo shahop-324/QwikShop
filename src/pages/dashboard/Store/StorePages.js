@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import { Stack, Typography, Grid, Card, Box, InputBase, Button, IconButton } from '@mui/material';
@@ -8,7 +9,12 @@ import Chip from '@mui/material/Chip';
 import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import dateFormat, { masks } from 'dateformat';
 import SelectPageBuilder from './Dialog/SelectPageBuilder';
+import { getStorePages } from '../../../actions';
+import QuillPageBuilder from './Dialog/QuillPageBuilder';
+import DnDPageBuilder from './Dialog/DnDPageBuilder';
+import DeletePage from './Dialog/DeletePage';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -51,7 +57,52 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const StorePages = () => {
+  const dispatch = useDispatch();
+
+  const { pages } = useSelector((state) => state.page);
+
+  const [term, setTerm] = useState('');
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      dispatch(getStorePages(term));
+    }, 800);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [term]);
+
   const [openAdd, setOpenAdd] = useState(false);
+
+  const [openQuill, setOpenQuill] = useState(false);
+  const [openDnD, setOpenDnD] = useState(false);
+
+  const [openDelete, setOpenDelete] = useState(false);
+
+  const [id, setId] = useState('');
+
+  const handleOpenQuill = () => {
+    setOpenQuill(true);
+  };
+  const handleOpenDnD = () => {
+    setOpenDnD(true);
+  };
+
+  const handleOpenDelete = () => {
+    setOpenDelete(true);
+  };
+
+  const handleCloseQuill = () => {
+    setOpenQuill(false);
+  };
+  const handleCloseDnD = () => {
+    setOpenDnD(false);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
 
   const handleOpenAdd = () => {
     setOpenAdd(true);
@@ -90,25 +141,48 @@ const StorePages = () => {
       headerName: 'Actions',
       width: 200,
       editable: false,
-      renderCell: (params) => (
-        <Stack spacing={2} direction={'row'} alignItems={'center'} justifyContent={'space-around'}>
-          <IconButton color="primary">
-            <RemoveRedEyeRoundedIcon />
-          </IconButton>
-          <IconButton color="warning">
-            <EditRoundedIcon />
-          </IconButton>
-          <IconButton color="error">
-            <DeleteRoundedIcon />
-          </IconButton>
-        </Stack>
-      ),
+      renderCell: (params) => {
+        console.log(params);
+        return (
+          <Stack spacing={2} direction={'row'} alignItems={'center'} justifyContent={'space-around'}>
+            <IconButton color="primary">
+              <RemoveRedEyeRoundedIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                setId(params.id);
+                if (params.row.type === 'dnd' ? handleOpenDnD() : handleOpenQuill());
+              }}
+              color="warning"
+            >
+              <EditRoundedIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                setId(params.id);
+                handleOpenDelete();
+              }}
+              color="error"
+            >
+              <DeleteRoundedIcon />
+            </IconButton>
+          </Stack>
+        );
+      },
     },
   ];
 
-  const rows = [
-    { id: '28292-shjj-272892', title: 'Privacy Policy', status: 'Live', date: '21st, Jan 2022, 06:56:12 AM' },
-  ];
+  const rows = pages.map((el) => ({
+    id: el._id,
+    title: el.name,
+    status: 'Live',
+    date: dateFormat(new Date(el.createdAt), 'dd, mm dS, yy, h:MM TT'),
+    type: el.type,
+  }));
+
+  // const rows = [
+  //   { id: '28292-shjj-272892', title: 'Privacy Policy', status: 'Live', date: '21st, Jan 2022, 06:56:12 AM' },
+  // ];
 
   return (
     <>
@@ -117,7 +191,11 @@ const StorePages = () => {
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
-          <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ 'aria-label': 'search' }}
+            onChange={(e) => setTerm(e.target.value)}
+          />
         </Search>
         <Button onClick={handleOpenAdd} variant="contained">
           Add New Page
@@ -127,6 +205,9 @@ const StorePages = () => {
         <DataGrid rows={rows} columns={columns} />
       </Box>
       {openAdd && <SelectPageBuilder open={openAdd} handleClose={handleCloseAdd} />}
+      {openQuill && <QuillPageBuilder open={openQuill} handleClose={handleCloseQuill} isEdit id={id} />}
+      {openDnD && <DnDPageBuilder open={openDnD} handleClose={handleCloseDnD} isEdit id={id} />}
+      {openDelete && <DeletePage open={openDelete} handleClose={handleCloseDelete} id={id} />}
     </>
   );
 };

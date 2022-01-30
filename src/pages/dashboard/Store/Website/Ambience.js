@@ -4,10 +4,17 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { TwitterPicker } from 'react-color';
 
 import RestoreRoundedIcon from '@mui/icons-material/RestoreRounded';
+import { LoadingButton } from '@mui/lab';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateStoreAmbience } from '../../../../actions';
 
 const StoreAmbience = () => {
-  const [mode, setMode] = useState('light');
-  const [color, setColor] = useState('#538BF7');
+  const dispatch = useDispatch();
+
+  const { store, isUpdatingAmbience } = useSelector((state) => state.store);
+
+  const [mode, setMode] = useState(store?.mode || 'light');
+  const [color, setColor] = useState(store?.primaryColor || '#2065D1');
 
   return (
     <div>
@@ -57,7 +64,7 @@ const StoreAmbience = () => {
               control={
                 <Radio
                   onClick={() => {
-                    setMode('light');
+                    setMode('dark');
                   }}
                 />
               }
@@ -81,10 +88,25 @@ const StoreAmbience = () => {
         }}
       />
       <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={3}>
-        <Button variant="outlined" startIcon={<RestoreRoundedIcon />}>
+        <LoadingButton
+          onClick={() => {
+            dispatch(updateStoreAmbience({ mode: 'light', primaryColor: '#2065D1' }));
+          }}
+          loading={isUpdatingAmbience}
+          variant="outlined"
+          startIcon={<RestoreRoundedIcon />}
+        >
           Restore to default
-        </Button>
-        <Button variant="contained">Save</Button>
+        </LoadingButton>
+        <LoadingButton
+          onClick={() => {
+            dispatch(updateStoreAmbience({ mode, primaryColor: color }));
+          }}
+          loading={isUpdatingAmbience}
+          variant="contained"
+        >
+          Save
+        </LoadingButton>
       </Stack>
     </div>
   );
