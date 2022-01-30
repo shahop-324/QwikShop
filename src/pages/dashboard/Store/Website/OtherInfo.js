@@ -111,11 +111,11 @@ const StoreOtherInfo = () => {
 
   return (
     <div>
-      <Stack direction="row" alignItems="center" justifyContent="end">
+      <div style={{width: "100%"}} className='d-flex flex-row align-items-center justify-content-end mb-2' >
         <Button variant="contained" startIcon={<RemoveRedEyeIcon />}>
           Preview
         </Button>
-      </Stack>
+      </div>
 
       <Grid className="px-4 pt-3" container spacing={3}>
         <Grid item xs={12} md={12}>
@@ -423,7 +423,7 @@ const StoreOtherInfo = () => {
               />
             </Stack>
           </Card>
-          <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={3} sx={{ py: 3 }}>
+          <div style={{width: "100%"}} className='d-flex flex-row align-items-center justify-content-end mt-3' >
             <LoadingButton
               onClick={() => {
                 onSubmit();
@@ -433,7 +433,7 @@ const StoreOtherInfo = () => {
             >
               Save
             </LoadingButton>
-          </Stack>
+          </div>
         </Grid>
       </Grid>
     </div>

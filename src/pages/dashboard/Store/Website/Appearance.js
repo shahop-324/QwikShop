@@ -10,11 +10,11 @@ const StoreAppearance = () => {
 
   return (
     <div>
-      <Stack direction="row" alignItems="center" justifyContent="end">
+      <div style={{ width: '100%' }} className="d-flex flex-row align-items-center justify-content-end mb-3">
         <Button variant="contained" startIcon={<RemoveRedEyeIcon />}>
           Preview
         </Button>
-      </Stack>
+      </div>
 
       <Typography variant="h6" className="mb-3">
         Theme

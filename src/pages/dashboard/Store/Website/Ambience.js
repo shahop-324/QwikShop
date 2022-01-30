@@ -18,11 +18,11 @@ const StoreAmbience = () => {
 
   return (
     <div>
-      <Stack direction="row" alignItems="center" justifyContent="end">
+      <div style={{width: "100%"}} className='d-flex flex-row align-items-center justify-content-end mb-3' >
         <Button variant="contained" startIcon={<RemoveRedEyeIcon />}>
           Preview
         </Button>
-      </Stack>
+      </div>
 
       <Typography variant="h6" className="mb-3">
         Mode
@@ -87,8 +87,9 @@ const StoreAmbience = () => {
           setColor(color.hex);
         }}
       />
-      <Stack direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={3}>
+     <div style={{width: "100%"}} className='d-flex flex-row align-items-center justify-content-end mt-3' >
         <LoadingButton
+        className='me-3'
           onClick={() => {
             dispatch(updateStoreAmbience({ mode: 'light', primaryColor: '#2065D1' }));
           }}
@@ -107,7 +108,7 @@ const StoreAmbience = () => {
         >
           Save
         </LoadingButton>
-      </Stack>
+      </div>
     </div>
   );
 };
