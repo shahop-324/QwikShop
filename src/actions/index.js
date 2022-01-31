@@ -19,6 +19,9 @@ import { discountActions } from '../reducers/discountSlice';
 import { pageActions } from '../reducers/pagesSlice';
 import { referralActions } from '../reducers/referralSlice';
 import { marketingActions } from '../reducers/marketingSlice';
+import { customerActions } from '../reducers/customerSlice';
+import { reviewActions } from '../reducers/reviewSlice';
+import { questionActions } from '../reducers/questionsSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -3981,9 +3984,7 @@ export const updateEmailCampaign = (formValues, id, handleClose) => async (dispa
   }
 };
 
-export const testEmailCampaign = () => async(dispatch, getState) => {
-  
-}
+export const testEmailCampaign = () => async (dispatch, getState) => {};
 
 export const createSMSCampaign = (formValues, handleClose) => async (dispatch, getState) => {
   let message;
@@ -4065,6 +4066,12 @@ export const createGoogleAdsCampaign = (formValues, handleClose) => async (dispa
 
     console.log(result);
 
+    dispatch(
+      marketingActions.CreateCampaign({
+        campaign: result.data,
+      })
+    );
+
     dispatch(showSnackbar('success', message));
     dispatch(marketingActions.SetIsCreating({ state: false }));
     handleClose();
@@ -4074,6 +4081,735 @@ export const createGoogleAdsCampaign = (formValues, handleClose) => async (dispa
     dispatch(marketingActions.SetIsCreating({ state: false }));
   }
 };
+
+// **************************************************** Customer ********************************************* //
+
+// Add, update, delete, deleteMultiple, fetch, import, send sms
+
+export const addNewCustomer = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsCreating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}customer/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.CreateCustomer({
+        customer: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(customerActions.SetIsCreating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateCustomer = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}customer/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.UpdateCustomer({
+        customer: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(customerActions.SetIsUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteCustomer = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}customer/delete/${id}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.DeleteCustomer({
+        customerId: id,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(customerActions.SetIsDeleting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const deleteMultipleCustomers = (ids, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}customer/deleteMultiple/`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ids,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.DeleteMultipleCustomer({
+        ids,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(customerActions.SetIsDeleting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const fetchCustomers = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}customer/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.FetchCustomers({
+        customers: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const importCustomer = (data, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsImporting({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}customer/createMultiple`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...data,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.CreateMultipleCustomer({
+        customers: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(customerActions.SetIsImporting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsImporting({ state: false }));
+  }
+};
+
+export const sendSMSToCustomer = (formValues, customerId, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsSendingSMS({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}customer/sendSMS/${customerId}`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(showSnackbar('success', message));
+    dispatch(customerActions.SetIsSendingSMS({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsSendingSMS({ state: false }));
+  }
+};
+
+// ******************************************** Reveiew *************************************** //
+
+// Add, update, delete, fetch
+
+export const createReview = (formValues, images, video) => async (dispatch, getState) => {
+  let message;
+  dispatch(reviewActions.SetIsCreating({ state: true }));
+  try {
+    for (const element of images) {
+      // upload all images to aws S3 and store their keys in mongodb
+      console.log(element);
+    }
+
+    // Upload video file to aws S3 and store its key in mongodb
+
+    const res = await fetch(`${BaseURL}review/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      reviewActions.CreateReview({
+        review: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(reviewActions.SetIsCreating({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(reviewActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateReview = (formValues, id) => async (dispatch, getState) => {
+  let message;
+  dispatch(reviewActions.SetIsUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}review/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      reviewActions.UpdateReview({
+        review: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(reviewActions.SetIsUpdating({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(reviewActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteReview = (id) => async (dispatch, getState) => {
+  let message;
+  dispatch(reviewActions.SetIsDeleting({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}review/delete/${id}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      reviewActions.DeleteReview({
+        reviewId: id,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(reviewActions.SetIsDeleting({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(reviewActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const fetchReviews = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}review/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      reviewActions.FetchReviews({
+        reviews: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+// ******************************************** Questions ****************************************** //
+
+// Add, update, delete, fetch
+
+export const createQuestion = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(questionActions.SetIsCreating({ state: true }));
+  try {
+
+    const res = await fetch(`${BaseURL}questions/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      questionActions.CreateQuestion({
+        question: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(questionActions.SetIsCreating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(questionActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateQuestion = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(questionActions.SetIsUpdating({ state: true }));
+
+  try {
+
+    const res = await fetch(`${BaseURL}questions/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      questionActions.UpdateQuestion({
+        question: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(questionActions.SetIsUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(questionActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteQuestion = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(questionActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}questions/delete/${id}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      questionActions.DeleteQuestion({
+        questionId: id,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(questionActions.SetIsDeleting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(questionActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const fetchQuestions = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}questions/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      questionActions.FetchQuestions({
+        questions: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+// ******************************************** Store Wallet ******************************************* //
+
+// Recharge wallet
+
+// ? This will be handle only on backend as its related to payment
+
+// ******************************************** Store coins ********************************************* //
+
+// ? Allow store owners to setup coins which can be collected and redeemed by users
 
 // Order
 // Customer

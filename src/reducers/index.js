@@ -16,6 +16,9 @@ import discountSlice from "./discountSlice";
 import pageSlice from "./pagesSlice";
 import referralSlice from "./referralSlice";
 import marketingSlice from "./marketingSlice";
+import customerSlice from "./customerSlice";
+import reviewSlice from "./reviewSlice";
+import questionSlice from "./questionsSlice";
 
 export default combineReducers({
     auth: authSlice.reducer,
@@ -35,4 +38,7 @@ export default combineReducers({
     page: pageSlice.reducer,
     referral: referralSlice.reducer,
     marketing: marketingSlice.reducer,
+    customer: customerSlice.reducer,
+    review: reviewSlice.reducer,
+    question: questionSlice.reducer,
 });
