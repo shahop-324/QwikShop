@@ -21,24 +21,30 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider } from '../components/hook-form';
-import { UploadAvatar } from '../components/upload';
+import { FormProvider } from '../../components/hook-form';
+import { UploadAvatar } from '../../components/upload';
 
 // utils
-import { fData } from '../utils/formatNumber';
-import { createSubCategory, fetchCategory } from '../actions';
+import { fData } from '../../utils/formatNumber';
+import { fetchCategory, fetchSubCategory, updateDivision, updateSubCategory } from '../../actions';
 
-const AddSubCategory = ({ open, handleClose }) => {
-    useEffect(() => {
-        dispatch(fetchCategory());
-      }, []);
-  const { categories } = useSelector((state) => state.category);
+const EditDivision = ({ open, handleClose, id }) => {
+  useEffect(() => {
+    dispatch(fetchSubCategory());
+  }, []);
+  const { divisions, isUpdating } = useSelector((state) => state.division);
+  const { subCategories } = useSelector((state) => state.subCategory);
+
+  const division = divisions.find((el) => el._id === id);
+
+  const { name, image } = division;
+
   const dispatch = useDispatch();
-  const { isCreating } = useSelector((state) => state.subCategory);
+  const { isCreating } = useSelector((state) => state.division);
   const [file, setFile] = useState({ error: false, message: 'Sub Category Image is required', value: '' });
-  const [fileToPreview, setFileToPreview] = useState();
-  const [subCategoryName, setSubCategoryName] = useState();
-  const [category, setCategory] = useState();
+  const [fileToPreview, setFileToPreview] = useState(`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`);
+  const [divisionName, setDivisionName] = useState(name);
+  const [subCategory, setSubCategory] = useState(division.subCategory);
 
   const NewSubCategorySchema = Yup.object().shape({
     avatarUrl: Yup.mixed().test('required', 'Sub Category image is required', (value) => value !== ''),
@@ -67,14 +73,14 @@ const AddSubCategory = ({ open, handleClose }) => {
   };
 
   const onSubmit = () => {
-    console.log(file.value, subCategoryName);
-    dispatch(createSubCategory(file.value, subCategoryName, category, handleClose));
+    console.log(file.value, divisionName);
+    dispatch(updateDivision(file.value, divisionName, subCategory, id, handleClose));
   };
 
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
-        <DialogTitle>Add Sub Category</DialogTitle>
+        <DialogTitle>Edit Division</DialogTitle>
         <div className="p-4">
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Grid className="px-4 pt-3" container spacing={3}>
@@ -105,13 +111,13 @@ const AddSubCategory = ({ open, handleClose }) => {
                   />
                   <Autocomplete
                     sx={{ mt: 3 }}
-                    value={category}
+                    value={subCategory}
                     onChange={(e, value) => {
-                      setCategory(value);
+                      setSubCategory(value);
                     }}
                     id=""
                     fullWidth
-                    options={categories.map((el) => ({
+                    options={subCategories.map((el) => ({
                       label: el.name,
                       image: el.image,
                       value: el._id,
@@ -120,14 +126,20 @@ const AddSubCategory = ({ open, handleClose }) => {
                     getOptionLabel={(option) => option.label}
                     renderOption={(props, option) => (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        <img loading="lazy" width="20" src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image}`} srcSet={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image} 2x`} alt="" />
+                        <img
+                          loading="lazy"
+                          width="20"
+                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image}`}
+                          srcSet={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image} 2x`}
+                          alt=""
+                        />
                         {option.label}
                       </Box>
                     )}
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="Choose a Category"
+                        label="Choose a Sub Category"
                         inputProps={{
                           ...params.inputProps,
                           autoComplete: '', // disable autocomplete and autofill
@@ -137,12 +149,12 @@ const AddSubCategory = ({ open, handleClose }) => {
                   />
                   <TextField
                     className="mt-4"
-                    name="subCategoryName"
-                    label="Sub Category Name"
+                    name="divisionName"
+                    label="Division Name"
                     fullWidth
-                    value={subCategoryName}
+                    value={divisionName}
                     onChange={(e) => {
-                      setSubCategoryName(e.target.value);
+                      setDivisionName(e.target.value);
                     }}
                   />
                 </Card>
@@ -157,9 +169,9 @@ const AddSubCategory = ({ open, handleClose }) => {
             }}
             type="submit"
             variant="contained"
-            loading={isCreating}
+            loading={isUpdating}
           >
-            Create Sub Category
+            Update Division
           </LoadingButton>
           <Button
             onClick={() => {
@@ -174,4 +186,4 @@ const AddSubCategory = ({ open, handleClose }) => {
   );
 };
 
-export default AddSubCategory;
+export default EditDivision;

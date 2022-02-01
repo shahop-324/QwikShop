@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import SmsIcon from '@mui/icons-material/Sms';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -8,8 +12,6 @@ import {
   Card,
   Stack,
   Table,
-  Avatar,
-  Button,
   Divider,
   MenuItem,
   TableRow,
@@ -21,68 +23,138 @@ import {
   Typography,
   TableContainer,
 } from '@mui/material';
-// _mock_
-import { _bookings } from '../../../../_mock';
 //
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import MenuPopover from '../../../../components/MenuPopover';
+import EditCustomer from '../../../../Dialogs/Customer/EditCustomer';
+import DeleteCustomer from '../../../../Dialogs/Customer/DeleteCustomer';
+import SMSCustomer from '../../../../Dialogs/Customer/SMSCustomer';
+import PreviewCustomer from '../../../../Dialogs/Customer/PreviewCustomer';
 
 // ----------------------------------------------------------------------
 
-export default function BookingDetails() {
+export default function BookingDetails({ customers }) {
   const theme = useTheme();
 
   const isLight = theme.palette.mode === 'light';
 
+  const [id, setId] = useState('');
+
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openSMS, setOpenSMS] = useState(false);
+  const [openPreview, setOpenPreview] = useState(false);
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
+  const handleCloseSMS = () => {
+    setOpenSMS(false);
+  };
+
+  const handleClosePreview = () => {
+    setOpenPreview(false);
+  }
+
+  const handleOpenDelete = (id) => {
+    setId(id);
+    setOpenDelete(true);
+  };
+
+  const handleOpenEdit = (id) => {
+    setId(id);
+    setOpenEdit(true);
+  };
+
+  const handleOpenSMS = (id) => {
+    setId(id);
+    setOpenSMS(true);
+  };
+
+  const handleOpenPreview = (id) => {
+    setId(id);
+    setOpenPreview(true);
+  }
+
   return (
     <>
       <Card>
-        <CardHeader title="Orders" sx={{ mb: 3 }} />
+        <CardHeader title="Customers" sx={{ mb: 3 }} />
         <Scrollbar>
           <TableContainer sx={{ minWidth: 720 }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ minWidth: 240 }}>Booker</TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>Check In</TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>Check Out</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Status</TableCell>
-                  <TableCell sx={{ minWidth: 200 }}>Phone</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Room Type</TableCell>
+                  <TableCell sx={{ minWidth: 200 }}>Customer</TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>Phone</TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>Email</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Pincode</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>City</TableCell>
+
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {_bookings.map((row) => (
-                  <TableRow key={row.id}>
+                {customers.map((row) => (
+                  <TableRow key={row._id}>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
-                        <Avatar alt={row.name} src={row.avatar} />
                         <Typography variant="subtitle2">{row.name}</Typography>
                       </Stack>
                     </TableCell>
 
-                    <TableCell>{format(new Date(row.checkIn), 'dd MMM yyyy')}</TableCell>
-                    <TableCell>{format(new Date(row.checkOut), 'dd MMM yyyy')}</TableCell>
+                    <TableCell>{row.phone}</TableCell>
+                    <TableCell>{row.email}</TableCell>
 
                     <TableCell>
                       <Label
-                        variant={isLight ? 'ghost' : 'filled'}
+                        variant={'ghost'}
                         color={
                           (row.status === 'paid' && 'success') || (row.status === 'pending' && 'warning') || 'error'
                         }
                       >
-                        {sentenceCase(row.status)}
+                        {sentenceCase(row.pincode)}
                       </Label>
                     </TableCell>
 
-                    <TableCell>{row.phoneNumber}</TableCell>
-                    <TableCell sx={{ textTransform: 'capitalize' }}>{row.roomType}</TableCell>
+                    <TableCell sx={{ textTransform: 'capitalize' }}>{row.city}</TableCell>
 
                     <TableCell align="right">
-                      <MoreMenuButton />
+                      <Stack direction={'row'} alignItems={'center'} spacing={1}>
+                        <IconButton
+                          onClick={() => {
+                            handleOpenSMS(row._id);
+                          }}
+                        >
+                          <SmsIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            handleOpenEdit(row._id);
+                          }}
+                        >
+                          <ModeEditIcon style={{ fontSize: '20px', color: '#A94ACF' }} />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            handleOpenDelete(row._id);
+                          }}
+                        >
+                          <DeleteIcon style={{ fontSize: '20px', color: '#C03725' }} />
+                        </IconButton>
+                        <IconButton onClick={() => {
+                            handleOpenPreview(row._id);
+                          }}>
+                          <VisibilityIcon style={{ fontSize: '20px', color: '#4ACF9C' }} />
+                        </IconButton>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -93,12 +165,12 @@ export default function BookingDetails() {
 
         <Divider />
 
-        <Box sx={{ p: 2, textAlign: 'right' }}>
-          <Button size="small" color="inherit" endIcon={<Iconify icon={'eva:arrow-ios-forward-fill'} />}>
-            View All
-          </Button>
-        </Box>
+        <Box sx={{ p: 2, textAlign: 'right' }}> </Box>
       </Card>
+      {openEdit && <EditCustomer open={openEdit} handleClose={handleCloseEdit} id={id} />}
+      {openDelete && <DeleteCustomer open={openDelete} handleClose={handleCloseDelete} id={id} />}
+      {openSMS && <SMSCustomer open={openSMS} handleClose={handleCloseSMS} id={id} />}
+      {openPreview && <PreviewCustomer open={openPreview} handleClose={handleClosePreview} id={id} />}
     </>
   );
 }

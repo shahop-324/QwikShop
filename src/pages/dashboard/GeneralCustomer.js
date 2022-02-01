@@ -1,16 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import Chip from '@mui/material/Chip';
 import CloudDownloadRoundedIcon from '@mui/icons-material/CloudDownloadRounded';
 
 import Select from 'react-select';
 // ----------------------------------------------------------------------
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 
 // @mui
-import { Grid, Container, Stack, IconButton, Button } from '@mui/material';
+import {
+  Grid,
+  Container,
+  Stack,
+  IconButton,
+  Button,
+  ToggleButtonGroup,
+  Typography,
+  ToggleButton,
+  Paper,
+  Grow,
+  ClickAwayListener,
+  ButtonGroup,
+  Popper,
+  Portal,
+  MenuItem,
+  MenuList,
+} from '@mui/material';
 // hooks
+import { useDispatch, useSelector } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -19,6 +37,23 @@ import { BookingDetails } from '../../sections/@dashboard/general/booking';
 
 import AddNewCustomer from '../../Dialogs/AddNewCustomer';
 import ImportCustomers from '../../Dialogs/ImportCustomers';
+import { fetchCustomers } from '../../actions';
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  '& .MuiToggleButtonGroup-grouped': {
+    margin: theme.spacing(0.5),
+    border: 0,
+    '&.Mui-disabled': {
+      border: 0,
+    },
+    '&:not(:first-of-type)': {
+      borderRadius: theme.shape.borderRadius,
+    },
+    '&:first-of-type': {
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
+}));
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -62,19 +97,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const options = [
-  { value: 'Lifetime', label: 'Lifetime' },
-  { value: 'Yesterday', label: 'Yesterday' },
-  { value: 'Last 7 days', label: 'Last 7 days' },
-  { value: 'Last 30 days', label: 'Last 30 days' },
-  { value: 'This month', label: 'This month' },
-  { value: 'Last month', label: 'Last month' },
-  { value: 'Custom range', label: 'Custom range' },
-];
+const options = ['Add Customer', "Export to excel"];
 
 export default function GeneralCustomer() {
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
   const [openImportCustomers, setOpenImportCustomers] = useState(false);
+
+  const { customers } = useSelector((state) => state.customer);
+
+  const [term, setTerm] = useState('');
+
+
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      dispatch(fetchCustomers(term));
+    }, 500);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [term]);
 
   const handleCloseAddCustomer = () => {
     setOpenAddCustomer(false);
@@ -88,17 +132,86 @@ export default function GeneralCustomer() {
     setOpenImportCustomers(false);
   };
 
-  const handleOpenImportCustomers = () => {
-    setOpenImportCustomers(true);
-  };
-
+ 
   const { themeStretch } = useSettings();
 
-  const [selectedOption, setSelectedOption] = useState();
 
-  const handleChange = (selectedOption) => {
-    setSelectedOption(selectedOption);
-    console.log(`Option selected:`, selectedOption);
+
+
+
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleClick = () => {
+    console.info(`You clicked ${options[selectedIndex]}`);
+    switch (selectedIndex * 1) {
+      case 0:
+        handleOpenAddCustomer();
+        break;
+
+      case 1:
+        // Run logic to export all categories to excel
+        handleExportCustomers();
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setOpen(false);
+  };
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const processCustomersData = () => {
+    const processedArray = [];
+
+    customers.map((category) => {
+      const array = Object.entries(category);
+
+      const filtered = array.filter(([key, value]) => key === 'name' || key === 'pincode' || key === 'phone' || key === 'email' || key === 'city');
+
+      const asObject = Object.fromEntries(filtered);
+
+      return processedArray.push(asObject);
+    });
+
+    const finalArray = processedArray.map((obj) => Object.values(obj));
+
+    return finalArray;
+  };
+
+  const CreateAndDownloadCSV = (data) => {
+    let csv = 'name, phone, email, pincode, city, \n';
+    data.forEach((row) => {
+      csv += row.join(',');
+      csv += '\n';
+    });
+
+    console.log(csv);
+    const hiddenElement = document.createElement('a');
+    hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'customers.csv';
+    hiddenElement.click();
+  };
+
+  const handleExportCustomers = () => {
+    CreateAndDownloadCSV(processCustomersData());
   };
 
   return (
@@ -112,48 +225,66 @@ export default function GeneralCustomer() {
                   <SearchIconWrapper>
                     <SearchIcon />
                   </SearchIconWrapper>
-                  <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+                  <StyledInputBase
+                    onChange={(e) => {
+                      setTerm(e.target.value);
+                    }}
+                    placeholder="Search…"
+                    inputProps={{ 'aria-label': 'search' }}
+                  />
                 </Search>
 
-                <div className="d-flex flex-row align-items-center">
-                  <IconButton>
-                    <CloudDownloadRoundedIcon />
-                  </IconButton>
-                  <Button
-                    onClick={() => {
-                      handleOpenImportCustomers();
-                    }}
-                    className="mx-3"
-                    variant="outlined"
-                  >
-                    Import customers
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleOpenAddCustomer();
-                    }}
-                    variant="contained"
-                  >
-                    Add customer
-                  </Button>
-                </div>
+                <div className="d-flex flex-row align-items-center justify-content-end">
+          <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+            <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+            <Button
+              size="small"
+              aria-controls={open ? 'split-button-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-label="add product category"
+              aria-haspopup="menu"
+              onClick={handleToggle}
+            >
+              <ArrowDropDownRoundedIcon />
+            </Button>
+          </ButtonGroup>
+          <Portal>
+            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList id="split-button-menu">
+                        {options.map((option, index) => (
+                          <MenuItem
+                            key={option}
+                            selected={index === selectedIndex}
+                            onClick={(event) => handleMenuItemClick(event, index)}
+                          >
+                            <Typography variant="subtitle2">{option}</Typography>
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </Portal>
+        </div>
+
+              
               </Stack>
             </Grid>
 
-            <div style={{ width: '100%' }} className="mx-4 d-flex flex-row align-items-center justify-content-between">
-              <Stack direction="row" spacing={2}>
-                <Chip label="All customers" component="a" href="#basic-chip" clickable />
-                <Chip label="New" component="a" href="#basic-chip" variant="outlined" clickable />
-                <Chip label="Returning" component="a" href="#basic-chip" variant="outlined" clickable />
-                <Chip label="Imported" component="a" href="#basic-chip" variant="outlined" clickable />
-                <Chip label="Fans" component="a" href="#basic-chip" variant="outlined" clickable />
-              </Stack>
-              <div style={{ width: '200px' }}>
-                <Select defaultValue={options[0]} value={selectedOption} onChange={handleChange} options={options} />
-              </div>
-            </div>
+            
             <Grid item xs={12}>
-              <BookingDetails />
+              <BookingDetails customers={customers} />
             </Grid>
           </Grid>
         </Container>

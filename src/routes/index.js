@@ -89,6 +89,7 @@ export default function Router() {
             { path: 'product', element: <EcommerceProductList /> },
             { path: 'category', element: <GeneralCategory /> },
             { path: 'sub-category', element: <GeneralSubCategory /> },
+            { path: 'division', element: <GeneralDivision /> },
             { path: 'builder', element: <GeneralCatalougeBuilder /> },
           ],
         },
@@ -182,6 +183,7 @@ const GeneralAcademy = Loadable(lazy(() => import('../pages/dashboard/GeneralAca
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const GeneralCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralCategory')));
 const GeneralSubCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralSubCategory')))
+const GeneralDivision = Loadable(lazy(() => import('../pages/dashboard/GeneralDivision')))
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 // Main

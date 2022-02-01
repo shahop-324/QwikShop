@@ -3,22 +3,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import PhoneInput from 'react-phone-number-input';
 import { Box, Card, Grid, Dialog, DialogTitle, TextField, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import CustomPhoneNumber from '../forms/PhoneNumber';
+import CustomPhoneNumber from '../../forms/PhoneNumber';
 // @mui
 // Phone Input
 import 'react-phone-number-input/style.css';
 
-import { addNewCustomer } from '../actions';
+import { updateCustomer } from '../../actions';
 
 // eslint-disable-next-line react/prop-types
-const AddNewCustomer = ({ open, handleClose }) => {
+const EditCustomer = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
-  const { isCreating } = useSelector((state) => state.customer);
-  const [phone, setPhone] = useState('');
-  const [customerName, setCustomerName] = useState('');
-  const [customerCity, setCustomerCity] = useState('');
-  const [pincode, setPincode] = useState();
-  const [email, setEmail] = useState();
+  const { isUpdating, customers } = useSelector((state) => state.customer);
+
+  const customer = customers.find((el) => el._id === id);
+
+  const [phone, setPhone] = useState(customer.phone);
+  const [customerName, setCustomerName] = useState(customer.name);
+  const [customerCity, setCustomerCity] = useState(customer.city);
+  const [pincode, setPincode] = useState(customer.pincode);
+  const [email, setEmail] = useState(customer.email);
 
   const onSubmit = () => {
     const formValues = {
@@ -27,16 +30,14 @@ const AddNewCustomer = ({ open, handleClose }) => {
       email,
       city: customerCity,
       pincode,
-      type: 'Imported',
-      tags: ['new'],
     };
-    dispatch(addNewCustomer(formValues, handleClose));
+    dispatch(updateCustomer(formValues, id, handleClose));
   };
 
   return (
     <>
       <Dialog fullWidth maxWidth="sm" open={open}>
-        <DialogTitle>Add customer</DialogTitle>
+        <DialogTitle>Update customer</DialogTitle>
         <Grid className="px-4 py-3" container spacing={3}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
@@ -94,16 +95,16 @@ const AddNewCustomer = ({ open, handleClose }) => {
                   defaultCountry="IN"
                 />
               </Box>
-              <div className="d-flex flex-row align-items-center justify-content-end  mt-4">
+              <div className="d-flex flex-row align-items-center justify-content-end mt-4">
                 <LoadingButton
                   onClick={() => {
                     onSubmit();
                   }}
                   type="submit"
                   variant="contained"
-                  loading={isCreating}
+                  loading={isUpdating}
                 >
-                  Create customer
+                  Update customer
                 </LoadingButton>
                 <Button
                   className="ms-3"
@@ -123,4 +124,4 @@ const AddNewCustomer = ({ open, handleClose }) => {
   );
 };
 
-export default AddNewCustomer;
+export default EditCustomer;

@@ -22,6 +22,7 @@ import { marketingActions } from '../reducers/marketingSlice';
 import { customerActions } from '../reducers/customerSlice';
 import { reviewActions } from '../reducers/reviewSlice';
 import { questionActions } from '../reducers/questionsSlice';
+import { divisionActions } from '../reducers/divisionSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -1819,6 +1820,425 @@ export const reorderSubCategories = (items) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+// ********************************************* Division *********************************************** //
+
+export const fetchDivision = (term) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const fullLocation = `${BaseURL}division/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      divisionActions.FetchDivisions({
+        divisions: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const createDivision = (file, name, subCategory, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(divisionActions.SetIsCreating({ state: true }));
+  const key = `division/${subCategory.value}/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+
+  try {
+    // Upload image then send data to backend
+
+    s3.getSignedUrl(
+      'putObject',
+      { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+      async (_err, presignedURL) => {
+        await fetch(presignedURL, {
+          method: 'PUT',
+
+          body: file,
+
+          headers: {
+            'Content-Type': file.type,
+          },
+        });
+
+        // Send division name and image with auth token to backend
+
+        const res = await fetch(`${BaseURL}division/create`, {
+          method: 'POST',
+
+          body: JSON.stringify({
+            image: key,
+            name,
+            subCategory,
+          }),
+
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        });
+
+        const result = await res.json();
+
+        message = result.message;
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error(message);
+          } else {
+            throw new Error(res.message);
+          }
+        }
+
+        console.log(result);
+
+        dispatch(
+          divisionActions.CreateDivision({
+            division: result.data,
+          })
+        );
+
+        dispatch(showSnackbar('success', message));
+        dispatch(divisionActions.SetIsCreating({ state: false }));
+        handleClose();
+      }
+    );
+    dispatch(divisionActions.SetIsCreating({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(divisionActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateDivision = (file, name, subCategory, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(divisionActions.SetIsUpdating({ state: true }));
+  const key = `division/${subCategory.value}/${getState().store.store._id}/${uuidv4()}.${file.type}`;
+
+  try {
+    if (file) {
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: file,
+
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+
+          // Send category name and image with auth token to backend
+
+          const res = await fetch(`${BaseURL}division/update/${id}`, {
+            method: 'PATCH',
+
+            body: JSON.stringify({
+              image: key,
+              name,
+              subCategory,
+            }),
+
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${getState().auth.token}`,
+            },
+          });
+
+          const result = await res.json();
+
+          message = result.message;
+
+          if (!res.ok) {
+            if (!res.message) {
+              throw new Error(message);
+            } else {
+              throw new Error(res.message);
+            }
+          }
+
+          console.log(result);
+
+          dispatch(
+            divisionActions.UpdateDivision({
+              division: result.data,
+            })
+          );
+
+          dispatch(showSnackbar('success', message));
+          dispatch(divisionActions.SetIsUpdating({ state: false }));
+          handleClose();
+        }
+      );
+    } else {
+      const res = await fetch(`${BaseURL}division/update/${id}`, {
+        method: 'PATCH',
+
+        body: JSON.stringify({
+          name,
+          subCategory,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(message);
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      dispatch(
+        divisionActions.UpdateDivision({
+          division: result.data,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+      dispatch(divisionActions.SetIsUpdating({ state: false }));
+      handleClose();
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(divisionActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteDivision = (divisionId, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(divisionActions.SetIsDeleting({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}division/delete/${divisionId}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      divisionActions.DeleteDivision({
+        divisionId,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(divisionActions.SetIsDeleting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(divisionActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const deleteMultipleDivisions = (ids, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(divisionActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}division/deleteMultiple`, {
+      method: 'DELETE',
+
+      body: JSON.stringify({
+        divisionIds: ids,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      divisionActions.DeleteMultipleDivision({
+        ids,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(divisionActions.SetIsDeleting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(divisionActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const updateDivisionStock = ( id, formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}division/update/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      divisionActions.UpdateDivision({
+        division: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    if (handleClose) {
+      handleClose();
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const reorderDivisions = (items) => async (dispatch, getState) => {
+  let message;
+
+  try {
+
+    const res = await fetch(`${BaseURL}division/reorder/`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+       divisions: items,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      divisionActions.FetchDivisions({
+        divisions: result.data,
+      })
+    );
+
+    dispatch(showSnackbar("success", message));
+
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -4086,6 +4506,54 @@ export const createGoogleAdsCampaign = (formValues, handleClose) => async (dispa
 
 // Add, update, delete, deleteMultiple, fetch, import, send sms
 
+export const addCoinsToCustomer = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsAddingCoins({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}customer/addCoins`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.UpdateCustomer({
+        customer: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(customerActions.SetIsAddingCoins({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsAddingCoins({ state: false }));
+  }
+};
+
 export const addNewCustomer = (formValues, handleClose) => async (dispatch, getState) => {
   let message;
   dispatch(customerActions.SetIsCreating({ state: true }));
@@ -4272,7 +4740,7 @@ export const deleteMultipleCustomers = (ids, handleClose) => async (dispatch, ge
   }
 };
 
-export const fetchCustomers = (term) => async (dispatch, getState) => {
+export const fetchCustomers = (term, tag) => async (dispatch, getState) => {
   let message;
   try {
     const fullLocation = `${BaseURL}customer/getAll`;
@@ -4281,6 +4749,9 @@ export const fetchCustomers = (term) => async (dispatch, getState) => {
 
     if (term) {
       searchParams.set('text', term);
+    }
+    if (tag) {
+      searchParams.set('tag', tag);
     }
 
     url.search = searchParams.toString();
@@ -4369,12 +4840,12 @@ export const importCustomer = (data, handleClose) => async (dispatch, getState) 
   }
 };
 
-export const sendSMSToCustomer = (formValues, customerId, handleClose) => async (dispatch, getState) => {
+export const sendSMSToCustomer = (formValues, handleClose) => async (dispatch, getState) => {
   let message;
   dispatch(customerActions.SetIsSendingSMS({ state: true }));
 
   try {
-    const res = await fetch(`${BaseURL}customer/sendSMS/${customerId}`, {
+    const res = await fetch(`${BaseURL}customer/sendSMS`, {
       method: 'POST',
 
       body: JSON.stringify({
@@ -4614,7 +5085,6 @@ export const createQuestion = (formValues, handleClose) => async (dispatch, getS
   let message;
   dispatch(questionActions.SetIsCreating({ state: true }));
   try {
-
     const res = await fetch(`${BaseURL}questions/create`, {
       method: 'POST',
 
@@ -4663,7 +5133,6 @@ export const updateQuestion = (formValues, id, handleClose) => async (dispatch, 
   dispatch(questionActions.SetIsUpdating({ state: true }));
 
   try {
-
     const res = await fetch(`${BaseURL}questions/update/${id}`, {
       method: 'PATCH',
 

@@ -135,7 +135,7 @@ export default function GeneralBooking() {
               <BookingWidgetSummary title="Facebook Ads Impression" total={124000} icon={<CheckOutIllustration />} />
             </Grid>
             <Grid item xs={12}>
-              <BookingDetails />
+              {/* <BookingDetails /> */}
             </Grid>
           </Grid>
         </Container>

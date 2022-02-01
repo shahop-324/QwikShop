@@ -10,6 +10,7 @@ const customerSlice = createSlice({
     isDeleting: false,
     isImporting: false,
     isSendingSMS: false,
+    isAddingCoins: false,
   },
 
   reducers: {
@@ -27,6 +28,9 @@ const customerSlice = createSlice({
     },
     SetIsSendingSMS(state, action) {
       state.isSendingSMS = action.payload.state;
+    },
+    SetIsAddingCoins(state, action){
+      state.isAddingCoins = action.payload.state;
     },
     CreateCustomer(state, action) {
       state.customers.push(action.payload.customer);

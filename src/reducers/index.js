@@ -19,6 +19,7 @@ import marketingSlice from "./marketingSlice";
 import customerSlice from "./customerSlice";
 import reviewSlice from "./reviewSlice";
 import questionSlice from "./questionsSlice";
+import divisionSlice from "./divisionSlice";
 
 export default combineReducers({
     auth: authSlice.reducer,
@@ -41,4 +42,5 @@ export default combineReducers({
     customer: customerSlice.reducer,
     review: reviewSlice.reducer,
     question: questionSlice.reducer,
+    division: divisionSlice.reducer,
 });

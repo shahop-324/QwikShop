@@ -64,7 +64,7 @@ import MUIStyled from 'styled-components';
 import DoNotDisturbOnRoundedIcon from '@mui/icons-material/DoNotDisturbOnRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import Editor from '../../components/editor/index';
-import { fetchCategory, fetchSubCategory, updateProduct } from '../../actions';
+import { fetchCategory, fetchSubCategory, fetchDivision, updateProduct } from '../../actions';
 
 import { RHFUploadMultiFile, FormProvider } from '../../components/hook-form';
 
@@ -248,6 +248,9 @@ const EditProduct = ({ open, handleClose, id }) => {
   useEffect(() => {
     dispatch(fetchSubCategory());
   }, []);
+  useEffect(() => {
+    dispatch(fetchDivision());
+  }, []);
 
   const { products, isUpdating } = useSelector((state) => state.product);
 
@@ -255,6 +258,7 @@ const EditProduct = ({ open, handleClose, id }) => {
 
   const { categories } = useSelector((state) => state.category);
   const { subCategories } = useSelector((state) => state.subCategory);
+  const { divisions } = useSelector((state) => state.division);
 
   const [metaTitle, setMetaTitle] = useState(product.metaTitle);
 
@@ -400,6 +404,8 @@ const EditProduct = ({ open, handleClose, id }) => {
   const [description, setDescription] = useState(product.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
   const [category, setCategory] = useState(product.category);
   const [subCategory, setSubCategory] = useState(product.subCategory);
+  const [division, setDivision] = useState(product.division);
+  const [brand, setBrand] = useState(product.brand);
   const [productType, setProductType] = useState(product.productType);
   const [price, setPrice] = useState(product.price);
   const [discountedPrice, setDiscountedPrice] = useState(product.discountedPrice);
@@ -593,6 +599,8 @@ const EditProduct = ({ open, handleClose, id }) => {
       productName,
       category,
       subCategory,
+      division,
+      brand,
       price,
       discountedPrice,
       wholesalePrice,
@@ -631,12 +639,20 @@ const EditProduct = ({ open, handleClose, id }) => {
   }));
 
   const subCategoryOptions = subCategories
-  .filter((el) => el.category?.value === category?.value)
-  .map((subCategory) => ({
-    label: subCategory.name,
-    value: subCategory._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
-  }));
+    .filter((el) => el.category?.value === category?.value)
+    .map((subCategory) => ({
+      label: subCategory.name,
+      value: subCategory._id,
+      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
+    }));
+
+  const divisionOptions = divisions
+    .filter((el) => el.subCategory?.value === subCategory?.value)
+    .map((division) => ({
+      label: division.name,
+      value: division._id,
+      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${division.image}`,
+    }));
 
   return (
     <>
@@ -777,6 +793,48 @@ const EditProduct = ({ open, handleClose, id }) => {
                                 />
                               )}
                             />
+                            <Autocomplete
+                              value={division}
+                              onChange={(e, value) => {
+                                setDivision(value);
+                              }}
+                              id=""
+                              fullWidth
+                              options={divisionOptions}
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderOption={(props, option) => (
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                  <img
+                                    loading="lazy"
+                                    width="20"
+                                    src={`${option.image}`}
+                                    srcSet={`${option.image} 2x`}
+                                    alt=""
+                                  />
+                                  {option.label}
+                                </Box>
+                              )}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Choose a division"
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: '', // disable autocomplete and autofill
+                                  }}
+                                />
+                              )}
+                            />
+                            <TextField
+                              name="brand"
+                              label="Brand"
+                              fullWidth
+                              value={brand}
+                              onChange={(e) => {
+                                setBrand(e.target.value);
+                              }}
+                            />
                             <TextField
                               type="number"
                               name="price"
@@ -841,7 +899,6 @@ const EditProduct = ({ open, handleClose, id }) => {
                           </Box>
 
                           <Box
-                            
                             sx={{
                               mt: 3,
                               display: 'grid',
@@ -851,10 +908,12 @@ const EditProduct = ({ open, handleClose, id }) => {
                             }}
                           >
                             {(productType?.label === 'Grocery' ||
-                              productType?.label === 'Bakery Item'  || productType?.label === 'Fast Food' || productType?.label === "Indian Food" || productType?.label === "Chocolate" 
-                              || productType?.label === "Medicine" 
-                              || productType?.label === "Pet supplies" 
-                              ) && (
+                              productType?.label === 'Bakery Item' ||
+                              productType?.label === 'Fast Food' ||
+                              productType?.label === 'Indian Food' ||
+                              productType?.label === 'Chocolate' ||
+                              productType?.label === 'Medicine' ||
+                              productType?.label === 'Pet supplies') && (
                               <FormControl className="mb-3">
                                 <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
                                 <RadioGroup
@@ -1109,7 +1168,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                   </>
                 );
 
-                case 3:
+              case 3:
                 return (
                   <>
                     <Grid className="px-4 pt-3" container spacing={3}>

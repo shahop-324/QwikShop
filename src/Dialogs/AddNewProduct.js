@@ -59,7 +59,7 @@ import CurrencyRupeeRoundedIcon from '@mui/icons-material/CurrencyRupeeRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import Editor from '../components/editor/index';
-import { fetchCategory, fetchSubCategory, createNewProduct } from '../actions';
+import { fetchCategory, fetchSubCategory, createNewProduct, fetchDivision } from '../actions';
 
 import { RHFUploadMultiFile, FormProvider } from '../components/hook-form';
 
@@ -209,8 +209,12 @@ const AddNewProduct = ({ open, handleClose }) => {
   useEffect(() => {
     dispatch(fetchSubCategory());
   }, []);
+  useEffect(() => {
+    dispatch(fetchDivision());
+  }, []);
 
   const { subCategories } = useSelector((state) => state.subCategory);
+  const {divisions} = useSelector((state) => state.division);
   const { categories } = useSelector((state) => state.category);
   const { isCreating } = useSelector((state) => state.product);
 
@@ -380,6 +384,8 @@ const AddNewProduct = ({ open, handleClose }) => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState();
   const [subCategory, setSubCategory] = useState();
+  const [division, setDivision] = useState();
+  const [brand, setBrand] = useState();
   const [productType, setProductType] = useState(null);
   const [price, setPrice] = useState();
   const [discountedPrice, setDiscountedPrice] = useState('');
@@ -508,6 +514,8 @@ const AddNewProduct = ({ open, handleClose }) => {
       productType,
       productName,
       subCategory,
+      division,
+      brand,
       category,
       price,
       discountedPrice,
@@ -552,6 +560,14 @@ const AddNewProduct = ({ open, handleClose }) => {
       label: subCategory.name,
       value: subCategory._id,
       image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
+    }));
+
+  const divisionOptions = divisions
+    .filter((el) => el.subCategory?.value === subCategory?.value)
+    .map((division) => ({
+      label: division.name,
+      value: division._id,
+      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${division.image}`,
     }));
 
   return (
@@ -692,6 +708,49 @@ const AddNewProduct = ({ open, handleClose }) => {
                                   }}
                                 />
                               )}
+                            />
+                            <Autocomplete
+                              value={division}
+                              onChange={(e, value) => {
+                                setDivision(value);
+                              }}
+                              id=""
+                              fullWidth
+                              options={divisionOptions}
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderOption={(props, option) => (
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                  <img
+                                    loading="lazy"
+                                    width="20"
+                                    src={`${option.image}`}
+                                    srcSet={`${option.image} 2x`}
+                                    alt=""
+                                  />
+                                  {option.label}
+                                </Box>
+                              )}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Choose a division"
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: '', // disable autocomplete and autofill
+                                  }}
+                                />
+                              )}
+                            />
+                            <TextField
+                              
+                              name="brand"
+                              label="Brand"
+                              fullWidth
+                              value={brand}
+                              onChange={(e) => {
+                                setBrand(e.target.value);
+                              }}
                             />
                             <TextField
                               type="number"
