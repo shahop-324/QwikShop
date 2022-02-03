@@ -157,7 +157,7 @@ const AddSubCategory = ({ open, handleClose }) => {
             }}
             type="submit"
             variant="contained"
-            loading={isCreating}
+            loading={false}
           >
             Create Sub Category
           </LoadingButton>

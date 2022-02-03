@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from 'uuid';
 import * as Yup from 'yup';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -214,7 +213,7 @@ const AddNewProduct = ({ open, handleClose }) => {
   }, []);
 
   const { subCategories } = useSelector((state) => state.subCategory);
-  const {divisions} = useSelector((state) => state.division);
+  const { divisions } = useSelector((state) => state.division);
   const { categories } = useSelector((state) => state.category);
   const { isCreating } = useSelector((state) => state.product);
 
@@ -243,15 +242,15 @@ const AddNewProduct = ({ open, handleClose }) => {
   };
 
   const updateSpecification = (index, value, field) => {
-    setSpecifications((prev) => {
+    setSpecifications((prev) =>
       prev.map((el) => {
         if (el.index !== index) {
           return el;
         }
         el[field] = value;
         return el;
-      });
-    });
+      })
+    );
   };
 
   const addCustomVariant = () => {
@@ -401,6 +400,7 @@ const AddNewProduct = ({ open, handleClose }) => {
   const [wholesalePrice, setWholesalePrice] = useState(null);
 
   const [minWholesaleQuantity, setMinWholesalePrice] = useState(null);
+  const [coins, setCoins] = useState(0);
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -513,10 +513,10 @@ const AddNewProduct = ({ open, handleClose }) => {
     const formValues = {
       productType,
       productName,
+      category,
       subCategory,
       division,
       brand,
-      category,
       price,
       discountedPrice,
       wholesalePrice,
@@ -543,6 +543,7 @@ const AddNewProduct = ({ open, handleClose }) => {
       metaTitle,
       metaKeyword,
       addOnList,
+      coins,
     };
 
     dispatch(createNewProduct(formValues, imageFiles, videoFiles, handleClose));
@@ -743,7 +744,6 @@ const AddNewProduct = ({ open, handleClose }) => {
                               )}
                             />
                             <TextField
-                              
                               name="brand"
                               label="Brand"
                               fullWidth
@@ -811,6 +811,16 @@ const AddNewProduct = ({ open, handleClose }) => {
                               value={minWholesaleQuantity}
                               onChange={(e) => {
                                 setMinWholesalePrice(e.target.value);
+                              }}
+                            />
+                            <TextField
+                              type="number"
+                              name="coins"
+                              label="Coins"
+                              fullWidth
+                              value={coins}
+                              onChange={(e) => {
+                                setCoins(e.target.value);
                               }}
                             />
                           </Box>

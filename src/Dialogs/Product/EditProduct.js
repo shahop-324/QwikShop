@@ -420,8 +420,8 @@ const EditProduct = ({ open, handleClose, id }) => {
 
   const [minWholesaleQuantity, setMinWholesalePrice] = useState(product.minWholesaleQuantity);
 
+  const [coins, setCoins] = useState(product.coins);
   const [activeStep, setActiveStep] = useState(0);
-
   const [length, setLength] = useState(product.length);
   const [width, setWidth] = useState(product.width);
   const [height, setHeight] = useState(product.height);
@@ -605,6 +605,7 @@ const EditProduct = ({ open, handleClose, id }) => {
       discountedPrice,
       wholesalePrice,
       minWholesaleQuantity,
+      coins,
       isFragile,
       isVeg,
       acceptCOD,
@@ -894,6 +895,16 @@ const EditProduct = ({ open, handleClose, id }) => {
                               value={minWholesaleQuantity}
                               onChange={(e) => {
                                 setMinWholesalePrice(e.target.value);
+                              }}
+                            />
+                            <TextField
+                              type="number"
+                              name="coins"
+                              label="Coins"
+                              fullWidth
+                              value={coins}
+                              onChange={(e) => {
+                                setCoins(e.target.value);
                               }}
                             />
                           </Box>

@@ -32,7 +32,7 @@ const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref}
 export default function App() {
   const dispatch = useDispatch();
   const { severity, message, open } = useSelector((state) => state.snackbar);
-  const { toggle, toastMessage } = useSelector((state) => state.notification);
+  const { toggle } = useSelector((state) => state.notification);
 
   useEffect(() => {
     // toast(toastMessage);

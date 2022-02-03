@@ -17,7 +17,7 @@ import { MobileDateTimePicker } from '@mui/lab';
 // @mui
 import { Grid, Typography, Button, Box, Autocomplete, Dialog, DialogTitle } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateDiscount, fetchCategory, fetchSubCategory, fetchProducts } from '../../actions';
+import { updateDiscount, fetchCategory, fetchSubCategory, fetchProducts, fetchDivision } from '../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -65,6 +65,7 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 export default function EditDiscount({ open, handleClose, id }) {
   const dispatch = useDispatch();
 
+  const { divisions } = useSelector((state) => state.division);
   const { categories } = useSelector((state) => state.category);
   const { subCategories } = useSelector((state) => state.subCategory);
   const { products } = useSelector((state) => state.product);
@@ -77,6 +78,7 @@ export default function EditDiscount({ open, handleClose, id }) {
     dispatch(fetchCategory());
     dispatch(fetchSubCategory());
     dispatch(fetchProducts());
+    dispatch(fetchDivision());
   }, []);
 
   const [discountType, setDiscountType] = useState(discount?.discountType);
@@ -86,12 +88,27 @@ export default function EditDiscount({ open, handleClose, id }) {
   const [applicableOn, setApplicableOn] = useState(discount?.applicableOn);
   const [applicableFromDateTime, setApplicableFromDateTime] = useState(discount?.applicableFromDateTime);
   const [applicableTillDateTime, setApplicableTillDateTime] = useState(discount?.applicableTillDateTime);
-  const [applicableCategories, setApplicableCategoories] = useState( typeof discount?.applicableCategories !== "undefined" &&
-  discount?.applicableCategories.length > 0 ? discount?.applicableCategories : []);
-  const [applicableSubCategories, setApplicableSubCategories] = useState(  typeof discount?.applicableSubCategories !== "undefined" &&
-  discount?.applicableSubCategories.length > 0 ? discount?.applicableSubCategories : []);
-  const [applicableProducts, setApplicableProducts] = useState( typeof discount?.applicableProducts !== "undefined" &&
-  discount?.applicableProducts.length > 0 ? discount?.applicableProducts :  []);
+  const [applicableCategories, setApplicableCategoories] = useState(
+    typeof discount?.applicableCategories !== 'undefined' && discount?.applicableCategories.length > 0
+      ? discount?.applicableCategories
+      : []
+  );
+  const [applicableSubCategories, setApplicableSubCategories] = useState(
+    typeof discount?.applicableSubCategories !== 'undefined' && discount?.applicableSubCategories.length > 0
+      ? discount?.applicableSubCategories
+      : []
+  );
+
+  const [applicableDivisions, setApplicableDivisions] = useState(
+    typeof discount?.applicableDivisions !== 'undefined' && discount?.applicableDivisions.length > 0
+      ? discount?.applicableDivisions
+      : []
+  );
+  const [applicableProducts, setApplicableProducts] = useState(
+    typeof discount?.applicableProducts !== 'undefined' && discount?.applicableProducts.length > 0
+      ? discount?.applicableProducts
+      : []
+  );
   const [boughtProduct, setBoughtProduct] = useState(discount?.boughtProduct);
   const [givenProduct, setGivenProduct] = useState(discount?.givenProduct);
   const [numberOfCoupons, setNumberOfCoupons] = useState(discount?.numberOfCoupons);
@@ -116,6 +133,7 @@ export default function EditDiscount({ open, handleClose, id }) {
       givenProduct,
       applicableCategories,
       applicableSubCategories,
+      applicableDivisions,
       applicableProducts,
       numberOfCoupons,
       discountCode,
@@ -142,13 +160,17 @@ export default function EditDiscount({ open, handleClose, id }) {
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.images[0]}`,
   }));
 
-  const subCategoryOptions = subCategories
-    .filter((el) => applicableCategories.map((el) => el.value).includes(el.category.value))
-    .map((subCategory) => ({
-      label: subCategory.name,
-      value: subCategory._id,
-      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
-    }));
+  const subCategoryOptions = subCategories.map((subCategory) => ({
+    label: subCategory.name,
+    value: subCategory._id,
+    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
+  }));
+
+  const divisionOptions = divisions.map((division) => ({
+    label: division.name,
+    value: division._id,
+    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${division.image}`,
+  }));
 
   return (
     <Dialog fullWidth maxWidth="md" open={open}>
@@ -180,51 +202,69 @@ export default function EditDiscount({ open, handleClose, id }) {
                 label="First Purchase"
               />
             </RadioGroup>
-            <FormLabel component="legend">Applicable on</FormLabel>
-            <RadioGroup
-              defaultValue={applicableOn}
-              className="mb-4"
-              row
-              aria-label="Discount type"
-              name="row-radio-buttons-group"
-            >
-              <FormControlLabel
-                value="allProducts"
-                control={<Radio onClick={() => setApplicableOn('regular')} />}
-                label="All Products"
-              />
-              <FormControlLabel
-                value="selectedCategory"
-                control={<Radio onClick={() => setApplicableOn('selectedCategory')} />}
-                label="Selected category"
-              />
-              <FormControlLabel
-                value="selectedProducts"
-                control={<Radio onClick={() => setApplicableOn('selectedProducts')} />}
-                label="Selected products"
-              />
-            </RadioGroup>
-            <Stack>
-              <FormLabel component="legend">Discount type</FormLabel>
-              <RadioGroup
-                defaultValue={discountType}
-                className="mb-4"
-                row
-                aria-label="Discount type"
-                name="row-radio-buttons-group"
-              >
-                <FormControlLabel
-                  value="percentage"
-                  control={<Radio onClick={() => setDiscountType('percentage')} />}
-                  label="Percentage"
-                />
-                <FormControlLabel
-                  value="flat"
-                  control={<Radio onClick={() => setDiscountType('flat')} />}
-                  label="Flat"
-                />
-              </RadioGroup>
-            </Stack>
+            {type !== 'buyXgetYFree' && (
+              <>
+                <FormLabel component="legend">Applicable on</FormLabel>
+                <RadioGroup
+                  defaultValue={applicableOn}
+                  className="mb-4"
+                  row
+                  aria-label="Discount type"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="allProducts"
+                    control={<Radio onClick={() => setApplicableOn('regular')} />}
+                    label="All Products"
+                  />
+                  <FormControlLabel
+                    value="selectedCategory"
+                    control={<Radio onClick={() => setApplicableOn('selectedCategory')} />}
+                    label="Selected category"
+                  />
+                  <FormControlLabel
+                    value="selectedSubCategory"
+                    control={<Radio onClick={() => setApplicableOn('selectedSubCategory')} />}
+                    label="Selected Sub category"
+                  />
+                  <FormControlLabel
+                    value="selectedDivision"
+                    control={<Radio onClick={() => setApplicableOn('selectedDivision')} />}
+                    label="Selected division"
+                  />
+                  <FormControlLabel
+                    value="selectedProducts"
+                    control={<Radio onClick={() => setApplicableOn('selectedProducts')} />}
+                    label="Selected products"
+                  />
+                </RadioGroup>
+              </>
+            )}
+
+            {type !== 'buyXGetYFree' && (
+              <Stack>
+                <FormLabel component="legend">Discount type</FormLabel>
+                <RadioGroup
+                  defaultValue={discountType}
+                  className="mb-4"
+                  row
+                  aria-label="Discount type"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="percentage"
+                    control={<Radio onClick={() => setDiscountType('percentage')} />}
+                    label="Percentage"
+                  />
+                  <FormControlLabel
+                    value="flat"
+                    control={<Radio onClick={() => setDiscountType('flat')} />}
+                    label="Flat"
+                  />
+                </RadioGroup>
+              </Stack>
+            )}
+
             <Box
               sx={{
                 display: 'grid',
@@ -357,7 +397,7 @@ export default function EditDiscount({ open, handleClose, id }) {
                 />
               )}
 
-              {applicableOn === 'selectedCategory' && (
+              {applicableOn === 'selectedSubCategory' && (
                 <Autocomplete
                   multiple
                   required
@@ -378,6 +418,31 @@ export default function EditDiscount({ open, handleClose, id }) {
                   options={subCategoryOptions}
                   renderInput={(params) => (
                     <TextField {...params} label="Applicable Sub Categories" fullWidth name="applicableSubCategories" />
+                  )}
+                />
+              )}
+
+              {applicableOn === 'selectedDivision' && (
+                <Autocomplete
+                  multiple
+                  required
+                  value={applicableDivisions}
+                  onChange={(e, value) => {
+                    setApplicableDivisions(value);
+                  }}
+                  fullWidth
+                  disablePortal
+                  autoHighlight
+                  getOptionLabel={(option) => option.label}
+                  renderOption={(props, option) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                      {option.label}
+                    </Box>
+                  )}
+                  options={divisionOptions}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Applicable Divisions" fullWidth name="applicableDivisions" />
                   )}
                 />
               )}

@@ -17,7 +17,7 @@ import { MobileDateTimePicker } from '@mui/lab';
 // @mui
 import { Grid, Typography, Button, Box, Autocomplete, Dialog, DialogTitle } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { createNewDiscount, fetchCategory, fetchProducts, fetchSubCategory } from '../../actions';
+import { createNewDiscount, fetchCategory, fetchDivision, fetchProducts, fetchSubCategory } from '../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -65,6 +65,7 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 export default function AddNewDiscount({ open, handleClose }) {
   const dispatch = useDispatch();
 
+  const { divisions } = useSelector((state) => state.division);
   const { categories } = useSelector((state) => state.category);
   const { subCategories } = useSelector((state) => state.subCategory);
   const { products } = useSelector((state) => state.product);
@@ -77,6 +78,7 @@ export default function AddNewDiscount({ open, handleClose }) {
     dispatch(fetchCategory());
     dispatch(fetchSubCategory());
     dispatch(fetchProducts());
+    dispatch(fetchDivision());
   }, []);
 
   const [discountType, setDiscountType] = useState('percentage');
@@ -88,6 +90,7 @@ export default function AddNewDiscount({ open, handleClose }) {
   const [applicableTillDateTime, setApplicableTillDateTime] = React.useState(new Date());
   const [applicableCategories, setApplicableCategoories] = useState([]);
   const [applicableSubCategories, setApplicableSubCategories] = useState([]);
+  const [applicableDivisions, setApplicableDivisions] = useState([]);
   const [applicableProducts, setApplicableProducts] = useState([]);
   const [boughtProduct, setBoughtProduct] = useState(null);
   const [givenProduct, setGivenProduct] = useState(null);
@@ -113,6 +116,7 @@ export default function AddNewDiscount({ open, handleClose }) {
       givenProduct,
       applicableCategories,
       applicableSubCategories,
+      applicableDivisions,
       applicableProducts,
       numberOfCoupons,
       discountCode,
@@ -139,13 +143,17 @@ export default function AddNewDiscount({ open, handleClose }) {
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.images[0]}`,
   }));
 
-  const subCategoryOptions = subCategories
-    .filter((el) => applicableCategories.map((el) => el.value).includes(el.category.value))
-    .map((subCategory) => ({
-      label: subCategory.name,
-      value: subCategory._id,
-      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
-    }));
+  const subCategoryOptions = subCategories.map((subCategory) => ({
+    label: subCategory.name,
+    value: subCategory._id,
+    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
+  }));
+
+  const divisionOptions = divisions.map((division) => ({
+    label: division.name,
+    value: division._id,
+    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${division.image}`,
+  }));
 
   return (
     <Dialog fullWidth maxWidth="md" open={open}>
@@ -177,30 +185,45 @@ export default function AddNewDiscount({ open, handleClose }) {
                 label="First Purchase"
               />
             </RadioGroup>
-            <FormLabel component="legend">Applicable on</FormLabel>
-            <RadioGroup
-              defaultValue={applicableOn}
-              className="mb-4"
-              row
-              aria-label="Discount type"
-              name="row-radio-buttons-group"
-            >
-              <FormControlLabel
-                value="allProducts"
-                control={<Radio onClick={() => setApplicableOn('regular')} />}
-                label="All Products"
-              />
-              <FormControlLabel
-                value="selectedCategory"
-                control={<Radio onClick={() => setApplicableOn('selectedCategory')} />}
-                label="Selected category"
-              />
-              <FormControlLabel
-                value="selectedProducts"
-                control={<Radio onClick={() => setApplicableOn('selectedProducts')} />}
-                label="Selected products"
-              />
-            </RadioGroup>
+            {type !== 'buyXGetYFree' && (
+              <>
+                <FormLabel component="legend">Applicable on</FormLabel>
+                <RadioGroup
+                  defaultValue={applicableOn}
+                  className="mb-4"
+                  row
+                  aria-label="Discount type"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="allProducts"
+                    control={<Radio onClick={() => setApplicableOn('regular')} />}
+                    label="All Products"
+                  />
+                  <FormControlLabel
+                    value="selectedCategory"
+                    control={<Radio onClick={() => setApplicableOn('selectedCategory')} />}
+                    label="Selected category"
+                  />
+                  <FormControlLabel
+                    value="selectedSubCategory"
+                    control={<Radio onClick={() => setApplicableOn('selectedSubCategory')} />}
+                    label="Selected Sub category"
+                  />
+                  <FormControlLabel
+                    value="selectedDivision"
+                    control={<Radio onClick={() => setApplicableOn('selectedDivision')} />}
+                    label="Selected division"
+                  />
+                  <FormControlLabel
+                    value="selectedProducts"
+                    control={<Radio onClick={() => setApplicableOn('selectedProducts')} />}
+                    label="Selected products"
+                  />
+                </RadioGroup>
+              </>
+            )}
+
             {type !== 'buyXGetYFree' && (
               <Stack>
                 <FormLabel component="legend">Discount type</FormLabel>
@@ -357,7 +380,7 @@ export default function AddNewDiscount({ open, handleClose }) {
                 />
               )}
 
-              {applicableOn === 'selectedCategory' && (
+              {applicableOn === 'selectedSubCategory' && (
                 <Autocomplete
                   multiple
                   required
@@ -378,6 +401,31 @@ export default function AddNewDiscount({ open, handleClose }) {
                   options={subCategoryOptions}
                   renderInput={(params) => (
                     <TextField {...params} label="Applicable Sub Categories" fullWidth name="applicableSubCategories" />
+                  )}
+                />
+              )}
+
+              {applicableOn === 'selectedDivision' && (
+                <Autocomplete
+                  multiple
+                  required
+                  value={applicableDivisions}
+                  onChange={(e, value) => {
+                    setApplicableDivisions(value);
+                  }}
+                  fullWidth
+                  disablePortal
+                  autoHighlight
+                  getOptionLabel={(option) => option.label}
+                  renderOption={(props, option) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                      {option.label}
+                    </Box>
+                  )}
+                  options={divisionOptions}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Applicable Divisions" fullWidth name="applicableDivisions" />
                   )}
                 />
               )}
