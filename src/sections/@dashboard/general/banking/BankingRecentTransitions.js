@@ -122,13 +122,17 @@ dispatch(fetchRecentOrder());
                     </TableCell>
 
                     <TableCell>
-                      <Typography variant="subtitle2">{format(new Date(row.date), 'dd MMM yyyy')}</Typography>
+                      <Typography variant="subtitle2">
+                        {/* {format(new Date(row.date), 'dd MMM yyyy')} */}
+                        </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        {format(new Date(row.date), 'p')}
+                        {/* {format(new Date(row.date), 'p')} */}
                       </Typography>
                     </TableCell>
 
-                    <TableCell>{fCurrency(row.amount)}</TableCell>
+                    <TableCell>
+                      {/* {fCurrency(row.amount)} */}
+                      </TableCell>
 
                     <TableCell>
                       <Label

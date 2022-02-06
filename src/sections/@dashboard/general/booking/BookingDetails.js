@@ -102,7 +102,7 @@ export default function BookingDetails({ customers }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {customers.map((row) => (
+                {customers?.length > 0 && customers?.map((row) => (
                   <TableRow key={row._id}>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
@@ -120,7 +120,7 @@ export default function BookingDetails({ customers }) {
                           (row.status === 'paid' && 'success') || (row.status === 'pending' && 'warning') || 'error'
                         }
                       >
-                        {sentenceCase(row.pincode)}
+                        {/* {sentenceCase(row?.pincode)} */}
                       </Label>
                     </TableCell>
 

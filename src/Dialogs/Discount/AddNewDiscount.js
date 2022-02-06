@@ -73,6 +73,7 @@ export default function AddNewDiscount({ open, handleClose }) {
   // Fetch all categories
   // Fetch all subcategories
   // Fetch all products
+  // Fetch all divisions
 
   useEffect(() => {
     dispatch(fetchCategory());
@@ -197,7 +198,7 @@ export default function AddNewDiscount({ open, handleClose }) {
                 >
                   <FormControlLabel
                     value="allProducts"
-                    control={<Radio onClick={() => setApplicableOn('regular')} />}
+                    control={<Radio onClick={() => setApplicableOn('allProducts')} />}
                     label="All Products"
                   />
                   <FormControlLabel

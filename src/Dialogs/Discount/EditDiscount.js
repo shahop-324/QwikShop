@@ -214,7 +214,7 @@ export default function EditDiscount({ open, handleClose, id }) {
                 >
                   <FormControlLabel
                     value="allProducts"
-                    control={<Radio onClick={() => setApplicableOn('regular')} />}
+                    control={<Radio onClick={() => setApplicableOn('allProducts')} />}
                     label="All Products"
                   />
                   <FormControlLabel

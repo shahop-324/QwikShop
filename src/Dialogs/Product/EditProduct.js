@@ -501,15 +501,13 @@ const EditProduct = ({ open, handleClose, id }) => {
   };
 
   const updateSpecification = (index, value, field) => {
-    setSpecifications((prev) => {
-      prev.map((el) => {
+    setSpecifications((prev) => prev.map((el) => {
         if (el.index !== index) {
           return el;
         }
         el[field] = value;
         return el;
-      });
-    });
+      }));
   };
 
   const onNext = () => {
