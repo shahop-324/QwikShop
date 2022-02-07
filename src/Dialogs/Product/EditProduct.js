@@ -40,6 +40,7 @@ import {
   IconButton,
   Stack,
   Tooltip,
+  Divider,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
@@ -277,7 +278,11 @@ const EditProduct = ({ open, handleClose, id }) => {
   const addCustomVariant = () => {
     setCustomVariants((prev) => [
       ...prev,
-      { index: uuidv4(), title: '', options: [{ name: '', price: '', discountedPrice: '', index: uuidv4() }] },
+      {
+        index: uuidv4(),
+        title: '',
+        options: [{ name: '', price: '', discountedPrice: '', qtyInStock: 100, index: uuidv4() }],
+      },
     ]);
   };
 
@@ -438,6 +443,8 @@ const EditProduct = ({ open, handleClose, id }) => {
   const [excludedImages, setExcludedImages] = useState([]);
   const [excludedVideos, setExcludedVideos] = useState([]);
 
+  const [priceDeterminingVariant, setPriceDeterminingVariant] = useState(customVariants[0]?.index);
+
   const excludeImage = (img) => {
     setExcludedImages((prev) => {
       prev.push(img);
@@ -501,13 +508,15 @@ const EditProduct = ({ open, handleClose, id }) => {
   };
 
   const updateSpecification = (index, value, field) => {
-    setSpecifications((prev) => prev.map((el) => {
+    setSpecifications((prev) =>
+      prev.map((el) => {
         if (el.index !== index) {
           return el;
         }
         el[field] = value;
         return el;
-      }));
+      })
+    );
   };
 
   const onNext = () => {
@@ -1493,108 +1502,39 @@ const EditProduct = ({ open, handleClose, id }) => {
                     </DialogActions>
                   </>
                 );
-
               case 5:
                 return (
                   <>
                     <Grid className="px-4 pt-3" container spacing={3}>
                       <Grid item xs={12} md={12}>
-                        <div>
-                          <Accordion className="mb-3">
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel1a-content"
-                              id="panel1a-header"
-                            >
-                              <Typography variant="h6">Sizes</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Card sx={{ p: 3 }} className="mb-3">
-                                {variantList.map((el, index) => (
-                                  <div className="d-flex flex-column mb-3" key={el.index}>
-                                    <Box
-                                      className="mb-2"
-                                      sx={{
-                                        display: 'grid',
-                                        columnGap: 2,
-                                        rowGap: 3,
-                                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
-                                      }}
-                                    >
-                                      <TextField
-                                        className="mb-2"
-                                        type="text"
-                                        label={`Name ${index + 1}`}
-                                        name="color"
-                                        fullWidth
-                                        value={el.name}
-                                        onChange={(e) => {
-                                          updateVariant(e.target.value, el.index, 'name');
-                                        }}
-                                      />
-                                      <TextField
-                                        className="mb-2"
-                                        type="text"
-                                        label={`Price ${index + 1}`}
-                                        name="color"
-                                        fullWidth
-                                        value={el.price}
-                                        onChange={(e) => {
-                                          updateVariant(e.target.value, el.index, 'price');
-                                        }}
-                                        InputProps={{
-                                          startAdornment: (
-                                            <InputAdornment>
-                                              <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                            </InputAdornment>
-                                          ),
-                                        }}
-                                      />
-                                      <TextField
-                                        className="mb-2"
-                                        type="text"
-                                        label={`Discounted price ${index + 1}`}
-                                        name="color"
-                                        fullWidth
-                                        value={el.discountedPrice}
-                                        onChange={(e) => {
-                                          updateVariant(e.target.value, el.index, 'discountedPrice');
-                                        }}
-                                        InputProps={{
-                                          startAdornment: (
-                                            <InputAdornment>
-                                              <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                            </InputAdornment>
-                                          ),
-                                        }}
-                                      />
-                                    </Box>
-                                    <div className="d-flex flex-row align-items-center justify-content-end">
-                                      <Button
-                                        onClick={() => {
-                                          deleteVariantRow(el.index);
-                                        }}
-                                        size="small"
-                                        color="error"
-                                      >
-                                        Remove
-                                      </Button>
-                                    </div>
-                                  </div>
-                                ))}
-                                <div className="d-flex flex-row align-items-center justify-content-center">
-                                  <Button
+                        <FormControl>
+                          <FormLabel id="demo-row-radio-buttons-group-label">Price Determining Variant</FormLabel>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                          >
+                            {customVariants.map((el) => (
+                              <FormControlLabel
+                                key={el.index}
+                                value={el.index}
+                                control={
+                                  <Radio
                                     onClick={() => {
-                                      addVariantRow();
+                                      setPriceDeterminingVariant(el.index);
                                     }}
-                                    variant="outlined"
-                                  >
-                                    Add
-                                  </Button>
-                                </div>
-                              </Card>
-                            </AccordionDetails>
-                          </Accordion>
+                                    checked={priceDeterminingVariant === el.index}
+                                  />
+                                }
+                                label={el.title}
+                              />
+                            ))}
+                          </RadioGroup>
+                        </FormControl>
+
+                        <Divider sx={{ my: 2 }} />
+
+                        <div>
                           <Accordion>
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
@@ -1704,7 +1644,11 @@ const EditProduct = ({ open, handleClose, id }) => {
                                           display: 'grid',
                                           columnGap: 2,
                                           rowGap: 3,
-                                          gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+                                          gridTemplateColumns: {
+                                            xs: 'repeat(1, 1fr)',
+                                            sm: 'repeat(3, 1fr)',
+                                            md: 'repeat(4, 1fr)',
+                                          },
                                         }}
                                       >
                                         <TextField
@@ -1757,6 +1701,23 @@ const EditProduct = ({ open, handleClose, id }) => {
                                                 <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
                                               </InputAdornment>
                                             ),
+                                          }}
+                                        />
+                                        <TextField
+                                          className="mb-2"
+                                          type="number"
+                                          minValue={1}
+                                          label={`Quantity In Stock`}
+                                          name="qtyInStock"
+                                          fullWidth
+                                          value={elm.qtyInStock}
+                                          onChange={(e) => {
+                                            updateCustomVariantOption(
+                                              el.index,
+                                              elm.index,
+                                              'qtyInStock',
+                                              e.target.value
+                                            );
                                           }}
                                         />
                                       </Box>
