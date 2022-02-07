@@ -258,7 +258,7 @@ const AddNewProduct = ({ open, handleClose }) => {
       {
         index: uuidv4(),
         title: '',
-        options: [{ name: '', price: '', discountedPrice: '', qtyInStock: 100, index: uuidv4() }],
+        options: [{ name: '', price: '', wholesalePrice: '', qtyInStock: 100, index: uuidv4() }],
       },
     ]);
   };
@@ -1473,7 +1473,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                         />
                                         <TextField
                                           className="mb-2"
-                                          type="text"
+                                          type="number"
                                           label={`Price ${index + 1}`}
                                           name="price"
                                           fullWidth
@@ -1491,16 +1491,16 @@ const AddNewProduct = ({ open, handleClose }) => {
                                         />
                                         <TextField
                                           className="mb-2"
-                                          type="text"
-                                          label={`Discounted price ${index + 1}`}
-                                          name="discountedPrice"
+                                          type="number"
+                                          label={`Wholsale price ${index + 1}`}
+                                          name="wholesalePrice"
                                           fullWidth
-                                          value={elm.discountedPrice}
+                                          value={elm.wholesalePrice}
                                           onChange={(e) => {
                                             updateCustomVariantOption(
                                               el.index,
                                               elm.index,
-                                              'discountedPrice',
+                                              'wholesalePrice',
                                               e.target.value
                                             );
                                           }}
