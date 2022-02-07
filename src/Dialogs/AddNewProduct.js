@@ -214,6 +214,7 @@ const AddNewProduct = ({ open, handleClose }) => {
   }, []);
 
   const { subCategories } = useSelector((state) => state.subCategory);
+  const { products } = useSelector((state) => state.product);
   const { divisions } = useSelector((state) => state.division);
   const { categories } = useSelector((state) => state.category);
   const { isCreating } = useSelector((state) => state.product);
@@ -223,8 +224,6 @@ const AddNewProduct = ({ open, handleClose }) => {
   const [metaKeyword, setMetaKeyword] = useState('');
 
   const [metaDescription, setMetaDescription] = useState('');
-
-  const [variantList, setVariantList] = useState([]);
 
   const [colorsList, setColorsList] = useState([]);
 
@@ -323,40 +322,12 @@ const AddNewProduct = ({ open, handleClose }) => {
     );
   };
 
-  const addAddOnRow = () => {
-    setAddOnList((prev) => [...prev, { index: uuidv4(), name: '', price: '', discountedPrice: '' }]);
-  };
-
-  const deleteAddOnRow = (index) => {
-    setAddOnList((prev) => prev.filter((el) => el.index !== index));
-  };
-
   const addColorRow = () => {
     setColorsList((prev) => [...prev, { index: uuidv4(), color: '#538BF7' }]);
   };
 
   const deleteColorRow = (index) => {
     setColorsList((prev) => prev.filter((el) => el.index !== index));
-  };
-
-  const addVariantRow = () => {
-    setVariantList((prev) => [...prev, { index: uuidv4(), name: '', price: '', discountedPrice: '' }]);
-  };
-
-  const deleteVariantRow = (index) => {
-    setVariantList((prev) => prev.filter((el) => el.index !== index));
-  };
-
-  const updateVariant = (value, index, field) => {
-    setVariantList((prev) =>
-      prev.map((el) => {
-        if (el.index !== index) {
-          return el;
-        }
-        el[field] = value;
-        return el;
-      })
-    );
   };
 
   const updateColor = (value, index, field) => {
@@ -371,18 +342,7 @@ const AddNewProduct = ({ open, handleClose }) => {
     );
   };
 
-  const updateAddOn = (value, index, field) => {
-    setAddOnList((prev) =>
-      prev.map((el) => {
-        if (el.index !== index) {
-          return el;
-        }
-        el[field] = value;
-        return el;
-      })
-    );
-  };
-
+  const [featured, setFeatured] = useState(false);
   const [weight, setWeight] = useState('');
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
@@ -544,7 +504,6 @@ const AddNewProduct = ({ open, handleClose }) => {
       height,
       InTheBox,
       colorsList,
-      variantList,
       customVariants,
       metaDescription,
       metaTitle,
@@ -552,6 +511,7 @@ const AddNewProduct = ({ open, handleClose }) => {
       addOnList,
       coins,
       priceDeterminingVariant,
+      featured,
     };
 
     dispatch(createNewProduct(formValues, imageFiles, videoFiles, handleClose));
@@ -578,6 +538,12 @@ const AddNewProduct = ({ open, handleClose }) => {
       value: division._id,
       image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${division.image}`,
     }));
+
+  const addOnOptions = products.map((product) => ({
+    label: product.productName,
+    value: product._id,
+    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${product.images[0]}`,
+  }));
 
   return (
     <>
@@ -915,6 +881,12 @@ const AddNewProduct = ({ open, handleClose }) => {
                               <FormControlLabel
                                 control={<Switch onClick={(e) => setAcceptCOD(e.target.checked)} checked={acceptCOD} />}
                                 label="Accept Cash on delivery"
+                              />
+                            </FormGroup>
+                            <FormGroup className="mt-3">
+                              <FormControlLabel
+                                control={<Switch onClick={(e) => setFeatured(e.target.checked)} checked={featured} />}
+                                label="Featured"
                               />
                             </FormGroup>
                           </Box>
@@ -1639,88 +1611,41 @@ const AddNewProduct = ({ open, handleClose }) => {
                       <Grid item xs={12} md={12}>
                         <div>
                           <Card sx={{ p: 3 }} className="mb-3">
-                            {addOnList.map((el, index) => (
-                              <div className="d-flex flex-column mb-3" key={el.index}>
-                                <Box
-                                  className="mb-2"
-                                  sx={{
-                                    display: 'grid',
-                                    columnGap: 2,
-                                    rowGap: 3,
-                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
-                                  }}
-                                >
-                                  <TextField
-                                    className="mb-2"
-                                    type="text"
-                                    label={`Name ${index + 1}`}
-                                    name="name"
-                                    fullWidth
-                                    value={el.name}
-                                    onChange={(e) => {
-                                      updateAddOn(e.target.value, el.index, 'name');
-                                    }}
+                            <Autocomplete
+                              multiple
+                              sx={{ mb: 3 }}
+                              value={addOnList}
+                              onChange={(e, value) => {
+                                setAddOnList(value);
+                              }}
+                              id=""
+                              fullWidth
+                              options={addOnOptions}
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderOption={(props, option) => (
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                  <img
+                                    loading="lazy"
+                                    width="20"
+                                    src={`${option.image}`}
+                                    srcSet={`${option.image} 2x`}
+                                    alt=""
                                   />
-                                  <TextField
-                                    className="mb-2"
-                                    type="number"
-                                    label={`Price ${index + 1}`}
-                                    name="price"
-                                    fullWidth
-                                    value={el.price}
-                                    onChange={(e) => {
-                                      updateAddOn(e.target.value, el.index, 'price');
-                                    }}
-                                    InputProps={{
-                                      startAdornment: (
-                                        <InputAdornment>
-                                          <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                        </InputAdornment>
-                                      ),
-                                    }}
-                                  />
-                                  <TextField
-                                    className="mb-2"
-                                    type="number"
-                                    label={`Discounted price ${index + 1}`}
-                                    name="discountedPrice"
-                                    fullWidth
-                                    value={el.discountedPrice}
-                                    onChange={(e) => {
-                                      updateAddOn(e.target.value, el.index, 'discountedPrice');
-                                    }}
-                                    InputProps={{
-                                      startAdornment: (
-                                        <InputAdornment>
-                                          <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                        </InputAdornment>
-                                      ),
-                                    }}
-                                  />
+                                  {option.label}
                                 </Box>
-                                <div className="d-flex flex-row align-items-center justify-content-end">
-                                  <Button
-                                    onClick={() => {
-                                      deleteAddOnRow(el.index);
-                                    }}
-                                    size="small"
-                                    color="error"
-                                  >
-                                    Remove
-                                  </Button>
-                                </div>
-                              </div>
-                            ))}
-                            <div className="d-flex flex-row align-items-center justify-content-center">
-                              <Button
-                                onClick={() => {
-                                  addAddOnRow();
-                                }}
-                                variant="outlined"
-                              >
-                                Add AddOn
-                              </Button>
-                            </div>
+                              )}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Choose Add ons"
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: '', // disable autocomplete and autofill
+                                  }}
+                                />
+                              )}
+                            />
                           </Card>
                         </div>
                       </Grid>
