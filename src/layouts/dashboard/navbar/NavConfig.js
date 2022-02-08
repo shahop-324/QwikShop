@@ -51,7 +51,7 @@ const navConfig = [
       { title: 'Payment', path: PATH_DASHBOARD.general.payment, icon: <AccountBalanceWalletRoundedIcon /> },
       { title: 'Discount', path: PATH_DASHBOARD.general.discount, icon: <LocalOfferRoundedIcon /> },
       { title: 'Manage', path: PATH_DASHBOARD.general.manage, icon: <ManageAccountsRoundedIcon /> },
-      // { title: 'Questions', path: PATH_DASHBOARD.general.questions, icon: <QuestionMarkRoundedIcon /> },
+      { title: 'Questions', path: PATH_DASHBOARD.general.questions, icon: <QuestionMarkRoundedIcon /> },
       { title: 'Refferal', path: PATH_DASHBOARD.general.referral, icon: <ConnectWithoutContactRoundedIcon /> },
       //  **************** Marketing Design Pages **************** //
       {
@@ -62,15 +62,15 @@ const navConfig = [
           { title: 'Profile', path: PATH_DASHBOARD.store.settings },
           { title: 'Website', path: PATH_DASHBOARD.store.theme },
           { title: 'Pages', path: PATH_DASHBOARD.store.pages },
-          // { title: 'Menus', path: PATH_DASHBOARD.store.menus },
+          { title: 'Menus', path: PATH_DASHBOARD.store.menus },
         ],
       },
      
-      // {
-      //   title: 'Integrations',
-      //   path: PATH_DASHBOARD.general.integration,
-      //   icon: <ExtensionRoundedIcon />,
-      // },
+      {
+        title: 'Integrations',
+        path: PATH_DASHBOARD.general.integration,
+        icon: <ExtensionRoundedIcon />,
+      },
       {
         title: 'Reviews',
         path: PATH_DASHBOARD.general.reviews,
