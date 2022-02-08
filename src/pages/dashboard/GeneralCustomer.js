@@ -97,7 +97,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const options = ['Add Customer', "Export to excel"];
+const options = ['Add Customer', 'Export to excel'];
 
 export default function GeneralCustomer() {
   const [openAddCustomer, setOpenAddCustomer] = useState(false);
@@ -106,8 +106,6 @@ export default function GeneralCustomer() {
   const { customers } = useSelector((state) => state.customer);
 
   const [term, setTerm] = useState('');
-
-
 
   const dispatch = useDispatch();
 
@@ -132,12 +130,7 @@ export default function GeneralCustomer() {
     setOpenImportCustomers(false);
   };
 
- 
   const { themeStretch } = useSettings();
-
-
-
-
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -183,7 +176,9 @@ export default function GeneralCustomer() {
     customers.map((category) => {
       const array = Object.entries(category);
 
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'pincode' || key === 'phone' || key === 'email' || key === 'city');
+      const filtered = array.filter(
+        ([key, value]) => key === 'name' || key === 'pincode' || key === 'phone' || key === 'email' || key === 'city'
+      );
 
       const asObject = Object.fromEntries(filtered);
 
@@ -235,54 +230,51 @@ export default function GeneralCustomer() {
                 </Search>
 
                 <div className="d-flex flex-row align-items-center justify-content-end">
-          <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
-            <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-            <Button
-              size="small"
-              aria-controls={open ? 'split-button-menu' : undefined}
-              aria-expanded={open ? 'true' : undefined}
-              aria-label="add product category"
-              aria-haspopup="menu"
-              onClick={handleToggle}
-            >
-              <ArrowDropDownRoundedIcon />
-            </Button>
-          </ButtonGroup>
-          <Portal>
-            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                  }}
-                >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleClose}>
-                      <MenuList id="split-button-menu">
-                        {options.map((option, index) => (
-                          <MenuItem
-                            key={option}
-                            selected={index === selectedIndex}
-                            onClick={(event) => handleMenuItemClick(event, index)}
-                          >
-                            <Typography variant="subtitle2">{option}</Typography>
-                          </MenuItem>
-                        ))}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
-          </Portal>
-        </div>
-
-              
+                  <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+                    <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+                    <Button
+                      size="small"
+                      aria-controls={open ? 'split-button-menu' : undefined}
+                      aria-expanded={open ? 'true' : undefined}
+                      aria-label="add product category"
+                      aria-haspopup="menu"
+                      onClick={handleToggle}
+                    >
+                      <ArrowDropDownRoundedIcon />
+                    </Button>
+                  </ButtonGroup>
+                  <Portal>
+                    <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                      {({ TransitionProps, placement }) => (
+                        <Grow
+                          {...TransitionProps}
+                          style={{
+                            transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                          }}
+                        >
+                          <Paper>
+                            <ClickAwayListener onClickAway={handleClose}>
+                              <MenuList id="split-button-menu">
+                                {options.map((option, index) => (
+                                  <MenuItem
+                                    key={option}
+                                    selected={index === selectedIndex}
+                                    onClick={(event) => handleMenuItemClick(event, index)}
+                                  >
+                                    <Typography variant="subtitle2">{option}</Typography>
+                                  </MenuItem>
+                                ))}
+                              </MenuList>
+                            </ClickAwayListener>
+                          </Paper>
+                        </Grow>
+                      )}
+                    </Popper>
+                  </Portal>
+                </div>
               </Stack>
             </Grid>
 
-            
             <Grid item xs={12}>
               <BookingDetails customers={customers} />
             </Grid>
