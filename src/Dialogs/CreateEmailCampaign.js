@@ -95,12 +95,4 @@ const CreateEmailCampaign = ({ open, handleClose }) => {
 
 export default CreateEmailCampaign;
 
-const customerOptions = [
-  { label: 'All customers' },
-  { label: 'New customers' },
-  { label: 'Returning Customers' },
-  { label: 'Abondened customers' },
-  { label: 'No sales customers' },
-  { label: 'Imported customers' },
-  { label: 'Custom customers' },
-];
+const customerOptions = [{ label: 'All customers' }, { label: 'New customers' }, { label: 'Returning Customers' }];

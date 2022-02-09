@@ -16,22 +16,25 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Paper,
+  Button,
 } from '@mui/material';
 // redux
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
+import LocalShippingRounded from '@mui/icons-material/LocalShippingRounded';
+import dateFormat from 'dateformat';
 import { useDispatch, useSelector } from '../../redux/store';
 // hooks
 // components
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 // sections
-import {
-  ShipmentListHead,
-  ShipmentListToolbar,
-} from '../../sections/@dashboard/e-commerce/product-list';
+import { ShipmentListHead, ShipmentListToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchShipments } from '../../actions';
-
 import EditShipment from '../../Dialogs/Shipment/EditShipment';
+import AssignCarrier from '../../Dialogs/Delivery/AssignCarrier';
+import UpdateShipment from '../../Dialogs/Delivery/UpdateShipmentStatus';
+import DeliveryReceipt from '../../Dialogs/Delivery/DeliveryReceipt';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   '& .MuiToggleButtonGroup-grouped': {
@@ -56,13 +59,13 @@ const TABLE_HEAD = [
   { id: 'carrier', label: 'Carrier', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: 'charge', label: 'Charge', alignRight: false },
+  { id: 'date', label: 'Date', alignRight: false },
   { id: 'actions', label: 'Actions', alignRight: true },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function GeneralShipments() {
-  
   const dispatch = useDispatch();
 
   const [term, setTerm] = useState('');
@@ -77,12 +80,32 @@ export default function GeneralShipments() {
     };
   }, [term]);
 
-  const [IdToEdit, setIdToEdit] = useState();
+  const [Id, setId] = useState();
 
   const [openUpdate, setOpenUpdate] = useState(false);
+  const [openAssign, setOpenAssign] = useState(false);
+  const [openReceipt, setOpenReceipt] = useState(false);
+
+  const handleOpenReceipt = (id) => {
+    setId(id);
+    setOpenReceipt(true);
+  };
+
+  const handleCloseReceipt = () => {
+    setOpenReceipt(false);
+  };
+
+  const handleOpenAssign = (id) => {
+    setId(id);
+    setOpenAssign(true);
+  };
+
+  const handleCloseAssign = () => {
+    setOpenAssign(false);
+  };
 
   const handleOpenUpdate = (id) => {
-    setIdToEdit(id);
+    setId(id);
     setOpenUpdate(true);
   };
 
@@ -249,7 +272,20 @@ export default function GeneralShipments() {
 
               <TableBody>
                 {shipments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                  const { _id, name, image, products, outOfStock, hidden, totalSales } = row;
+                  const {
+                    _id,
+                    orderRef,
+                    carrier,
+                    status,
+                    order,
+                    name,
+                    image,
+                    products,
+                    outOfStock,
+                    hidden,
+                    totalSales,
+                    createdAt,
+                  } = row;
 
                   const isItemSelected = selected.indexOf(_id) !== -1;
 
@@ -258,22 +294,45 @@ export default function GeneralShipments() {
                       <TableCell>
                         <Stack direction={'row'} alignItems={'center'}>
                           <Typography variant="subtitle2" noWrap>
-                            {/* {name} */}
+                            {orderRef}
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{/*  */}</TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{/*  */}</TableCell>
-                      <TableCell align="left">{/*  */}</TableCell>
+                      <TableCell style={{ minWidth: 160 }}>{carrier || 'Not Assigned'}</TableCell>
+                      <TableCell style={{ minWidth: 160 }}>{status}</TableCell>
+                      <TableCell align="left">Rs.{order?.deliveryCharge}</TableCell>
+                      <TableCell align="left">{dateFormat(new Date(createdAt), 'ddd mmm dS, yy hh:mm TT')}</TableCell>
                       <TableCell align="right">
-                        <IconButton
-                          onClick={() => {
-                            handleOpenUpdate(_id);
-                          }}
-                          className="me-2"
-                        >
-                          <ModeEditOutlineRoundedIcon style={{ fontSize: '20px' }} />
-                        </IconButton>
+                        {!carrier ? (
+                          <Stack spacing={1} direction={'row'} alignItems="center">
+                            <IconButton
+                              onClick={() => {
+                                handleOpenUpdate(_id);
+                              }}
+                              className="me-2"
+                            >
+                              <ModeEditOutlineRoundedIcon color={'primary'} style={{ fontSize: '20px' }} />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => {
+                                handleOpenReceipt(_id);
+                              }}
+                              className="me-2"
+                            >
+                              <ReceiptLongIcon color={'secondary'} style={{ fontSize: '20px' }} />
+                            </IconButton>
+                          </Stack>
+                        ) : (
+                          <Button
+                            onClick={() => {
+                              handleOpenAssign(_id);
+                            }}
+                            startIcon={<LocalShippingRounded />}
+                            variant="outlined"
+                          >
+                            Assign Carrier
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   );
@@ -312,7 +371,9 @@ export default function GeneralShipments() {
         />
       </Card>
 
-      {openUpdate && <EditShipment open={openUpdate} handleClose={handleCloseUpdate} id={IdToEdit} />}
+      {openAssign && <AssignCarrier open={openAssign} handleClose={handleCloseAssign} id={Id} />}
+      {openUpdate && <UpdateShipment open={openUpdate} handleClose={handleCloseUpdate} id={Id} />}
+      {openReceipt && <DeliveryReceipt open={openReceipt} handleClose={handleCloseReceipt} id={Id} />}
     </>
   );
 }

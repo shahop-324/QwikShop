@@ -317,7 +317,7 @@ export default function GeneralAnalytics() {
           ) : (
             <Grid item xs={12} md={12}>
               <div className="mt-5">
-                <Grid className="px-5 pt-3" container spacing={3}>
+                <Grid className="px-2 pt-3" container spacing={3}>
                   <Box sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

@@ -71,7 +71,7 @@ const DesignEmailCampaign = ({ open, handleClose, isEdit, id }) => {
         <AppBar sx={{ position: 'relative', backgroundColor: '#212121' }}>
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {isEdit ? 'Edit Page' : 'Create Page'}
+              {isEdit ? 'Edit Mail' : 'Create Mail'}
             </Typography>
 
             <Stack direction="row" alignItems="center" spacing={3}>

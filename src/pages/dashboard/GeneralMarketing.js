@@ -12,7 +12,7 @@ import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 // sections
-import { BookingDetails, BookingWidgetSummary } from '../../sections/@dashboard/general/booking';
+import { BookingWidgetSummary, MarketingCampaignDetails } from '../../sections/@dashboard/general/booking';
 // assets
 import { BookingIllustration, CheckInIllustration, CheckOutIllustration } from '../../assets';
 
@@ -24,6 +24,7 @@ import CreateSMSCampaign from '../../Dialogs/CreateSMSCampaign';
 import CreateEmailCampaign from '../../Dialogs/CreateEmailCampaign';
 import CreateGoogleAdsCampaign from '../../Dialogs/CreateGoogleAdsCampaign';
 import CreateFacebookAdsCampaign from '../../Dialogs/CreateFacebookAdsCampaign';
+import DesignEmailCampaign from '../../Dialogs/Marketing/DesignEmailCampaign';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +72,7 @@ export default function GeneralBooking() {
     <div>
       <Page title="Marketing">
         <Container maxWidth={themeStretch ? false : 'xl'}>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12} md={8}>
               <MarketingWelcome />
             </Grid>
@@ -97,6 +98,7 @@ export default function GeneralBooking() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
+                comingSoon
                 action={handleOpenCreateGoogleAdsCampaign}
                 title="Create Campaign"
                 total={'Google Ads'}
@@ -106,6 +108,7 @@ export default function GeneralBooking() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
+                comingSoon
                 action={handleOpenCreateFacebookAdsCampaign}
                 title="Create Campaign"
                 total={'Facebook Ads'}
@@ -126,7 +129,7 @@ export default function GeneralBooking() {
               <BookingWidgetSummary title="SMS Messages sent" total={124000} icon={<CheckOutIllustration />} />
             </Grid>
             <Grid item xs={12} md={3}>
-              <BookingWidgetSummary title="WhatsApp Message sent" total={124000} icon={<CheckOutIllustration />} />
+              <BookingWidgetSummary title="Email Messages sent" total={124000} icon={<CheckOutIllustration />} />
             </Grid>
             <Grid item xs={12} md={3}>
               <BookingWidgetSummary title="Google Ads Impression" total={124000} icon={<CheckOutIllustration />} />
@@ -134,10 +137,9 @@ export default function GeneralBooking() {
             <Grid item xs={12} md={3}>
               <BookingWidgetSummary title="Facebook Ads Impression" total={124000} icon={<CheckOutIllustration />} />
             </Grid>
-            <Grid item xs={12}>
-              {/* <BookingDetails /> */}
-            </Grid>
           </Grid>
+
+          <MarketingCampaignDetails />
         </Container>
       </Page>
 
@@ -145,7 +147,8 @@ export default function GeneralBooking() {
         <CreateSMSCampaign open={openCreateSMSCampaign} handleClose={handleCloseCreateSMSCampaign} />
       )}
       {openCreateEmailCampaign && (
-        <CreateEmailCampaign open={openCreateEmailCampaign} handleClose={handleCloseCreateEmailCampaign} />
+        // <CreateEmailCampaign open={openCreateEmailCampaign} handleClose={handleCloseCreateEmailCampaign} />
+        <DesignEmailCampaign open={openCreateEmailCampaign} handleClose={handleCloseCreateEmailCampaign} />
       )}
       {openCreateGoogleAdsCampaign && (
         <CreateGoogleAdsCampaign open={openCreateGoogleAdsCampaign} handleClose={handleCloseCreateGoogleAdsCampaign} />

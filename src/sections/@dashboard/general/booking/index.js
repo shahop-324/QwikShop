@@ -7,4 +7,6 @@ export { default as BookingCheckInWidgets } from './BookingCheckInWidgets';
 export { default as BookingCustomerReviews } from './BookingCustomerReviews';
 export { default as BookingReservationStats } from './BookingReservationStats';
 export { default as BookingWidgetSummary } from './BookingWidgetSummary';
-export {default as OrderDetails} from './OrderDetails';
+export { default as OrderDetails } from './OrderDetails';
+export { default as AbondonedCartDetails } from './AbondonedCartDetails';
+export { default as MarketingCampaignDetails } from './MarketingCampaignDetails';

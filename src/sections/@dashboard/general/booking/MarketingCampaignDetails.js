@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 import {
   Box,
@@ -21,50 +20,36 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import dateFormat from 'dateformat';
 import Label from '../../../../components/Label';
 import Scrollbar from '../../../../components/Scrollbar';
-import OrderReceipt from '../../../../Dialogs/Order/OrderReceipt';
 
 // ----------------------------------------------------------------------
 
-export default function OrderDetails() {
+export default function MarketingCampaignDetails() {
   const { orders } = useSelector((state) => state.order);
 
-  const [id, setId] = useState('');
-
-  const [openReceipt, setOpenReceipt] = useState(false);
-
-  const handleCloseReceipt = () => {
-    setOpenReceipt(false);
-  };
-
-  const handleOpenReceipt = (id) => {
-    setId(id);
-    setOpenReceipt(true);
-  };
-
+  const {campaigns} = useSelector((state) => state.marketing);
 
   return (
     <>
       <Card>
-        <CardHeader title="Orders" sx={{ mb: 3 }} />
+        <CardHeader title="Marketing Campaigns" sx={{ mb: 3 }} />
         <Scrollbar>
           <TableContainer sx={{ minWidth: 720 }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ minWidth: 200 }}>Order Id</TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>Customer</TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>Status</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Delivery Status</TableCell>
-                  <TableCell sx={{ minWidth: 100 }}>Total</TableCell>
-                  <TableCell sx={{ minWidth: 100 }}>Timestamp</TableCell>
-                  <TableCell sx={{ minWidth: 100 }}>Receipt</TableCell>
-
+                  <TableCell sx={{ minWidth: 200 }}>Campaign Id</TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>Name</TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>Type</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Sales</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>Orders</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>Created At</TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>Actions</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders?.length > 0 &&
-                  orders?.map((row) => (
+                {campaigns?.length > 0 &&
+                  campaigns?.map((row) => (
                     <TableRow key={row?._id}>
                       <TableCell>
                         <Stack direction="row" alignItems="center" spacing={2}>
@@ -95,11 +80,7 @@ export default function OrderDetails() {
                       </TableCell>
 
                       <TableCell align="right">
-                        <IconButton
-                          onClick={() => {
-                            handleOpenReceipt(row._id);
-                          }}
-                        >
+                        <IconButton onClick={() => {}}>
                           <ReceiptIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
                         </IconButton>
                       </TableCell>
@@ -114,7 +95,6 @@ export default function OrderDetails() {
 
         <Box sx={{ p: 2, textAlign: 'right' }}> </Box>
       </Card>
-      {openReceipt && <OrderReceipt open={openReceipt} handleClose={handleCloseReceipt} id={id} />}
     </>
   );
 }

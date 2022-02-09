@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Card, Typography, Button } from '@mui/material';
+import { Card, Typography, Button, Chip } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../../../utils/formatNumber';
 // components
@@ -34,7 +34,7 @@ AnalyticsWidgetSummary.propTypes = {
   total: PropTypes.number,
 };
 
-export default function AnalyticsWidgetSummary({ title, action, total, icon, color = 'primary' }) {
+export default function AnalyticsWidgetSummary({ comingSoon, title, action, total, icon, color = 'primary' }) {
   return (
     <RootStyle
       sx={{
@@ -52,13 +52,16 @@ export default function AnalyticsWidgetSummary({ title, action, total, icon, col
             )} 100%)`,
         }}
       >
-       {icon}
+        {icon}
       </IconWrapperStyle>
       <Typography variant="h5">{total}</Typography>
-      <Button onClick={action} className='my-3' variant="contained" to="#">{title}</Button>
-      {/* <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        {title}
-      </Typography> */}
+      {comingSoon ? (
+        <Chip className="my-3" label={'Coming Soon'} variant="contained" color="primary" />
+      ) : (
+        <Button onClick={action} className="my-3" variant="contained" to="#">
+          {title}
+        </Button>
+      )}
     </RootStyle>
   );
 }

@@ -6,6 +6,7 @@ const orderSlice = createSlice({
   initialState: {
     orders: [],
     recentOrders: [],
+    abondonedCarts: [],
     error: false,
   },
 
@@ -16,6 +17,9 @@ const orderSlice = createSlice({
     FetchRecentOrders(state, action) {
       state.recentOrders = action.payload.recentOrders;
     },
+    FetchAbondonedCarts(state, action) {
+      state.abondonedCarts = action.payload.abondonedCarts;
+    }
   },
 });
 

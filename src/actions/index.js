@@ -5331,6 +5331,46 @@ export const fetchOrders = (term) => async (dispatch, getState) => {
   }
 };
 
+// **************************************************** Fetch Abondoned Carts **************************************************** //
+
+export const fetchAbondonedCarts = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}order/getAbondonedCarts`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      orderActions.FetchAbondonedCarts({
+        abondonedCarts: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 // Customer
 // Review
 // Marketing
