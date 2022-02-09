@@ -181,6 +181,11 @@ export default function AddNewDiscount({ open, handleClose }) {
                 label="Buy X get Y free"
               />
               <FormControlLabel
+                value="buyXGetYPercentOff"
+                control={<Radio onClick={() => setType('buyXGetYPercentOff')} />}
+                label="Buy X get Y% Off"
+              />
+              <FormControlLabel
                 value="firstPurchase"
                 control={<Radio onClick={() => setType('firstPurchase')} />}
                 label="First Purchase"

@@ -1,5 +1,5 @@
 // React select
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 // @mui
 import Chip from '@mui/material/Chip';
@@ -13,11 +13,13 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
 // hooks
+import { useDispatch } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 // sections
-import { BookingDetails } from '../../sections/@dashboard/general/booking';
+import { OrderDetails } from '../../sections/@dashboard/general/booking';
+import { fetchOrders } from '../../actions';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -71,7 +73,21 @@ const options = [
   { value: 'Custom range', label: 'Custom range' },
 ];
 
-export default function GeneralEcommerce() {
+export default function GeneralOrders() {
+  const dispatch = useDispatch();
+
+  const [term, setTerm] = useState('');
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      dispatch(fetchOrders(term));
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [term]);
+
   const { themeStretch } = useSettings();
 
   const [selectedOption, setSelectedOption] = useState();
@@ -82,7 +98,7 @@ export default function GeneralEcommerce() {
   };
 
   return (
-    <Page title="General: E-commerce">
+    <Page title="Orders List">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -91,10 +107,16 @@ export default function GeneralEcommerce() {
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
-                <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+                <StyledInputBase
+                  onChange={(e) => {
+                    setTerm(e.target.value);
+                  }}
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                />
               </Search>
-              <div style={{width: "200px"}}>
-              <Select defaultValue={options[0]} value={selectedOption} onChange={handleChange} options={options} />
+              <div style={{ width: '200px' }}>
+                <Select defaultValue={options[0]} value={selectedOption} onChange={handleChange} options={options} />
               </div>
             </Stack>
           </Grid>
@@ -111,7 +133,7 @@ export default function GeneralEcommerce() {
             <Chip label="COD" component="a" href="#basic-chip" variant="outlined" clickable />
           </Stack>
           <Grid item xs={12}>
-            <BookingDetails />
+            <OrderDetails  />
           </Grid>
         </Grid>
       </Container>

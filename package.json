@@ -115,6 +115,7 @@
     "react-scrollspy": "^3.4.3",
     "react-select": "^5.2.1",
     "react-share": "^4.4.0",
+    "react-simple-image-viewer": "^1.1.1",
     "react-slick": "^0.28.0",
     "react-swipeable-views": "^0.14.0",
     "react-timer-hook": "^3.0.5",

@@ -2151,7 +2151,7 @@ export const deleteMultipleDivisions = (ids, handleClose) => async (dispatch, ge
   }
 };
 
-export const updateDivisionStock = ( id, formValues, handleClose) => async (dispatch, getState) => {
+export const updateDivisionStock = (id, formValues, handleClose) => async (dispatch, getState) => {
   let message;
 
   try {
@@ -2203,12 +2203,11 @@ export const reorderDivisions = (items) => async (dispatch, getState) => {
   let message;
 
   try {
-
     const res = await fetch(`${BaseURL}division/reorder/`, {
       method: 'POST',
 
       body: JSON.stringify({
-       divisions: items,
+        divisions: items,
       }),
 
       headers: {
@@ -2237,8 +2236,7 @@ export const reorderDivisions = (items) => async (dispatch, getState) => {
       })
     );
 
-    dispatch(showSnackbar("success", message));
-
+    dispatch(showSnackbar('success', message));
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -5280,7 +5278,59 @@ export const fetchQuestions = (term) => async (dispatch, getState) => {
 
 // ? Allow store owners to setup coins which can be collected and redeemed by users
 
-// Order
+// ******************************************************* Order ******************************************************* //
+
+export const fetchOrders = (term) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const fullLocation = `${BaseURL}order/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      orderActions.FetchOrders({
+        orders: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 // Customer
 // Review
 // Marketing
