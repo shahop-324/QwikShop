@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable prefer-destructuring */
 import AWS from 'aws-sdk';
@@ -5374,3 +5376,42 @@ export const fetchAbondonedCarts = () => async (dispatch, getState) => {
 // Customer
 // Review
 // Marketing
+
+// ************************************************* Billing *********************************************** //
+
+export const createSubscription = (plan_id, displayRazorpay) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsCreatingSubscription({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}razorpay/createSubscription/${plan_id}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    displayRazorpay(result.data.id, plan_id);
+
+    dispatch(storeActions.SetIsCreatingSubscription({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsCreatingSubscription({ state: false }));
+  }
+};

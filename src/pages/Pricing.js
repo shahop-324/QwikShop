@@ -47,11 +47,13 @@ export default function Pricing() {
           </Box>
 
           <Grid container spacing={3}>
-            {_pricingPlans.map((card, index) => (
+            {_pricingPlans.map((card, index) => {
+              console.log(card);
+              return (
               <Grid item xs={12} md={4} key={card.subscription}>
                 <PricingPlanCard card={card} index={index} />
               </Grid>
-            ))}
+            )})}
           </Grid>
         </Container>
       </RootStyle>

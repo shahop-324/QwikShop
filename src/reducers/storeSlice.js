@@ -23,6 +23,8 @@ const storeSlice = createSlice({
     isUpdatingStaff: false,
     isDeletingStaff: false,
 
+    isCreatingSubscription: false,
+
     isUpdatingAmbience: false,
     isUpdatingOtherInfo: false,
   },
@@ -88,6 +90,9 @@ const storeSlice = createSlice({
     SetIsUpdatingOtherInfo(state, action) {
       state.isUpdatingOtherInfo = action.payload.state;
     },
+    SetIsCreatingSubscription(state, action) {
+      state.isCreatingSubscription = action.payload.state;
+    }
   },
 });
 
