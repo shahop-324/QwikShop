@@ -5,7 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
@@ -18,15 +18,19 @@ import { logout } from '../../../actions';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: 'My Profile',
     linkTo: '/',
   },
   {
-    label: 'Products',
-    linkTo: PATH_DASHBOARD.catalouge.product,
+    label: 'Store Profile',
+    linkTo: '/',
   },
   {
-    label: 'categories',
+    label: 'Facebook Group',
+    linkTo: PATH_DASHBOARD.catalouge.category,
+  },
+  {
+    label: 'Referral',
     linkTo: PATH_DASHBOARD.catalouge.category,
   },
 ];
@@ -34,14 +38,9 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  let user;
-
-  const isMountedRef = useIsMountedRef();
-
-  const { enqueueSnackbar } = useSnackbar();
+  const {user} = useSelector((state) => state.user);
 
   const [open, setOpen] = useState(null);
 
@@ -95,7 +94,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {`${user?.firstName} ${user?.lastName}`}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user?.email}

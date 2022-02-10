@@ -135,8 +135,8 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           <IconButton>
             <CampaignRounded style={{ fontSize: '26px' }} />
           </IconButton>
-          <NotificationsPopover />
-          <ContactsPopover />
+          {/* <NotificationsPopover /> */}
+          {/* <ContactsPopover /> */}
           <AccountPopover />
         </Stack>
       </Toolbar>
