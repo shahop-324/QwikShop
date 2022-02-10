@@ -1,13 +1,11 @@
-import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
 import { useDispatch, useSelector } from 'react-redux';
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
