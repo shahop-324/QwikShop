@@ -6,6 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 // hooks
 import CampaignRounded from '@mui/icons-material/CampaignRounded';
 import Switch from '@mui/material/Switch';
+import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
 // utils
@@ -22,6 +23,7 @@ import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
+
 
 // ----------------------------------------------------------------------
 
@@ -134,6 +136,9 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           <FormControlLabel control={<MaterialUISwitch defaultChecked />} label="" />
           <IconButton>
             <CampaignRounded style={{ fontSize: '26px' }} />
+          </IconButton>
+          <IconButton>
+            <AccountBalanceWalletRoundedIcon style={{ fontSize: '26px' }} />
           </IconButton>
           {/* <NotificationsPopover /> */}
           {/* <ContactsPopover /> */}

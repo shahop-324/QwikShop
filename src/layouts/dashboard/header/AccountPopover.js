@@ -5,6 +5,10 @@ import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
 import { useDispatch, useSelector } from 'react-redux';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import StoreMallDirectoryRoundedIcon from '@mui/icons-material/StoreMallDirectoryRounded';
+import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
+import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import MyAvatar from '../../../components/MyAvatar';
@@ -12,24 +16,30 @@ import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 import { logout } from '../../../actions';
 
+
+
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
     label: 'My Profile',
     linkTo: '/',
+    icon: <PersonRoundedIcon sx={{mr: 1}} />,
   },
   {
     label: 'Store Profile',
     linkTo: '/',
+    icon: <StoreMallDirectoryRoundedIcon sx={{mr: 1}} />,
   },
   {
     label: 'Facebook Group',
     linkTo: PATH_DASHBOARD.catalouge.category,
+    icon: <FacebookRoundedIcon sx={{mr: 1}} />,
   },
   {
     label: 'Referral',
     linkTo: PATH_DASHBOARD.catalouge.category,
+    icon: <ConnectWithoutContactRoundedIcon sx={{mr: 1}} />,
   },
 ];
 
@@ -103,8 +113,8 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
-              {option.label}
+            <MenuItem sx={{mb: 1}} key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+           {option.icon}   {option.label}
             </MenuItem>
           ))}
         </Stack>

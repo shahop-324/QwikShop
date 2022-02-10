@@ -1,4 +1,6 @@
+/* eslint-disable no-constant-condition */
 // utils
+import { useSelector } from 'react-redux';
 import createAvatar from '../utils/createAvatar';
 //
 import Avatar from './Avatar';
@@ -6,17 +8,20 @@ import Avatar from './Avatar';
 // ----------------------------------------------------------------------
 
 export default function MyAvatar({ ...other }) {
-  
-  const user = {photoURL: 'https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/man5-512.png', displayName: 'Shreyansh shah',};
+  const { user } = useSelector((state) => state.user);
 
   return (
     <Avatar
-      src={user?.photoURL}
-      alt={user?.displayName}
-      color={user?.photoURL ? 'default' : createAvatar(user?.displayName).color}
+      src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${user?.image}`}
+      alt={`${user?.firstName} ${user?.lastName}`}
+      color={
+        `https://qwikshop.s3.ap-south-1.amazonaws.com/${user?.image}`
+          ? 'default'
+          : createAvatar(`${user?.firstName} ${user?.lastName}`).color
+      }
       {...other}
     >
-      {createAvatar(user?.displayName).name}
+      {createAvatar(`${user?.firstName} ${user?.lastName}`).name}
     </Avatar>
   );
 }
