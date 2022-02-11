@@ -1,15 +1,3 @@
-// {/* 1. Theme */}
-// {/* 2. Ambience */}
-// {/* 3. Color */}
-// {/* 4. Store banners */}
-// {/* 5. Other Info */}
-
-// Return Offered
-// Return period
-// Delivery happens within
-// Free Delivery Above
-// Store Banners
-
 import { capitalCase } from 'change-case';
 import { useState } from 'react';
 // @mui
@@ -55,7 +43,7 @@ export default function StoreWebsite() {
   ];
 
   return (
-    <Page title="User: Account Settings">
+    <Page title="Store Theme">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Tabs
           value={currentTab}

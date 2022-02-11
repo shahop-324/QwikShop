@@ -1,14 +1,101 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Stack, Button, Typography, Card, Box, CardActionArea, IconButton } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { updateStoreTheme } from '../../../../actions';
+import CustomiseSuperstore from '../../../../Dialogs/StoreTheme/CustomiseSuperstore';
 
 const StoreAppearance = () => {
   const { store } = useSelector((state) => state.store);
+  const dispatch = useDispatch();
+
+  const [superstore, setSuperstore] = useState(false);
+  const [electronics, setElectronics] = useState(false);
+  const [groceryBeta, setGroceryBeta] = useState(false);
+  const [fashion, setFashion] = useState(false);
+  const [grocery, setGrocery] = useState(false);
+  const [furniture, setFurniture] = useState(false);
+  const [healthBeauty, setHealthBeauty] = useState(false);
+  const [groceryAlpha, setGroceryAlpha] = useState(false);
+  const [gift, setGift] = useState(false);
+  const [lite, setLite] = useState(false);
+  const [eureka, setEureka] = useState(false);
+
+  const handleCloseSuperstore = () => {
+    setSuperstore(false);
+  };
+  const handleCloseElectronics = () => {
+    setElectronics(false);
+  };
+  const handleCloseGroceryBeta = () => {
+    setGroceryBeta(false);
+  };
+  const handleCloseFashion = () => {
+    setFashion(false);
+  };
+  const handleCloseGrocery = () => {
+    setGrocery(false);
+  };
+  const handleCloseHealthBeauty = () => {
+    setHealthBeauty(false);
+  };
+  const handleCloseGroceryAlpha = () => {
+    setGroceryAlpha(false);
+  };
+  const handleCloseGift = () => {
+    setGift(false);
+  };
+  const handleCloseLite = () => {
+    setLite(false);
+  };
+  const handleCloseEureka = () => {
+    setEureka(false);
+  };
+
+  const handleOpen = (theme) => {
+    switch (theme) {
+      case 'Grocery Beta':
+        setGroceryBeta(true);
+        break;
+      case 'Electronics':
+        setElectronics(true);
+        break;
+      case 'Superstore':
+        setSuperstore(true);
+        break;
+      case 'Fashion':
+        setFashion(true);
+        break;
+      case 'Grocery':
+        setGrocery(true);
+        break;
+      case 'Furniture':
+        setFurniture(true);
+        break;
+      case 'Health & Beauty':
+        setHealthBeauty(true);
+        break;
+      case 'Grocery Alpha':
+        setGroceryAlpha(true);
+        break;
+      case 'Gift':
+        setGift(true);
+        break;
+      case 'Lite':
+        setLite(true);
+        break;
+      case 'Eureka':
+        setEureka(true);
+        break;
+
+      default:
+        break;
+    }
+  };
 
   return (
     <div>
@@ -50,11 +137,21 @@ const StoreAppearance = () => {
                         Preview
                       </Button>
                       {store.theme === el.label ? (
-                        <IconButton>
+                        <IconButton
+                          onClick={() => {
+                            handleOpen(el.label);
+                          }}
+                        >
                           <SettingsIcon />
                         </IconButton>
                       ) : (
-                        <Button size={'small'} variant="contained">
+                        <Button
+                          onClick={() => {
+                            dispatch(updateStoreTheme(el.label));
+                          }}
+                          size={'small'}
+                          variant="contained"
+                        >
                           Apply
                         </Button>
                       )}
@@ -66,6 +163,7 @@ const StoreAppearance = () => {
           </>
         ))}
       </Box>
+      {superstore && <CustomiseSuperstore open={superstore} handleClose={handleCloseSuperstore} />}
     </div>
   );
 };

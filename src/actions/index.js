@@ -25,6 +25,7 @@ import { customerActions } from '../reducers/customerSlice';
 import { reviewActions } from '../reducers/reviewSlice';
 import { questionActions } from '../reducers/questionsSlice';
 import { divisionActions } from '../reducers/divisionSlice';
+import { menuActions } from '../reducers/menuSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -2928,6 +2929,88 @@ export const deleteDiscount = (id, handleClose) => async (dispatch, getState) =>
 
 // ********************************************* Manage Store *********************************** //
 
+export const updateStoreTheme = (theme) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}store/updateTheme/${theme}`, {
+      method: 'PATCH',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const updateStore = (formValues) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}store/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 export const updateStoreFavicon = (file, handleClose) => async (dispatch, getState) => {
   let message;
 
@@ -5413,5 +5496,182 @@ export const createSubscription = (plan_id, displayRazorpay) => async (dispatch,
     console.log(error);
     dispatch(showSnackbar('error', message));
     dispatch(storeActions.SetIsCreatingSubscription({ state: false }));
+  }
+};
+
+// ******************************************************** Store Menu ******************************************************** //
+
+export const fetchMenu = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}menu/getAll`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      menuActions.FetchMenu({
+        menus: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const createMenuItem = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(menuActions.SetIsCreating({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}menu/create`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      menuActions.CreateMenuItem({
+        menuItem: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(menuActions.SetIsCreating({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(menuActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateMenuItem = (formValues, menuId) => async (dispatch, getState) => {
+  let message;
+
+  dispatch(menuActions.SetIsUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}menu/update/${menuId}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      menuActions.UpdateMenuItem({
+        menuItem: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(menuActions.SetIsUpdating({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(menuActions.SetIsUpdating({ state: false }));
+  }
+};
+
+export const deleteMenuItem = (menuId) => async (dispatch, getState) => {
+  let message;
+  dispatch(menuActions.SetIsDeleting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}menu/delete/${menuId}`, {
+      method: 'DELETE',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      menuActions.DeleteMenuItem({
+        menuId,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(menuActions.SetIsDeleting({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(menuActions.SetIsDeleting({ state: false }));
   }
 };
