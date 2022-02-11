@@ -22,8 +22,9 @@ import {
   AccountPolicies,
   AccountDomain,
   AccountCheckout,
-  AccountStaff,
 } from '../../sections/@dashboard/user/account';
+
+import { StaffDetails } from '../../sections/@dashboard/general/booking';
 
 
 // ----------------------------------------------------------------------
@@ -57,7 +58,7 @@ export default function UserAccount() {
     {
       value: 'staff_account',
       icon: <PeopleIcon width={20} height={20} />,
-      component: <AccountStaff myProfile={_userAbout} />,
+      component: <StaffDetails myProfile={_userAbout} />,
     },
     {
       value: 'checkout',

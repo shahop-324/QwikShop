@@ -15,42 +15,31 @@ import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 import { logout } from '../../../actions';
-
-
+import Profile from '../../../Dialogs/User/Profile';
+import UserReferral from '../../../Dialogs/User/UserReferral';
 
 // ----------------------------------------------------------------------
-
-const MENU_OPTIONS = [
-  {
-    label: 'My Profile',
-    linkTo: '/',
-    icon: <PersonRoundedIcon sx={{mr: 1}} />,
-  },
-  {
-    label: 'Store Profile',
-    linkTo: '/',
-    icon: <StoreMallDirectoryRoundedIcon sx={{mr: 1}} />,
-  },
-  {
-    label: 'Facebook Group',
-    linkTo: PATH_DASHBOARD.catalouge.category,
-    icon: <FacebookRoundedIcon sx={{mr: 1}} />,
-  },
-  {
-    label: 'Referral',
-    linkTo: PATH_DASHBOARD.catalouge.category,
-    icon: <ConnectWithoutContactRoundedIcon sx={{mr: 1}} />,
-  },
-];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const dispatch = useDispatch();
 
-  const {user} = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
 
   const [open, setOpen] = useState(null);
+
+  const [openProfile, setOpenProfile] = useState(false);
+
+  const [openReferral, setOpenReferral] = useState(false);
+
+  const handleCloseReferral = () => {
+    setOpenReferral(false);
+  };
+
+  const handleCloseProfile = () => {
+    setOpenProfile(false);
+  };
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -63,6 +52,37 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     dispatch(logout());
   };
+
+  const MENU_OPTIONS = [
+    {
+      label: 'My Profile',
+      linkTo: '/',
+      icon: <PersonRoundedIcon sx={{ mr: 1 }} />,
+      onClick: () => {
+        setOpenProfile(true);
+      },
+    },
+    {
+      label: 'Store Profile',
+      linkTo: '/',
+      icon: <StoreMallDirectoryRoundedIcon sx={{ mr: 1 }} />,
+      onClick: () => {},
+    },
+    {
+      label: 'Facebook Group',
+      linkTo: PATH_DASHBOARD.catalouge.category,
+      icon: <FacebookRoundedIcon sx={{ mr: 1 }} />,
+      onClick: () => {},
+    },
+    {
+      label: 'Referral',
+      linkTo: PATH_DASHBOARD.catalouge.category,
+      icon: <ConnectWithoutContactRoundedIcon sx={{ mr: 1 }} />,
+      onClick: () => {
+        setOpenReferral(true);
+      },
+    },
+  ];
 
   return (
     <>
@@ -113,8 +133,17 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem sx={{mb: 1}} key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
-           {option.icon}   {option.label}
+            <MenuItem
+              sx={{ mb: 1 }}
+              key={option.label}
+              // to={option.linkTo}
+              // component={RouterLink}
+              onClick={() => {
+                option.onClick();
+                handleClose();
+              }}
+            >
+              {option.icon} {option.label}
             </MenuItem>
           ))}
         </Stack>
@@ -125,6 +154,8 @@ export default function AccountPopover() {
           Logout
         </MenuItem>
       </MenuPopover>
+      {openProfile && <Profile open={openProfile} handleClose={handleCloseProfile} />}
+      {openReferral && <UserReferral open={openReferral} handleClose={handleCloseReferral} />}
     </>
   );
 }

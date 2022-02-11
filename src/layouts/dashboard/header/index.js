@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -18,11 +19,8 @@ import Logo from '../../../components/Logo';
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';
 //
-import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
-import ContactsPopover from './ContactsPopover';
-import NotificationsPopover from './NotificationsPopover';
+import QwikWallet from '../../../Dialogs/Wallet/QwikWallet';
 
 
 // ----------------------------------------------------------------------
@@ -114,6 +112,12 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
 
   const isDesktop = useResponsive('up', 'lg');
 
+  const [openWallet, setOpenWallet] = useState(false);
+
+  const handleCloseWallet = () => {
+    setOpenWallet(false);
+  }
+
   return (
     <RootStyle isCollapse={isCollapse} isOffset={isOffset} verticalLayout={verticalLayout}>
       <Toolbar
@@ -137,7 +141,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           <IconButton>
             <CampaignRounded style={{ fontSize: '26px' }} />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() => {setOpenWallet(true)}}>
             <AccountBalanceWalletRoundedIcon style={{ fontSize: '26px' }} />
           </IconButton>
           {/* <NotificationsPopover /> */}
@@ -145,6 +149,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           <AccountPopover />
         </Stack>
       </Toolbar>
+      {openWallet && <QwikWallet open={openWallet} handleClose={handleCloseWallet} />}
     </RootStyle>
   );
 }

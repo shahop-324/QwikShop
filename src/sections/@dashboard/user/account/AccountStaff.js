@@ -111,20 +111,9 @@ const AccountStaff = () => {
           }}
           productName=""
         />
-        // <IconButton
-        //   onClick={() => {
-        //     console.log(params.value);
-        //   }}
-        // >
-        //   <DeleteRoundedIcon />
-        // </IconButton>
       ),
     },
   ];
-
-  console.log(store.team);
-
-  // const rows = [];
 
   const rows = store.team.map((el) => ({
     id: el.email,
@@ -155,7 +144,7 @@ const AccountStaff = () => {
               </Button>
             </Stack>
           </Stack>
-          <Box sx={{ height: 1200, width: '100%' }}>
+          <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid rowHeight={200} rows={rows} columns={columns} />
           </Box>
         </Card>
