@@ -30,16 +30,16 @@ const UserReferral = ({ open, handleClose }) => {
   return (
     <>
       <Dialog
-        maxWidth="md"
+        maxWidth="lg"
         open={open}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle sx={{ mb: 2 }}>{'My Profile'}</DialogTitle>
+        <DialogTitle sx={{ mb: 2 }}>{'My Referrals'}</DialogTitle>
         <DialogContent>
-          <Box sx={{ width: '600px' }}>
+          <Box sx={{ width: '900px' }}>
             <Card sx={{ p: 3 }}>
               <Stack direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="subtitle2">Total Accounts Created</Typography>
@@ -54,7 +54,7 @@ const UserReferral = ({ open, handleClose }) => {
               </Stack>
             </Card>
 
-            <Box sx={{ width: '100%', display: 'grid', alignItems: 'center' }} spacing={2}>
+            <Box sx={{ my: 3, gridAutoFlow: 'column', gridColumn: '1fr 1fr', gridGap: 5, width: '100%', display: 'grid', alignItems: 'center' }} spacing={2}>
               <Button
                 disabled
                 startIcon={<LockIcon style={{ fontSize: '20px' }} />}
