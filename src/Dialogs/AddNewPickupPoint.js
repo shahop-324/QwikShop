@@ -32,8 +32,6 @@ const AddNewPickupPoint = ({ open, handleClose }) => {
     const dispatch = useDispatch();
 
     const {isCreatingPickupPoint} = useSelector((state) => state.delivery);
-
-  
     const [addressType, setAddressType] = useState('shop');
     const [contactPersonName, setContactPersonName] = useState();
     const [contactEmail, setContactEmail] = useState();

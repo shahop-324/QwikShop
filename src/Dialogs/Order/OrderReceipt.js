@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-key */
-import React, { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Dialog,
   Stack,
@@ -35,6 +35,9 @@ import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
 import DeliveryDiningRoundedIcon from '@mui/icons-material/DeliveryDiningRounded';
 import Iconify from '../../components/Iconify';
 import CoinPNG from '../../assets/coin.png';
+import RejectOrder from './RejectOrder';
+import CancelOrder from './CancelOrder';
+import { acceptOrder } from '../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -161,7 +164,8 @@ ColorlibStepIcon.propTypes = {
 
 const steps = ['Waiting for acceptance', 'Packaging', 'Shipped', 'Delivered'];
 
-const ComponentToPrint = React.forwardRef(({ id }, ref) => {
+const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject }, ref) => {
+  const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.order);
   const { products } = useSelector((state) => state.product);
   const { discounts } = useSelector((state) => state.discount);
@@ -200,26 +204,60 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
     <div ref={ref}>
       <Box sx={{ width: '1200px', p: 3 }}>
         <Stack sx={{ mb: 3 }} direction={'row'} alignItems="center" justifyContent={'space-between'}>
-          <DialogTitle>{'Order Receipt'}</DialogTitle>
-          <Stack spacing={2} direction="row" alignItems="center">
-            <Button
-              onClick={() => {}}
-              fullWidth
-              variant="contained"
-              endIcon={<Iconify icon={'eva:checkmark-circle-2-fill'} />}
-            >
-              Accept
-            </Button>
-            <Button
-              onClick={() => {}}
-              fullWidth
-              variant="contained"
-              color="error"
-              endIcon={<Iconify icon={'eva:close-circle-fill'} />}
-            >
-              Reject
-            </Button>
-          </Stack>
+          <DialogTitle sx={{ mb: 2 }}>{'Order Receipt'}</DialogTitle>
+
+          {(() => {
+            switch (order.status) {
+              case 'Pending':
+                return (
+                  <Stack spacing={2} direction="row" alignItems="center">
+                    {' '}
+                    <Button
+                      onClick={() => {
+                        dispatch(acceptOrder(id));
+                      }}
+                      fullWidth
+                      variant="contained"
+                      endIcon={<Iconify icon={'eva:checkmark-circle-2-fill'} />}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setOpenReject(true);
+                      }}
+                      fullWidth
+                      variant="contained"
+                      color="error"
+                      endIcon={<Iconify icon={'eva:close-circle-fill'} />}
+                    >
+                      Reject
+                    </Button>
+                  </Stack>
+                );
+
+              case 'Accepted':
+                return (
+                  <Stack spacing={2} direction="row" alignItems="center">
+                    {' '}
+                    <Button
+                      onClick={() => {
+                        setOpenCancel(true);
+                      }}
+                      fullWidth
+                      variant="contained"
+                      endIcon={<Iconify icon={'eva:checkmark-circle-2-fill'} />}
+                      color="warning"
+                    >
+                      Cancel
+                    </Button>
+                  </Stack>
+                );
+
+              default:
+                break;
+            }
+          })()}
         </Stack>
         <Card sx={{ p: 3, mb: 3 }}>
           <Box
@@ -585,6 +623,21 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
 const OrderReceipt = ({ open, handleClose, id }) => {
   const componentRef = useRef();
 
+  const [openReject, setOpenReject] = useState(false);
+  const [openCancel, setOpenCancel] = useState(false);
+
+  const { orders } = useSelector((state) => state.order);
+
+  const order = orders.find((el) => el._id === id);
+
+  const handleCloseReject = () => {
+    setOpenReject(false);
+  };
+
+  const handleCloseCancel = () => {
+    setOpenCancel(false);
+  };
+
   return (
     <>
       <Dialog
@@ -596,6 +649,7 @@ const OrderReceipt = ({ open, handleClose, id }) => {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogActions>
+          <Chip sx={{ mr: 3 }} label={order.status} color="primary" variant="outlined" />
           <Button
             variant="outlined"
             onClick={() => exportComponentAsPNG(componentRef)}
@@ -604,8 +658,10 @@ const OrderReceipt = ({ open, handleClose, id }) => {
             Download Receipt
           </Button>
         </DialogActions>
-        <ComponentToPrint id={id} ref={componentRef} />
+        <ComponentToPrint id={id} setOpenCancel={setOpenCancel} setOpenReject={setOpenReject} ref={componentRef} />
       </Dialog>
+      {openReject && <RejectOrder open={openReject} handleClose={handleCloseReject} id={id} />}
+      {openCancel && <CancelOrder open={openCancel} handleClose={handleCloseCancel} id={id} />}
     </>
   );
 };

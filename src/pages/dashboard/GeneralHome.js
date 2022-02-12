@@ -14,15 +14,10 @@ import Page from '../../components/Page';
 import { AppWelcome, AppFeatured } from '../../sections/@dashboard/general/home';
 
 // sections
-import {
-  
-  BankingInviteFriends,
-  BankingRecentTransitions,
-  
-} from '../../sections/@dashboard/general/banking';
+import { BankingInviteFriends, BankingRecentTransitions } from '../../sections/@dashboard/general/banking';
 
 import { EcommerceWidgetSummary } from '../../sections/@dashboard/general/orders';
-import { stopLoginBtnLoader } from '../../actions';
+import { fetchCustomers, fetchRecentOrder, stopLoginBtnLoader } from '../../actions';
 import StoreCreated from '../../Dialogs/StoreCreated';
 
 import AmountOnHold from '../../assets/deposit-box.png';
@@ -35,7 +30,9 @@ import Product from '../../assets/product.png';
 export default function GeneralApp() {
   const { store } = useSelector((state) => state.store);
 
-  const { amountOnHold, amountPaid, productsSold, customers, storeViews } = store;
+  const { amountOnHold, amountPaid, productsSold, storeViews } = store;
+
+  const { customers } = useSelector((state) => state.customer);
 
   const [openStoreSetup, setOpenStoreSetup] = useState(!store?.setupCompleted);
 
@@ -67,6 +64,8 @@ export default function GeneralApp() {
 
   useEffect(() => {
     dispatch(stopLoginBtnLoader());
+    dispatch(fetchCustomers());
+    dispatch(fetchRecentOrder());
   }, []);
 
   const { user } = useSelector((state) => state.user);
@@ -102,7 +101,7 @@ export default function GeneralApp() {
             <Grid item xs={12} md={4}>
               <EcommerceWidgetSummary
                 title="Total customers"
-                total={customers}
+                total={customers.length}
                 widget={<img src={Customer} alt="customer" style={{ height: '100px', width: '100px' }} />}
               />
             </Grid>
@@ -130,9 +129,7 @@ export default function GeneralApp() {
 
             <Grid item xs={12} md={8}>
               <Stack spacing={3}>
-                <BankingRecentTransitions storeName={store.name}
-                
-                link={`qwikshop.online/${store.subName}`} />
+                <BankingRecentTransitions storeName={store.name} link={`qwikshop.online/${store.subName}`} />
               </Stack>
             </Grid>
 

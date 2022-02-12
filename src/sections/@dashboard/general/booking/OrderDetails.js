@@ -40,8 +40,7 @@ export default function OrderDetails() {
     setId(id);
     setOpenReceipt(true);
   };
-
-
+  
   return (
     <>
       <Card>

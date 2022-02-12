@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import CloudDownloadRoundedIcon from '@mui/icons-material/CloudDownloadRounded';
-
-import Select from 'react-select';
 // ----------------------------------------------------------------------
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,11 +10,8 @@ import {
   Grid,
   Container,
   Stack,
-  IconButton,
   Button,
-  ToggleButtonGroup,
   Typography,
-  ToggleButton,
   Paper,
   Grow,
   ClickAwayListener,
@@ -38,22 +32,6 @@ import { BookingDetails } from '../../sections/@dashboard/general/booking';
 import AddNewCustomer from '../../Dialogs/AddNewCustomer';
 import ImportCustomers from '../../Dialogs/ImportCustomers';
 import { fetchCustomers } from '../../actions';
-
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  '& .MuiToggleButtonGroup-grouped': {
-    margin: theme.spacing(0.5),
-    border: 0,
-    '&.Mui-disabled': {
-      border: 0,
-    },
-    '&:not(:first-of-type)': {
-      borderRadius: theme.shape.borderRadius,
-    },
-    '&:first-of-type': {
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-}));
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

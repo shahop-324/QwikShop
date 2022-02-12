@@ -19,7 +19,10 @@ const orderSlice = createSlice({
     },
     FetchAbondonedCarts(state, action) {
       state.abondonedCarts = action.payload.abondonedCarts;
-    }
+    },
+    UpdateOrder(state, action) {
+      state.orders = state.orders.map((el) => el._id !== action.payload.order._id ? el : action.payload.order);
+    },
   },
 });
 

@@ -79,39 +79,6 @@ const PreviewCustomer = ({ open, handleClose, id }) => {
                 </Button>
               </Stack>
             </Card>
-
-            <Typography variant='variant1' className='mb-3'>Orders</Typography>
-            <Divider className="my-3" />
-
-            <Card sx={{ p: 3, mb: 3 }}>
-              <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} className="mb-3">
-                <a href="#" style={{ textDecoration: 'none' }}>
-                  <Typography color="#2A60CC" variant="subtitle2">
-                    #1236JWH
-                  </Typography>
-                </a>
-                <Typography variant="subtitle2">Rs. 455</Typography>
-              </Stack>
-              <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} className="mb-4">
-                <Typography variant="subtitle2">{dateFormat(new Date(), 'ddd, mmm dS, yy, h:MM TT')}</Typography>
-                <Label
-                  variant={'ghost'}
-                  color={
-                    'success'
-                    //   'success' ||  'warning' || 'error'
-                  }
-                >
-                  {'Delivered'}
-                </Label>
-              </Stack>
-              <Divider className="my-3" />
-              <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'} className="mb-1">
-                <Chip size="small" label="Prepaid" style={{ fontWeight: 500 }} color="primary" />
-                <Button  variant="outlined" size="small" startIcon={<WhatsAppIcon />}>
-                  Ask for review
-                </Button>
-              </Stack>
-            </Card>
           </Box>
         </Drawer>
       </React.Fragment>
@@ -121,11 +88,3 @@ const PreviewCustomer = ({ open, handleClose, id }) => {
 };
 
 export default PreviewCustomer;
-
-// Info card
-// Coins Give Coins button & Total purchase
-// Orders
-
-// Order Id, amount
-// Date, status
-// COD, prepaid

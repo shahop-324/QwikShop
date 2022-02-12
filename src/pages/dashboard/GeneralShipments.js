@@ -189,14 +189,6 @@ export default function GeneralShipments() {
     CreateAndDownloadCSV(processShipmentsData());
   };
 
-  const [filter, setFilter] = React.useState('all');
-
-  const handleFilter = (event, newAlignment) => {
-    if (newAlignment !== null) {
-      setFilter(newAlignment);
-    }
-  };
-
   return (
     <>
       <Card sx={{ px: 0 }}>
@@ -207,55 +199,6 @@ export default function GeneralShipments() {
           onFilterName={handleFilterByName}
           handleExportShipments={handleExportShipments}
         />
-
-        <div className="px-3 mb-3">
-          <Paper
-            elevation={0}
-            sx={{
-              display: 'flex',
-              border: (theme) => `1px solid ${theme.palette.divider}`,
-              flexWrap: 'wrap',
-            }}
-          >
-            <StyledToggleButtonGroup size="small" value={filter} exclusive onChange={handleFilter} aria-label="filter">
-              <ToggleButton value="all" aria-label="left aligned">
-                <Typography sx={{ mx: 2 }} variant="subtitle2">
-                  All
-                </Typography>
-              </ToggleButton>
-              <ToggleButton value="preparingForShipment" aria-label="centered">
-                <Typography sx={{ mx: 2 }} variant="subtitle2">
-                  Preparing for shipment
-                </Typography>
-              </ToggleButton>
-              <ToggleButton value="shipped" aria-label="right aligned">
-                <Typography sx={{ mx: 2 }} variant="subtitle2">
-                  Shipped
-                </Typography>
-              </ToggleButton>
-              <ToggleButton value="inTransit" aria-label="justified">
-                <Typography sx={{ mx: 2 }} variant="subtitle2">
-                  In Transit
-                </Typography>
-              </ToggleButton>
-              <ToggleButton value="outForDelivery" aria-label="justified">
-                <Typography sx={{ mx: 2 }} variant="subtitle2">
-                  Out for delivery
-                </Typography>
-              </ToggleButton>
-              <ToggleButton value="delivered" aria-label="justified">
-                <Typography sx={{ mx: 2 }} variant="subtitle2">
-                  Delivered
-                </Typography>
-              </ToggleButton>
-              <ToggleButton value="cancelled" aria-label="justified">
-                <Typography sx={{ mx: 2 }} variant="subtitle2">
-                  Cancelled
-                </Typography>
-              </ToggleButton>
-            </StyledToggleButtonGroup>
-          </Paper>
-        </div>
 
         <Scrollbar>
           <TableContainer sx={{ minWidth: 900 }}>
@@ -278,12 +221,7 @@ export default function GeneralShipments() {
                     carrier,
                     status,
                     order,
-                    name,
-                    image,
-                    products,
-                    outOfStock,
-                    hidden,
-                    totalSales,
+
                     createdAt,
                   } = row;
 
@@ -303,7 +241,7 @@ export default function GeneralShipments() {
                       <TableCell align="left">Rs.{order?.deliveryCharge}</TableCell>
                       <TableCell align="left">{dateFormat(new Date(createdAt), 'ddd mmm dS, yy hh:mm TT')}</TableCell>
                       <TableCell align="right">
-                        {!carrier ? (
+                        {carrier ? (
                           <Stack spacing={1} direction={'row'} alignItems="center">
                             <IconButton
                               onClick={() => {

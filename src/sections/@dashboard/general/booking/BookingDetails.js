@@ -114,14 +114,15 @@ export default function BookingDetails({ customers }) {
                     <TableCell>{row.email}</TableCell>
 
                     <TableCell>
-                      <Label
+                      {row?.pincode ?  <Label
                         variant={'ghost'}
                         color={
                           (row.status === 'paid' && 'success') || (row.status === 'pending' && 'warning') || 'error'
                         }
                       >
-                        {/* {sentenceCase(row?.pincode)} */}
-                      </Label>
+                        {(row?.pincode)}
+                      </Label> : "---" }
+                     
                     </TableCell>
 
                     <TableCell sx={{ textTransform: 'capitalize' }}>{row.city}</TableCell>
