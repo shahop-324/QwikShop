@@ -21,6 +21,7 @@ import reviewSlice from "./reviewSlice";
 import questionSlice from "./questionsSlice";
 import divisionSlice from "./divisionSlice";
 import menuSlice from "./menuSlice";
+import walletSlice from "./walletSlice";
 
 export default combineReducers({
     auth: authSlice.reducer,
@@ -45,4 +46,5 @@ export default combineReducers({
     question: questionSlice.reducer,
     division: divisionSlice.reducer,
     menu: menuSlice.reducer,
+    wallet: walletSlice.reducer,
 });

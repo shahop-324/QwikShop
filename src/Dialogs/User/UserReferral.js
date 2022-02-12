@@ -20,12 +20,15 @@ import {
   TextField,
   Divider,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { ReferralDetails } from '../../sections/@dashboard/general/booking';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const UserReferral = ({ open, handleClose }) => {
   const [state, setState] = useState('');
+
+  const {user} = useSelector((state) => state.user);
 
   return (
     <>
@@ -43,14 +46,14 @@ const UserReferral = ({ open, handleClose }) => {
             <Card sx={{ p: 3 }}>
               <Stack direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="subtitle2">Total Accounts Created</Typography>
-                <Typography variant="subtitle2">12</Typography>
+                <Typography variant="subtitle2">{user?.referredUsers?.length}</Typography>
               </Stack>
 
               <Divider sx={{ my: 2 }} />
 
               <Stack direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="subtitle2">Total Accounts Upgraded</Typography>
-                <Typography variant="subtitle2">5</Typography>
+                <Typography variant="subtitle2">{user?.upgradedByRefUsers?.length}</Typography>
               </Stack>
             </Card>
 

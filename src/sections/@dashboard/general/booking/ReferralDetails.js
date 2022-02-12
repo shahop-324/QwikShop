@@ -15,6 +15,7 @@ import {
   Chip,
   TableContainer,
 } from '@mui/material';
+import dateFormat from 'dateformat';
 //
 import { useSelector } from 'react-redux';
 import Scrollbar from '../../../../components/Scrollbar';
@@ -27,6 +28,7 @@ import { ProductMoreMenu } from '../../e-commerce/product-list';
 
 export default function ReferralDetails() {
   const { store } = useSelector((state) => state.store);
+  const { user } = useSelector((state) => state.user);
 
   return (
     <>
@@ -40,39 +42,31 @@ export default function ReferralDetails() {
                   <TableCell sx={{ minWidth: 200 }}>Name</TableCell>
                   <TableCell sx={{ minWidth: 160 }}>Mobile</TableCell>
                   <TableCell sx={{ minWidth: 160 }}>Email</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Joined At</TableCell>
+                  <TableCell sx={{ minWidth: 200 }}>Joined At</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Upgraded</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Plan</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {store.team?.length > 0 &&
-                  store.team?.map((row) => (
-                    <TableRow key={row?.email}>
+                {user.referredUsers?.length > 0 &&
+                  user.referredUsers?.map((row) => (
+                    <TableRow key={row?._id}>
                       <TableCell>
                         <Stack direction="row" alignItems="center" spacing={2}>
-                          <Typography variant="subtitle2">{/* {row?.name} */}</Typography>
+                          <Typography variant="subtitle2">{`${row?.firstName} ${row?.lastName}`}</Typography>
                         </Stack>
                       </TableCell>
 
-                      <TableCell>{/* {row?.phone} */}</TableCell>
-                      <TableCell>{/* {row?.email} */}</TableCell>
+                      <TableCell>{row?.phone || '----'}</TableCell>
+                      <TableCell>{row?.email}</TableCell>
 
                       <TableCell>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            columnGap: 2,
-                            rowGap: 3,
-                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
-                          }}
-                        >
-                          {/* {row?.permissions?.map((el) => (
-                            <Chip key={el.label} label={el?.label || el} color="primary" variant="outlined" />
-                          ))} */}
-                        </Box>
+                        {dateFormat(new Date(row?.joinedAt || Date.now()), 'ddd mmm dS, yy')}
+                      
                       </TableCell>
+                      <TableCell>{!row?.upgraded ? 'Not Yet' : 'Yes'}</TableCell>
+                      <TableCell>{row?.plan}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

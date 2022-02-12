@@ -1,17 +1,17 @@
+/* eslint-disable import/no-duplicates */
+/* eslint-disable camelcase */
 /* eslint-disable import/order */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import validator from 'validator';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import MUIStyled from 'styled-components';
 import * as Yup from 'yup';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { setupStore, showNotification } from '../../actions';
+import { Formik } from 'formik';
+import { createNewStore } from '../../actions';
+import CloseIcon from '@mui/icons-material/Close';
 // utils
 // @mui
 import {
@@ -24,6 +24,8 @@ import {
   TextField,
   Autocomplete,
   Typography,
+  IconButton,
+  Stack,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import PhoneInput from 'react-phone-number-input';
@@ -45,7 +47,7 @@ import Confetti from 'react-confetti';
 import { UploadAvatar } from '../../components/upload';
 import { fData } from '../../utils/formatNumber';
 import CustomPhoneNumber from '../../forms/PhoneNumber';
-import { FormProvider } from '../../components/hook-form';
+import CancelRounded from '@mui/icons-material/CancelRounded';
 
 const Container = MUIStyled.div`
   height: 500px;
@@ -177,25 +179,9 @@ const steps = ['Basic info', 'Add logo', 'Store created'];
 const AddNewStore = ({ open, handleClose }) => {
   const dispatch = useDispatch();
 
-  const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
+  const { store } = useSelector((state) => state.store);
 
   const [activeStep, setActiveStep] = useState(0);
-
-  const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email(),
-    address: Yup.string().required('Address is required'),
-    country: Yup.string().required('country is required'),
-    company: Yup.string().required('Company is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    role: Yup.string().required('Role Number is required'),
-    avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    category: Yup.string().required('Category is required'),
-    landmark: Yup.string().required('Landmark is required'),
-    pincode: Yup.string().required('Pincode is required'),
-  });
 
   const [storeName, setStoreName] = useState(store?.name);
   const [country, setCountry] = useState();
@@ -208,24 +194,8 @@ const AddNewStore = ({ open, handleClose }) => {
   const [category, setCategory] = useState();
   const [phone, setPhone] = useState();
 
-  const [storeNameError, setStoreNameError] = useState({ error: false, message: 'Store Name is required' });
-  const [countryError, setCountryError] = useState({ error: false, message: 'Country is required' });
-  const [stateError, setStateError] = useState({ error: false, message: 'State is required' });
-  const [cityError, setCityError] = useState({ error: false, message: 'City is required' });
-  const [addressError, setAddressError] = useState({ error: false, message: 'Address is required' });
-  const [pincodeError, setPincodeError] = useState({ error: false, message: 'Pincode is required' });
-  const [landmarkError, setLandmarkError] = useState({ error: false, message: 'Landmark is required' });
-  const [categoryError, setCategoryError] = useState({ error: false, message: 'Category is required' });
-  const [phoneError, setPhoneError] = useState({ error: false, message: 'Phone number is required' });
-
   const [image, setImage] = useState();
   const [fileToPreview, setFileToPreview] = useState();
-
-  const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
-  });
-
-  const { handleSubmit } = methods;
 
   const { width, height } = useWindowSize();
 
@@ -241,130 +211,15 @@ const AddNewStore = ({ open, handleClose }) => {
     }
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    // validate each field
-
-    if (!storeName) {
-      setStoreNameError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!country) {
-      setCountryError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!state) {
-      setStateError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!city) {
-      setCityError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!address) {
-      setAddressError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!pincode) {
-      setPincodeError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!landmark) {
-      setLandmarkError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!category) {
-      setCategoryError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!phone) {
-      setPhoneError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-
-    // e.preventDefault();
-    const formValues = {
-      storeName,
-      country,
-      state,
-      city,
-      address,
-      pincode,
-      landmark,
-      gstin,
-      category,
-      phone,
-    };
-
-    if (!storeName) {
-      // toast("Store name is required")
-      dispatch(showNotification('Store name is required'));
-    }
-    if (!country) {
-      // toast("Country is required")
-      dispatch(showNotification('Country is required'));
-    }
-    if (!state) {
-      // toast("State is required")
-      dispatch(showNotification('state is required'));
-    }
-    if (!city) {
-      // toast("State is required")
-      dispatch(showNotification('City is required'));
-    }
-    if (!landmark) {
-      // toast("State is required")
-      dispatch(showNotification('Landmark is required'));
-    }
-    if (!address) {
-      // toast("State is required")
-      dispatch(showNotification('Address is required'));
-    }
-    if (!pincode) {
-      // toast("State is required")
-      dispatch(showNotification('Pincode is required'));
-    }
-    if (!category) {
-      // toast("Category is required")
-      dispatch(showNotification('Category is required'));
-    }
-    if (!phone) {
-      // toast("Phone is required")
-      dispatch(showNotification('Phone is required'));
-    }
-
-    if (storeName && country && state && city && address && pincode && landmark && category && phone) {
-      console.log(formValues);
-      onNext();
-    }
-  };
-
   const onSubmitImage = async () => {
     const formValues = {
       image,
     };
 
     dispatch(
-      setupStore(
-        { image, storeName, country, state, city, address, pincode, landmark, category, phone, gstin },
+      createNewStore(
+        { storeName, country, state, city, address, pincode, landmark, category, phone, gstin },
+        image,
         onNext,
         handleClose
       )
@@ -379,9 +234,39 @@ const AddNewStore = ({ open, handleClose }) => {
     setFileToPreview(URL.createObjectURL(file));
   };
 
+  const handleFormSubmit = async (values) => {
+    console.log(values);
+    setStoreName(values.store_name);
+    setCity(values.store_city);
+    setState(values.store_state);
+    setAddress(values.store_address);
+    setPincode(values.store_pincode);
+    setLandmark(values.store_pincode);
+    onNext();
+  };
+
+  const new_store_schema = Yup.object().shape({
+    store_name: Yup.string().required('Store Name is required'),
+    store_city: Yup.string().required('Store City is required'),
+    store_state: Yup.string().required('Store State / Region is required'),
+    store_address: Yup.string().required('Store Address is required'),
+    store_pincode: Yup.string().required('Store Pincode is required'),
+    store_landmark: Yup.string().required('Store Landmark is required'),
+  });
+
+  const initialValues = {};
+
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
+        <Stack spacing={2} direction="row" alignItems="center" justifyContent="space-between">
+          <DialogTitle>Add New Store</DialogTitle>
+
+          <IconButton sx={{ px: 3, width: 'max-content' }} style={{ color: '#000000' }} onClick={handleClose}>
+            <CancelRounded />
+          </IconButton>
+        </Stack>
+
         <Stepper className="mt-3" alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
           {steps.map((label) => (
             <Step key={label}>
@@ -390,380 +275,281 @@ const AddNewStore = ({ open, handleClose }) => {
           ))}
         </Stepper>
 
-        {(() => {
-          switch (activeStep * 1) {
-            case 0:
-              return (
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                  <Grid className="px-4 pt-3" container spacing={3}>
-                    <Grid item xs={12} md={12}>
-                      <Card sx={{ p: 3 }}>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            columnGap: 2,
-                            rowGap: 3,
-                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                          }}
-                        >
-                          <TextField
-                            required
-                            error={storeNameError.error}
-                            helperText={storeNameError.error ? storeNameError.message : ''}
-                            name="name"
-                            label="Store name"
-                            fullWidth
-                            value={storeName}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setStoreNameError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setStoreNameError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-
-                              setStoreName(e.target.value);
-                            }}
-                          />
-
-                          <Autocomplete
-                            required
-                            value={country}
-                            onChange={(e, value) => {
-                              if (!value) {
-                                setCountryError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setCountryError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setCountry(value);
-                            }}
-                            id=""
-                            fullWidth
-                            options={countries}
-                            autoHighlight
-                            getOptionLabel={(option) => option.label}
-                            renderOption={(props, option) => (
-                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                <img
-                                  loading="lazy"
-                                  width="20"
-                                  src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                                  srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                                  alt=""
-                                />
-                                {option.label} ({option.code}) +{option.phone}
-                              </Box>
-                            )}
-                            renderInput={(params) => (
-                              <TextField
-                                error={countryError.error}
-                                helperText={countryError.error ? countryError.message : ''}
-                                {...params}
-                                label="Choose a country"
-                                inputProps={{
-                                  ...params.inputProps,
-                                  autoComplete: '', // disable autocomplete and autofill
-                                }}
-                              />
-                            )}
-                          />
-                          <TextField
-                            error={stateError.error}
-                            helperText={stateError.error ? stateError.message : ''}
-                            required
-                            name="state"
-                            label="State/Region"
-                            fullWidth
-                            value={state}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setStateError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setStateError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setState(e.target.value);
-                            }}
-                          />
-                          <TextField
-                            required
-                            error={cityError.error}
-                            helperText={cityError.error ? cityError.message : ''}
-                            name="city"
-                            label="City"
-                            fullWidth
-                            value={city}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setCityError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setCityError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setCity(e.target.value);
-                            }}
-                          />
-                          <TextField
-                            error={addressError.error}
-                            helperText={addressError.error ? addressError.message : ''}
-                            required
-                            name="address"
-                            label="Address"
-                            fullWidth
-                            value={address}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setAddressError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setAddressError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setAddress(e.target.value);
-                            }}
-                          />
-                          <TextField
-                            required
-                            error={pincodeError.error}
-                            helperText={pincodeError.error ? pincodeError.message : ''}
-                            name="pincode"
-                            label="Pincode"
-                            fullWidth
-                            value={pincode}
-                            onChange={(e) => {
-                              if (!e.target.value || !validator.isPostalCode(e.target.value, 'IN')) {
-                                setPincodeError((prev) => {
-                                  prev.error = true;
-                                  if (!validator.isPostalCode(e.target.value, 'IN')) {
-                                    prev.message = 'Please provide valid 6 digit pincode';
-                                  }
-                                  return prev;
-                                });
-                              } else {
-                                setPincodeError((prev) => {
-                                  prev.error = false;
-                                  prev.message = 'Pincode is required';
-                                  return prev;
-                                });
-                              }
-                              setPincode(e.target.value);
-                            }}
-                          />
-                          <TextField
-                            required
-                            error={landmarkError.error}
-                            helperText={landmarkError.error ? landmarkError.message : ''}
-                            name="landmark"
-                            label="Landmark"
-                            fullWidth
-                            value={landmark}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setLandmarkError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setLandmarkError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setLandmark(e.target.value);
-                            }}
-                          />
-                          <TextField
-                            name="GSTIN"
-                            label="GSTIN"
-                            fullWidth
-                            value={gstin}
-                            onChange={(e) => {
-                              setGstin(e.target.value);
-                            }}
-                          />
-                          <Autocomplete
-                            required
-                            value={category}
-                            onChange={(e, value) => {
-                              if (!value) {
-                                setCategoryError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setCategoryError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setCategory(value);
-                            }}
-                            fullWidth
-                            disablePortal
-                            autoHighlight
-                            getOptionLabel={(option) => option.label}
-                            renderOption={(props, option) => (
-                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                <img
-                                  loading="lazy"
-                                  width="50"
-                                  src={option.image}
-                                  srcSet={`${option.image} 2x`}
-                                  alt=""
-                                />
-                                {option.label}
-                              </Box>
-                            )}
-                            options={categoryOptions}
-                            renderInput={(params) => (
-                              <TextField
-                                required
-                                error={categoryError.error}
-                                helperText={categoryError.error ? categoryError.message : ''}
-                                {...params}
-                                label="Category"
-                                fullWidth
-                                name="category"
-                              />
-                            )}
-                          />
-                          <PhoneInput
-                            required
-                            error={phoneError.error}
-                            helperText={phoneError.error ? phoneError.message : ''}
-                            name="phoneNumber"
-                            placeholder="Enter phone number"
-                            value={phone}
-                            onChange={(value) => {
-                              if (!value) {
-                                setPhoneError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setPhoneError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setPhone(value);
-                            }}
-                            inputComponent={CustomPhoneNumber}
-                            defaultCountry="IN"
-                          />
-                        </Box>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                  <DialogActions>
-                    <LoadingButton
-                      onClick={(e) => {
-                        onSubmit(e);
-                      }}
-                      type="submit"
-                      variant="contained"
-                      loading={false}
-                    >
-                      Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                    </LoadingButton>
-                  </DialogActions>
-                </FormProvider>
-              );
-
-            case 1:
-              return (
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                  <Grid className="px-4 pt-3" container spacing={3}>
-                    <Grid item xs={12} md={12}>
-                      <Card sx={{ py: 10, px: 3 }}>
-                        <Typography className="mb-4 text-center" variant="h6">
-                          Image
-                        </Typography>
-                        <Box sx={{ mb: 5 }}>
-                          <UploadAvatar
-                            name="avatarUrl"
-                            accept="image/*"
-                            maxSize={3145728}
-                            onDrop={handleDrop}
-                            file={fileToPreview}
-                            helperText={
-                              <Typography
-                                variant="caption"
+        <Formik
+          initialValues={initialValues}
+          validationSchema={new_store_schema}
+          onSubmit={handleFormSubmit}
+          // enableReinitialize={true}
+        >
+          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
+            <form onSubmit={handleSubmit}>
+              {(() => {
+                switch (activeStep * 1) {
+                  case 0:
+                    return (
+                      <>
+                        <Grid className="px-4 pt-3" container spacing={3}>
+                          <Grid item xs={12} md={12}>
+                            <Card sx={{ p: 3 }}>
+                              <Box
                                 sx={{
-                                  mt: 2,
-                                  mx: 'auto',
-                                  display: 'block',
-                                  textAlign: 'center',
-                                  color: 'text.secondary',
+                                  display: 'grid',
+                                  columnGap: 2,
+                                  rowGap: 3,
+                                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                                 }}
                               >
-                                Allowed *.jpeg, *.jpg, *.png, *.gif
-                                <br /> max size of {fData(3145728)}
+                                <TextField
+                                  value={values.store_name}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  error={!!touched.store_name && !!errors.store_name}
+                                  helperText={touched.store_name && errors.store_name}
+                                  name="store_name"
+                                  label="Store name"
+                                  fullWidth
+                                />
+
+                                <Autocomplete
+                                  id=""
+                                  fullWidth
+                                  value={country}
+                                  onChange={(e, value) => {
+                                    setCountry(value);
+                                  }}
+                                  options={countries}
+                                  autoHighlight
+                                  getOptionLabel={(option) => option.label}
+                                  renderOption={(props, option) => (
+                                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                      <img
+                                        loading="lazy"
+                                        width="20"
+                                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                        alt=""
+                                      />
+                                      {option.label} ({option.code}) +{option.phone}
+                                    </Box>
+                                  )}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      //   value={values.store_country}
+                                      error={!!touched.store_country && !!errors.store_country}
+                                      helperText={touched.store_country && errors.store_country}
+                                      {...params}
+                                      label="Choose a country"
+                                      onBlur={handleBlur}
+                                      name="store_country"
+                                      //   onChange={(e) => {
+                                      //     handleChange(e);
+                                      //   }}
+                                      inputProps={{
+                                        ...params.inputProps,
+                                        autoComplete: '', // disable autocomplete and autofill
+                                      }}
+                                    />
+                                  )}
+                                />
+                                <TextField
+                                  value={values.store_state}
+                                  error={!!touched.store_state && !!errors.store_state}
+                                  helperText={touched.store_state && errors.store_state}
+                                  name="store_state"
+                                  label="State/Region"
+                                  fullWidth
+                                  onBlur={handleBlur}
+                                  onChange={(e) => {
+                                    handleChange(e);
+                                  }}
+                                />
+                                <TextField
+                                  value={values.store_city}
+                                  error={!!touched.store_city && !!errors.store_city}
+                                  helperText={touched.store_city && errors.store_city}
+                                  name="store_city"
+                                  label="City"
+                                  fullWidth
+                                  onBlur={handleBlur}
+                                  onChange={(e) => {
+                                    handleChange(e);
+                                  }}
+                                />
+                                <TextField
+                                  value={values.store_address}
+                                  error={!!touched.store_address && !!errors.store_address}
+                                  helperText={touched.store_address && errors.store_address}
+                                  required
+                                  name="store_address"
+                                  label="Address"
+                                  fullWidth
+                                  onBlur={handleBlur}
+                                  onChange={(e) => {
+                                    handleChange(e);
+                                  }}
+                                />
+                                <TextField
+                                  value={values.store_pincode}
+                                  error={!!touched.store_pincode && !!errors.store_pincode}
+                                  helperText={touched.store_pincode && errors.store_pincode}
+                                  name="store_pincode"
+                                  label="Pincode"
+                                  fullWidth
+                                  onBlur={handleBlur}
+                                  onChange={(e) => {
+                                    handleChange(e);
+                                  }}
+                                />
+                                <TextField
+                                  value={values.store_landmark}
+                                  error={!!touched.store_landmark && !!errors.store_landmark}
+                                  helperText={touched.store_landmark && errors.store_landmark}
+                                  name="store_landmark"
+                                  label="Landmark"
+                                  fullWidth
+                                  onBlur={handleBlur}
+                                  onChange={(e) => {
+                                    handleChange(e);
+                                  }}
+                                />
+                                <TextField
+                                  value={values.store_gstin}
+                                  error={!!touched.store_gstin && !!errors.store_gstin}
+                                  helperText={touched.store_gstin && errors.store_gstin}
+                                  name="store_gstin"
+                                  label="GSTIN"
+                                  fullWidth
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                />
+                                <Autocomplete
+                                  id="store_category"
+                                  value={category}
+                                  onChange={(e, value) => {
+                                    setCategory(value);
+                                  }}
+                                  fullWidth
+                                  disablePortal
+                                  autoHighlight
+                                  getOptionLabel={(option) => option.label}
+                                  renderOption={(props, option) => (
+                                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                      <img
+                                        loading="lazy"
+                                        width="50"
+                                        src={option.image}
+                                        srcSet={`${option.image} 2x`}
+                                        alt=""
+                                      />
+                                      {option.label}
+                                    </Box>
+                                  )}
+                                  options={categoryOptions}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      //   value={values.store_category}
+                                      error={!!touched.store_category && !!errors.store_category}
+                                      helperText={touched.store_category && errors.store_category}
+                                      name="store_category"
+                                      onBlur={handleBlur}
+                                      {...params}
+                                      label="Category"
+                                      fullWidth
+                                      //   onChange={(e) => {
+                                      //     handleChange(e);
+                                      //   }}
+                                    />
+                                  )}
+                                />
+                                <PhoneInput
+                                  required
+                                  value={phone}
+                                  name="store_contact"
+                                  placeholder="Enter phone number"
+                                  onChange={(value) => {
+                                    setPhone(value);
+                                  }}
+                                  inputComponent={CustomPhoneNumber}
+                                  defaultCountry="IN"
+                                />
+                              </Box>
+                            </Card>
+                          </Grid>
+                        </Grid>
+                        <DialogActions>
+                          <LoadingButton type="submit" variant="contained" loading={false}>
+                            Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                          </LoadingButton>
+                        </DialogActions>
+                      </>
+                    );
+
+                  case 1:
+                    return (
+                      <>
+                        <Grid className="px-4 pt-3" container spacing={3}>
+                          <Grid item xs={12} md={12}>
+                            <Card sx={{ py: 10, px: 3 }}>
+                              <Typography className="mb-4 text-center" variant="h6">
+                                Image
                               </Typography>
-                            }
-                          />
-                        </Box>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                  <DialogActions>
-                    <LoadingButton
-                      onClick={() => {
-                        onSubmitImage();
-                      }}
-                      type="submit"
-                      variant="contained"
-                      loading={isSubmittingStoreSetup}
-                    >
-                      Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                    </LoadingButton>
-                  </DialogActions>
-                </FormProvider>
-              );
+                              <Box sx={{ mb: 5 }}>
+                                <UploadAvatar
+                                  name="avatarUrl"
+                                  accept="image/*"
+                                  maxSize={3145728}
+                                  onDrop={handleDrop}
+                                  file={fileToPreview}
+                                  helperText={
+                                    <Typography
+                                      variant="caption"
+                                      sx={{
+                                        mt: 2,
+                                        mx: 'auto',
+                                        display: 'block',
+                                        textAlign: 'center',
+                                        color: 'text.secondary',
+                                      }}
+                                    >
+                                      Allowed *.jpeg, *.jpg, *.png, *.gif
+                                      <br /> max size of {fData(3145728)}
+                                    </Typography>
+                                  }
+                                />
+                              </Box>
+                            </Card>
+                          </Grid>
+                        </Grid>
+                        <DialogActions>
+                          {/* <button type="submit">Finish</button> */}
+                          <LoadingButton onClick={onSubmitImage} type="button" variant="contained">
+                            Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                          </LoadingButton>
+                        </DialogActions>
+                      </>
+                    );
 
-            case 2:
-              return (
-                <>
-                  <Confetti width={width} height={height} />
-                  <DialogTitle className="text-center">Store Created</DialogTitle>
-                  <Container className="d-flex flex-column align-items-center justify-content-center">
-                    <StoreMallDirectoryRoundedIcon className="mb-3" style={{ fontSize: '200', color: 'green' }} />
-                    <Typography variant="p2">
-                      Now, you can easily run your business online with 0% commision.
-                    </Typography>
-                  </Container>
-                </>
-              );
+                  case 2:
+                    return (
+                      <>
+                        <Confetti width={width} height={height} />
+                        <DialogTitle className="text-center">Store Created</DialogTitle>
+                        <Container className="d-flex flex-column align-items-center justify-content-center">
+                          <StoreMallDirectoryRoundedIcon className="mb-3" style={{ fontSize: '200', color: 'green' }} />
+                          <Typography variant="p2">
+                            Now, you can easily run your business online with 0% commision.
+                          </Typography>
+                        </Container>
+                      </>
+                    );
 
-            default:
-              break;
-          }
-        })()}
+                  default:
+                    break;
+                }
+              })()}
+            </form>
+          )}
+        </Formik>
       </Dialog>
     </>
   );

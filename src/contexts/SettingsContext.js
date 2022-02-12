@@ -39,10 +39,10 @@ function SettingsProvider({ children }) {
     themeLayout: initialState.themeLayout,
   });
 
-  const onChangeMode = (event) => {
+  const onChangeMode = (value) => {
     setSettings({
       ...settings,
-      themeMode: event.target.value,
+      themeMode: value,
     });
   };
 

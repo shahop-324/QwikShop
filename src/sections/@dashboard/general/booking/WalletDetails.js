@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 //
 import { useSelector } from 'react-redux';
+import dateFormat from 'dateformat';
 import Scrollbar from '../../../../components/Scrollbar';
 import AddStaffMember from '../../../../Dialogs/AddStaffMember';
 import UpdateStaffMember from '../../../../Dialogs/Staff/updateStaff';
@@ -27,6 +28,7 @@ import { ProductMoreMenu } from '../../e-commerce/product-list';
 
 export default function Walletetails() {
   const { store } = useSelector((state) => state.store);
+  const {transactions} = useSelector((state) => state.wallet);
 
   return (
     <>
@@ -46,31 +48,23 @@ export default function Walletetails() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {store.team?.length > 0 &&
-                  store.team?.map((row) => (
-                    <TableRow key={row?.email}>
+                {transactions?.length > 0 &&
+                  transactions?.map((row) => (
+                    <TableRow key={row?._id}>
                       <TableCell>
                         <Stack direction="row" alignItems="center" spacing={2}>
-                          <Typography variant="subtitle2">{/* {row?.name} */}</Typography>
+                          <Typography variant="subtitle2">{row?.transactionId}</Typography>
                         </Stack>
                       </TableCell>
 
-                      <TableCell>{/* {row?.phone} */}</TableCell>
-                      <TableCell>{/* {row?.email} */}</TableCell>
+                      <TableCell>{row?.type}</TableCell>
+                      <TableCell>{row?.amount}</TableCell>
 
                       <TableCell>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            columnGap: 2,
-                            rowGap: 3,
-                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
-                          }}
-                        >
-                          {/* {row?.permissions?.map((el) => (
-                            <Chip key={el.label} label={el?.label || el} color="primary" variant="outlined" />
-                          ))} */}
-                        </Box>
+                        {row?.reason}
+                      </TableCell>
+                      <TableCell>
+                        {dateFormat(new Date(row?.timestamp || Date.now()), 'ddd mmm dS, yy, hh:mm TT')}
                       </TableCell>
                     </TableRow>
                   ))}

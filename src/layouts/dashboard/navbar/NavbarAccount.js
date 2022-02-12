@@ -22,11 +22,12 @@ import ContentCut from '@mui/icons-material/ContentCut';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import ContentPaste from '@mui/icons-material/ContentPaste';
 import Cloud from '@mui/icons-material/Cloud';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import MenuPopover from '../../../components/MenuPopover';
 import MyAvatar from '../../../components/MyAvatar';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 import AddNewStore from '../../../Dialogs/Store/AddNewStore';
+import {switchStore} from '../../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -48,15 +49,16 @@ NavbarAccount.propTypes = {
 };
 
 export default function NavbarAccount({ isCollapse }) {
- 
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
 
-  const {user} = useSelector((state) => state.user);
+  const { store } = useSelector((state) => state.store);
 
   const [openAddStore, setOpenAddStore] = useState(false);
 
   const handleCloseAddStore = () => {
     setOpenAddStore(false);
-  }
+  };
 
   const [open, setOpen] = useState(null);
 
@@ -68,15 +70,17 @@ export default function NavbarAccount({ isCollapse }) {
     setOpen(null);
   };
 
+  const MENU_OPTIONS = [];
+
+  user?.stores
+    ?.filter((el) => el._id !== store._id)
+    ?.forEach((store) => {
+      MENU_OPTIONS.push({ name: store?.storeName, logo: store?.logo, id: store?._id });
+    });
+
   return (
     <>
-      <Link
-        onClick={handleOpen}
-        underline="none"
-        color="inherit"
-        component={RouterLink}
-        to={PATH_DASHBOARD.store.settings}
-      >
+      <Link onClick={handleOpen} underline="none" color="inherit">
         <RootStyle
           sx={{
             ...(isCollapse && {
@@ -84,9 +88,7 @@ export default function NavbarAccount({ isCollapse }) {
             }),
           }}
         >
-          <Avatar sx={{ bgcolor: blue[500] }}>
-            <StorefrontIcon style={{ color: '#ffffff', fontSize: '30px' }} />
-          </Avatar>
+          <Avatar src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`} />
 
           <Box
             sx={{
@@ -102,10 +104,7 @@ export default function NavbarAccount({ isCollapse }) {
             }}
           >
             <Typography variant="subtitle2" noWrap>
-              {'Uncle Kirana Store'}
-            </Typography>
-            <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-              {'Owner'}
+              {store?.storeName}
             </Typography>
           </Box>
         </RootStyle>
@@ -126,31 +125,22 @@ export default function NavbarAccount({ isCollapse }) {
           },
         }}
       >
-        <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            {`${user?.firstName} ${user?.lastName}`}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.email}
-          </Typography>
-        </Box>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <Stack sx={{ p: 1 }}>
+        <Stack>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={() => {
+              handleClose();
+              dispatch(switchStore(option.id));
+            }}>
               <RootStyle
                 sx={{
                   ...(isCollapse && {
                     bgcolor: 'transparent',
-                    width: '100%',
+                    width: '100% !important',
                   }),
+                  width: '100% !important',
                 }}
               >
-                <Avatar sx={{ bgcolor: blue[500] }}>
-                  <StorefrontIcon style={{ color: '#ffffff', fontSize: '30px' }} />
-                </Avatar>
+                <Avatar src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.logo}`} />
 
                 <Box
                   sx={{
@@ -168,21 +158,20 @@ export default function NavbarAccount({ isCollapse }) {
                   <Typography variant="subtitle2" noWrap>
                     {option.name}
                   </Typography>
-                  <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-                    {option.level}
-                  </Typography>
                 </Box>
               </RootStyle>
             </MenuItem>
           ))}
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <MenuItem onClick={() => {
-          handleClose();
-          setOpenAddStore(true);
-        }} sx={{ m: 1 }} alignItems="center">
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            setOpenAddStore(true);
+          }}
+          sx={{ m: 1 }}
+          alignItems="center"
+        >
           <Stack sx={{ width: '100%' }} direction={'row'} justifyContent={'center'} alignItems={'center'}>
             <Button variant="outlined" startIcon={<AddRoundedIcon />}>
               Add new shop
@@ -196,4 +185,3 @@ export default function NavbarAccount({ isCollapse }) {
 }
 
 // const MENU_OPTIONS = [{name: 'Ambala Kirana Store', level: 'Staff',}];
-const MENU_OPTIONS = [];

@@ -27,6 +27,7 @@ const storeSlice = createSlice({
 
     isUpdatingAmbience: false,
     isUpdatingOtherInfo: false,
+    permissions: [],
   },
 
   reducers: {
@@ -92,7 +93,10 @@ const storeSlice = createSlice({
     },
     SetIsCreatingSubscription(state, action) {
       state.isCreatingSubscription = action.payload.state;
-    }
+    },
+    FetchPermissions(state, action) {
+      state.permissions = action.payload.permissions;
+    },
   },
 });
 

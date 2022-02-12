@@ -26,6 +26,7 @@ import { reviewActions } from '../reducers/reviewSlice';
 import { questionActions } from '../reducers/questionsSlice';
 import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
+import { walletActions } from '../reducers/walletSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
 const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
@@ -179,6 +180,12 @@ export const verifyEmail = (email, otp) => async (dispatch, _getState) => {
       })
     );
 
+    dispatch(
+      storeActions.FetchPermissions({
+        permissions: result.permissions,
+      })
+    );
+
     dispatch(showSnackbar('success', message));
 
     // Send user to dashboard
@@ -199,6 +206,66 @@ export const verifyEmail = (email, otp) => async (dispatch, _getState) => {
         isSubmitting: false,
       })
     );
+  }
+};
+
+export const switchStore = (storeId) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/switch/${storeId}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    // Store token in auth state => redux store
+
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+      })
+    );
+
+    dispatch(
+      userActions.FetchUser({
+        user: result.user,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchPermissions({
+        permissions: result.permissions,
+      })
+    );
+
+    dispatch(showSnackbar('success', 'Store switched successfully!'));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
   }
 };
 
@@ -242,6 +309,24 @@ export const login = (email, password) => async (dispatch, _getState) => {
     dispatch(
       authActions.SignIn({
         token: res.token,
+      })
+    );
+
+    dispatch(
+      userActions.FetchUser({
+        user: res.user,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchStore({
+        store: res.store,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchPermissions({
+        permissions: res.permissions,
       })
     );
 
@@ -317,6 +402,185 @@ export const stopLoginBtnLoader = () => async (dispatch, _getState) => {
       isSubmitting: false,
     })
   );
+};
+
+export const createNewStore = (formValues, file, onNext, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  dispatch(
+    storeActions.SetIsSubmittingSteup({
+      isSubmitting: true,
+    })
+  );
+
+  const key = `store/profile/${uuidv4()}.${file.type}`;
+
+  try {
+    if (file) {
+      // Upload image to s3
+
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: file,
+
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+        }
+      );
+
+      const res = await fetch(`${BaseURL}store/createNew`, {
+        method: 'POST',
+
+        body: JSON.stringify({
+          ...formValues,
+          logo: key,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error('Failed to create store, Please try again!');
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      // Result will contain new store, new token, and updated user
+
+      dispatch(
+        storeActions.UpdateStore({
+          store: result.store,
+        })
+      );
+
+      dispatch(
+        authActions.SignIn({
+          token: result.token,
+        })
+      );
+
+      dispatch(
+        userActions.FetchUser({
+          user: result.user,
+        })
+      );
+
+      dispatch(
+        storeActions.FetchPermissions({
+          permissions: result.permissions,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+
+      onNext();
+
+      setTimeout(() => {
+        handleClose();
+      }, 4000);
+
+      dispatch(
+        storeActions.SetIsSubmittingSteup({
+          isSubmitting: false,
+        })
+      );
+    } else {
+      const res = await fetch(`${BaseURL}store/createNew`, {
+        method: 'POST',
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error('Failed to create store, Please try again!');
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      // Result will contain new store, new token, and updated user
+
+      dispatch(
+        storeActions.UpdateStore({
+          store: result.store,
+        })
+      );
+
+      dispatch(
+        authActions.SignIn({
+          token: result.token,
+        })
+      );
+
+      dispatch(
+        userActions.FetchUser({
+          user: result.user,
+        })
+      );
+
+      dispatch(
+        storeActions.FetchPermissions({
+          permissions: result.permissions,
+        })
+      );
+
+      dispatch();
+
+      dispatch(showSnackbar('success', message));
+
+      onNext();
+
+      setTimeout(() => {
+        handleClose();
+      }, 4000);
+
+      dispatch(
+        storeActions.SetIsSubmittingSteup({
+          isSubmitting: false,
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(
+      storeActions.SetIsSubmittingSteup({
+        isSubmitting: false,
+      })
+    );
+    dispatch(showSnackbar('error', message));
+  }
 };
 
 export const setupStore = (formValues, onNext, handleClose) => async (dispatch, getState) => {
@@ -5673,5 +5937,185 @@ export const deleteMenuItem = (menuId) => async (dispatch, getState) => {
     console.log(error);
     dispatch(showSnackbar('error', message));
     dispatch(menuActions.SetIsDeleting({ state: false }));
+  }
+};
+
+export const updateUserProfile = (formValues, file) => async (dispatch, getState) => {
+  let message;
+  try {
+    const key = `user/profile/${uuidv4()}.${file.type}`;
+
+    if (file) {
+      s3.getSignedUrl(
+        'putObject',
+        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        async (_err, presignedURL) => {
+          await fetch(presignedURL, {
+            method: 'PUT',
+
+            body: file,
+
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+        }
+      );
+      const res = await fetch(`${BaseURL}user/update`, {
+        method: 'PATCH',
+
+        body: JSON.stringify({
+          ...formValues,
+          image: key,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(message);
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      dispatch(
+        userActions.FetchUser({
+          user: result.data,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+    } else {
+      const res = await fetch(`${BaseURL}user/update`, {
+        method: 'PATCH',
+
+        body: JSON.stringify({
+          ...formValues,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(message);
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      dispatch(
+        userActions.FetchUser({
+          user: result.data,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const updateUserPassword = (formValues) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}auth/update-password`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+// ************************************** Fetch Wallet Transactions ***************************************** //
+
+export const fetchWalletTransactions = () => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}wallet/getTransactions`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      walletActions.FetchTransactions({
+        transactions: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
   }
 };

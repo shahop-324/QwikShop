@@ -21,6 +21,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 //
 import AccountPopover from './AccountPopover';
 import QwikWallet from '../../../Dialogs/Wallet/QwikWallet';
+import useSettings from '../../../hooks/useSettings';
 
 
 // ----------------------------------------------------------------------
@@ -118,6 +119,8 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
     setOpenWallet(false);
   }
 
+  const { themeMode, onChangeMode } = useSettings();
+
   return (
     <RootStyle isCollapse={isCollapse} isOffset={isOffset} verticalLayout={verticalLayout}>
       <Toolbar
@@ -137,7 +140,14 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <FormControlLabel control={<MaterialUISwitch defaultChecked />} label="" />
+          <FormControlLabel control={<MaterialUISwitch checked={themeMode === 'dark'} onChange={(e) => {
+            if(e.target.checked) {
+              onChangeMode('dark')
+            }
+            else {
+              onChangeMode('light')
+            }
+          }}  />} label="" />
           <IconButton>
             <CampaignRounded style={{ fontSize: '26px' }} />
           </IconButton>

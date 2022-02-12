@@ -18,9 +18,11 @@ import {
   TextField,
 } from '@mui/material';
 
+import { useSelector, useDispatch } from 'react-redux';
 import WalletPNG from '../../assets/wallet.png';
 import RechargeWallet from './RechargeWallet';
 import { WalletDetails } from '../../sections/@dashboard/general/booking';
+import {fetchWalletTransactions} from '../../actions';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,11 +60,20 @@ function a11yProps(index) {
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const QwikWallet = ({ open, handleClose }) => {
+
+  const dispatch = useDispatch();
+
+  const {store} = useSelector((state) => state.store);
+
   const [openRecharge, setOpenRecharge] = useState(false);
 
   const handleCloseRecharge = () => {
     setOpenRecharge(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchWalletTransactions());
+  }, []);
 
   return (
     <>
@@ -84,7 +95,7 @@ const QwikWallet = ({ open, handleClose }) => {
                 <Stack direction="column" alignItems={'center'}>
                   <Stack sx={{ mb: 2 }} direction="column" alignItems={'center'} spacing={2}>
                     <Typography variant="h6">Balance</Typography>
-                    <Typography variant="h3">Rs. 0</Typography>
+                    <Typography variant="h3">Rs. {store.walletAmount}</Typography>
                   </Stack>
 
                   <Button

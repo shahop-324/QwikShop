@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Stack, TextField, IconButton, InputAdornment, } from '@mui/material';
+import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // Phone Input
@@ -21,16 +21,16 @@ const RegisterForm = ({ handleSubmit }) => {
   const { isSubmittingRegister } = useSelector((state) => state.auth);
 
   // const [phone, setPhone] = useState();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [shopName, setShopName] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [shopName, setShopName] = useState('');
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [referralCode, setReferralCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = () => {
-
     const currentLocation = window.location.href;
 
     const formValues = {
@@ -39,6 +39,7 @@ const RegisterForm = ({ handleSubmit }) => {
       shopName,
       email,
       password,
+      referralCode,
     };
 
     console.log(formValues);
@@ -104,6 +105,15 @@ const RegisterForm = ({ handleSubmit }) => {
               </InputAdornment>
             ),
           }}
+        />
+
+        <TextField
+          value={referralCode}
+          onChange={(e) => setReferralCode(e.target.value)}
+          fullWidth
+          label="Referral Code"
+          variant="outlined"
+          name="referralCode"
         />
 
         {/* <PhoneInput
