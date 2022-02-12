@@ -111,14 +111,8 @@ const QwikWallet = ({ open, handleClose }) => {
               </Stack>
             </Card>
           </Box>
-
-          {/* Recharge Wallet */}
-          {/* Wallet Money */}
-          {/* Wallet Transactions */}
-
           <WalletDetails />
         </DialogContent>
-
         <DialogActions>
           <Button variant="outlined" onClick={handleClose}>
             Close
