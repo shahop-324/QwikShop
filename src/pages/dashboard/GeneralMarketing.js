@@ -127,8 +127,8 @@ export default function GeneralBooking() {
         <CreateSMSCampaign open={openCreateSMSCampaign} handleClose={handleCloseCreateSMSCampaign} />
       )}
       {openCreateEmailCampaign && (
-        // <CreateEmailCampaign open={openCreateEmailCampaign} handleClose={handleCloseCreateEmailCampaign} />
-        <DesignEmailCampaign open={openCreateEmailCampaign} handleClose={handleCloseCreateEmailCampaign} />
+        <CreateEmailCampaign open={openCreateEmailCampaign} handleClose={handleCloseCreateEmailCampaign} />
+        // <DesignEmailCampaign open={openCreateEmailCampaign} handleClose={handleCloseCreateEmailCampaign} />
       )}
       {openCreateGoogleAdsCampaign && (
         <CreateGoogleAdsCampaign open={openCreateGoogleAdsCampaign} handleClose={handleCloseCreateGoogleAdsCampaign} />

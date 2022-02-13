@@ -4656,7 +4656,7 @@ export const deleteMultipleReferrers = (ids, handleClose) => async (dispatch, ge
 
 // ************************************************* Marketing ********************************************** //
 
-export const creatEmailCampaign = (formValues, handleClose) => async (dispatch, getState) => {
+export const creatEmailCampaign = (formValues, customersList, handleClose) => async (dispatch, getState) => {
   let message;
   dispatch(marketingActions.SetIsCreating({ state: true }));
 
@@ -4666,6 +4666,7 @@ export const creatEmailCampaign = (formValues, handleClose) => async (dispatch, 
 
       body: JSON.stringify({
         ...formValues,
+        customers: customersList,
       }),
 
       headers: {

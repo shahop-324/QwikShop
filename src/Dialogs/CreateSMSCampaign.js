@@ -92,8 +92,6 @@ const steps = ['Enter Campaign Name', 'Write Message', 'Select Audience', 'Pay a
 const CreateSMSCampaign = ({ open, handleClose }) => {
   const [campaignName, setCampaignName] = useState('');
 
-  const [discountCode, setDiscountCode] = useState('');
-
   const [activeStep, setActiveStep] = useState(0);
 
   const [customerCategory, setCustomerCategory] = useState();

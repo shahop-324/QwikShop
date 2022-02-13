@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Card, Grid, TextField, Dialog, DialogTitle, Button, Stack, Autocomplete, Box } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { creatEmailCampaign } from '../actions';
+import { creatEmailCampaign, showSnackbar } from '../actions';
 
 const CreateEmailCampaign = ({ open, handleClose }) => {
   const dispatch = useDispatch();
+
+  const { customers } = useSelector((state) => state.customer);
 
   const { isCreating } = useSelector((state) => state.marketing);
 
@@ -13,9 +15,44 @@ const CreateEmailCampaign = ({ open, handleClose }) => {
   const [customerCategory, setCustomerCategory] = useState();
 
   const onSubmit = () => {
-    const formValues = { name: campaignName, customer: customerCategory };
+    const formValues = { name: campaignName };
 
-    dispatch(creatEmailCampaign(formValues, handleClose));
+    const customList = [];
+
+    switch (customerCategory.label) {
+      case 'All customers':
+        // All customer
+        customers.forEach((e) => {
+          customList.push(e._id);
+        });
+        break;
+      case 'New customers':
+        // customer created under last 1 month
+        customers.forEach((e) => {
+          if (new Date(e.createdAt) > Date.now() - 31 * 24 * 60 * 60 * 1000) {
+            customList.push(e._id);
+          }
+        });
+        break;
+      case 'Returning Customers':
+        // Customers with more than 1 orders
+
+        customers.forEach((e) => {
+          if (e.orders.length > 1) {
+            customList.push(e._id);
+          }
+        });
+        break;
+
+      default:
+        break;
+    }
+
+    if (customList.length > 0) {
+      dispatch(creatEmailCampaign(formValues, customList, handleClose));
+    } else {
+      dispatch(showSnackbar('info', `There are no customers matching ${customerCategory.label}`));
+    }
   };
 
   return (
