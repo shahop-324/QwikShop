@@ -4709,7 +4709,7 @@ export const updateEmailCampaign = (formValues, id, handleClose) => async (dispa
   let message;
   dispatch(marketingActions.SetIsUpdating({ state: true }));
   try {
-    const res = await fetch(`${BaseURL}marketing/update/email/${id}`, {
+    const res = await fetch(`${BaseURL}marketing/update/mail/${id}`, {
       method: 'PATCH',
 
       body: JSON.stringify({

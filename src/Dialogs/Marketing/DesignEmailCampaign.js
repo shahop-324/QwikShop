@@ -4,33 +4,31 @@ import { Dialog, AppBar, Toolbar, Typography, Slide, TextField, Stack } from '@m
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
 import template from '../../design.json';
-import { addStorePage, updateStorePage } from '../../actions';
+import { updateEmailCampaign } from '../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const DesignEmailCampaign = ({ open, handleClose, isEdit, id }) => {
+const DesignEmailCampaign = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
 
-  const { pages } = useSelector((state) => state.page);
+  const { campaigns } = useSelector((state) => state.marketing);
 
-  let design;
-  let page;
+  const campaign = campaigns.find((el) => el._id === id);
 
-  if (isEdit) {
-    page = pages.find((el) => el._id === id);
-
-    let stringified = JSON.stringify(page.designJSON);
-    stringified = stringified.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-
-    design = JSON.parse(stringified);
-    console.log(design);
+  let stringified = JSON.stringify(campaign.design);
+  if (stringified) {
+    stringified = stringified?.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
   }
 
-  const { isCreating, isUpdating } = useSelector((state) => state.page);
+  let design;
+
+  if (stringified) {
+    design = JSON.parse(stringified);
+  }
 
   const emailEditorRef = useRef(null);
 
-  const [templateName, setTemplateName] = useState(isEdit && page?.name);
+  const [campaignName, setCampaignName] = useState(campaign?.name);
 
   const onLoad = () => {
     // editor instance is created
@@ -55,13 +53,9 @@ const DesignEmailCampaign = ({ open, handleClose, isEdit, id }) => {
     emailEditorRef.current.editor.exportHtml((data) => {
       const { html, design } = data;
 
-      const formValues = { name: templateName, html, type: 'dnd', designJSON: design };
+      const formValues = { html, design };
 
-      if (isEdit) {
-        dispatch(updateStorePage(formValues, id, handleClose));
-      } else {
-        dispatch(addStorePage(formValues, handleClose));
-      }
+      dispatch(updateEmailCampaign(formValues, id, handleClose));
     });
   };
 
@@ -71,27 +65,12 @@ const DesignEmailCampaign = ({ open, handleClose, isEdit, id }) => {
         <AppBar sx={{ position: 'relative', backgroundColor: '#212121' }}>
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {isEdit ? 'Edit Mail' : 'Create Mail'}
+              {campaignName}
             </Typography>
 
             <Stack direction="row" alignItems="center" spacing={3}>
-              <TextField
-                name="templateName"
-                label="Template Name"
-                sx={{ width: '250px' }}
-                value={templateName}
-                onChange={(e) => {
-                  setTemplateName(e.target.value);
-                }}
-              />
-
-              <LoadingButton
-                loading={isEdit ? isUpdating : isCreating}
-                onClick={onSubmit}
-                variant="contained"
-                color="primary"
-              >
-                Save as draft
+              <LoadingButton onClick={onSubmit} variant="contained" color="primary">
+                Save
               </LoadingButton>
             </Stack>
           </Toolbar>
