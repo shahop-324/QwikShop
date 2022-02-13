@@ -13,11 +13,11 @@ import {
   Divider,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendEmailCampaign } from '../../actions';
+import { sendSMSCampaign } from '../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const SendEmailCampaign = ({ open, handleClose, id }) => {
+const SendSMSCampaign = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
 
   const { campaigns } = useSelector((state) => state.marketing);
@@ -36,7 +36,7 @@ const SendEmailCampaign = ({ open, handleClose, id }) => {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{'Send Email Campaign'}</DialogTitle>
+        <DialogTitle>{'Send SMS Campaign'}</DialogTitle>
         <DialogContent>
           <Box sx={{ width: '600px' }}>
             <Card sx={{ p: 4, mt: 3 }}>
@@ -83,7 +83,7 @@ const SendEmailCampaign = ({ open, handleClose, id }) => {
             disabled={(campaign.customers.length * 1.5).toFixed(2) >= (store.walletAmount * 1).toFixed(2)}
             variant="contained"
             onClick={() => {
-              dispatch(sendEmailCampaign(id, handleClose));
+              dispatch(sendSMSCampaign(id, handleClose));
             }}
           >
             Launch Campaign
@@ -94,4 +94,4 @@ const SendEmailCampaign = ({ open, handleClose, id }) => {
   );
 };
 
-export default SendEmailCampaign;
+export default SendSMSCampaign;

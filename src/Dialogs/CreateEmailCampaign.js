@@ -72,6 +72,7 @@ const CreateEmailCampaign = ({ open, handleClose }) => {
                 }}
               >
                 <TextField
+                helperText="This will be used as Subject of your Email Campaign"
                   name="campaignName"
                   label="Campaign Name"
                   fullWidth

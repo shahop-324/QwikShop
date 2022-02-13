@@ -21,12 +21,15 @@ import {
   Autocomplete,
   TextField,
 } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { assignSelfShipping } from '../../actions';
 import ConfirmCarrier from './ConfirmCarrier';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const AssignCarrier = ({ open, handleClose, id }) => {
+  const dispatch = useDispatch();
+
   const [carrier, setCarrier] = useState('delhivery');
 
   const { pickupPoints } = useSelector((state) => state.delivery);
@@ -65,15 +68,11 @@ const AssignCarrier = ({ open, handleClose, id }) => {
             }}
             id=""
             fullWidth
-            options={pickupPoints.map((el) => ({ label: el.pickupPointName, value: el._id }))}
+            options={pickupPoints
+              .filter((el) => el.operational)
+              .map((el) => ({ label: el.pickupPointName, value: el._id }))}
             autoHighlight
             getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                <img loading="lazy" width="20" src={`${option.image}`} srcSet={`${option.image} 2x`} alt="" />
-                {option.label}
-              </Box>
-            )}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -157,7 +156,6 @@ const AssignCarrier = ({ open, handleClose, id }) => {
                     }
                     label=""
                   />
-
                   <Stack direction={'row'} alignItems="center" spacing={2}>
                     <img
                       src={'http://www.jubileerestaurant.in/img/deliverybike.png'}
@@ -175,7 +173,16 @@ const AssignCarrier = ({ open, handleClose, id }) => {
           <Button variant="outlined" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleOpenConfirmation}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (carrier === 'delhivery') {
+                handleOpenConfirmation();
+              } else {
+                dispatch(assignSelfShipping(pickupPoint, id, handleClose));
+              }
+            }}
+          >
             {(() => {
               switch (carrier) {
                 case 'self':
@@ -191,7 +198,14 @@ const AssignCarrier = ({ open, handleClose, id }) => {
           </Button>
         </DialogActions>
       </Dialog>
-      {openConfirmation && <ConfirmCarrier open={openConfirmation} handleClose={handleCloseConfirmation} id={id} />}
+      {openConfirmation && (
+        <ConfirmCarrier
+          open={openConfirmation}
+          handleClose={handleCloseConfirmation}
+          id={id}
+          pickupPoint={pickupPoint}
+        />
+      )}
     </>
   );
 };

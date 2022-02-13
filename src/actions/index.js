@@ -4752,9 +4752,103 @@ export const updateEmailCampaign = (formValues, id, handleClose) => async (dispa
   }
 };
 
+export const sendEmailCampaign = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}marketing/send/mail/${id}`, {
+      method: 'PATCH',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      marketingActions.UpdateCampaign({
+        campaign: result.data,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const sendSMSCampaign = (id, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}marketing/send/sms/${id}`, {
+      method: 'PATCH',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      marketingActions.UpdateCampaign({
+        campaign: result.data,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 export const testEmailCampaign = () => async (dispatch, getState) => {};
 
-export const createSMSCampaign = (formValues, handleClose) => async (dispatch, getState) => {
+export const createSMSCampaign = (formValues, customersList, handleClose) => async (dispatch, getState) => {
   let message;
   dispatch(marketingActions.SetIsCreating({ state: true }));
 
@@ -4764,6 +4858,7 @@ export const createSMSCampaign = (formValues, handleClose) => async (dispatch, g
 
       body: JSON.stringify({
         ...formValues,
+        customers: customersList,
       }),
 
       headers: {
@@ -4799,6 +4894,53 @@ export const createSMSCampaign = (formValues, handleClose) => async (dispatch, g
     console.log(error);
     dispatch(showSnackbar('error', message));
     dispatch(marketingActions.SetIsCreating({ state: false }));
+  }
+};
+
+export const updateSMSCampaign = (formValues, id, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(marketingActions.SetIsUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}marketing/update/sms/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      marketingActions.UpdateCampaign({
+        campaign: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(marketingActions.SetIsUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(marketingActions.SetIsUpdating({ state: false }));
   }
 };
 
@@ -6316,6 +6458,100 @@ export const fetchWalletTransactions = () => async (dispatch, getState) => {
         transactions: result.data,
       })
     );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+// ***************************************** Assign Carrier ******************************************* //
+
+export const assignDelhivery = (pickupPointId, shipmentId, handleClose) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}delivery/shipment/assignDelhivery`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        pickupPointId,
+        shipmentId,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    // dispatch(
+    //   shipmentActions.UpdateShipment({
+    //     shipment: result.data,
+    //   })
+    // );
+
+    dispatch(showSnackbar('success', message));
+
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const assignSelfShipping = (pickupPointId, shipmentId, handleClose) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}shipment/selfShipping`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        pickupPointId,
+        shipmentId,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      shipmentActions.UpdateShipment({
+        shipment: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    handleClose();
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));

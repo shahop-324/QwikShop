@@ -60,7 +60,7 @@ const AddNewPickupPoint = ({ open, handleClose, id }) => {
       <Dialog fullWidth maxWidth="md" open={open}>
         <DialogTitle>Update Pickup Point</DialogTitle>
         <Grid item xs={12} md={12}>
-          <div className="mt-5">
+          <div className="mt-1">
             <Grid className="px-4 pt-3" container spacing={3}>
               <Grid item xs={12} md={12}>
                 <Card sx={{ p: 3 }}>
@@ -127,6 +127,7 @@ const AddNewPickupPoint = ({ open, handleClose, id }) => {
                     />
 
                     <Autocomplete
+                      disabled
                       value={country}
                       onChange={(e, value) => {
                         setCountry(value);
@@ -161,6 +162,7 @@ const AddNewPickupPoint = ({ open, handleClose, id }) => {
                     />
 
                     <TextField
+                     disabled
                       name="state"
                       label="State/Region"
                       fullWidth
@@ -170,6 +172,7 @@ const AddNewPickupPoint = ({ open, handleClose, id }) => {
                       }}
                     />
                     <TextField
+                     disabled
                       name="city"
                       label="City"
                       fullWidth
@@ -197,6 +200,7 @@ const AddNewPickupPoint = ({ open, handleClose, id }) => {
                       }}
                     />
                     <TextField
+                     disabled
                       name="landmark"
                       label="Landmark"
                       fullWidth
@@ -223,6 +227,7 @@ const AddNewPickupPoint = ({ open, handleClose, id }) => {
                       }}
                     />
                     <TextField
+                      disabled
                       type="email"
                       name="contactEmail"
                       label="Contact Email"

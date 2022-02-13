@@ -10,7 +10,7 @@ import FormLabel from '@mui/material/FormLabel';
 import 'react-phone-number-input/style.css';
 
 // @mui
-import { Box, Card, Grid, Dialog, TextField, Autocomplete, Button, Divider, Typography } from '@mui/material';
+import { Card, Grid, Dialog, TextField, Button } from '@mui/material';
 
 import Stack from '@mui/material/Stack';
 import Stepper from '@mui/material/Stepper';
@@ -19,7 +19,7 @@ import StepLabel from '@mui/material/StepLabel';
 import Check from '@mui/icons-material/Check';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { useSelector, useDispatch } from 'react-redux';
-import { createSMSCampaign, showSnackbar } from '../actions';
+import { updateSMSCampaign } from '../../actions';
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -89,20 +89,20 @@ QontoStepIcon.propTypes = {
   completed: PropTypes.bool,
 };
 
-const steps = ['Enter Campaign Name', 'Write Message', 'Select Audience'];
+const steps = ['Enter Campaign Name', 'Write Message'];
 
-const CreateSMSCampaign = ({ open, handleClose }) => {
+const EditSMSCampaign = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
 
-  const { customers } = useSelector((state) => state.customer);
+  const { campaigns } = useSelector((state) => state.marketing);
 
-  const [campaignName, setCampaignName] = useState('');
+  const campaign = campaigns.find((el) => el._id === id);
+
+  const [campaignName, setCampaignName] = useState(campaign.name);
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const [customerCategory, setCustomerCategory] = useState();
-
-  const [campaignMessage, setCampaignMessage] = useState();
+  const [campaignMessage, setCampaignMessage] = useState(campaign.message);
 
   const handleNext = () => {
     setActiveStep((prev) => {
@@ -125,41 +125,7 @@ const CreateSMSCampaign = ({ open, handleClose }) => {
   const onSubmit = () => {
     const formValues = { name: campaignName, message: campaignMessage };
 
-    const customList = [];
-
-    switch (customerCategory.label) {
-      case 'All customers':
-        // All customer
-        customers.forEach((e) => {
-          customList.push(e._id);
-        });
-        break;
-      case 'New customers':
-        // customer created under last 1 month
-        customers.forEach((e) => {
-          if (new Date(e.createdAt) > Date.now() - 31 * 24 * 60 * 60 * 1000) {
-            customList.push(e._id);
-          }
-        });
-        break;
-      case 'Returning Customers':
-        // Customers with more than 1 orders
-
-        customers.forEach((e) => {
-          if (e.orders.length > 1) {
-            customList.push(e._id);
-          }
-        });
-        break;
-
-      default:
-        break;
-    }
-    if (customList.length > 0) {
-      dispatch(createSMSCampaign(formValues, customList, handleClose));
-    } else {
-      dispatch(showSnackbar('info', `There are no customers matching ${customerCategory.label}`));
-    }
+    dispatch(updateSMSCampaign(formValues, id, handleClose));
   };
 
   return (
@@ -218,46 +184,6 @@ const CreateSMSCampaign = ({ open, handleClose }) => {
                 </Grid>
               );
 
-            case 2:
-              return (
-                <Grid className="px-4 py-3" container spacing={3}>
-                  <Grid item xs={12} md={12}>
-                    <Card sx={{ p: 3 }}>
-                      <Box
-                        sx={{
-                          display: 'grid',
-                          columnGap: 2,
-                          rowGap: 3,
-                          gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
-                        }}
-                      >
-                        <Autocomplete
-                          value={customerCategory}
-                          onChange={(e, value) => {
-                            setCustomerCategory(value);
-                          }}
-                          id=""
-                          fullWidth
-                          options={customerOptions}
-                          autoHighlight
-                          getOptionLabel={(option) => option.label}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Choose customers"
-                              inputProps={{
-                                ...params.inputProps,
-                                autoComplete: '', // disable autocomplete and autofill
-                              }}
-                            />
-                          )}
-                        />
-                      </Box>
-                    </Card>
-                  </Grid>
-                </Grid>
-              );
-
             default:
               break;
           }
@@ -274,7 +200,7 @@ const CreateSMSCampaign = ({ open, handleClose }) => {
               Previous
             </Button>
           )}
-          {activeStep * 1 !== 2 && (
+          {activeStep * 1 !== 1 && (
             <Button
               onClick={() => {
                 handleNext();
@@ -285,7 +211,7 @@ const CreateSMSCampaign = ({ open, handleClose }) => {
             </Button>
           )}
 
-          {activeStep * 1 === 2 && (
+          {activeStep * 1 === 1 && (
             <Button
               onClick={() => {
                 onSubmit();
@@ -309,6 +235,4 @@ const CreateSMSCampaign = ({ open, handleClose }) => {
   );
 };
 
-export default CreateSMSCampaign;
-
-const customerOptions = [{ label: 'All customers' }, { label: 'New customers' }, { label: 'Returning Customers' }];
+export default EditSMSCampaign;

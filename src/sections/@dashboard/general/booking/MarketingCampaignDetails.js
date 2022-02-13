@@ -20,28 +20,38 @@ import dateFormat from 'dateformat';
 import EmailRounded from '@mui/icons-material/EmailRounded';
 import SendRounded from '@mui/icons-material/SendRounded';
 import { useState } from 'react';
+import MessageRounded from '@mui/icons-material/MessageRounded';
 import DesignEmailCampaign from '../../../../Dialogs/Marketing/DesignEmailCampaign';
 import SendEmailCampaign from '../../../../Dialogs/Marketing/SendEmailCampaign';
 import Label from '../../../../components/Label';
 import Scrollbar from '../../../../components/Scrollbar';
+import SendSMSCampaign from '../../../../Dialogs/Marketing/SendSMSCampaign';
+import EditSMSCampaign from '../../../../Dialogs/Marketing/EditSMSCampaign';
 
 // ----------------------------------------------------------------------
 
 export default function MarketingCampaignDetails() {
-  const { orders } = useSelector((state) => state.order);
-
   const { campaigns } = useSelector((state) => state.marketing);
 
   const [id, setId] = useState();
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openSend, setOpenSend] = useState(false);
+  const [openEditEmail, setOpenEditEmail] = useState(false);
+  const [openEditSMS, setOpenEditSMS] = useState(false);
+  const [openSendSMS, setOpenSendSMS] = useState(false);
+  const [openSendEmail, setOpenSendEmail] = useState(false);
 
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
+  const handleCloseEditEmail = () => {
+    setOpenEditEmail(false);
   };
 
-  const handleCloseSend = () => {
-    setOpenSend(false);
+  const handleCloseEditSMS = () => {
+    setOpenEditSMS(false);
+  }
+
+  const handleCloseSendSMS = () => {
+    setOpenSendSMS(false);
+  };
+  const handleCloseSendEmail = () => {
+    setOpenSendEmail(false);
   };
 
   return (
@@ -99,19 +109,36 @@ export default function MarketingCampaignDetails() {
 
                       <TableCell align="right">
                         <Tooltip title={'Edit Campaign'}>
-                          <IconButton
+                          {row.channel === 'email' ?  <IconButton
                             onClick={() => {
-                              setOpenEdit(true);
+                              setOpenEditEmail(true);
                               setId(row?._id);
                             }}
-                          >
-                            <EmailRounded style={{ fontSize: '20px', color: 'primary' }} />
+                          >   <EmailRounded style={{ fontSize: '20px', color: 'primary' }} />
+                          </IconButton>: 
+                          
+                          <IconButton
+                            onClick={() => {
+                              setOpenEditSMS(true);
+                              setId(row?._id);
+                            }}
+                          >   <MessageRounded style={{ fontSize: '20px', color: 'primary' }} />
                           </IconButton>
+                           }
+                         
+                           
                         </Tooltip>
+
                         <Tooltip title={'Send Campaign'}>
                           <IconButton
                             onClick={() => {
-                              setOpenSend(true);
+                              if (row.channel === 'email') {
+                                setOpenSendEmail(true);
+                              }
+                              if (row.channel === 'sms') {
+                                setOpenSendSMS(true);
+                              }
+
                               setId(row?._id);
                             }}
                           >
@@ -130,8 +157,10 @@ export default function MarketingCampaignDetails() {
 
         <Box sx={{ p: 2, textAlign: 'right' }}> </Box>
       </Card>
-      {openEdit && <DesignEmailCampaign open={openEdit} handleClose={handleCloseEdit} id={id} />}
-      {openSend && <SendEmailCampaign open={openSend} handleClose={handleCloseSend} id={id} />}
+      {openEditEmail && <DesignEmailCampaign open={openEditEmail} handleClose={handleCloseEditEmail} id={id} />}
+      {openSendEmail && <SendEmailCampaign open={openSendEmail} handleClose={handleCloseSendEmail} id={id} />}
+      {openSendSMS && <SendSMSCampaign open={openSendSMS} handleClose={handleCloseSendSMS} id={id} />}
+      {openEditSMS && <EditSMSCampaign open={openEditSMS} handleClose={handleCloseEditSMS} id={id} />}
     </>
   );
 }
