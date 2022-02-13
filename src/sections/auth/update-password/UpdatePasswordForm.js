@@ -10,11 +10,12 @@ import { LoadingButton } from '@mui/lab';
 // hooks
 import { Formik } from 'formik';
 import { useDispatch } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import { FormProvider } from '../../../components/hook-form';
 
-import {forgotPassword} from '../../../actions';
+import { resetPassword } from '../../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -24,13 +25,14 @@ ResetPasswordForm.propTypes = {
 };
 
 export default function ResetPasswordForm({ onSent, onGetEmail }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  console.log(searchParams.get('token'));
   const isMountedRef = useIsMountedRef();
 
   const dispatch = useDispatch();
 
-  const ResetPasswordSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-  });
+  const ResetPasswordSchema = Yup.object().shape({});
 
   const methods = useForm({
     resolver: yupResolver(ResetPasswordSchema),
@@ -42,10 +44,9 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
     formState: { isSubmitting },
   } = methods;
 
-  
   const handleFormSubmit = async (values) => {
     console.log(values);
-    dispatch(forgotPassword(values, onSent));
+    dispatch(resetPassword(values, searchParams.get('token')));
   };
 
   const initialValues = {};
@@ -62,18 +63,29 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
           <Stack spacing={3}>
             <TextField
               fullWidth
-              label="Email"
+              label="New Password"
               variant="outlined"
-              name="email"
-              value={values.email}
+              name="new_pass"
+              value={values.new_pass}
               onBlur={handleBlur}
               onChange={handleChange}
-              error={!!touched.email && !!errors.email}
-              helperText={touched.email && errors.email}
+              error={!!touched.new_pass && !!errors.new_pass}
+              helperText={touched.new_pass && errors.new_pass}
+            />
+            <TextField
+              fullWidth
+              label="Confirm New Password"
+              variant="outlined"
+              name="pass_confirm"
+              value={values.pass_confirm}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              error={!!touched.pass_confirm && !!errors.pass_confirm}
+              helperText={touched.pass_confirm && errors.pass_confirm}
             />
 
             <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-              Reset Password
+              Update Password
             </LoadingButton>
           </Stack>
         </form>

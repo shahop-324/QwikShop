@@ -121,15 +121,7 @@ export default function GeneralManage() {
             <Grid item xs={12} md={4}>
               <ManageLessons />
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
-                title="Manage timing"
-                action={handleOpenStoreTimings}
-                total={'Store timings'}
-                icon={<AccessTimeRoundedIcon />}
-                color={'info'}
-              />
-            </Grid>
+           
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
                 title="View QR Code"
@@ -148,24 +140,8 @@ export default function GeneralManage() {
                 color={'success'}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
-                title="Create Invoice"
-                action={handleOpenCreateInvoice}
-                total={'Invoice Generator'}
-                icon={<ReceiptRoundedIcon />}
-                color={'secondary'}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
-                title="Edit"
-                action={handleOpenDeliveryZones}
-                total={'Self Delivery zones'}
-                icon={<LocalShippingIcon />}
-                color={'warning'}
-              />
-            </Grid>
+            
+            
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
                 title="Edit"
@@ -186,6 +162,7 @@ export default function GeneralManage() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
+              comingSoon
                 title="Get Mobile App"
                 action={handleOpenSEOSettings}
                 total={'Android App'}

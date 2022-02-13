@@ -38,6 +38,8 @@ import { PaymentsLessons, PaymentsWelcome } from '../../sections/@dashboard/gene
 // @mui
 import { updatePaymentSettings } from '../../actions';
 import GeneralTransaction from './GeneralTransaction';
+import GeneralPayouts from './GeneralPayouts';
+import GeneralRefunds from './GeneralRefunds';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -163,19 +165,27 @@ export default function GeneralPayment() {
           </Grid>
 
           <Grid item xs={12} md={12}>
-            <Grid className="px-4 pt-3" container spacing={3}>
+            <Grid className="pt-3" container spacing={3}>
               <Grid item xs={12} md={12}>
                 <Box sx={{ width: '100%' }}>
                   <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                       <Tab label="Transactions" {...a11yProps(0)} />
-                      <Tab label="Payout settings" {...a11yProps(1)} />
+                      <Tab label="Payouts" {...a11yProps(1)} />
+                      <Tab label="Refunds" {...a11yProps(2)} />
+                      <Tab label="Payout settings" {...a11yProps(3)} />
                     </Tabs>
                   </Box>
                   <TabPanel value={value} index={0}>
                     <GeneralTransaction />
                   </TabPanel>
                   <TabPanel value={value} index={1}>
+                    <GeneralPayouts />
+                  </TabPanel>
+                  <TabPanel value={value} index={2}>
+                    <GeneralRefunds />
+                  </TabPanel>
+                  <TabPanel value={value} index={3}>
                     <Grid item xs={12} md={12}>
                       <Card sx={{ p: 3, mb: 3 }}>
                         <Box
@@ -201,37 +211,9 @@ export default function GeneralPayment() {
                             />
                           </FormGroup>
 
-                          {enableCOD && (
-                            <Stack direction="row" spacing={1} alignItems="center">
-                              <Typography>Enforce partial COD</Typography>
-                              <AntSwitch
-                                checked={enablePartialCOD}
-                                onClick={(e) => {
-                                  setEnabledPartialCOD(e.target.checked);
-                                }}
-                                inputProps={{ 'aria-label': 'ant design' }}
-                              />
-                            </Stack>
-                          )}
+                        
 
-                          {enablePartialCOD && enableCOD && (
-                            <TextField
-                              name="percentage"
-                              label="Partial COD Percentage"
-                              fullWidth
-                              value={partialCODPercentage}
-                              onChange={(e) => {
-                                setPartialCODPercentage(e.target.value);
-                              }}
-                              InputProps={{
-                                endAdornment: (
-                                  <InputAdornment>
-                                    <PercentRoundedIcon style={{ fontSize: '20px' }} />
-                                  </InputAdornment>
-                                ),
-                              }}
-                            />
-                          )}
+                         
                         </Box>
                       </Card>
                       <Card sx={{ p: 3 }}>

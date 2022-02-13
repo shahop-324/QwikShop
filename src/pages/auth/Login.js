@@ -2,7 +2,7 @@ import { capitalCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Link, Alert, Tooltip, Container, Typography } from '@mui/material';
+import { Box, Card, Stack, Link, Alert, Tooltip, Button, Container, Typography } from '@mui/material';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 import useResponsive from '../../hooks/useResponsive';
@@ -109,6 +109,15 @@ export default function Login() {
            
 
             <LoginForm />
+
+            {/* <Typography variant="body2" align="left" sx={{ color: 'text.secondary', mt: 3 }}>
+             Forgot Password?
+              
+            </Typography> */}
+           <Link href="/auth/reset-password">
+           <Button color="primary" sx={{my: 2}}  >Forgot Password?</Button>
+           </Link>
+           
 
             {!smUp && (
               <Typography variant="body2" align="center" sx={{ mt: 3 }}>

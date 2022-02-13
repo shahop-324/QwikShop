@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -28,7 +28,13 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function ResetPassword() {
   const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState(true);
+
+  useEffect(() => {
+    setSent(false);
+  }, []);
+
+  
 
   return (
     <Page title="Reset Password" sx={{ height: 1 }}>
@@ -61,7 +67,7 @@ export default function ResetPassword() {
                   Request sent successfully
                 </Typography>
                 <Typography>
-                  We have sent a confirmation email to &nbsp;
+                  We have sent a confirmation email to {email} &nbsp;
                   <strong>{email}</strong>
                   <br />
                   Please check your email.

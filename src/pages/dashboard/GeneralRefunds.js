@@ -19,14 +19,16 @@ import {
 } from '@mui/material';
 // redux
 import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
-import dateFormat from 'dateformat'
 import { useDispatch, useSelector } from '../../redux/store';
 // hooks
 // components
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 // sections
-import { TransactionListHead, TransactionListToolbar } from '../../sections/@dashboard/e-commerce/product-list';
+import {
+  TransactionListHead,
+  TransactionListToolbar,
+} from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchTransactions } from '../../actions';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
@@ -51,15 +53,16 @@ const TABLE_HEAD = [
   { id: 'transactionId', label: 'Transaction Id', alignRight: false },
   { id: 'orderId', label: 'Order Id', alignRight: false },
   { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'customer', label: 'Customer', alignRight: false },
+  { id: 'type', label: 'Type', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
-
-  { id: 'timestamp', label: 'Date & Time', alignRight: false },
+  
+  { id: 'destination', label: 'Destination', alignRight: true  },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function GeneralTransaction() {
+  
   const dispatch = useDispatch();
 
   const [term, setTerm] = useState('');
@@ -73,6 +76,19 @@ export default function GeneralTransaction() {
       clearTimeout(timeoutId);
     };
   }, [term]);
+
+  const [IdToEdit, setIdToEdit] = useState();
+
+  const [openUpdate, setOpenUpdate] = useState(false);
+
+  const handleOpenUpdate = (id) => {
+    setIdToEdit(id);
+    setOpenUpdate(true);
+  };
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
+  };
 
   const { transactions } = useSelector((state) => state.transaction);
 
@@ -150,6 +166,14 @@ export default function GeneralTransaction() {
     CreateAndDownloadCSV(processTransactionsData());
   };
 
+  const [filter, setFilter] = React.useState('all');
+
+  const handleFilter = (event, newValue) => {
+    if (newValue !== null) {
+      setFilter(newValue);
+    }
+  };
+
   return (
     <>
       <Card sx={{ px: 0 }}>
@@ -160,6 +184,8 @@ export default function GeneralTransaction() {
           onFilterName={handleFilterByName}
           handleExportTransactions={handleExportTransactions}
         />
+
+       
 
         <Scrollbar>
           <TableContainer sx={{ minWidth: 900 }}>
@@ -176,7 +202,7 @@ export default function GeneralTransaction() {
 
               <TableBody>
                 {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                  const { _id, id, order, name, amount, customer, status, createdAt, image, products, outOfStock, hidden, totalSales } = row;
+                  const { _id, name, image, products, outOfStock, hidden, totalSales } = row;
 
                   const isItemSelected = selected.indexOf(_id) !== -1;
 
@@ -185,20 +211,22 @@ export default function GeneralTransaction() {
                       <TableCell>
                         <Stack direction={'row'} alignItems={'center'}>
                           <Typography variant="subtitle2" noWrap>
-                            {id}
+                            {/* {name} */}
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{order.ref}</TableCell>
-                      <TableCell style={{ minWidth: 160 }}>Rs.{((amount *1)/100).toFixed(2)}</TableCell>
-                      <TableCell align="left">
-                        {customer.name}
-                      </TableCell>
-                      <TableCell align="left">
-                        {status}
-                      </TableCell>
-                      <TableCell align="left">
-                        {dateFormat(new Date(createdAt || Date.now()), 'ddd mmm dS, yy hh:mm TT')}
+                      <TableCell style={{ minWidth: 160 }}>{/*  */}</TableCell>
+                      <TableCell style={{ minWidth: 160 }}>{/*  */}</TableCell>
+                      <TableCell align="left">{/*  */}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          onClick={() => {
+                            handleOpenUpdate(_id);
+                          }}
+                          className="me-2"
+                        >
+                          <ModeEditOutlineRoundedIcon style={{ fontSize: '20px' }} />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   );

@@ -116,27 +116,7 @@ export default function GeneralBooking() {
                 icon={<FacebookIcon />}
               />
             </Grid>
-            <Grid item xs={12} md={3}>
-              <BookingWidgetSummary title="Total orders from marketing" total={714000} icon={<BookingIllustration />} />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <BookingWidgetSummary title="Total sales from marketing" total={311000} icon={<CheckInIllustration />} />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <BookingWidgetSummary title="Marketing cost" total={124000} icon={<CheckOutIllustration />} />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <BookingWidgetSummary title="SMS Messages sent" total={124000} icon={<CheckOutIllustration />} />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <BookingWidgetSummary title="Email Messages sent" total={124000} icon={<CheckOutIllustration />} />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <BookingWidgetSummary title="Google Ads Impression" total={124000} icon={<CheckOutIllustration />} />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <BookingWidgetSummary title="Facebook Ads Impression" total={124000} icon={<CheckOutIllustration />} />
-            </Grid>
+           
           </Grid>
 
           <MarketingCampaignDetails />

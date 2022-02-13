@@ -6209,6 +6209,79 @@ export const updateUserPassword = (formValues) => async (dispatch, getState) => 
   }
 };
 
+export const forgotPassword = (formValues, onSent) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}auth/forgot-password`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    onSent();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const resetPassword = (formValues, token) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}auth/reset-password/${token}`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 // ************************************** Fetch Wallet Transactions ***************************************** //
 
 export const fetchWalletTransactions = () => async (dispatch, getState) => {
