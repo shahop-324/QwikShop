@@ -33,7 +33,7 @@ PricingPlanCard.propTypes = {
   card: PropTypes.object,
 };
 
-export default function PricingPlanCard({ card, index }) {
+export default function PricingPlanCard({ card, index, isHome }) {
   const { cycle, subscription, img, icon, price, caption, lists, labelAction, plan_id } = card;
   const dispatch = useDispatch();
 
@@ -179,7 +179,12 @@ export default function PricingPlanCard({ card, index }) {
       <LoadingButton
         loading={store.isCreatingSubscription}
         onClick={() => {
-          onSubmit(plan_id);
+          if(isHome) {
+            window.location.href = '/auth/register';
+          } else {
+            onSubmit(plan_id);
+          }
+         
         }}
         fullWidth
         size="large"

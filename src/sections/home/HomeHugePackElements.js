@@ -7,6 +7,9 @@ import { PATH_PAGE } from '../../routes/paths';
 // components
 import Image from '../../components/Image';
 import { MotionInView, varFade } from '../../components/animate';
+import CreateStore from "../../assets/create-store.png";
+import ShareStore from "../../assets/Share-store.png";
+import MarketStore from "../../assets/market-store.png";
 
 // ----------------------------------------------------------------------
 
@@ -77,6 +80,9 @@ export default function HomeHugePackElements() {
   const screenCenterAnimate = variantScreenCenter;
   const screenRightAnimate = variantScreenRight;
 
+
+  const images = [CreateStore, MarketStore, ShareStore]
+
   return (
     <RootStyle>
       <Container>
@@ -85,14 +91,14 @@ export default function HomeHugePackElements() {
             <ContentStyle>
               <MotionInView variants={varFade().inUp}>
                 <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-                  Interface Starter Kit
+                  STEP 1
                 </Typography>
               </MotionInView>
 
               <MotionInView variants={varFade().inUp}>
                 <Typography variant="h2" sx={{ mb: 3 }}>
-                  Huge pack <br />
-                  of elements
+                  Create Your <br />
+                  Store in 10 Seconds
                 </Typography>
               </MotionInView>
 
@@ -103,7 +109,7 @@ export default function HomeHugePackElements() {
                     color: isLight ? 'text.secondary' : 'common.white',
                   }}
                 >
-                  We collected most popular elements. Menu, sliders, buttons, inputs etc. are all here. Just dive in!
+                  QwikShop has everything you need to create, manage and run your online business smoothly and effortlessly.
                 </Typography>
               </MotionInView>
 
@@ -113,9 +119,9 @@ export default function HomeHugePackElements() {
                   color="inherit"
                   variant="outlined"
                   component={RouterLink}
-                  to={PATH_PAGE.components}
+                  to={'/auth/register'}
                 >
-                  View All Components
+                  Start 14 Days Free Trial
                 </Button>
               </MotionInView>
             </ContentStyle>
@@ -160,9 +166,7 @@ export default function HomeHugePackElements() {
                   <Image
                     disabledEffect
                     alt={`screen ${index + 1}`}
-                    src={`https://minimal-assets-api.vercel.app/assets/images/home/screen_${
-                      isLight ? 'light' : 'dark'
-                    }_${index + 1}.png`}
+                    src={images[index]}
                   />
                 </ScreenStyle>
               ))}

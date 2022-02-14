@@ -4,7 +4,7 @@ import { Grid, Container, Typography } from '@mui/material';
 // components
 import Image from '../../components/Image';
 import { MotionInView, varFade } from '../../components/animate';
-
+import AddProducts from "../../assets/add-products.png";
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -32,12 +32,12 @@ const ContentStyle = styled('div')(({ theme }) => ({
 export default function HomeDarkMode() {
   return (
     <RootStyle>
-      <Container sx={{ position: 'relative' }}>
+      <Container sx={{ position: 'relative', pb: 10 }}>
         <Image
           visibleByDefault
           disabledEffect
           alt="image shape"
-          src="https://minimal-assets-api.vercel.app/assets/images/home/shape.svg"
+          src={"https://minimal-assets-api.vercel.app/assets/images/home/shape.svg"}
           sx={{
             top: 0,
             right: 0,
@@ -56,38 +56,33 @@ export default function HomeDarkMode() {
             <ContentStyle>
               <MotionInView variants={varFade().inUp}>
                 <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-                  Easy switch between styles.
+                  STEP 2
                 </Typography>
               </MotionInView>
 
               <MotionInView variants={varFade().inUp}>
                 <Typography variant="h2" sx={{ mb: 3, color: 'common.white' }}>
-                  Dark mode
+                  Add Products
                 </Typography>
               </MotionInView>
 
               <MotionInView variants={varFade().inUp}>
                 <Typography sx={{ color: 'common.white', mb: 5 }}>
-                  A dark theme that feels easier on the eyes.
+                  Set pricing, Create Catalouge and share your store
                 </Typography>
               </MotionInView>
             </ContentStyle>
           </Grid>
 
           <Grid item xs={12} md={7} sx={{ position: 'relative' }}>
-            <MotionInView threshold={0.5} variants={varFade().inUp}>
-              <Image
-                disabledEffect
-                alt="light mode"
-                src="https://minimal-assets-api.vercel.app/assets/images/home/lightmode.png"
-              />
-            </MotionInView>
+            
 
             <MotionInView threshold={0.5} variants={varFade().inDown} sx={{ top: 0, left: 0, position: 'absolute' }}>
               <Image
+              style={{height: "500px"}}
                 disabledEffect
                 alt="dark mode"
-                src="https://minimal-assets-api.vercel.app/assets/images/home/darkmode.png"
+                src={AddProducts}
               />
             </MotionInView>
           </Grid>

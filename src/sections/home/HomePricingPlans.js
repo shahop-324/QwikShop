@@ -24,52 +24,43 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 const _homePlans = [{
   img: Silver,
-  commons: ['One end products', '12 months updates', '6 months of support'],
+  commons: ['3% Transaction Charge','15 Stores', '25 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
   license: 'Monthly',
   options: [
-    'JavaScript version',
-    'TypeScript version',
-    'Design Resources',
-    'Commercial applications',
+    'Store Management',
+    'Customer Management',
+    'Catalouge (Sub category, Division)',
+    'Unlimited Products',
+    'Super coins',
+    'Custom Pages & Menus'
   ],
-  icons: [
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_figma.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_js.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_ts.svg',
-  ],
+  price: 'Rs. 300/-'
 }, {
   img: Gold,
-  commons: ['One end products', '12 months updates', '6 months of support'],
   license: 'Yearly',
+  commons: ['1.5% Transaction Charge', '15 Stores', '25 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
   options: [
-    'JavaScript version',
-    'TypeScript version',
-    'Design Resources',
-    'Commercial applications',
+    'Store Management',
+    'Customer Management',
+    'Catalouge (Sub category, Division)',
+    'Unlimited Products',
+    'Super coins',
+    'Custom Pages & Menus'
   ],
-  icons: [
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_figma.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_js.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_ts.svg',
-  ],
+  price: 'Rs. 2400/-'
 }, {
   img: Unicorn,
-  commons: ['One end products', '12 months updates', '6 months of support'],
   license: 'Lifetime',
+  commons: ['1% Transaction Charge', '15 Stores', '25 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
   options: [
-    'JavaScript version',
-    'TypeScript version',
-    'Design Resources',
-    'Commercial applications',
+    'Store Management',
+    'Customer Management',
+    'Catalouge (Sub category, Division)',
+    'Unlimited Products',
+    'Super coins',
+    'Custom Pages & Menus'
   ],
-  icons: [
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_figma.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_js.svg',
-    'https://minimal-assets-api.vercel.app/assets/images/home/ic_ts.svg',
-  ],
+  price: 'Rs. 15000/-'
 }]
 
 export default function HomePricingPlans() {
@@ -127,7 +118,7 @@ export default function HomePricingPlans() {
               <Button
                 size="large"
                 variant="contained"
-                href="mailto:support@qwikshop.online?subject=[Feedback] from Customer"
+                href="/contact-us"
               >
                 Contact us
               </Button>
@@ -151,7 +142,7 @@ PlanCard.propTypes = {
 };
 
 function PlanCard({ plan }) {
-  const { license, commons, options, icons } = plan;
+  const { license, commons, options, icons, img, price } = plan;
 
   const standard = license === 'Standard';
   const plus = license === 'Standard Plus';
@@ -169,21 +160,12 @@ function PlanCard({ plan }) {
       <Stack spacing={5}>
         <div>
           <Typography variant="overline" component="div" sx={{ mb: 2, color: 'text.disabled' }}>
-            LICENSE
+            {license}
           </Typography>
-          <Typography variant="h4">{license}</Typography>
+          <Typography variant="h4">{price}</Typography>
         </div>
 
-        {standard ? (
-          <Image src={icons[2]} sx={{ width: 40, height: 40 }} />
-        ) : (
-          <Stack direction="row" spacing={1}>
-            {icons.map((icon) => (
-              <Image key={icon} src={icon} sx={{ width: 40, height: 40 }} />
-            ))}
-          </Stack>
-        )}
-
+        <Image src={img} sx={{ width: 40, height: 40 }} />
         <Stack spacing={2.5}>
           {commons.map((option) => (
             <Stack key={option} spacing={1.5} direction="row" alignItems="center">
@@ -232,7 +214,7 @@ function PlanCard({ plan }) {
             underline="always"
             target="_blank"
             rel="noopener"
-            href="https://material-ui.com/store/license/#i-standard-license"
+            href="/pricing"
             sx={{ typography: 'body2', display: 'flex', alignItems: 'center' }}
           >
             Learn more <Iconify icon={'eva:chevron-right-fill'} width={20} height={20} />
@@ -245,7 +227,7 @@ function PlanCard({ plan }) {
           variant={plus ? 'contained' : 'outlined'}
           target="_blank"
           rel="noopener"
-          href="https://material-ui.com/store/items/minimal-dashboard/"
+          href="/auth/register"
         >
           Choose Plan
         </Button>
