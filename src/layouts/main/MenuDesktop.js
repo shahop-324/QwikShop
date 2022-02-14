@@ -234,11 +234,11 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
     );
   }
 
-  if (title === 'Documentation') {
+  if (title === 'Features') {
     return (
       <LinkStyle
         href={path}
-        target="_blank"
+       
         rel="noopener"
         sx={{
           ...(isHome && { color: 'common.white' }),

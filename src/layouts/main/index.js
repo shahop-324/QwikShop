@@ -22,9 +22,8 @@ export default function MainLayout() {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {!isHome ? (
-        <MainFooter />
-      ) : (
+      {isHome &&
+      
         <Box
           sx={{
             py: 5,
@@ -33,17 +32,10 @@ export default function MainLayout() {
             bgcolor: 'background.default',
           }}
         >
-          <Container>
-            <Logo sx={{ mb: 1, mx: 'auto' }} />
-
-            <Typography variant="caption" component="p">
-              © All rights reserved
-              <br /> made by &nbsp;
-              <Link href="https://qwikshop.online/">qwikshop.online</Link>
-            </Typography>
-          </Container>
+         {/*  */}
         </Box>
-      )}
+      }
+      <MainFooter />
     </Stack>
   );
 }

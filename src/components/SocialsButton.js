@@ -20,25 +20,25 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       name: 'FaceBook',
       icon: 'eva:facebook-fill',
       socialColor: '#1877F2',
-      path: links.facebook || '#facebook-link',
+      path: 'https://www.facebook.com/QwikShop-106478858632254',
     },
     {
       name: 'Instagram',
       icon: 'ant-design:instagram-filled',
       socialColor: '#E02D69',
-      path: links.instagram || '#instagram-link',
+      path: 'https://www.instagram.com/qwik.shop/?hl=en',
     },
     {
       name: 'Linkedin',
       icon: 'eva:linkedin-fill',
       socialColor: '#007EBB',
-      path: links.linkedin || '#linkedin-link',
+      path: 'https://www.linkedin.com/company/qwikshop-online/about/',
     },
     {
       name: 'Twitter',
       icon: 'eva:twitter-fill',
       socialColor: '#00AAEC',
-      path: links.twitter || '#twitter-link',
+      path: 'https://twitter.com/QwikShop_online',
     },
   ];
 

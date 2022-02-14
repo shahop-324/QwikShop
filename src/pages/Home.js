@@ -35,7 +35,7 @@ export default function HomePage() {
       <RootStyle>
         <HomeHero />
         <ContentStyle>
-          <HomeMinimal />
+          <HomeMinimal id="features" />
 
           <HomeHugePackElements />
 

@@ -51,8 +51,8 @@ export default function AboutHero() {
                 fontWeight: 'fontWeightMedium',
               }}
             >
-              Let's work together and
-              <br /> make awesome site easily
+              We are team of Passionate people commited to
+              <br />  make Commerce incredibly Easy and affordable
             </Typography>
           </m.div>
         </ContentStyle>

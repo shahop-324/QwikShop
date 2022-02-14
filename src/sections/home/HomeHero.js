@@ -107,7 +107,7 @@ export default function HomeHero() {
                 size="large"
                 variant="contained"
                 component={RouterLink}
-                to={PATH_AUTH.login}
+                to={PATH_AUTH.register}
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
                 Start 14 Days Free Trial

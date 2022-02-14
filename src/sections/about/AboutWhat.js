@@ -69,7 +69,7 @@ export default function AboutWhat() {
           <Grid item xs={12} md={6} lg={5}>
             <MotionInView variants={varFade().inRight}>
               <Typography variant="h2" sx={{ mb: 3 }}>
-                What is minimal?
+                What is QwikShop?
               </Typography>
             </MotionInView>
 
@@ -79,30 +79,24 @@ export default function AboutWhat() {
                   color: (theme) => (theme.palette.mode === 'light' ? 'text.secondary' : 'common.white'),
                 }}
               >
-                Our theme is the most advanced and user-friendly theme you will find on the market, we have
-                documentation and video to help set your site really easily, pre-installed demos you can import in one
-                click and everything from the theme options to page content can be edited from the front-end. This is
-                the theme you are looking for.
+                QwikShop is the most powerful and easy to use solution available for running a online business in India, It allows people to create, manage and earn through online shops and gives them all the tools necessary to make this happen. 
+                Our Mission is to make Commerce very affordable and easy to use for Small and Medium scale Businesses in India and Outside.
               </Typography>
             </MotionInView>
 
-            <Box sx={{ my: 5 }}>
-              {_skills.map((progress) => (
-                <MotionInView key={progress.label} variants={varFade().inRight}>
-                  <ProgressItem progress={progress} />
-                </MotionInView>
-              ))}
-            </Box>
-
-            <MotionInView variants={varFade().inRight}>
+            <MotionInView sx={{mt: 5}} variants={varFade().inRight}>
+              <a style={{textDecoration: "none"}} href='/auth/register'>
               <Button
-                variant="outlined"
-                color="inherit"
-                size="large"
-                endIcon={<Iconify icon={'ic:round-arrow-right-alt'} width={24} height={24} />}
-              >
-                Check out our work
-              </Button>
+              
+              variant="outlined"
+              color="inherit"
+              size="large"
+              endIcon={<Iconify icon={'ic:round-arrow-right-alt'} width={24} height={24} />}
+            >
+              Start Your 14 Days Free Trial
+            </Button>
+              </a>
+              
             </MotionInView>
           </Grid>
         </Grid>

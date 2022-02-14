@@ -254,7 +254,7 @@ export default function HomeMinimal() {
   const isLight = theme.palette.mode === 'light';
 
   return (
-    <RootStyle>
+    <RootStyle id="features" className='fatures'>
       <Container>
         <Box
           sx={{

@@ -147,6 +147,9 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
+        { path: 'terms-of-service', element: <TermsOfService /> },
+        { path: 'privacy-policy', element: <PrivacyPolicy /> },
+        { path: 'refund-policy', element: <RefundPolicy /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -217,3 +220,7 @@ const StoreProfile = Loadable(lazy(() => import('../pages/dashboard/UserAccount'
 const StoreTheme = Loadable(lazy(() => import('../pages/dashboard/Store/StoreWebsite')));
 const StorePages = Loadable(lazy(() => import('../pages/dashboard/Store/StorePages')));
 const StoreMenus = Loadable(lazy(() => import('../pages/dashboard/Store/StoreMenus')));
+
+const TermsOfService = Loadable(lazy(() => import('../pages/TermsOfService')));
+const PrivacyPolicy = Loadable(lazy(() => import('../pages/PrivacyPolicy')));
+const RefundPolicy = Loadable(lazy(() => import('../pages/RefundPolicy')));

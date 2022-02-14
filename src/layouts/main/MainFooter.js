@@ -10,29 +10,36 @@ import SocialsButton from '../../components/SocialsButton';
 
 // ----------------------------------------------------------------------
 
+
+
 const LINKS = [
+  
   {
-    headline: 'qwikshop',
+    headline: 'QwikShop',
     children: [
       { name: 'About us', href: PATH_PAGE.about },
       { name: 'Contact us', href: PATH_PAGE.contact },
       { name: 'FAQs', href: PATH_PAGE.faqs },
+      // { name: 'Blog', href: PATH_PAGE.faqs },  
     ],
   },
   {
     headline: 'Legal',
     children: [
-      { name: 'Terms and Condition', href: '#' },
-      { name: 'Privacy Policy', href: '#' },
+      { name: 'Terms and Condition', href: '/terms-of-service' },
+      { name: 'Privacy Policy', href: '/privacy-policy' },
+      { name: 'Return & Refund Policy', href: '/refund-policy' },
     ],
   },
+  
   {
     headline: 'Contact',
     children: [
       { name: 'support@qwikshop.online', href: '#' },
-      { name: 'EE 738 Deen Dayal Nagar Gwalior, MP', href: '#' },
+      { name: 'EE 738 DEEN DAYAL NAGAR, GWALIOR, MP, 474020', href: '#' },
     ],
   },
+  
 ];
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -57,8 +64,7 @@ export default function MainFooter() {
           </Grid>
           <Grid item xs={8} md={3}>
             <Typography variant="body2" sx={{ pr: { md: 5 } }}>
-              The starting point for your next project with QwikShop UI Kit, built on the newest
-              version of Material-UI ©, ready to be customized to your style.
+            QwikShop is the Easiest and Powerful way to sell online
             </Typography>
 
             <Stack
