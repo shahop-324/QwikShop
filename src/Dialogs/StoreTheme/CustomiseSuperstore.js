@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from 'react';
 import {
@@ -31,6 +32,10 @@ import {
   fetchDivision,
   getStorePages,
   updateStore,
+  updateHeroBanners,
+  updateCustomBanners,
+  updateImageBanners,
+  updateCustomSections,
 } from '../../actions';
 import { UploadAvatar } from '../../components/upload';
 // utils
@@ -45,12 +50,6 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
 
   const { store } = useSelector((state) => state.store);
 
-  const [heroHeading, setHeroHeading] = useState('');
-  const [heroDescription, setHeroDescription] = useState('');
-  const [actionButtonLabel, setActionButtonLabel] = useState('');
-  const [CTAType, setCTAType] = useState('');
-  const [CTADestination, setCTADestination] = useState('');
-
   const [flashDeals, setFlashDeals] = useState(store.flashDeals);
   const [featuredProducts, setFeaturedProducts] = useState(store.featuredProducts);
   const [topCategories, setTopCategories] = useState(store.topCategories);
@@ -59,23 +58,24 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
   const [dealOfTheWeek, setDealOfTheWeek] = useState(store.dealOfTheWeek);
   const [dealOfTheMonth, setDealOfTheMonth] = useState(store.dealOfTheMonth);
 
-  const [customSections, setCustomSections] = useState([{ index: uuidv4(), name: '', products: [] }]);
-  const [imageBanners, setImageBanners] = useState([
-    {
-      index: uuidv4(),
-      file: null,
-      product: null,
-      destination: null,
-      category: null,
-      subCategory: null,
-      division: null,
-      page: null,
-    },
-  ]);
+  const writeableCustomSections = store?.customSections.map((el) => ({ ...el }));
+  const [customSections, setCustomSections] = useState(
+    store && store.customSections !== undefined ? writeableCustomSections : []
+  );
+  const writeableImageBanners = store?.imageBanners?.map((el) => ({ ...el }));
+  const [imageBanners, setImageBanners] = useState(
+    store && store.imageBanners !== undefined ? writeableImageBanners : []
+  );
 
-  const [heroBanners, setHeroBanners] = useState([]);
+  const writeableHeroBanners = store.heroBanners.map((el) => ({ ...el }));
 
-  const [customBanners, setCustomBanners] = useState([]);
+  const [heroBanners, setHeroBanners] = useState(store ? writeableHeroBanners : []);
+
+  const writeableCustomBanners = store?.customBanners?.map((el) => ({ ...el }));
+
+  const [customBanners, setCustomBanners] = useState(
+    store && store.customBanners !== undefined ? writeableCustomBanners : []
+  );
 
   const addCustomBanner = () => {
     setCustomBanners((prev) => [
@@ -83,6 +83,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
       {
         index: uuidv4(),
         file: null,
+        preview: null,
         heading: null,
         caption: null,
         CTALabel: null,
@@ -102,6 +103,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
       {
         index: uuidv4(),
         file: null,
+        preview: null,
         heading: null,
         caption: null,
         CTALabel: null,
@@ -157,6 +159,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
       {
         index: uuidv4(),
         file: null,
+        preview: null,
         product: null,
         destination: null,
         category: null,
@@ -196,6 +199,57 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
         }
 
         el[field] = value;
+        return el;
+      })
+    );
+  };
+
+  const handleDropHeroBanner = (acceptedFiles, index) => {
+    const file = acceptedFiles[0];
+
+    console.log(file);
+
+    setHeroBanners((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el.file = file;
+        el.preview = URL.createObjectURL(file);
+        return el;
+      })
+    );
+  };
+
+  const handleDropCustomBanner = (acceptedFiles, index) => {
+    const file = acceptedFiles[0];
+
+    console.log(file);
+
+    setCustomBanners((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el.file = file;
+        el.preview = URL.createObjectURL(file);
+        return el;
+      })
+    );
+  };
+
+  const handleDropImageBanner = (acceptedFiles, index) => {
+    const file = acceptedFiles[0];
+
+    console.log(file);
+
+    setImageBanners((prev) =>
+      prev.map((el) => {
+        if (el.index !== index) {
+          return el;
+        }
+        el.file = file;
+        el.preview = URL.createObjectURL(file);
         return el;
       })
     );
@@ -272,8 +326,10 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                             name="avatarUrl"
                             accept="image/*"
                             maxSize={3145728}
-                            // onDrop={handleDrop}
-                            // file={fileToPreview}
+                            onDrop={(files) => {
+                              handleDropHeroBanner(files, el.index);
+                            }}
+                            file={el.preview}
                             helperText={
                               <Typography
                                 variant="caption"
@@ -349,7 +405,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                       )}
                     />
                     {(() => {
-                      switch (CTAType?.label) {
+                      switch (el.destination?.label) {
                         case 'Product':
                           return (
                             <Autocomplete
@@ -557,6 +613,17 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                   }}
                 >
                   Add Hero Banner
+                </Button>
+              </Stack>
+              <Stack direction={'row'} sx={{ mb: 3 }} alignItems="center" justifyContent={'center'}>
+                <Button
+                  sx={{ width: 'max-content' }}
+                  variant="contained"
+                  onClick={() => {
+                    dispatch(updateHeroBanners(heroBanners));
+                  }}
+                >
+                  Update Hero Banners
                 </Button>
               </Stack>
             </Accordion>
@@ -996,6 +1063,17 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                   Add Section
                 </Button>
               </Stack>
+              <Stack direction={'row'} sx={{ mb: 3 }} alignItems="center" justifyContent={'center'}>
+                <Button
+                  sx={{ width: 'max-content' }}
+                  variant="contained"
+                  onClick={() => {
+                    dispatch(updateCustomSections(customSections));
+                  }}
+                >
+                  Update Custom Sections
+                </Button>
+              </Stack>
             </Accordion>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
@@ -1012,8 +1090,10 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                             name="avatarUrl"
                             accept="image/*"
                             maxSize={3145728}
-                            // onDrop={handleDrop}
-                            // file={fileToPreview}
+                            onDrop={(files) => {
+                              handleDropCustomBanner(files, el.index);
+                            }}
+                            file={el.preview}
                             helperText={
                               <Typography
                                 variant="caption"
@@ -1040,7 +1120,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                       fullWidth
                       value={el.heading}
                       onChange={(e) => {
-                        updateHeroBanner(el.index, e.target.value, 'heading');
+                        updateCustomBanner(el.index, e.target.value, 'heading');
                       }}
                     />
                     <TextField
@@ -1051,7 +1131,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                       fullWidth
                       value={el.caption}
                       onChange={(e) => {
-                        updateHeroBanner(el.index, e.target.value, 'caption');
+                        updateCustomBanner(el.index, e.target.value, 'caption');
                       }}
                     />
                     <TextField
@@ -1062,7 +1142,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                       fullWidth
                       value={el.CTALabel}
                       onChange={(e) => {
-                        updateHeroBanner(el.index, e.target.value, 'CTALabel');
+                        updateCustomBanner(el.index, e.target.value, 'CTALabel');
                       }}
                     />
 
@@ -1070,7 +1150,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                       sx={{ mb: 2 }}
                       value={el.destination}
                       onChange={(e, value) => {
-                        updateHeroBanner(el.index, value, 'destination');
+                        updateCustomBanner(el.index, value, 'destination');
                       }}
                       id=""
                       fullWidth
@@ -1089,14 +1169,14 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                       )}
                     />
                     {(() => {
-                      switch (CTAType?.label) {
+                      switch (el.destination?.label) {
                         case 'Product':
                           return (
                             <Autocomplete
                               sx={{ mb: 2 }}
                               value={el.product}
                               onChange={(e, value) => {
-                                updateHeroBanner(el.index, value, 'product');
+                                updateCustomBanner(el.index, value, 'product');
                               }}
                               id=""
                               fullWidth
@@ -1134,7 +1214,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                               sx={{ mb: 2 }}
                               value={el.category}
                               onChange={(e, value) => {
-                                updateHeroBanner(el.index, value, 'category');
+                                updateCustomBanner(el.index, value, 'category');
                               }}
                               id=""
                               fullWidth
@@ -1172,7 +1252,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                               sx={{ mb: 2 }}
                               value={el.subCategory}
                               onChange={(e, value) => {
-                                updateHeroBanner(el.index, value, 'subCategory');
+                                updateCustomBanner(el.index, value, 'subCategory');
                               }}
                               id=""
                               fullWidth
@@ -1210,7 +1290,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                               sx={{ mb: 2 }}
                               value={el.division}
                               onChange={(e, value) => {
-                                updateHeroBanner(el.index, value, 'division');
+                                updateCustomBanner(el.index, value, 'division');
                               }}
                               id=""
                               fullWidth
@@ -1248,7 +1328,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                               sx={{ mb: 2 }}
                               value={el.page}
                               onChange={(e, value) => {
-                                updateHeroBanner(el.index, value, 'page');
+                                updateCustomBanner(el.index, value, 'page');
                               }}
                               id=""
                               fullWidth
@@ -1299,6 +1379,17 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                   Add Custom Banner
                 </Button>
               </Stack>
+              <Stack direction={'row'} sx={{ mb: 3 }} alignItems="center" justifyContent={'center'}>
+                <Button
+                  sx={{ width: 'max-content' }}
+                  variant="contained"
+                  onClick={() => {
+                    dispatch(updateCustomBanners(customBanners));
+                  }}
+                >
+                  Update Custom Banners
+                </Button>
+              </Stack>
             </Accordion>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
@@ -1315,8 +1406,10 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                             name="avatarUrl"
                             accept="image/*"
                             maxSize={3145728}
-                            // onDrop={handleDrop}
-                            // file={fileToPreview}
+                            onDrop={(files) => {
+                              handleDropImageBanner(files, el.index);
+                            }}
+                            file={el.preview}
                             helperText={
                               <Typography
                                 variant="caption"
@@ -1338,6 +1431,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                     </Grid>
 
                     <Autocomplete
+                      sx={{ mb: 3 }}
                       value={el.destination}
                       onChange={(e, value) => {
                         updateImageBanner(el.index, value, 'destination');
@@ -1359,7 +1453,7 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                       )}
                     />
                     {(() => {
-                      switch (CTAType?.label) {
+                      switch (el.destination?.label) {
                         case 'Product':
                           return (
                             <Autocomplete
@@ -1568,6 +1662,17 @@ const CustomiseSuperstore = ({ open, handleClose }) => {
                   }}
                 >
                   Add Image Banner
+                </Button>
+              </Stack>
+              <Stack direction={'row'} sx={{ mb: 3 }} alignItems="center" justifyContent={'center'}>
+                <Button
+                  sx={{ width: 'max-content' }}
+                  variant="contained"
+                  onClick={() => {
+                    dispatch(updateImageBanners(imageBanners));
+                  }}
+                >
+                  Update Image Banners
                 </Button>
               </Stack>
             </Accordion>

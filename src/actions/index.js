@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
@@ -2885,7 +2886,7 @@ export const updateShipment = (formValues, id, handleClose) => async (dispatch, 
 
     dispatch(showSnackbar('success', message));
     dispatch(shipmentActions.SetIsUpdating({ state: false }));
-    if(handleClose) {
+    if (handleClose) {
       handleClose();
     }
   } catch (error) {
@@ -6555,6 +6556,289 @@ export const assignSelfShipping = (pickupPointId, shipmentId, handleClose) => as
     dispatch(showSnackbar('success', message));
 
     handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+// ******************************************** Store Theme Customisation ********************************************** //
+
+export const updateHeroBanners = (banners) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    // For each banner update
+
+    // update banners array by adding image field if they contain any file
+
+    let data = banners;
+
+    data.forEach(async (element) => {
+      // if element contains file then upload file
+
+      if (element.file) {
+        const key = `store/heroBanner/${uuidv4()}.${element.file.type}`;
+
+        s3.getSignedUrl(
+          'putObject',
+          { Bucket: 'qwikshop', Key: key, ContentType: `image/${element.file.type}` },
+          async (_err, presignedURL) => {
+            await fetch(presignedURL, {
+              method: 'PUT',
+
+              body: element.file,
+
+              headers: {
+                'Content-Type': element.file.type,
+              },
+            });
+
+            // Now update that particular data (banner) whose image was uploaded
+            const newObj = data.filter((el) => el.index === element.index);
+            newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
+
+            data = data.map((el) => (el.index !== newObj.index ? el : newObj));
+          }
+        );
+      }
+    });
+
+    const res = await fetch(`${BaseURL}store/updateHeroBanners`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        banners: data,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updateCustomBanners = (banners) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    // For each banner update
+
+    // update banners array by adding image field if they contain any file
+
+    let data = banners;
+
+    data.forEach(async (element) => {
+      // if element contains file then upload file
+
+      if (element.file) {
+        const key = `store/customBanner/${uuidv4()}.${element.file.type}`;
+
+        s3.getSignedUrl(
+          'putObject',
+          { Bucket: 'qwikshop', Key: key, ContentType: `image/${element.file.type}` },
+          async (_err, presignedURL) => {
+            await fetch(presignedURL, {
+              method: 'PUT',
+
+              body: element.file,
+
+              headers: {
+                'Content-Type': element.file.type,
+              },
+            });
+
+            // Now update that particular data (custom banner) whose image was uploaded
+            const newObj = data.filter((el) => el.index === element.index);
+            newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
+
+            data = data.map((el) => (el.index !== newObj.index ? el : newObj));
+          }
+        );
+      }
+    });
+
+    const res = await fetch(`${BaseURL}store/updateCustomBanners`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        banners: data,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updateImageBanners = (banners) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    // For each banner update
+
+    // update banners array by adding image field if they contain any file
+
+    let data = banners;
+
+    data.forEach(async (element) => {
+      // if element contains file then upload file
+
+      if (element.file) {
+        const key = `store/imageBanner/${uuidv4()}.${element.file.type}`;
+
+        s3.getSignedUrl(
+          'putObject',
+          { Bucket: 'qwikshop', Key: key, ContentType: `image/${element.file.type}` },
+          async (_err, presignedURL) => {
+            await fetch(presignedURL, {
+              method: 'PUT',
+
+              body: element.file,
+
+              headers: {
+                'Content-Type': element.file.type,
+              },
+            });
+
+            // Now update that particular data (custom banner) whose image was uploaded
+            const newObj = data.filter((el) => el.index === element.index);
+            newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
+
+            data = data.map((el) => (el.index !== newObj.index ? el : newObj));
+          }
+        );
+      }
+    });
+
+    const res = await fetch(`${BaseURL}store/updateImageBanners`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        banners: data,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updateCustomSections = (sections) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/updateCustomSections`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        sections,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
