@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
+import {updateStore} from "../../../actions";
 
 const WhatsAppBusinessChat = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store } = useSelector((state) => state.store);
 
-  const [whatsAppBusinessNumber, setWhatsAppBusinessNumber] = useState();
+  const [whatsAppBusinessNumber, setWhatsAppBusinessNumber] = useState(store.WhatsAppNumber);
 
   return (
     <>
@@ -19,7 +20,11 @@ const WhatsAppBusinessChat = ({ open, handleClose }) => {
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="h6">WhatsApp Chat</Typography>
 
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  handleClose();
+                }}
+              >
                 <CloseRounded />
               </IconButton>
             </Stack>
@@ -45,7 +50,9 @@ const WhatsAppBusinessChat = ({ open, handleClose }) => {
                 />
               </Box>
 
-              <Button sx={{ my: 2 }} variant="contained" fullWidth>
+              <Button onClick={() => {
+                dispatch(updateStore({WhatsAppNumber: whatsAppBusinessNumber}))
+              }} sx={{ my: 2 }} variant="contained" fullWidth>
                 Connect
               </Button>
               <Typography sx={{ my: 3 }} variant="subtitle2">

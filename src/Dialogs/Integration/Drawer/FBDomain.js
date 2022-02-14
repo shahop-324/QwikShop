@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
+import {updateStore} from "../../../actions";
 
 const FacebookDomainVerification = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store } = useSelector((state) => state.store);
 
-  const [verificationCode, setVerificationCode] = useState();
+  const [verificationCode, setVerificationCode] = useState(store.FBDomainVerificationCode);
 
   return (
     <>
@@ -19,7 +20,11 @@ const FacebookDomainVerification = ({ open, handleClose }) => {
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="h6">FB Domain Verification</Typography>
 
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  handleClose();
+                }}
+              >
                 <CloseRounded />
               </IconButton>
             </Stack>
@@ -45,7 +50,9 @@ const FacebookDomainVerification = ({ open, handleClose }) => {
                 />
               </Box>
 
-              <Button sx={{ my: 2 }} variant="contained" fullWidth>
+              <Button onClick={() => {
+                dispatch(updateStore({FBDomainVerificationCode: verificationCode}))
+              }} sx={{ my: 2 }} variant="contained" fullWidth>
                 Connect
               </Button>
               <Typography sx={{ my: 3 }} variant="subtitle2">

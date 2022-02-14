@@ -86,39 +86,85 @@ const AdwordsInfo = ({ open, handleClose }) => {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              Intro
+              <Typography>Implementing Google Ads (Google AdWords) conversion pixel or tracking code is extremely important for running successful Google Ads campaigns. You can optimize your shopping, search or display campaigns only if you have the exact conversions data.</Typography>
+              <Typography>Retarget your visitors and clients better within the Google Ad network using AdWords Conversion Tracking plugin. Send client data directly to Google Ads server from your QwikShop store. Run better ads campaigns by targeting the right users.</Typography>
+              <Typography>Features</Typography>
+              <ul>
+                <li>Once click integration without involving developers</li>
+                <li>
+                Save time and money by using this FREE plugin
+                </li>
+                <li>
+                Accurate reporting for conversion actions
+                </li>
+              </ul>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Instructions
+              <Typography>Here's how you can start tracking AdWords conversions on your QwikShop store:</Typography>
+              <ol>
+                <li>
+                To start using Google Adwords Plugin, log in to your Google Ads Account
+                </li>
+                <li>
+                In your Google Ads account, click the Tools and Settings menu
+                </li>
+                <li>
+                Under Measurement, select Conversions
+                </li>
+                <li>
+                Select the name of the conversion that you want to use from the Conversion action column
+                </li>
+                <li>
+                Click on the Tag Setup section to expand it for details
+                </li>
+                <li>
+                Select Use Google Tag Manager
+                </li>
+                <li>
+                Copy the Conversion ID and Conversion Label
+                </li>
+                <li>
+                Now, Install the Adwords Conversion Tracking plugin on QwikShop
+                </li>
+                <li>
+                Click on Settings and it’ll ask for Conversion ID and Conversion Label
+                </li>
+                <li>
+                Paste both of them in the respective fields to complete the installation
+                </li>
+              </ol>
             </TabPanel>
             <TabPanel value={value} index={2}>
               <div>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                    <Typography>Accordion 1</Typography>
+                    <Typography>Which networks I can track the conversions on?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    You can track e-commerce conversions across Google Display, Search and YouTube. Tracking is free for unlimited number of events.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-                    <Typography>Accordion 2</Typography>
+                    <Typography>Is this plugin free to use?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    Yes, this plugin is absolutely free of cost.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                    <Typography>Disabled Accordion</Typography>
+                    <Typography>Do I need Google Adwords account to use this?</Typography>
                   </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                    Yes, you need fully active AdWords account in order to obtain conversion code.
+                    </Typography>
+                  </AccordionDetails>
                 </Accordion>
               </div>
             </TabPanel>

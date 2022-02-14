@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
+import { updateStore } from '../../../actions';
 
 const Adwords = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -11,8 +12,8 @@ const Adwords = ({ open, handleClose }) => {
 
   const [propertyId, setPropertyId] = useState();
 
-  const [conversionId, setConversionId] = useState();
-  const [conversionLabel, setConversionLabel] = useState();
+  const [conversionId, setConversionId] = useState(store.adWordsConversionId);
+  const [conversionLabel, setConversionLabel] = useState(store.adWordsConversionLabel);
 
   return (
     <>
@@ -22,7 +23,11 @@ const Adwords = ({ open, handleClose }) => {
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="h6">Adwords</Typography>
 
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  handleClose();
+                }}
+              >
                 <CloseRounded />
               </IconButton>
             </Stack>
@@ -58,7 +63,14 @@ const Adwords = ({ open, handleClose }) => {
                 />
               </Box>
 
-              <Button sx={{ my: 2 }} variant="contained" fullWidth>
+              <Button
+                onClick={() => {
+                  dispatch(updateStore({ adWordsConversionId: conversionId, adWordsConversionLabel: conversionLabel }));
+                }}
+                sx={{ my: 2 }}
+                variant="contained"
+                fullWidth
+              >
                 Connect
               </Button>
               <Typography sx={{ my: 3 }} variant="subtitle2">

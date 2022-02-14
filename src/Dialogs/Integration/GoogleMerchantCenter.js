@@ -86,39 +86,67 @@ const GMCInfo = ({ open, handleClose }) => {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              Intro
+            Now link your store directly to your Google Merchant Center account. Once this is done, you can start uploading product data and creating product feeds that can be linked to your Google Ads account for marketing with Google Shopping Ads.
+<Typography>Features</Typography>
+
+<ul>
+  <li>Manage your business information and details like website details and store logo</li>
+  <li>Manage your product feed, review feed data quality, and view a detailed list of your products</li>
+  <li>Link your Google Ads, Display Video 360, and supported e-commerce platforms to Merchant Center</li>
+  <li>Explore programs in Merchant Center that may help you advertise your products</li>
+</ul>
+            
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Instructions
+              <Typography>Step 1: Add your website address</Typography>
+              <ol>
+                <li>Sign in to your Google Merchant Center account.</li>
+                <li>From the navigation menu, click the tools icon Merchant Center Settings [icon].</li>
+                <li>Select Business information under “Tools”.</li>
+                <li>Click the Website tab.</li>
+                <li>Enter the URL for your online store, starting with http:// or https://. Use a domain that you own and maintain.</li>
+                <li>Click Continue.</li>
+              </ol>
+              <Typography>Step 2: Verify your website</Typography>
+              <Typography>After you have added your website URL in GMC, you need to verify your website by clicking on "Add an HTML tag".</Typography>
+              <ol>
+                <li>Copy and paste the HTML tag generated for your website in the above plugin section. It should look like this "<meta name="google-site-verification" content="_pbVlkdjjsTgDFMeQqTsZslmF_2-mN4-wY33rcA9ek" />"</li>
+                <li>After the above step is done, wait for 5 mins and then click the "Verify Website" button at the bottom right to submit your website for verification.</li>
+                <li>After verification, you can claim your website directly by clicking on it.</li>
+              </ol>
+
             </TabPanel>
             <TabPanel value={value} index={2}>
               <div>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                    <Typography>Accordion 1</Typography>
+                    <Typography>What benefit do I get from this?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    GMC setup is a must to start with product promotions with Google Shopping Ads and other Google product listing platforms.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-                    <Typography>Accordion 2</Typography>
+                    <Typography>Is this plugin free to use?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    Yes, this is a completely free plugin.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                    <Typography>Disabled Accordion</Typography>
+                    <Typography>Do I need a GMC account to use this?</Typography>
                   </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                    Yes, you will need a GMC account to set up the product feed. If you want to start promoting these products, you'll also need to have a Google Ads account.
+                    </Typography>
+                  </AccordionDetails>
                 </Accordion>
               </div>
             </TabPanel>

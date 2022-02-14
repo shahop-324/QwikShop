@@ -17,7 +17,11 @@ const MailchimpConnect = ({ open, handleClose }) => {
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="h6">Mailchimp</Typography>
 
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  handleClose();
+                }}
+              >
                 <CloseRounded />
               </IconButton>
             </Stack>

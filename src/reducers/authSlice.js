@@ -15,13 +15,11 @@ const authSlice = createSlice({
   reducers: {
     SignIn(state, action) {
       console.log(action.payload.token);
-      alert("This was triggered", action.payload.token);
       state.token = action.payload.token;
       state.isSignedIn = true;
     },
     SignOut(state) {
       state.isSignedIn = false;
-      console.log("Sign out was triggered");
       state.token = null;
       state.isSignedIn = false;
     },

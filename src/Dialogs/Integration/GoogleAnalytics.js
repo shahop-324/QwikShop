@@ -86,39 +86,92 @@ const GoogleAnalyticsInfo = ({ open, handleClose }) => {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              Intro
+              <Typography>
+                Google Analytics is a website traffic analysis application that provides real-time statistics and
+                analysis of user interaction with the website.
+              </Typography>
+
+              <Typography>
+                Google Analytics enables website owners to analyze their visitors, with the objective of interpreting
+                and optimizing the website’s performance to improve sales and performance.
+              </Typography>
+
+              <Typography>Features</Typography>
+
+              <ul>
+                <li>Easy to set up with this plugin</li>
+                <li>
+                  Full access to the most important Google Analytics metrics ( Sessions, Users, Page views, % New
+                  Sessions, Bounce Rate, avg. Session Duration, Pageviews/Session)
+                </li>
+                <li>Real-Time monitor of your shop's visitors</li>
+                <li>Keywords used to find your shop on Google search ( provided by Google Search Console).</li>
+                <li>Traffic sources</li>
+                <li>Most visited pages</li>
+                <li>Countries of your shop visitors</li>
+                <li>Browsers and their versions</li>
+                <li>Languages</li>
+                <li>Operating Systems and their versions</li>
+              </ul>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Instructions
+              <Typography>Here's how you can start using Google Analytics:</Typography>
+              <ol>
+                <li>To start using Google Analytics, create an account on it or log in (if you have one)</li>
+                <li>Once logged in, click on Admin</li>
+                <li>Select the account from the menu in the ACCOUNT column.</li>
+                <li>Select the property from the menu in the PROPERTY column.</li>
+                <li>Under PROPERTY, click Tracking Info and then select Tracking Code</li>
+                <li>Copy the Tracking ID displayed at the top of the page</li>
+                <li>Now, Install the Google Analytics plugin on QwikShop</li>
+                <li>Click on Settings and it’ll ask for Analytics Property ID</li>
+                <li>Paste the Tracking ID here to complete the installation</li>
+              </ol>
             </TabPanel>
             <TabPanel value={value} index={2}>
               <div>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                    <Typography>Accordion 1</Typography>
+                    <Typography>What is Google Analytics?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                      Google Analytics is the most popular web analytics tool used today. At a very basic level, it
+                      provides a lot of information about your website visitors and users, their origin, and their
+                      behavior so you can monitor, measure, and improve your online business.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-                    <Typography>Accordion 2</Typography>
+                    <Typography>What are the benefits of Google Analytics?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                      Google Analytics has numerous benefits for your online business. It helps you measure key
+                      performance indicators of your business, see which channels are working and bringing revenue, most
+                      popular products, categories of your store, etc.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                    <Typography>Disabled Accordion</Typography>
+                    <Typography>How to install the Google Analytics plugin?</Typography>
                   </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>To install Google Analytics on your QwikShop store, follow the below steps.</Typography>
+                    <ol>
+                      <li>Log in to QwikShop Store</li>
+                      <li>Click on Plugins and look for the Google Analytics plugin</li>
+                      <li>Click on Install</li>
+                      <li>
+                        Once you click on install, it’ll ask for the tracking code. Paste the tracking code and complete
+                        the installation.
+                      </li>
+                    </ol>
+
+                    <Typography>To find your Google Analytics tracking code, refer to this article.</Typography>
+                  </AccordionDetails>
                 </Accordion>
               </div>
             </TabPanel>

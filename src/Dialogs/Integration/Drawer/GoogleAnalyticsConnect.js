@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
+import {updateStore} from '../../../actions';
 
 const GoogleAnalyticsConnect = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store } = useSelector((state) => state.store);
 
-  const [propertyId, setPropertyId] = useState();
+  const [propertyId, setPropertyId] = useState(store.GAPropertyId);
 
   return (
     <>
@@ -19,7 +20,11 @@ const GoogleAnalyticsConnect = ({ open, handleClose }) => {
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="h6">Google Analytics</Typography>
 
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  handleClose();
+                }}
+              >
                 <CloseRounded />
               </IconButton>
             </Stack>
@@ -45,7 +50,14 @@ const GoogleAnalyticsConnect = ({ open, handleClose }) => {
                 />
               </Box>
 
-              <Button sx={{ my: 2 }} variant="contained" fullWidth>
+              <Button
+                onClick={() => {
+                  dispatch(updateStore({ GAPropertyId: propertyId }));
+                }}
+                sx={{ my: 2 }}
+                variant="contained"
+                fullWidth
+              >
                 Connect
               </Button>
               <Typography sx={{ my: 3 }} variant="subtitle2">

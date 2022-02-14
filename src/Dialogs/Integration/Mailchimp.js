@@ -86,39 +86,59 @@ const MailchimpInfo = ({ open, handleClose }) => {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              Intro
+              <Typography>Mailchimp is a newsletter service that allows you to send out email campaigns to a list of email subscribers. This plugin helps you grow your Mailchimp lists and write better newsletters through various methods. You can create good-looking opt-in forms or integrate them with any existing form on your website.</Typography>
+              <Typography>This plugin allows you to integrate Mailchimp with your QwikShop store. Please note this plugin can only be used on the Oxford Pro theme.</Typography>
+              <Typography>Features</Typography>
+              <ul>
+                <li>Manage contacts and grow your contact list without hassle</li>
+                <li>Drag and drop editor to set up your own campaigns with 1000+ creative templates</li>
+                <li>Campaign builder and reporting with powerful analytics</li>
+                <li>Email automation on predefined user behavior</li>
+                <li>Advanced segmentation to filter out and communicate with the target audience</li>
+                <li>A/B split testing to learn what’s working with customers</li>
+                <li>Spam analysis to prevent emails from landing in spam folders</li>
+              </ul>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Instructions
+            <Typography>Here's how you can start using Mailchimp:</Typography> 
+            <ol>
+              <li>Install the Mailchimp plugin.</li>
+              <li>Once installed, click on Connect button.</li>
+              <li>Login with your Mailchimp username and password</li>
+              <li>Click on Allow to authorize the access</li>
+            </ol>
             </TabPanel>
             <TabPanel value={value} index={2}>
               <div>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                    <Typography>Accordion 1</Typography>
+                    <Typography>What benefit do I get from this?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    Mailchimp can help you communicate with and grow your audience. You can send emails to customers, do segmentation, easy automation, and much more.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-                    <Typography>Accordion 2</Typography>
+                    <Typography>Is this plugin free to use?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    Yes, this is a completely free plugin.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                    <Typography>Disabled Accordion</Typography>
+                    <Typography>Do I need a Mailchimp account to use this?</Typography>
                   </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                    Yes, you will need a Mailchimp account to connect the plugin with your website.
+                    </Typography>
+                  </AccordionDetails>
                 </Accordion>
               </div>
             </TabPanel>

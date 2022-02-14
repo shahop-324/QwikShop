@@ -86,39 +86,74 @@ const GoogleSearchConsoleInfo = ({ open, handleClose }) => {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              Intro
+            Google Search Console (previously known as Google Webmaster Tools) is a free service provided by Google. It allows you to monitor your site’s Google search presence. By using Google Search Console, you can gain insights into why your site is performing well (or poorly) in Google’s eyes.  
+
+<Typography>Features</Typography>
+<ul>
+  <li>Learn about the keywords that your website and its pages rank for</li>
+  <li>Measure total clicks, total impressions, average CTR (click-through rate), and average position of pages</li>
+  <li>See where each page of your site ranks for specific keywords on Google</li>
+  <li>Submit pages that haven’t yet been indexed by Google</li>
+  <li>Links report shows you which sites have linked back to yours</li>
+</ul>
+
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Instructions
+              <Typography>Step 1: Add your website address</Typography>
+              <ol>
+                <li>Sign in to your Google Search Console account.</li>
+                <li>Click on the Menu icon and then click on Add Property.</li>
+                <li>Under the Domain section, enter your website address and click on Continue.</li>
+                <li>Now, click on the COPY button to copy the copy for verification.</li>
+              </ol>
+              <Typography>Step 2: Verify your website</Typography>
+              After you’ve copied the code, follow the next steps:
+              <ol>
+                <li>Install the Plugin and paste the code.</li>
+                <li>Click the Connect button to finish the verification.</li>
+              </ol>
             </TabPanel>
             <TabPanel value={value} index={2}>
               <div>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                    <Typography>Accordion 1</Typography>
+                    <Typography>What benefit do I get from this?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    Google Search Console is a free service offered by Google that helps you monitor, maintain, and troubleshoot your site's presence in Google Search results.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-                    <Typography>Accordion 2</Typography>
+                    <Typography>Is this plugin free to use?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    Yes, this is a completely free plugin.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                    <Typography>Disabled Accordion</Typography>
+                    <Typography>Do I need a Google Search Console account to use this?</Typography>
                   </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                    Yes, you will need a Google Search Console account to verify your website.
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
+                    <Typography>Who should use Google Search Console?</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                    Anyone with a website should use Google Search Console. If you’re a business owner, SEO specialist, Site administrator, or web developer, Google Search Console helps you optimize your website for search engines.
+                    </Typography>
+                  </AccordionDetails>
                 </Accordion>
               </div>
             </TabPanel>

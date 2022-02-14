@@ -72,7 +72,9 @@ const WhatsAppChat = ({ open, handleClose }) => {
         <DialogTitle>{'WhatsApp Chat'}</DialogTitle>
         <DialogContent>
           <img
-            src={'https://phantom-marca.unidadeditorial.es/056bedb69c1666468ed3645bc6629ebb/resize/1320/f/jpg/assets/multimedia/imagenes/2021/12/26/16405530859485.jpg'}
+            src={
+              'https://phantom-marca.unidadeditorial.es/056bedb69c1666468ed3645bc6629ebb/resize/1320/f/jpg/assets/multimedia/imagenes/2021/12/26/16405530859485.jpg'
+            }
             style={{ height: '270px', width: '100%', objectFit: 'contain' }}
             alt={'WhatsApp Chat'}
           />
@@ -86,39 +88,45 @@ const WhatsAppChat = ({ open, handleClose }) => {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              Intro
+              WhatsApp chat support plugin that provides a quick and easy way to interact with your customers. This
+              plugin will allow your customers to send WhatsApp messages directly to you. By installing this, you can
+              just add a click-to-chat WhatsApp button to your QwikShop store.
+              <Typography>Features</Typography>
+              <ol>
+                <li>Provide WhatsApp chat support to customers</li>
+                <li>Chat with customers in real-time and increase conversions</li>
+              </ol>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Instructions
+              <Typography>Here's how you can start using WhatsApp Chat Support on your QwikShop store:</Typography>
+              <ol>
+                <li>Click on Install</li>
+                <li>If there’s no number added, verify your WhatsApp number</li>
+                <li>
+                  Once Installed, your customers can see the WhatsApp button at the bottom of your store page to reach
+                  out to you
+                </li>
+              </ol>
             </TabPanel>
             <TabPanel value={value} index={2}>
               <div>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                    <Typography>Accordion 1</Typography>
+                    <Typography>Is this plugin free to use?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
-                    </Typography>
+                    <Typography>Yes, this is free to use.</Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-                    <Typography>Accordion 2</Typography>
+                    <Typography>Can I turn this off at any time?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                      Yes. Simply uninstall the plugin if you don’t want to enable WhatsApp support on your store.
                     </Typography>
                   </AccordionDetails>
-                </Accordion>
-                <Accordion>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                    <Typography>Disabled Accordion</Typography>
-                  </AccordionSummary>
                 </Accordion>
               </div>
             </TabPanel>

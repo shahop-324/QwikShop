@@ -86,39 +86,88 @@ const FacebookPixelInfo = ({ open, handleClose }) => {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              Intro
+            Facebook pixel is a piece of code that you put on your website that allows you to measure the effectiveness of your advertising by understanding the actions people take on your website. Examples of actions include adding an item to their shopping basket or making a purchase. You can then reach out to those customers again in the future through Facebook ads.
+
+            <Typography>Features</Typography>
+            <ol>
+              <li>Make sure that your ads are shown to the right people. Find new customers or people who have visited a specific page or taken a desired action on your website.</li>
+              <li>Drive more sales. Set up automatic bidding to reach people who are more likely to take any action that you care about, such as making a purchase.</li>
+              <li>Measure the results of your ads. Better understand the impact of your ads by measuring what happens when people see them.</li>
+            </ol>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Instructions
+              <Typography>In order to start capturing audience data through Link Manager, you need to setup pixels for each of your advertising platforms. In order to find your Pixel ID for Facebook, follow the instructions below:</Typography>
+              <ol>
+                <li>To start using Facebook Pixel, log in to your Facebook Ads Manager</li>
+                <li>Once logged in, click on All Tools located in the left navigation bar</li>
+                <li>Select Events Manager</li>
+                <li>Copy the Pixel ID from the dashboard</li>
+                <li>Now, Install the Facebook Pixel plugin on QwikShop</li>
+                <li>Click on Settings and it’ll ask for Facebook Analytics Pixel ID</li>
+                <li>Paste the Pixel ID here to complete the installation</li>
+              </ol>
             </TabPanel>
             <TabPanel value={value} index={2}>
               <div>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                    <Typography>Accordion 1</Typography>
+                    <Typography>What is Facebook Pixel?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    The Facebook pixel is an analytics tool that allows you to measure the effectiveness of your advertising by understanding the actions people take on your website. You can use the pixel to - make sure that your ads are shown to the right people, drive more sales, and measure the results of ads.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-                    <Typography>Accordion 2</Typography>
+                    <Typography>What are standard and custom events?</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                      blandit leo lobortis eget.
+                    When an action occurs on your website (for example, when someone adds an item to their basket), your Facebook pixel fires and logs it as an event. There are two categories of events: standard and custom.
+                    </Typography>
+                    <Typography>
+                    Standard events are predefined actions that we recognize and support across ad products. Custom events are actions that fall outside those covered by our standard events, and you can give them a unique name to represent the action taking place.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
                 <Accordion>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                    <Typography>Disabled Accordion</Typography>
+                    <Typography>How to install Facebook Pixel to my online store?</Typography>
                   </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                    To install Facebook Pixel on your QwikShop store, follow the below steps.
+                    </Typography>
+                    <ol>
+                      <li>Log in to QwikShop Store</li>
+                      <li>Click on Plugins and look for the Facebook Analytics plugin</li>
+                      <li>Click on Install</li>
+                      <li>Once you click on install, it’ll ask for Facebook Pixel ID. Paste the pixel ID and complete the installation.</li>
+                    </ol>
+                    <Typography>
+                    To know more about how to create Facebook Pixel for your store, refer this.
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
+                    <Typography>How to change or remove the Facebook Pixel?</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                    To change your Facebook Pixel ID connect to your QwikShop store, follow the below steps.
+
+                    </Typography>
+                    <ol>
+                      <li>Log in to QwikShop Store</li>
+                      <li>Click on Plugins and look for the Facebook Analytics plugin</li>
+                      <li>Click on Install</li>
+                      <li>Once you click on settings, it’ll show your existing Pixel ID linked to your store. Replace it with the new ID and complete the change.</li>
+                    </ol>
+                    
+                  </AccordionDetails>
                 </Accordion>
               </div>
             </TabPanel>
