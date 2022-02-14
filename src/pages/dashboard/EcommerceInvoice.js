@@ -196,7 +196,7 @@ export default function EcommerceInvoice() {
             </Grid>
             <Grid item xs={12} md={3} sx={{ py: 3, textAlign: 'right' }}>
               <Typography variant="subtitle2">Have a Question?</Typography>
-              <Typography variant="body2">support@minimals.cc</Typography>
+              <Typography variant="body2">support@qwikshop.online</Typography>
             </Grid>
           </Grid>
         </Card>

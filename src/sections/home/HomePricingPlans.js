@@ -76,7 +76,7 @@ export default function HomePricingPlans() {
               <Button
                 size="large"
                 variant="contained"
-                href="mailto:support@minimals.cc?subject=[Feedback] from Customer"
+                href="mailto:support@qwikshop.online?subject=[Feedback] from Customer"
               >
                 Contact us
               </Button>

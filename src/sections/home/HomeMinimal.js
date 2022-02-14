@@ -2,27 +2,193 @@
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Container, Typography } from '@mui/material';
 // components
-import Image from '../../components/Image';
+import LanguageIcon from '@mui/icons-material/Language';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import BoltIcon from '@mui/icons-material/Bolt';
+import CategoryIcon from '@mui/icons-material/Category';
+import LocalShippingRounded from '@mui/icons-material/LocalShippingRounded';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import PeopleIcon from '@mui/icons-material/People';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PhoneAndroidRounded from '@mui/icons-material/PhoneAndroidRounded';
+import WebRoundedIcon from '@mui/icons-material/WebRounded';
+import RemoveShoppingCartRoundedIcon from '@mui/icons-material/RemoveShoppingCartRounded';
 import { MotionInView, varFade } from '../../components/animate';
+import Image from '../../components/Image';
 
 // ----------------------------------------------------------------------
 
 const CARDS = [
   {
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_design.svg',
-    title: 'UI & UX Design',
+    title: 'Custom Marketing',
     description:
-      'The set is built on the principles of the atomic design system. It helps you to create projects fastest and easily customized packages for your projects.',
+      'Using Qwikshop you can send custom marketing SMS and emails to your customers, which is a proven way to increase your sales by 65%.',
   },
   {
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_code.svg',
-    title: 'Development',
-    description: 'Easy to customize and extend each component, saving you time and money.',
+    title: 'Unique Themes',
+    description:
+      'Get your Business a theme which suits it Best. QwikShop Gives you the power to choose your theme based on your type of Business.',
   },
   {
-    icon: '/logo/logo_single.svg',
-    title: 'Branding',
-    description: 'Consistent design in colors, fonts ... makes brand recognition easy.',
+    isIcon: true,
+    icon: (
+      <LanguageIcon
+        sx={{
+          mb: 10,
+          mx: 'auto',
+          width: 40,
+          height: 40,
+        }}
+      />
+    ),
+    title: 'Custom Domain & Email',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <CurrencyRupeeIcon
+        sx={{
+          mb: 10,
+          mx: 'auto',
+          width: 40,
+          height: 40,
+        }}
+      />
+    ),
+    title: 'Online Payments',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+
+    isIcon: true,
+    icon: (
+      <BoltIcon
+        sx={{
+          mb: 10,
+          mx: 'auto',
+          width: 40,
+          height: 40,
+        }}
+      />
+    ),
+    title: 'Integrations',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <CategoryIcon sx={{
+        mb: 10,
+        mx: 'auto',
+        width: 40,
+        height: 40,
+      }} />
+    ),
+    title: 'Product Catalouge',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <LocalShippingRounded sx={{
+        mb: 10,
+        mx: 'auto',
+        width: 40,
+        height: 40,
+      }} />
+    ),
+    title: 'Delivery',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <MonetizationOnIcon sx={{
+        mb: 10,
+        mx: 'auto',
+        width: 40,
+        height: 40,
+      }} />
+    ),
+    title: 'Super cash',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    
+    isIcon: true,
+    icon: (
+      <LocalOfferIcon sx={{
+        mb: 10,
+        mx: 'auto',
+        width: 40,
+        height: 40,
+      }} />
+    ),
+    title: 'Discount Coupons',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <PeopleIcon sx={{
+        mb: 10,
+        mx: 'auto',
+        width: 40,
+        height: 40,
+      }} />
+    ),
+    title: 'Referral',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    icon: (
+      <RateReviewIcon sx={{
+        mb: 10,
+        mx: 'auto',
+        width: 40,
+        height: 40,
+      }} />
+    ),
+    isIcon: true,
+    title: 'Reviews & Questions',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <ShoppingCartIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40,}} />
+    ),
+    title: 'Variant Based Pricing',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <WebRoundedIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40,}} />
+    ),
+    title: 'Website Builder',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <RemoveShoppingCartRoundedIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40,}} />
+    ),
+    title: 'Abondoned Cart',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+  },
+  {
+    isIcon: true,
+    icon: (
+      <PhoneAndroidRounded sx={{mb: 10, mx: 'auto', width: 40, height: 40,}} />
+    ),
+    title: 'Mobile APK',
+    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
   },
 ];
 
@@ -98,11 +264,11 @@ export default function HomeMinimal() {
         >
           <MotionInView variants={varFade().inUp}>
             <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-              Minimal
+              QwikShop
             </Typography>
           </MotionInView>
           <MotionInView variants={varFade().inDown}>
-            <Typography variant="h2">What minimal helps you?</Typography>
+            <Typography variant="h2">Easiest and Powerful way to sell online</Typography>
           </MotionInView>
         </Box>
 
@@ -116,23 +282,28 @@ export default function HomeMinimal() {
           {CARDS.map((card, index) => (
             <MotionInView variants={varFade().inUp} key={card.title}>
               <CardStyle className={(index === 0 && 'cardLeft') || (index === 1 && 'cardCenter') || ''}>
-                <Image
-                  src={card.icon}
-                  alt={card.title}
-                  sx={{
-                    mb: 10,
-                    mx: 'auto',
-                    width: 40,
-                    height: 40,
-                    filter: (theme) => shadowIcon(theme.palette.primary.main),
-                    ...(index === 0 && {
-                      filter: (theme) => shadowIcon(theme.palette.info.main),
-                    }),
-                    ...(index === 1 && {
-                      filter: (theme) => shadowIcon(theme.palette.error.main),
-                    }),
-                  }}
-                />
+                {card.isIcon ? (
+                  card.icon
+                ) : (
+                  <Image
+                    src={card.icon}
+                    alt={card.title}
+                    sx={{
+                      mb: 10,
+                      mx: 'auto',
+                      width: 40,
+                      height: 40,
+                      filter: (theme) => shadowIcon(theme.palette.primary.main),
+                      ...(index === 0 && {
+                        filter: (theme) => shadowIcon(theme.palette.info.main),
+                      }),
+                      ...(index === 1 && {
+                        filter: (theme) => shadowIcon(theme.palette.error.main),
+                      }),
+                    }}
+                  />
+                )}
+
                 <Typography variant="h5" paragraph>
                   {card.title}
                 </Typography>

@@ -71,7 +71,7 @@ export default function AboutTeam() {
             color: (theme) => (theme.palette.mode === 'light' ? 'text.secondary' : 'common.white'),
           }}
         >
-          Minimal will provide you support if you have any problems, our support team will reply within a day and we
+          QwikShop will provide you support if you have any problems, our support team will reply within a day and we
           also have detailed documentation.
         </Typography>
       </MotionInView>
