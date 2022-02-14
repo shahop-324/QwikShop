@@ -95,7 +95,7 @@ const QwikWallet = ({ open, handleClose }) => {
                 <Stack direction="column" alignItems={'center'}>
                   <Stack sx={{ mb: 2 }} direction="column" alignItems={'center'} spacing={2}>
                     <Typography variant="h6">Balance</Typography>
-                    <Typography variant="h3">Rs. {store.walletAmount}</Typography>
+                    <Typography variant="h3">Rs. {store.walletAmount.toFixed(1)}</Typography>
                   </Stack>
 
                   <Button

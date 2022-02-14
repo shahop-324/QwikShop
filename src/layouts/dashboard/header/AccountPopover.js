@@ -56,7 +56,6 @@ export default function AccountPopover() {
   const MENU_OPTIONS = [
     {
       label: 'My Profile',
-      linkTo: '/',
       icon: <PersonRoundedIcon sx={{ mr: 1 }} />,
       onClick: () => {
         setOpenProfile(true);
@@ -64,19 +63,22 @@ export default function AccountPopover() {
     },
     {
       label: 'Store Profile',
-      linkTo: '/',
+      
       icon: <StoreMallDirectoryRoundedIcon sx={{ mr: 1 }} />,
-      onClick: () => {},
+      onClick: () => {
+        window.location.href = `/dashboard/store/settings`;
+      },
     },
     {
       label: 'Facebook Group',
-      linkTo: PATH_DASHBOARD.catalouge.category,
+      
       icon: <FacebookRoundedIcon sx={{ mr: 1 }} />,
-      onClick: () => {},
+      onClick: () => {
+        window.location.href = `https://www.facebook.com/groups/327591219305404`;
+      },
     },
     {
       label: 'Referral',
-      linkTo: PATH_DASHBOARD.catalouge.category,
       icon: <ConnectWithoutContactRoundedIcon sx={{ mr: 1 }} />,
       onClick: () => {
         setOpenReferral(true);
@@ -136,8 +138,7 @@ export default function AccountPopover() {
             <MenuItem
               sx={{ mb: 1 }}
               key={option.label}
-              // to={option.linkTo}
-              // component={RouterLink}
+              
               onClick={() => {
                 option.onClick();
                 handleClose();
