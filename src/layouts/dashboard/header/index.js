@@ -148,9 +148,9 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
               onChangeMode('light')
             }
           }}  />} label="" />
-          <IconButton>
+          {/* <IconButton>
             <CampaignRounded style={{ fontSize: '26px' }} />
-          </IconButton>
+          </IconButton> */}
           <IconButton onClick={() => {setOpenWallet(true)}}>
             <AccountBalanceWalletRoundedIcon style={{ fontSize: '26px' }} />
           </IconButton>

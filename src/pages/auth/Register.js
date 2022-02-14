@@ -104,11 +104,11 @@ export default function Register() {
             <RegisterForm />
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
               By registering, I agree to QwikShop&nbsp;
-              <Link underline="always" color="text.primary" href="#">
+              <Link underline="always" color="text.primary" href="/terms-of-service">
                 Terms of Service
               </Link>
               {'  '} and {'  '}
-              <Link underline="always" color="text.primary" href="#">
+              <Link underline="always" color="text.primary" href="/privacy-policy">
                 Privacy Policy
               </Link>
               .
