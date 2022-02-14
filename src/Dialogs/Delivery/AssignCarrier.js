@@ -22,7 +22,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { assignSelfShipping } from '../../actions';
+import { assignSelfShipping, updateShipment } from '../../actions';
 import ConfirmCarrier from './ConfirmCarrier';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -179,7 +179,7 @@ const AssignCarrier = ({ open, handleClose, id }) => {
               if (carrier === 'delhivery') {
                 handleOpenConfirmation();
               } else {
-                dispatch(assignSelfShipping(pickupPoint, id, handleClose));
+                dispatch(updateShipment({carrier: "self"}, id, handleClose));
               }
             }}
           >

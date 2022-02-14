@@ -2845,7 +2845,7 @@ export const fetchShipments = (term) => async (dispatch, getState) => {
   }
 };
 
-export const updateShipment = (formValues, id) => async (dispatch, getState) => {
+export const updateShipment = (formValues, id, handleClose) => async (dispatch, getState) => {
   let message;
   dispatch(shipmentActions.SetIsUpdating({ state: true }));
 
@@ -2885,6 +2885,9 @@ export const updateShipment = (formValues, id) => async (dispatch, getState) => 
 
     dispatch(showSnackbar('success', message));
     dispatch(shipmentActions.SetIsUpdating({ state: false }));
+    if(handleClose) {
+      handleClose();
+    }
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
