@@ -42,6 +42,7 @@ const CARDS = [
           mx: 'auto',
           width: 40,
           height: 40,
+          color: "#C661CA"
         }}
       />
     ),
@@ -57,11 +58,12 @@ const CARDS = [
           mx: 'auto',
           width: 40,
           height: 40,
+          color: "#7961CA"
         }}
       />
     ),
     title: 'Online Payments',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'You can accept payments online using Upi, Wallet, Debit/Credit card and Netbanking on QwikShop. QwikShop Supports 100+ Payment methods so you cannot missout on any possible order.',
   },
   {
 
@@ -73,11 +75,12 @@ const CARDS = [
           mx: 'auto',
           width: 40,
           height: 40,
+          color: "#BE6817"
         }}
       />
     ),
     title: 'Integrations',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'You can use various plugins which are available to you on QwikShop that will enable you to run efficient marketing campaigns and derive more sales for your business.',
   },
   {
     isIcon: true,
@@ -87,10 +90,11 @@ const CARDS = [
         mx: 'auto',
         width: 40,
         height: 40,
+        color: "#74A12C"
       }} />
     ),
     title: 'Product Catalouge',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'Create, Update, Share and manage Unlimited products with High Quality Product Graphics, Variants and much more.',
   },
   {
     isIcon: true,
@@ -100,10 +104,11 @@ const CARDS = [
         mx: 'auto',
         width: 40,
         height: 40,
+        color: "#212EDF"
       }} />
     ),
     title: 'Delivery',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'You can make use of Delivery service provided by QwikShop for shipping your orders or you can also ship them on your own and manage from dashboard.',
   },
   {
     isIcon: true,
@@ -113,10 +118,11 @@ const CARDS = [
         mx: 'auto',
         width: 40,
         height: 40,
+        color: "#07B42D"
       }} />
     ),
     title: 'Super cash',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'Reward your customers for making purchase from you by giving them Super cash which can be redeemed to place further orders.',
   },
   {
     
@@ -127,10 +133,11 @@ const CARDS = [
         mx: 'auto',
         width: 40,
         height: 40,
+        color: "#D3D03D"
       }} />
     ),
     title: 'Discount Coupons',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'Create and manage Discount Coupons based on your business Requirement and control them at your will on a simple tap',
   },
   {
     isIcon: true,
@@ -140,10 +147,11 @@ const CARDS = [
         mx: 'auto',
         width: 40,
         height: 40,
+        color: "#007B86"
       }} />
     ),
     title: 'Referral',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'You can assign people to bring more customers to your site and give them comissions, this can be easily done from QwikShop Dashboard.',
   },
   {
     icon: (
@@ -152,43 +160,44 @@ const CARDS = [
         mx: 'auto',
         width: 40,
         height: 40,
+        color: "#A961CA"
       }} />
     ),
     isIcon: true,
     title: 'Reviews & Questions',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'Allow your customers to tell what they like, dislike or what you can improve upon. Your customers can also ask questions before making a purchase.',
   },
   {
     isIcon: true,
     icon: (
-      <ShoppingCartIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40,}} />
+      <ShoppingCartIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40, color: "#CAC361"}} />
     ),
     title: 'Variant Based Pricing',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'You can sell various products based on Variants and quantity. You can create your pricing structure easily from QwikShop Dashboard.',
   },
   {
     isIcon: true,
     icon: (
-      <WebRoundedIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40,}} />
+      <WebRoundedIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40, color: "#CA6161"}} />
     ),
     title: 'Website Builder',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'Build your own custom pages based on season, your business type and needs using simple and powerful drag and drop builder.',
   },
   {
     isIcon: true,
     icon: (
-      <RemoveShoppingCartRoundedIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40,}} />
+      <RemoveShoppingCartRoundedIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40, color: "#20278B"}} />
     ),
     title: 'Abondoned Cart',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'You can send your customers offers to place an order by checking abondoned carts and can recover lot of hidden revenue fro your business.',
   },
   {
     isIcon: true,
     icon: (
-      <PhoneAndroidRounded sx={{mb: 10, mx: 'auto', width: 40, height: 40,}} />
+      <PhoneAndroidRounded sx={{mb: 10, mx: 'auto', width: 40, height: 40, color: "#8BCA61"}} />
     ),
     title: 'Mobile APK',
-    description: 'Get your own Custom domain and Business Email for free when you upgrade to QwikShop Premium.',
+    description: 'Get your personlaised Android Mobile App And get it hosted on Google play Store for free.',
   },
 ];
 

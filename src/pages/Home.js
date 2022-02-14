@@ -1,5 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
+import HomeTagLine from '../sections/home/HomeTagLine';
 // components
 import Page from '../components/Page';
 // sections
@@ -35,19 +36,23 @@ export default function HomePage() {
       <RootStyle>
         <HomeHero />
         <ContentStyle>
-          <HomeMinimal id="features" />
+          <HomeTagLine/>
 
           <HomeHugePackElements />
 
-          <HomeDarkMode />
+<HomeDarkMode />
 
-          <HomeColorPresets />
+<HomeColorPresets />
 
+
+          <HomeMinimal id="features" />
+
+          
           <HomeCleanInterfaces />
 
           <HomePricingPlans />
 
-          <HomeLookingFor />
+          {/* <HomeLookingFor /> */}
 
           <HomeAdvertisement />
         </ContentStyle>

@@ -4,7 +4,7 @@ import { Box, Container, Typography, useTheme } from '@mui/material';
 // components
 import Image from '../../components/Image';
 import { MotionInView, varFade } from '../../components/animate';
-
+import ThemePreview from "../../assets/theme-preview.png";
 // ----------------------------------------------------------------------
 
 const IMG = [...Array(10)].map(
@@ -36,49 +36,35 @@ export default function HomeCleanInterfaces() {
   return (
     <RootStyle>
       <Container>
-        <ContentStyle>
+        
+      <Box
+          sx={{
+            textAlign: 'center',
+            mb: { xs: 10, md: 25 },
+          }}
+        >
           <MotionInView variants={varFade().inUp}>
             <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-              clean & clear
+              Website for your Business
             </Typography>
           </MotionInView>
-
-          <MotionInView variants={varFade().inUp}>
-            <Typography
-              variant="h2"
-              paragraph
-              sx={{
-                ...(!isLight && {
-                  textShadow: (theme) => `4px 4px 16px ${alpha(theme.palette.grey[800], 0.48)}`,
-                }),
-              }}
-            >
-              Beautiful, modern and clean user interfaces
-            </Typography>
+          <MotionInView variants={varFade().inDown}>
+            <Typography variant="h2">Beautiful, modern and powerful  Themes for your Business</Typography>
           </MotionInView>
-        </ContentStyle>
+        </Box>
+        
 
         <Box sx={{ position: 'relative' }}>
-          {IMG.map((_, index) => (
-            <MotionInView
-              key={index}
-              variants={varFade().inUp}
-              sx={{
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                ...(index === 0 && { zIndex: 8 }),
-                ...(index === 9 && { position: 'relative', zIndex: 9 }),
-              }}
-            >
+         
+            
               <Image
                 disabledEffect
                 visibleByDefault
-                alt={`clean-${index + 1}`}
-                src={`https://minimal-assets-api.vercel.app/assets/images/home/clean-${index + 1}.png`}
+                alt={`clean`}
+                src={ThemePreview}
               />
-            </MotionInView>
-          ))}
+           
+          
         </Box>
       </Container>
     </RootStyle>

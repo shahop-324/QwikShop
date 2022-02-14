@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Grid, Card, Link, Stack, Button, Divider, Container, Typography } from '@mui/material';
-// _mock_
-import { _homePlans } from '../../_mock';
 // components
 import Image from '../../components/Image';
 import Iconify from '../../components/Iconify';
 import { MotionInView, varFade } from '../../components/animate';
+import Silver from "../../assets/coin.png";
+import Gold from "../../assets/Yearly.png";
+import Unicorn from "../../assets/Lifetime.png";
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,56 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 // ----------------------------------------------------------------------
+
+const _homePlans = [{
+  img: Silver,
+  commons: ['One end products', '12 months updates', '6 months of support'],
+  license: 'Monthly',
+  options: [
+    'JavaScript version',
+    'TypeScript version',
+    'Design Resources',
+    'Commercial applications',
+  ],
+  icons: [
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_figma.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_js.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_ts.svg',
+  ],
+}, {
+  img: Gold,
+  commons: ['One end products', '12 months updates', '6 months of support'],
+  license: 'Yearly',
+  options: [
+    'JavaScript version',
+    'TypeScript version',
+    'Design Resources',
+    'Commercial applications',
+  ],
+  icons: [
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_figma.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_js.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_ts.svg',
+  ],
+}, {
+  img: Unicorn,
+  commons: ['One end products', '12 months updates', '6 months of support'],
+  license: 'Lifetime',
+  options: [
+    'JavaScript version',
+    'TypeScript version',
+    'Design Resources',
+    'Commercial applications',
+  ],
+  icons: [
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_sketch.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_figma.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_js.svg',
+    'https://minimal-assets-api.vercel.app/assets/images/home/ic_ts.svg',
+  ],
+}]
 
 export default function HomePricingPlans() {
   const theme = useTheme();
@@ -51,9 +102,9 @@ export default function HomePricingPlans() {
         </Box>
 
         <Grid container spacing={5}>
-          {_homePlans.map((plan) => (
-            <Grid key={plan.license} item xs={12} md={4}>
-              <MotionInView variants={plan.license === 'Standard Plus' ? varFade().inDown : varFade().inUp}>
+          {_homePlans.map((plan, index) => (
+            <Grid key={index} item xs={12} md={4}>
+              <MotionInView variants={index*1 === 1 ? varFade().inDown : varFade().inUp}>
                 <PlanCard plan={plan} />
               </MotionInView>
             </Grid>
