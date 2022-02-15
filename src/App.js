@@ -4,13 +4,11 @@ import React, { useEffect } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { useSelector, useDispatch } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { snackbarActions } from './reducers/snackbarSlice';
 import Router from './routes';
 // theme
 import ThemeProvider from './theme';
-// components
-import Settings from './components/settings';
 import RtlLayout from './components/RtlLayout';
 import { ChartStyle } from './components/chart';
 import ScrollToTop from './components/ScrollToTop';

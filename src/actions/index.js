@@ -331,10 +331,6 @@ export const login = (email, password) => async (dispatch, _getState) => {
       })
     );
 
-    // Send user to dashboard
-
-    // window.location.href = `/dashboard/home`;
-
     dispatch(showSnackbar('success', message));
 
     dispatch(
