@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
 
+const BaseURL = 'http://localhost:8000/v1';
+
 const MailchimpConnect = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store } = useSelector((state) => state.store);
@@ -26,9 +28,11 @@ const MailchimpConnect = ({ open, handleClose }) => {
               </IconButton>
             </Stack>
             <Box sx={{ my: 4 }}>
-              <Button sx={{ my: 2 }} variant="contained" fullWidth>
-                Authorize using Mailchimp
-              </Button>
+              <a href={`${BaseURL}/auth/mailChimp`} style={{ textDecoration: 'none', width: '100%' }}>
+                <Button sx={{ my: 2 }} variant="contained" fullWidth>
+                  Authorize using Mailchimp
+                </Button>
+              </a>
               <Typography sx={{ my: 3 }} variant="subtitle2">
                 Need Help?
               </Typography>

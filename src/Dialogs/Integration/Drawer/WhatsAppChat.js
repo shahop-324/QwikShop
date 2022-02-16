@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
-import {updateStore} from "../../../actions";
+import {updateWhatsAppNumber} from "../../../actions";
 import WhatsAppVerification from '../Verification/WhatsApp';
 
 const WhatsAppBusinessChat = ({ open, handleClose }) => {
@@ -16,7 +16,7 @@ const WhatsAppBusinessChat = ({ open, handleClose }) => {
   const [openVerification, setOpenVerification] = useState(false);
 
   const handleCloseVerification = () => {
-    setOpenVerification(true);
+    setOpenVerification(false);
   }
 
   return (
@@ -59,7 +59,7 @@ const WhatsAppBusinessChat = ({ open, handleClose }) => {
 
               <Button onClick={() => {
                 setOpenVerification(true);
-                dispatch(updateStore({WhatsAppNumber: whatsAppBusinessNumber}))
+                dispatch(updateWhatsAppNumber(whatsAppBusinessNumber))
               }} sx={{ my: 2 }} variant="contained" fullWidth>
                 Connect
               </Button>

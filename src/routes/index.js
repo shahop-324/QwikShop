@@ -150,6 +150,7 @@ export default function Router() {
         { path: 'terms-of-service', element: <TermsOfService /> },
         { path: 'privacy-policy', element: <PrivacyPolicy /> },
         { path: 'refund-policy', element: <RefundPolicy /> },
+        { path: 'connect-mailchimp', element: <MailchimpConnect /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -224,3 +225,5 @@ const StoreMenus = Loadable(lazy(() => import('../pages/dashboard/Store/StoreMen
 const TermsOfService = Loadable(lazy(() => import('../pages/TermsOfService')));
 const PrivacyPolicy = Loadable(lazy(() => import('../pages/PrivacyPolicy')));
 const RefundPolicy = Loadable(lazy(() => import('../pages/RefundPolicy')));
+
+const MailchimpConnect = Loadable(lazy(() => import('../pages/MailchimpConnect')));

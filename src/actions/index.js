@@ -6897,7 +6897,6 @@ export const verifyWhatsAppNumber = (otp, handleClose) => async (dispatch, getSt
     dispatch(showSnackbar('success', message));
 
     handleClose();
-
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -6941,6 +6940,55 @@ export const updateWhatsAppNumber = (phone) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const connectMailchimp = (storeId, code) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}oauth/mailchimp/callback`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        storeId: '61ed9897748c894fbed9fba9', // Replace it with storeId when deploying
+        code,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    setTimeout(() => {
+      window.location = `http://localhost:4000/dashboard/integration`;
+    }, 1000);
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
