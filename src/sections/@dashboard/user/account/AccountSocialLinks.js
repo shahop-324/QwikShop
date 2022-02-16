@@ -11,6 +11,7 @@ import { LoadingButton } from '@mui/lab';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 import { FormProvider } from '../../../../components/hook-form';
 import { updateSocialLinks } from '../../../../actions';
 
@@ -37,6 +38,7 @@ export default function AccountSocialLinks() {
   const [facebookLink, setFacebookLink] = useState(store.facebookLink);
   const [instagramLink, setInstagramLink] = useState(store.instagramLink);
   const [twitterLink, setTwitterLink] = useState(store.twitterLink);
+  const [youtubeLink, setYoutubeLink] = useState(store.youtubeLink);
 
   const methods = useForm({
     defaultValues,
@@ -100,6 +102,22 @@ export default function AccountSocialLinks() {
               startAdornment: (
                 <InputAdornment>
                   <TwitterIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            name="youtube"
+            label="Youtube"
+            fullWidth
+            value={youtubeLink}
+            onChange={(e) => {
+              setYoutubeLink(e.target.value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment>
+                  <YouTubeIcon />
                 </InputAdornment>
               ),
             }}

@@ -3669,7 +3669,7 @@ export const updateSocialLinks = (formValues) => async (dispatch, getState) => {
   dispatch(storeActions.SetIsUpdatingSocialLinks({ state: true }));
 
   try {
-    const res = await fetch(`${BaseURL}storeu/social-links/update`, {
+    const res = await fetch(`${BaseURL}store/social-links/update`, {
       method: 'PATCH',
 
       body: JSON.stringify({
@@ -6606,24 +6606,24 @@ export const updateHeroBanners = (banners) => async (dispatch, getState) => {
 
     console.log(newData);
 
-    setTimeout(async() => {
+    setTimeout(async () => {
       const res = await fetch(`${BaseURL}store/updateHeroBanners`, {
         method: 'POST',
-  
+
         body: JSON.stringify({
           banners: newData,
         }),
-  
+
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${getState().auth.token}`,
         },
       });
-  
+
       const result = await res.json();
-  
+
       message = result.message;
-  
+
       if (!res.ok) {
         if (!res.message) {
           throw new Error(message);
@@ -6631,19 +6631,17 @@ export const updateHeroBanners = (banners) => async (dispatch, getState) => {
           throw new Error(res.message);
         }
       }
-  
+
       console.log(result);
-  
+
       dispatch(
         storeActions.FetchStore({
           store: result.data,
         })
       );
-  
+
       dispatch(showSnackbar('success', message));
     }, 4000);
-
-
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -6693,24 +6691,24 @@ export const updateCustomBanners = (banners) => async (dispatch, getState) => {
       }
     });
 
-    setTimeout(async() => {
+    setTimeout(async () => {
       const res = await fetch(`${BaseURL}store/updateCustomBanners`, {
         method: 'POST',
-  
+
         body: JSON.stringify({
           banners: newData,
         }),
-  
+
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${getState().auth.token}`,
         },
       });
-  
+
       const result = await res.json();
-  
+
       message = result.message;
-  
+
       if (!res.ok) {
         if (!res.message) {
           throw new Error(message);
@@ -6718,19 +6716,17 @@ export const updateCustomBanners = (banners) => async (dispatch, getState) => {
           throw new Error(res.message);
         }
       }
-  
+
       console.log(result);
-  
+
       dispatch(
         storeActions.FetchStore({
           store: result.data,
         })
       );
-  
+
       dispatch(showSnackbar('success', message));
     }, 4000);
-
-    
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -6776,13 +6772,56 @@ export const updateImageBanners = (banners) => async (dispatch, getState) => {
       }
     });
 
-    setTimeout(async() => {
-      
-    const res = await fetch(`${BaseURL}store/updateImageBanners`, {
+    setTimeout(async () => {
+      const res = await fetch(`${BaseURL}store/updateImageBanners`, {
+        method: 'POST',
+
+        body: JSON.stringify({
+          banners: data,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(message);
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      dispatch(
+        storeActions.FetchStore({
+          store: result.data,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+    }, 4000);
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updateCustomSections = (sections) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/updateCustomSections`, {
       method: 'POST',
 
       body: JSON.stringify({
-        banners: data,
+        sections,
       }),
 
       headers: {
@@ -6812,22 +6851,67 @@ export const updateImageBanners = (banners) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar('success', message));
-    }, 4000);
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const verifyWhatsAppNumber = (otp, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/verifyWhatsAppNumber`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        otp,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    handleClose();
 
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
   }
 };
-export const updateCustomSections = (sections) => async (dispatch, getState) => {
+export const updateWhatsAppNumber = (phone) => async (dispatch, getState) => {
   let message;
 
   try {
-    const res = await fetch(`${BaseURL}store/updateCustomSections`, {
+    const res = await fetch(`${BaseURL}store/updateWhatsAppNumber`, {
       method: 'POST',
 
       body: JSON.stringify({
-        sections,
+        phone,
       }),
 
       headers: {

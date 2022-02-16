@@ -5,12 +5,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
 import {updateStore} from "../../../actions";
+import WhatsAppVerification from '../Verification/WhatsApp';
 
 const WhatsAppBusinessChat = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store } = useSelector((state) => state.store);
 
   const [whatsAppBusinessNumber, setWhatsAppBusinessNumber] = useState(store.WhatsAppNumber);
+
+  const [openVerification, setOpenVerification] = useState(false);
+
+  const handleCloseVerification = () => {
+    setOpenVerification(true);
+  }
 
   return (
     <>
@@ -51,6 +58,7 @@ const WhatsAppBusinessChat = ({ open, handleClose }) => {
               </Box>
 
               <Button onClick={() => {
+                setOpenVerification(true);
                 dispatch(updateStore({WhatsAppNumber: whatsAppBusinessNumber}))
               }} sx={{ my: 2 }} variant="contained" fullWidth>
                 Connect
@@ -66,6 +74,7 @@ const WhatsAppBusinessChat = ({ open, handleClose }) => {
           </Box>
         </Drawer>
       </React.Fragment>
+      {openVerification && <WhatsAppVerification open={openVerification} handleClose={handleCloseVerification} />}
     </>
   );
 };
