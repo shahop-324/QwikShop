@@ -6767,7 +6767,7 @@ export const updateImageBanners = (banners) => async (dispatch, getState) => {
             });
 
             // Now update that particular data (custom banner) whose image was uploaded
-            const newObj = data.filter((el) => el.index === element.index);
+            const newObj = data.find((el) => el.index === element.index);
             newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
 
             data = data.map((el) => (el.index !== newObj.index ? el : newObj));
@@ -6776,6 +6776,8 @@ export const updateImageBanners = (banners) => async (dispatch, getState) => {
       }
     });
 
+    setTimeout(async() => {
+      
     const res = await fetch(`${BaseURL}store/updateImageBanners`, {
       method: 'POST',
 
@@ -6810,6 +6812,8 @@ export const updateImageBanners = (banners) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar('success', message));
+    }, 4000);
+
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));

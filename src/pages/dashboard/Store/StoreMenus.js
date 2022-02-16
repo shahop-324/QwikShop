@@ -127,7 +127,7 @@ const StoreMenus = () => {
   const [page, setPage] = useState();
   const [itemName, setItemName] = useState();
 
-  const [level, setLevel] = useState();
+  const [level, setLevel] = useState("One");
   const [parent, setParent] = useState();
 
   const { products } = useSelector((state) => state.product);
@@ -230,110 +230,21 @@ const StoreMenus = () => {
           {/* Name of Item */}
           {/* Button to create */}
 
-          <FormControl sx={{ mb: 2 }}>
-            <FormLabel id="demo-row-radio-buttons-group-label">Level</FormLabel>
-            <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
-              <FormControlLabel
-                value="one"
-                control={
-                  <Radio
-                    checked={level === 'One'}
-                    onClick={() => {
-                      setLevel('One');
-                    }}
-                  />
-                }
-                label="One"
-              />
-              <FormControlLabel
-                value="two"
-                control={
-                  <Radio
-                    checked={level === 'Two'}
-                    onClick={() => {
-                      setLevel('Two');
-                    }}
-                  />
-                }
-                label="Two"
-              />
-              <FormControlLabel
-                value="three"
-                control={
-                  <Radio
-                    checked={level === 'Three'}
-                    onClick={() => {
-                      setLevel('Three');
-                    }}
-                  />
-                }
-                label="Three"
-              />
-            </RadioGroup>
-          </FormControl>
-
-          {(() => {
-            switch (level) {
-              case 'Two':
-                return (
-                  <Autocomplete
-                    sx={{ mb: 3 }}
-                    value={parent}
-                    onChange={(e, value) => {
-                      setParent(value);
-                    }}
-                    id=""
-                    fullWidth
-                    options={levelOneParentOptions}
-                    autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Choose Parent"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: '', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
-                  />
-                );
-
-              case 'Three':
-                // To be done
-                return (
-                  <Autocomplete
-                    sx={{ mb: 3 }}
-                    value={parent}
-                    onChange={(e, value) => {
-                      setParent(value);
-                    }}
-                    id=""
-                    fullWidth
-                    options={levelTwoParentOptions}
-                    autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Choose Parent"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: '', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
-                  />
-                );
-
-              default:
-                break;
-            }
-          })()}
+         
+          <TextField
+          sx={{ mb: 3 }}
+            name="itemName"
+            label="Name"
+            fullWidth
+            value={itemName}
+            onChange={(e) => {
+              setItemName(e.target.value);
+            }}
+          />
+          
 
           <Autocomplete
-            sx={{ mb: 3 }}
+            
             value={menuType}
             onChange={(e, value) => {
               setMenuType(value);
@@ -354,15 +265,7 @@ const StoreMenus = () => {
               />
             )}
           />
-          <TextField
-            name="itemName"
-            label="Name"
-            fullWidth
-            value={itemName}
-            onChange={(e) => {
-              setItemName(e.target.value);
-            }}
-          />
+          
           <Box sx={{ mt: 2 }}>
             {(() => {
               switch (menuType?.label) {
@@ -562,7 +465,8 @@ const StoreMenus = () => {
             ))}
           </TreeView>
         </Card>
-        <Card sx={{ p: 3 }}>
+
+        {menus !== undefined && menus.length > 0 &&  <Card sx={{ p: 3 }}>
           <Typography sx={{ mb: 2 }} variant="subtitle2">
             Update menu
           </Typography>
@@ -578,7 +482,8 @@ const StoreMenus = () => {
             divisionA={el.division}
             pageA={el.page} />
           ))}
-        </Card>
+        </Card> }
+        
       </Box>
     </>
   );

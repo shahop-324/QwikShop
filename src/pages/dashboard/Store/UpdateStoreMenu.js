@@ -41,7 +41,7 @@ const UpdateStoreMenu = ({
   const [page, setPage] = useState(pageA);
   const [itemName, setItemName] = useState(itemNameA);
 
-  const [level, setLevel] = useState();
+  
   const [parent, setParent] = useState();
 
   const { products } = useSelector((state) => state.product);
@@ -96,7 +96,7 @@ const UpdateStoreMenu = ({
 
   const onUpdate = () => {
     dispatch(
-      updateMenuItem({ level, parent, menuType, itemName, product, category, subCategory, division, page }, _id)
+      updateMenuItem({ parent, menuType, itemName, product, category, subCategory, division, page }, _id)
     );
   };
 
@@ -106,108 +106,16 @@ const UpdateStoreMenu = ({
 
   return (
     <div key={_id}>
-      <FormControl sx={{ mb: 2 }}>
-        <FormLabel id="demo-row-radio-buttons-group-label">Level</FormLabel>
-        <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
-          <FormControlLabel
-            value="one"
-            control={
-              <Radio
-                checked={level === 'One'}
-                onClick={() => {
-                  setLevel('One');
-                }}
-              />
-            }
-            label="One"
-          />
-          <FormControlLabel
-            value="two"
-            control={
-              <Radio
-                checked={level === 'Two'}
-                onClick={() => {
-                  setLevel('Two');
-                }}
-              />
-            }
-            label="Two"
-          />
-          <FormControlLabel
-            value="three"
-            control={
-              <Radio
-                checked={level === 'Three'}
-                onClick={() => {
-                  setLevel('Three');
-                }}
-              />
-            }
-            label="Three"
-          />
-        </RadioGroup>
-      </FormControl>
-
-      {(() => {
-        switch (level) {
-          case 'Two':
-            return (
-              <Autocomplete
-                sx={{ mb: 3 }}
-                value={parent}
-                onChange={(e, value) => {
-                  setParent(value);
-                }}
-                id=""
-                fullWidth
-                options={levelOneParentOptions}
-                autoHighlight
-                getOptionLabel={(option) => option.label}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Choose Parent"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: '', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-            );
-
-          case 'Three':
-            // To be done
-            return (
-              <Autocomplete
-                sx={{ mb: 3 }}
-                value={parent}
-                onChange={(e, value) => {
-                  setParent(value);
-                }}
-                id=""
-                fullWidth
-                options={levelTwoParentOptions}
-                autoHighlight
-                getOptionLabel={(option) => option.label}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Choose Parent"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: '', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-            );
-
-          default:
-            break;
-        }
-      })()}
-
+    <TextField
+    sx={{mb: 3}}
+        name="itemName"
+        label="Name"
+        fullWidth
+        value={itemName}
+        onChange={(e) => {
+          setItemName(e.target.value);
+        }}
+      />
       <Autocomplete
         sx={{ mb: 3 }}
         value={menuType}
@@ -230,15 +138,7 @@ const UpdateStoreMenu = ({
           />
         )}
       />
-      <TextField
-        name="itemName"
-        label="Name"
-        fullWidth
-        value={itemName}
-        onChange={(e) => {
-          setItemName(e.target.value);
-        }}
-      />
+      
       <Box sx={{ mt: 2 }}>
         {(() => {
           switch (menuType?.label) {
