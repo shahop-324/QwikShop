@@ -28,7 +28,7 @@ const MailchimpConnect = ({ open, handleClose }) => {
               </IconButton>
             </Stack>
             <Box sx={{ my: 4 }}>
-              <a href={`${BaseURL}/auth/mailChimp`} style={{ textDecoration: 'none', width: '100%' }}>
+              <a href={`${BaseURL}auth/mailChimp`} style={{ textDecoration: 'none', width: '100%' }}>
                 <Button sx={{ my: 2 }} variant="contained" fullWidth>
                   Authorize using Mailchimp
                 </Button>
