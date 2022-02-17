@@ -30,7 +30,7 @@ import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
 const { REACT_APP_MY_ENV } = process.env;
-const BaseURL = REACT_APP_MY_ENV ? 'http://localhost:8000/v1/' : 'https://api.letstream.live/api-eureka/eureka/v1/';
+const BaseURL = 'http://localhost:8000/v1/'
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
