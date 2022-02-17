@@ -32,7 +32,7 @@ import {
   ReferralListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
 import AddNewReferrer from '../../Dialogs/Referral/AddNewReferrer';
-import { fetchReferrals } from '../../actions';
+import { fetchReferrals, showSnackbar } from '../../actions';
 
 import EditReferrer from '../../Dialogs/Referral/EditReferrer';
 import DeleteReferrer from '../../Dialogs/Referral/DeleteReferrer';
@@ -55,6 +55,8 @@ const TABLE_HEAD = [
 export default function GeneralReferral() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
+
+  const {store} = useSelector((state) => state.store);
 
   const [openAddReferrer, setOpenAddReferrer] = useState(false);
 
@@ -284,7 +286,18 @@ export default function GeneralReferral() {
                           <TableCell align="left"> {`Rs.${totalEarnings}`} </TableCell>
                           <TableCell align="right">
                             <Tooltip title="Copy Referral Link">
-                              <IconButton className="me-2">
+                              <IconButton onClick={() => {
+                                navigator.clipboard.writeText(`localhost:3000/${store.subName}/?ref=${_id}`).then(
+                                  () => {
+                                    console.log("Async: Copying to clipboard was successful!");
+                                    dispatch(showSnackbar("success", "Copied to clipboard!"));
+                                  },
+                                  (err) => {
+                                    console.error("Async: Could not copy text: ", err);
+                                    dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
+                                  }
+                                );
+                              }} className="me-2">
                                 <ContentCopyRoundedIcon style={{ fontSize: '20px' }} />
                               </IconButton>
                             </Tooltip>
