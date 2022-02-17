@@ -4,12 +4,14 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
+import { updateStore } from '../../../actions';
 
 const BaseURL = 'https://api.app.qwikshop.online/v1/';
 
 const MailchimpConnect = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store } = useSelector((state) => state.store);
+  const [apiKey, setApiKey] = useState(store.mailchimpKey);
 
   return (
     <>
@@ -28,11 +30,34 @@ const MailchimpConnect = ({ open, handleClose }) => {
               </IconButton>
             </Stack>
             <Box sx={{ my: 4 }}>
-              <a href={`${BaseURL}auth/mailChimp`} style={{ textDecoration: 'none', width: '100%' }}>
-                <Button sx={{ my: 2 }} variant="contained" fullWidth>
-                  Authorize using Mailchimp
-                </Button>
-              </a>
+              <TextField
+                required
+                name="apiKey"
+                label="Api Key"
+                fullWidth
+                value={apiKey}
+                onChange={(e) => {
+                  setApiKey(e.target.value);
+                }}
+              />
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  dispatch(updateStore({ mailchimpKey: apiKey }));
+                }}
+                sx={{ my: 2 }}
+                fullWidth
+              >
+                Update API Key
+              </Button>
+              {store.mailchimpKey && (
+                <a href={`${BaseURL}auth/mailChimp`} style={{ textDecoration: 'none', width: '100%' }}>
+                  <Button sx={{ my: 2 }} variant="contained" fullWidth>
+                    Authorize using Mailchimp
+                  </Button>
+                </a>
+              )}
+
               <Typography sx={{ my: 3 }} variant="subtitle2">
                 Need Help?
               </Typography>

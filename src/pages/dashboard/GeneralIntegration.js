@@ -486,53 +486,7 @@ export default function GeneralIntegration() {
                   </Grid>
                 </Grid>
               </Card>
-              {/* Mailchimp */}
-              <Card className="p-2 mb-4">
-                <Grid container>
-                  <Grid item xs={9} md={9} className="d-flex flex-row align-items-center">
-                    <Logo className="me-3" src={'https://www.drupal.org/files/project-images/MC_Logo.jpg'} />
-                    <div className="d-flex flex-column justify-content-center">
-                      <Typography variant="h6">Mailchmip</Typography>
-                      <Typography variant="p1">
-                        All-In-One integrated marketing platform for small businesses, to grow your business on your
-                        terms
-                      </Typography>
-                    </div>
-                  </Grid>
-                  <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
-                      onClick={() => {
-                        setOpenMailchimpInfo(true);
-                      }}
-                      variant="outlined"
-                      className="me-3"
-                    >
-                      Learn more
-                    </Button>
-                    {!store.mailchimpInstalled ? (
-                      <Button
-                        onClick={() => {
-                          setOpenMailchimp(true);
-                        }}
-                        variant="contained"
-                      >
-                        Install
-                      </Button>
-                    ) : (
-                      <Button
-                        color="error"
-                        variant="contained"
-                        onClick={() => {
-                          dispatch(uninstallMailchimp());
-                        }}
-                      >
-                        Uninstall
-                      </Button>
-                    )}
-                    
-                  </Grid>
-                </Grid>
-              </Card>
+              
               {/* Intercom */}
               <Card className="p-2 mb-4">
                 <Grid container>
@@ -676,6 +630,56 @@ export default function GeneralIntegration() {
                 </Grid>
               </Card>
 
+
+              {/* Mailchimp */}
+              <Card className="p-2 mb-4">
+                <Grid container>
+                  <Grid item xs={9} md={9} className="d-flex flex-row align-items-center">
+                    <Logo className="me-3" src={'https://www.drupal.org/files/project-images/MC_Logo.jpg'} />
+                    <div className="d-flex flex-column justify-content-center">
+                      <Typography variant="h6">Mailchmip</Typography>
+                      <Typography variant="p1">
+                        All-In-One integrated marketing platform for small businesses, to grow your business on your
+                        terms
+                      </Typography>
+                    </div>
+                  </Grid>
+                  <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
+                  <Chip variant="outlined" color="primary" label="Coming Soon" />
+                    {/* <Button
+                      onClick={() => {
+                        setOpenMailchimpInfo(true);
+                      }}
+                      variant="outlined"
+                      className="me-3"
+                    >
+                      Learn more
+                    </Button>
+                    {!store.mailchimpInstalled ? (
+                      <Button
+                        onClick={() => {
+                          setOpenMailchimp(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(uninstallMailchimp());
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )} */}
+                    
+                  </Grid>
+                </Grid>
+              </Card>
+
               
 
               {/* Zoho Books */}
@@ -695,7 +699,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenZohoBookInfo(true);
                       }}
@@ -703,7 +707,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -720,7 +724,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenDunzoInfo(true);
                       }}
@@ -728,7 +732,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -748,7 +752,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenQuickBooksInfo(true);
                       }}
@@ -756,7 +760,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -778,7 +782,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenHubspotInfo(true);
                       }}
@@ -786,7 +790,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -805,7 +809,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenPaytmInfo(true);
                       }}
@@ -813,7 +817,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -836,7 +840,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenPhonePeInfo(true);
                       }}
@@ -844,7 +848,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -864,7 +868,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenGooglePayInfo(true);
                       }}
@@ -872,7 +876,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -894,7 +898,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenMobikwikInfo(true);
                       }}
@@ -902,7 +906,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -924,7 +928,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenAmazonPayInfo(true);
                       }}
@@ -932,7 +936,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
@@ -956,7 +960,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         setOpenZapierInfo(true);
                       }}
@@ -964,7 +968,7 @@ export default function GeneralIntegration() {
                       className="me-3"
                     >
                       Learn more
-                    </Button>
+                    </Button> */}
                     {/* <Button variant="contained">Install</Button> */}
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
