@@ -367,7 +367,7 @@ export default function GeneralIntegration() {
                       Learn more
                     </Button>
 
-                    {!store.GAInstalled ? (
+                    {!store.GMCInstalled ? (
                       <Button
                         onClick={() => {
                           setOpenGMC(true);
@@ -413,7 +413,7 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    {!store.GAInstalled ? (
+                    {!store.GSCInstalled ? (
                       <Button
                         onClick={() => {
                           setOpenGSC(true);
@@ -509,7 +509,7 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    {!store.WAVerified ? (
+                    {!store.mailchimpInstalled ? (
                       <Button
                         onClick={() => {
                           setOpenMailchimp(true);
