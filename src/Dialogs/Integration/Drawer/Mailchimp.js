@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
 
-const BaseURL = 'http://localhost:8000/v1';
+const BaseURL = 'https://api.app.qwikshop.online/v1/';
 
 const MailchimpConnect = ({ open, handleClose }) => {
   const dispatch = useDispatch();

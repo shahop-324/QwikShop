@@ -29,7 +29,7 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'http://localhost:8000/v1/'
+const BaseURL = 'https://api.app.qwikshop.online/v1/'
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -7029,7 +7029,7 @@ export const connectMailchimp = (storeId, code) => async (dispatch, getState) =>
     dispatch(showSnackbar('success', message));
 
     setTimeout(() => {
-      window.location = `http://localhost:4000/dashboard/integration`;
+      window.location = `https://app.qwikshop.online/dashboard/integration`;
     }, 1000);
   } catch (error) {
     console.log(error);
