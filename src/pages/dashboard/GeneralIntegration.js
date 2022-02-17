@@ -3,6 +3,8 @@ import { Container, Grid, Typography, Button, Chip } from '@mui/material';
 import styled from 'styled-components';
 // Hooks
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateGA, updateGMC, updateGSC, updatePixel, updateAdwords, updateIntercom, updateWhatsAppNumber, uninstallMailchimp } from '../../actions';
 import AdwordsInfo from '../../Dialogs/Integration/AdwordsConversionTracking';
 import FacebookPixelInfo from '../../Dialogs/Integration/FacebookPixel';
 import FacebookDomainVerificationInfo from '../../Dialogs/Integration/FacebookDomainVerification';
@@ -47,6 +49,10 @@ const Logo = styled.img`
 `;
 
 export default function GeneralIntegration() {
+  const { store } = useSelector((state) => state.store);
+
+  const dispatch = useDispatch();
+
   const { themeStretch } = useSettings();
 
   const [openGA, setOpenGA] = useState(false);
@@ -313,14 +319,27 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenGA(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
+
+                    {!store.GAInstalled ? (
+                      <Button
+                        onClick={() => {
+                          setOpenGA(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(updateGA(undefined, () => {}, true));
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Card>
@@ -347,14 +366,27 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenGMC(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
+
+                    {!store.GAInstalled ? (
+                      <Button
+                        onClick={() => {
+                          setOpenGMC(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(updateGMC(undefined, () => {}, true));
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Card>
@@ -381,14 +413,26 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenGSC(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
+                    {!store.GAInstalled ? (
+                      <Button
+                        onClick={() => {
+                          setOpenGSC(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(updateGSC(undefined, () => {}, true));
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Card>
@@ -419,14 +463,26 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenWhatsApp(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
+                    {!store.WAVerified ? (
+                      <Button
+                        onClick={() => {
+                          setOpenWhatsApp(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(updateWhatsAppNumber(undefined, true));
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Card>
@@ -453,14 +509,27 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenMailchimp(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
+                    {!store.WAVerified ? (
+                      <Button
+                        onClick={() => {
+                          setOpenMailchimp(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(uninstallMailchimp());
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )}
+                    
                   </Grid>
                 </Grid>
               </Card>
@@ -484,14 +553,28 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenIntercom(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
+                    
+                    {!store.IntercomInstalled ? (
+                      <Button
+                        onClick={() => {
+                          setOpenIntercom(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(updateIntercom(undefined, () => {}, true));
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )}
+                    
                   </Grid>
                 </Grid>
               </Card>
@@ -522,14 +605,26 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenAdwords(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
+                    {!store.adWordsInstalled ? (
+                      <Button
+                        onClick={() => {
+                          setOpenAdwords(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(updateAdwords(undefined, () => {}, true));
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Card>
@@ -556,57 +651,32 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenFBPixel(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
+                    {!store.PixelInstalled ? (
+                      <Button
+                        onClick={() => {
+                          setOpenFBPixel(true);
+                        }}
+                        variant="contained"
+                      >
+                        Install
+                      </Button>
+                    ) : (
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => {
+                          dispatch(updatePixel(undefined, () => {}, true));
+                        }}
+                      >
+                        Uninstall
+                      </Button>
+                    )}
+                   
                   </Grid>
                 </Grid>
               </Card>
 
-              {/* Facebook Domain Verification */}
-              <Card className="p-2 mb-4">
-                <Grid container>
-                  <Grid item xs={9} md={9} className="d-flex flex-row align-items-center">
-                    <Logo
-                      className="me-3"
-                      src={
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/1200px-2021_Facebook_icon.svg.png'
-                      }
-                    />
-                    <div className="d-flex flex-column justify-content-center">
-                      <Typography variant="h6">Facebook domain verification</Typography>
-                      <Typography variant="p1">
-                        Track your store visitors and improve your google ads conversion rate by targeting right
-                        customers
-                      </Typography>
-                    </div>
-                  </Grid>
-                  <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                    <Button
-                      onClick={() => {
-                        setOpenFBDomainInfo(true);
-                      }}
-                      variant="outlined"
-                      className="me-3"
-                    >
-                      Learn more
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setOpenFBDomain(true);
-                      }}
-                      variant="contained"
-                    >
-                      Install
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Card>
+              
 
               {/* Zoho Books */}
               <Card className="p-2 mb-4">
@@ -929,18 +999,17 @@ export default function GeneralIntegration() {
       {openDunzoInfo && <DunzoInfo open={openDunzoInfo} handleClose={handleCloseDunzoInfo} />}
       {openZohoBookInfo && <ZohoBooksInfo open={openZohoBookInfo} handleClose={handleCloseZohoBookInfo} />}
 
-{/* Integrations Setting Drawer */}
+      {/* Integrations Setting Drawer */}
 
-{openAdwords && <Adwords open={openAdwords} handleClose={handleCloseAdwords} />}
-{openGA && <GoogleAnalyticsConnect open={openGA} handleClose={handleCloseGA} />}
-{openGMC && <GoogleMerchantCentre open={openGMC} handleClose={handleCloseGMC} />}
-{openGSC && <GoogleSearchConsole open={openGSC} handleClose={handleCloseGSC} />}
-{openWhatsApp && <WhatsAppBusinessChat open={openWhatsApp} handleClose={handleCloseWhatsApp} />}
-{openMailchimp && <MailchimpConnect open={openMailchimp} handleClose={handleClosenMailchimp} />}
-{openIntercom && <IntercomConnect open={openIntercom} handleClose={handleCloseIntercom} />}
-{openFBPixel && <FBPixelConnect open={openFBPixel} handleClose={handleCloseFBPixel} />}
-{openFBDomain && <FacebookDomainVerification open={openFBDomain} handleClose={handleCloseFBDomain} />}
-
-    </>    
+      {openAdwords && <Adwords open={openAdwords} handleClose={handleCloseAdwords} />}
+      {openGA && <GoogleAnalyticsConnect open={openGA} handleClose={handleCloseGA} />}
+      {openGMC && <GoogleMerchantCentre open={openGMC} handleClose={handleCloseGMC} />}
+      {openGSC && <GoogleSearchConsole open={openGSC} handleClose={handleCloseGSC} />}
+      {openWhatsApp && <WhatsAppBusinessChat open={openWhatsApp} handleClose={handleCloseWhatsApp} />}
+      {openMailchimp && <MailchimpConnect open={openMailchimp} handleClose={handleClosenMailchimp} />}
+      {openIntercom && <IntercomConnect open={openIntercom} handleClose={handleCloseIntercom} />}
+      {openFBPixel && <FBPixelConnect open={openFBPixel} handleClose={handleCloseFBPixel} />}
+      {openFBDomain && <FacebookDomainVerification open={openFBDomain} handleClose={handleCloseFBDomain} />}
+    </>
   );
 }

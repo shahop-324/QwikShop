@@ -4,16 +4,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
-import { updateStore } from '../../../actions';
+import { updateAdwords, updateStore } from '../../../actions';
 
 const Adwords = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store } = useSelector((state) => state.store);
 
-  const [propertyId, setPropertyId] = useState();
-
-  const [conversionId, setConversionId] = useState(store.adWordsConversionId);
-  const [conversionLabel, setConversionLabel] = useState(store.adWordsConversionLabel);
+  const [verificationCode, setVerificationCode] = useState();
 
   return (
     <>
@@ -43,29 +40,19 @@ const Adwords = ({ open, handleClose }) => {
               >
                 <TextField
                   required
-                  name="conversionId"
-                  label="Conversion ID"
+                  name="verificationCode"
+                  label="Verification Code"
                   fullWidth
-                  value={conversionId}
+                  value={verificationCode}
                   onChange={(e) => {
-                    setConversionId(e.target.value);
-                  }}
-                />
-                <TextField
-                  required
-                  name="conversionLabel"
-                  label="Conversion Label"
-                  fullWidth
-                  value={conversionLabel}
-                  onChange={(e) => {
-                    setConversionLabel(e.target.value);
+                    setVerificationCode(e.target.value);
                   }}
                 />
               </Box>
 
               <Button
                 onClick={() => {
-                  dispatch(updateStore({ adWordsConversionId: conversionId, adWordsConversionLabel: conversionLabel }));
+                  dispatch(updateAdwords(verificationCode, handleClose, false));
                 }}
                 sx={{ my: 2 }}
                 variant="contained"

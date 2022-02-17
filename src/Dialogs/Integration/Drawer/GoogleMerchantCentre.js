@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
-import {updateStore} from '../../../actions';
+import {updateGMC} from '../../../actions';
 
 const GoogleMerchantCentre = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const GoogleMerchantCentre = ({ open, handleClose }) => {
               </Box>
 
               <Button onClick={() => {
-                dispatch(updateStore({GMCVerificationCode: verificationCode}))
+                dispatch(updateGMC(verificationCode, handleClose, false))
               }} sx={{ my: 2 }} variant="contained" fullWidth>
                 Connect
               </Button>

@@ -6902,7 +6902,7 @@ export const verifyWhatsAppNumber = (otp, handleClose) => async (dispatch, getSt
     dispatch(showSnackbar('error', message));
   }
 };
-export const updateWhatsAppNumber = (phone) => async (dispatch, getState) => {
+export const updateWhatsAppNumber = (phone, uninstall) => async (dispatch, getState) => {
   let message;
 
   try {
@@ -6911,6 +6911,7 @@ export const updateWhatsAppNumber = (phone) => async (dispatch, getState) => {
 
       body: JSON.stringify({
         phone,
+        uninstall,
       }),
 
       headers: {
@@ -6945,6 +6946,48 @@ export const updateWhatsAppNumber = (phone) => async (dispatch, getState) => {
     dispatch(showSnackbar('error', message));
   }
 };
+
+export const uninstallMailchimp = () => async(dispatch, getState) => {
+  let message;
+
+  try{
+
+    const res = await fetch(`${BaseURL}store/uninstallMailchimp`, {
+      method: 'PATCH',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+
+    dispatch(storeActions.FetchStore({
+      store: result.data,
+    }))
+
+    dispatch(showSnackbar("success", message));
+  }
+  catch(error) {
+    console.log(error);
+    dispatch(showSnackbar("error", message));
+  }
+
+}
 
 export const connectMailchimp = (storeId, code) => async (dispatch, getState) => {
   let message;
@@ -6989,6 +7032,284 @@ export const connectMailchimp = (storeId, code) => async (dispatch, getState) =>
     setTimeout(() => {
       window.location = `http://localhost:4000/dashboard/integration`;
     }, 1000);
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+
+export const updateGA = (measurementId, handleClose, uninstall) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/updateGA`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        measurementId,
+        uninstall,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updateGMC = (code, handleClose, uninstall) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/updateGMC`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        code,
+        uninstall,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updateGSC = (code, handleClose, uninstall) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/updateGSC`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        code,
+        uninstall,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updatePixel = (code, handleClose, uninstall) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/updatePixel`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        code,
+        uninstall,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updateAdwords = (code, handleClose, uninstall) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/updateAdwords`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        code,
+        uninstall,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+export const updateIntercom = (appId, handleClose, uninstall) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}store/updateIntercom`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        appId,
+        uninstall,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    handleClose();
+
+    dispatch(showSnackbar('success', message));
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
