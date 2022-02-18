@@ -30,7 +30,7 @@ import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
 // const BaseURL = 'https://api.app.qwikshop.online/v1/'
-const BaseURL = 'http://localhost:8000/v1/'
+const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -4416,6 +4416,44 @@ export const removeStaffMember = (email, handleClose) => async (dispatch, getSta
 
 // ******************************************************** Referral ********************************************************** //
 
+export const fetchReferralPurchases = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}referral/fetchReferralPurchases`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.FetchReferralPurchases({
+        purchases: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 export const fetchReferrals = (term) => async (dispatch, getState) => {
   let message;
   try {
@@ -6947,11 +6985,10 @@ export const updateWhatsAppNumber = (phone, uninstall) => async (dispatch, getSt
   }
 };
 
-export const uninstallMailchimp = () => async(dispatch, getState) => {
+export const uninstallMailchimp = () => async (dispatch, getState) => {
   let message;
 
-  try{
-
+  try {
     const res = await fetch(`${BaseURL}store/uninstallMailchimp`, {
       method: 'PATCH',
 
@@ -6975,19 +7012,18 @@ export const uninstallMailchimp = () => async(dispatch, getState) => {
 
     console.log(result);
 
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
 
-    dispatch(storeActions.FetchStore({
-      store: result.data,
-    }))
-
-    dispatch(showSnackbar("success", message));
-  }
-  catch(error) {
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("error", message));
+    dispatch(showSnackbar('error', message));
   }
-
-}
+};
 
 export const connectMailchimp = (storeId, code) => async (dispatch, getState) => {
   let message;
@@ -7037,7 +7073,6 @@ export const connectMailchimp = (storeId, code) => async (dispatch, getState) =>
     dispatch(showSnackbar('error', message));
   }
 };
-
 
 export const updateGA = (measurementId, handleClose, uninstall) => async (dispatch, getState) => {
   let message;
@@ -7310,6 +7345,47 @@ export const updateIntercom = (appId, handleClose, uninstall) => async (dispatch
     handleClose();
 
     dispatch(showSnackbar('success', message));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const updateReferralPurchase = (formValues, id) => async (dispatch, getState) => {
+  let message;
+  try {
+    const res = await fetch(`${BaseURL}referral/updateReferralPurchase/${id}`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.UpdatePurchase({
+        purchase: result.data,
+      })
+    );
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));

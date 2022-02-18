@@ -20,24 +20,31 @@ import {
 import React, { useState, useEffect } from 'react';
 import Chip from '@mui/material/Chip';
 import dateFormat from 'dateformat';
+import {useSelector, useDispatch} from 'react-redux';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import { ReferralListHead } from '../../sections/@dashboard/e-commerce/product-list';
 import useSettings from '../../hooks/useSettings';
+import {updateReferralPurchase} from "../../actions";
 
 const TABLE_HEAD = [
   { id: 'orderRef', label: 'Order Id', alignRight: false },
   { id: 'orderAmount', label: 'OrderAmount', alignRight: false },
   { id: 'earning', label: 'Earning', alignRight: false },
-  { id: 'paymentStatus', label: 'Payment Status', alignRight: false },
+  { id: 'commission', label: 'Commission', alignRight: false },
   { id: 'date&Time', label: 'Date & Time', alignRight: false },
   { id: 'actions', label: 'Actions', alignRight: true },
 ];
 
-const ReferralDetails = ({ open, handleClose }) => {
+const ReferralDetails = ({ open, handleClose, id }) => {
+
+const dispatch = useDispatch();
+
   const { themeStretch } = useSettings();
 
-  const [state, setState] = useState('');
+  const {  purchases } = useSelector((state) => state.referral);
+
+  const myPurchases = purchases.filter((el) => el.ref === id);
 
   const earnings = [
     {
@@ -49,6 +56,8 @@ const ReferralDetails = ({ open, handleClose }) => {
       status: 'Not paid',
     },
   ];
+
+
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -65,7 +74,7 @@ const ReferralDetails = ({ open, handleClose }) => {
 
   const handleSelectAllClick = (checked) => {
     if (checked) {
-      const selected = earnings.map((n) => n._id);
+      const selected = myPurchases.map((n) => n._id);
       setSelected(selected);
     } else {
       setSelected([]);
@@ -96,9 +105,9 @@ const ReferralDetails = ({ open, handleClose }) => {
     setFilterName(filterName);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - earnings.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - myPurchases.length) : 0;
 
-  const filteredEarnings = applySortFilter(earnings, getComparator(order, orderBy), filterName);
+  const filteredEarnings = applySortFilter(myPurchases, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredEarnings.length && Boolean(filterName);
 
@@ -121,43 +130,53 @@ const ReferralDetails = ({ open, handleClose }) => {
                     order={order}
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
-                    rowCount={earnings.length}
+                    rowCount={myPurchases.length}
                     onRequestSort={handleRequestSort}
                     hideCheckbox
                   />
 
                   <TableBody>
-                    {earnings.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                      const { _id, orderRef, timestamp, orderAmount, amount, status } = row;
+                    {myPurchases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                      const { _id, order, paid, customer, commissionPercent, commissionAmount, timestamp, status } = row;
 
                       return (
                         <TableRow key={_id} hover tabIndex={-1} role="checkbox">
                           <TableCell>
                             <Stack direction={'row'} alignItems={'center'}>
                               <Typography variant="subtitle2" noWrap>
-                                {orderRef}
+                                {order.ref}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell style={{ minWidth: 160 }}> {`Rs.${orderAmount}`} </TableCell>
-                          <TableCell style={{ minWidth: 160 }}> {`Rs.${amount}%`} </TableCell>
+                          <TableCell style={{ minWidth: 160 }}> {`Rs.${order.charges.total}`} </TableCell>
+                          <TableCell style={{ minWidth: 160 }}> {`Rs.${commissionAmount}`} </TableCell>
                           <TableCell style={{ minWidth: 160 }}>
                             {' '}
                             {status === 'Not Paid' ? (
-                              <Chip label="Not paid" color="error" />
+                              <Chip label={`${commissionPercent}%`} color="error" />
                             ) : (
-                              <Chip label="Paid" color="success" />
+                              <Chip label={`${commissionPercent}%`} color="success" />
                             )}{' '}
                           </TableCell>
                           <TableCell align="left">
                             {' '}
                             {dateFormat(new Date(timestamp), 'ddd, mmm dS, yy, hh:MM TT')}{' '}
                           </TableCell>
-                          <TableCell align="right">
-                            <Button variant="outlined" onClick={() => {}}>
-                              Send Payout
+                          {
+                            paid ? 
+                            <TableCell align="right">
+                              <Chip label={`Paid`} color="success" />
+                            </TableCell>
+                            
+                            : <TableCell align="right">
+                            <Button onClick={() => {
+                              dispatch(updateReferralPurchase({paid: true}, _id));
+                            }} variant="outlined" >
+                              Mark as paid
                             </Button>
                           </TableCell>
+                          }
+                          
                         </TableRow>
                       );
                     })}
@@ -187,7 +206,7 @@ const ReferralDetails = ({ open, handleClose }) => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={earnings.length}
+              count={myPurchases.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={(event, value) => setPage(value)}

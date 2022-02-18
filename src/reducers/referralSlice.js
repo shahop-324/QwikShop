@@ -5,6 +5,7 @@ const referralSlice = createSlice({
 
   initialState: {
     referrals: [],
+    purchases: [],
     isCreating: false,
     isUpdating: false,
     isDeleting: false,
@@ -30,6 +31,12 @@ const referralSlice = createSlice({
     },
     FetchReferrals(state, action) {
       state.referrals = action.payload.referrals;
+    },
+    FetchReferralPurchases(state, action) {
+      state.purchases = action.payload.purchases;
+    },
+    UpdatePurchase(state, action) {
+      state.purchases = state.purchases.map((el) => (el._id !== action.payload.purchase._id ? el : action.payload.purchase));
     },
     DeleteReferral(state, action) {
       state.referrals = state.referrals.filter((el) => el._id !== action.payload.referralId);

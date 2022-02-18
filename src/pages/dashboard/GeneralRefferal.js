@@ -32,7 +32,7 @@ import {
   ReferralListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
 import AddNewReferrer from '../../Dialogs/Referral/AddNewReferrer';
-import { fetchReferrals, showSnackbar } from '../../actions';
+import { fetchReferrals, fetchReferralPurchases, showSnackbar } from '../../actions';
 
 import EditReferrer from '../../Dialogs/Referral/EditReferrer';
 import DeleteReferrer from '../../Dialogs/Referral/DeleteReferrer';
@@ -71,6 +71,10 @@ export default function GeneralReferral() {
       clearTimeout(timeoutId);
     };
   }, [term]);
+
+  useEffect(() => {
+    dispatch(fetchReferralPurchases());
+  }, []);
 
   const [openDetails, setOpenDetails] = useState();
 
@@ -129,7 +133,7 @@ export default function GeneralReferral() {
     setOpenAddReferrer(true);
   };
 
-  const { referrals } = useSelector((state) => state.referral);
+  const { referrals, purchases } = useSelector((state) => state.referral);
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -250,7 +254,18 @@ export default function GeneralReferral() {
 
                   <TableBody>
                     {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                      const { _id, name, phone, email, commission, totalSales, totalEarnings } = row;
+                      const { _id, name, phone, email, commission } = row;
+
+                      const myPurchases = purchases.filter((el) => el.ref === _id);
+
+                      let totalSales = 0;
+
+                      let totalEarnings = 0;
+
+                      myPurchases.forEach((pur) => {
+                        totalSales = pur.order.charges.total + totalSales;
+                        totalEarnings = pur.commissionAmount + totalEarnings;
+                      });
 
                       const isItemSelected = selected.indexOf(_id) !== -1;
 

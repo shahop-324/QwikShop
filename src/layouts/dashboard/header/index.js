@@ -160,8 +160,6 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
             <SupportAgentIcon style={{ fontSize: '26px' }} />
           </IconButton>
           </a>
-         
-
           {/* <NotificationsPopover /> */}
           {/* <ContactsPopover /> */}
           <AccountPopover />
