@@ -8,6 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import CampaignRounded from '@mui/icons-material/CampaignRounded';
 import Switch from '@mui/material/Switch';
 import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
 // utils
@@ -154,6 +155,13 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           <IconButton onClick={() => {setOpenWallet(true)}}>
             <AccountBalanceWalletRoundedIcon style={{ fontSize: '26px' }} />
           </IconButton>
+          <a href="//qwikshop.zendesk.com/hc/en-us" target={"_blank"} rel="noreferrer">
+          <IconButton>
+            <SupportAgentIcon style={{ fontSize: '26px' }} />
+          </IconButton>
+          </a>
+         
+
           {/* <NotificationsPopover /> */}
           {/* <ContactsPopover /> */}
           <AccountPopover />
