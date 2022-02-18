@@ -2894,6 +2894,109 @@ export const updateShipment = (formValues, id, handleClose) => async (dispatch, 
 
 // ****************************************************** Transactions *************************************************** //
 
+
+
+export const fetchPayouts = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}payout/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      transactionActions.FetchPayouts({
+        payouts: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+
+export const fetchRefunds = (term) => async (dispatch, getState) => {
+  let message;
+  try {
+    const fullLocation = `${BaseURL}refund/getAll`;
+    const url = new URL(fullLocation);
+    const searchParams = url.searchParams;
+
+    if (term) {
+      searchParams.set('text', term);
+    }
+
+    url.search = searchParams.toString();
+    const newUrl = url.toString();
+
+    console.log(newUrl);
+    const res = await fetch(newUrl, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      transactionActions.FetchRefunds({
+        refunds: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+
+
 export const fetchTransactions = (term) => async (dispatch, getState) => {
   let message;
   try {
@@ -5810,6 +5913,47 @@ export const fetchQuestions = (term) => async (dispatch, getState) => {
 
 // ******************************************************* Order ******************************************************* //
 
+export const askForReview = (id) => async(dispatch, getState) => {
+  let message;
+
+  try{
+    const res = await fetch(`${BaseURL}order/askForReview/${id}`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        id,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(showSnackbar("success", message))
+    
+  }
+  catch(error) {
+    console.log(error);
+    dispatch(showSnackbar("error", message));
+  }
+
+}
+
 export const acceptOrder = (id) => async (dispatch, getState) => {
   let message;
 
@@ -5889,6 +6033,9 @@ export const rejectOrder = (id, reason) => async (dispatch, getState) => {
         order: result.data,
       })
     );
+    dispatch(shipmentActions.UpdateShipment({
+      shipment: result.shipment,
+    }))
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -5932,6 +6079,9 @@ export const cancelOrder = (id, reason) => async (dispatch, getState) => {
         order: result.data,
       })
     );
+    dispatch(shipmentActions.UpdateShipment({
+      shipment: result.shipment,
+    }))
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));

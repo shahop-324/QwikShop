@@ -174,7 +174,7 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
                   display: 'grid',
                   columnGap: 2,
                   rowGap: 3,
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                 }}
               >
                 <Stack spacing={1} direction={'row'} alignItems="center">
@@ -189,9 +189,7 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
                     </Typography>
                   </Stack>
                 </Stack>
-                <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
-                  <Typography variant="body2">{'Product variants'}</Typography>
-                </Stack>
+                
               </Box>
               <Divider sx={{ my: 1 }} />
             </div>

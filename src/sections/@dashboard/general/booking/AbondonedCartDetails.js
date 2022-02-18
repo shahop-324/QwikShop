@@ -67,7 +67,9 @@ export default function AbondonedCartDetails() {
               </TableHead>
               <TableBody>
                 {abondonedCarts?.length > 0 &&
-                  abondonedCarts?.map((row) => (
+                  abondonedCarts?.map((row) => {
+                    console.log(row)
+                    return (
                     <TableRow key={row?._id}>
                       <TableCell>
                         <Stack direction="row" alignItems="center" spacing={2}>
@@ -107,7 +109,7 @@ export default function AbondonedCartDetails() {
                         </IconButton>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )})}
               </TableBody>
             </Table>
           </TableContainer>

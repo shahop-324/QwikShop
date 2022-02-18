@@ -56,7 +56,7 @@ export default function GeneralReferral() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
 
-  const {store} = useSelector((state) => state.store);
+  const { store } = useSelector((state) => state.store);
 
   const [openAddReferrer, setOpenAddReferrer] = useState(false);
 
@@ -263,7 +263,7 @@ export default function GeneralReferral() {
                       let totalEarnings = 0;
 
                       myPurchases.forEach((pur) => {
-                        totalSales = pur.order.charges.total + totalSales;
+                        totalSales = pur?.order?.charges?.total + totalSales;
                         totalEarnings = pur.commissionAmount + totalEarnings;
                       });
 
@@ -301,18 +301,21 @@ export default function GeneralReferral() {
                           <TableCell align="left"> {`Rs.${totalEarnings}`} </TableCell>
                           <TableCell align="right">
                             <Tooltip title="Copy Referral Link">
-                              <IconButton onClick={() => {
-                                navigator.clipboard.writeText(`qwikshop.online/${store.subName}/?ref=${_id}`).then(
-                                  () => {
-                                    console.log("Async: Copying to clipboard was successful!");
-                                    dispatch(showSnackbar("success", "Copied to clipboard!"));
-                                  },
-                                  (err) => {
-                                    console.error("Async: Could not copy text: ", err);
-                                    dispatch(showSnackbar("error", "Failed to copy to clipboard!"));
-                                  }
-                                );
-                              }} className="me-2">
+                              <IconButton
+                                onClick={() => {
+                                  navigator.clipboard.writeText(`qwikshop.online/${store.subName}/?ref=${_id}`).then(
+                                    () => {
+                                      console.log('Async: Copying to clipboard was successful!');
+                                      dispatch(showSnackbar('success', 'Copied to clipboard!'));
+                                    },
+                                    (err) => {
+                                      console.error('Async: Could not copy text: ', err);
+                                      dispatch(showSnackbar('error', 'Failed to copy to clipboard!'));
+                                    }
+                                  );
+                                }}
+                                className="me-2"
+                              >
                                 <ContentCopyRoundedIcon style={{ fontSize: '20px' }} />
                               </IconButton>
                             </Tooltip>

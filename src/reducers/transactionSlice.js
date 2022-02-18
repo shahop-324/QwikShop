@@ -5,12 +5,20 @@ const transactionSlice = createSlice({
 
   initialState: {
     transactions: [],
+    payouts: [],
+    refunds: [],
   },
 
   reducers: {
     FetchTransactions(state, action) {
       state.transactions = action.payload.transactions;
     },
+    FetchPayouts(state, action) {
+      state.payouts = action.payload.payouts;
+    },
+    FetchRefunds(state, action) {
+      state.refunds = action.payload.refunds
+    }
   },
 });
 

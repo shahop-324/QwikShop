@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-key */
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Dialog,
@@ -30,14 +30,16 @@ import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector
 
 import MessageIcon from '@mui/icons-material/Message';
 import CheckBoxRoundedIcon from '@mui/icons-material/CheckBoxRounded';
-import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
-import DeliveryDiningRoundedIcon from '@mui/icons-material/DeliveryDiningRounded';
+import FilterFramesRoundedIcon from '@mui/icons-material/FilterFramesRounded';
+import AddRoadRoundedIcon from '@mui/icons-material/AddRoadRounded';
+import MopedRoundedIcon from '@mui/icons-material/MopedRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import Iconify from '../../components/Iconify';
 import CoinPNG from '../../assets/coin.png';
 import RejectOrder from './RejectOrder';
 import CancelOrder from './CancelOrder';
-import { acceptOrder } from '../../actions';
+import { acceptOrder, askForReview, fetchReviews } from '../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -132,9 +134,11 @@ function ColorlibStepIcon(props) {
 
   const icons = {
     1: <CheckBoxRoundedIcon />,
-    2: <Inventory2RoundedIcon />,
+    2: <FilterFramesRoundedIcon />,
     3: <LocalShippingRoundedIcon />,
-    4: <DeliveryDiningRoundedIcon />,
+    4: <AddRoadRoundedIcon />,
+    5: <MopedRoundedIcon />,
+    6: <CheckCircleRoundedIcon />,
   };
 
   return (
@@ -162,7 +166,14 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const steps = ['Waiting for acceptance', 'Packaging', 'Shipped', 'Delivered'];
+const steps = [
+  'Waiting for acceptance',
+  'Preparing for shipment',
+  'Shipped',
+  'In Transit',
+  'Out for Delivery',
+  'Delivered',
+];
 
 const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject }, ref) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -172,8 +183,43 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
   const { products } = useSelector((state) => state.product);
   const { discounts } = useSelector((state) => state.discount);
   const { store } = useSelector((state) => state.store);
+  const { shipments } = useSelector((state) => state.shipment);
 
   const order = orders.find((el) => el._id === id);
+
+  const shipment = shipments.find((el) => el.orderRef === order.ref);
+
+  useEffect(() => {
+    if (order.status === 'Accepted') {
+      switch (shipment.status) {
+        case 'Preparing for shipment':
+          setActiveStep(1);
+          break;
+        case 'Shipped':
+          setActiveStep(2);
+          break;
+        case 'In Transit':
+          setActiveStep(3);
+          break;
+        case 'Out for delivery':
+          setActiveStep(4);
+          break;
+        case 'Delivered':
+          setActiveStep(5);
+          break;
+        case 'Cancelled':
+          setActiveStep(undefined);
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    if (order.status === 'Pending') {
+      setActiveStep(0);
+    }
+  }, []);
 
   const appliedDiscount = discounts.find((el) => el._id === order.couponId);
 
@@ -191,7 +237,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
       color: matchedProduct.colorsList.find((col) => col.index === el.color),
       variants: el.variants.map((v) => {
         const variant = matchedProduct.customVariants.find((op) => op.index === v.index);
-        const selected = variant !== undefined ?  variant.options.find((ab) => ab.index === v.selectedOption) : {};
+        const selected = variant !== undefined ? variant.options.find((ab) => ab.index === v.selectedOption) : {};
         return {
           name: selected,
           type: variant ? variant.title : null,
@@ -308,13 +354,17 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
         </Card>
 
         <Card sx={{ p: 3, mb: 3 }}>
-          <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
+          {activeStep ? (
+            <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          ) : (
+            <Typography color="error">This Order has been cancelled</Typography>
+          )}
         </Card>
 
         <Typography variant="subtitle1" sx={{ mb: 2 }}>
@@ -322,66 +372,58 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
         </Typography>
         <Card sx={{ p: 3, mb: 3 }}>
           {orderedProducts.map((el) => {
-            console.log(el)
-            return(
-            <div key={el._id}>
-              <Box
-                className="mb-2"
-                sx={{
-                  display: 'grid',
-                  columnGap: 2,
-                  rowGap: 3,
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
-                }}
-              >
-                <Stack direction={'row'} alignItems="center" spacing={2}>
-                  <Avatar
-                    variant="rounded"
-                    src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
-                    sx={{ width: 70, height: 70 }}
-                  />
-                  <Stack spacing={1}>
-                    <Typography variant="subtitle2">{el.product.productName}</Typography>
-                    <Typography variant="caption">
-                      {' '}
-                      Rs. {el.price} * {el.quantity}
+            console.log(el);
+            return (
+              <div key={el._id}>
+                <Box
+                  className="mb-2"
+                  sx={{
+                    display: 'grid',
+                    columnGap: 2,
+                    rowGap: 3,
+                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                  }}
+                >
+                  <Stack direction={'row'} alignItems="center" spacing={2}>
+                    <Avatar
+                      variant="rounded"
+                      src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
+                      sx={{ width: 70, height: 70 }}
+                    />
+                    <Stack spacing={1}>
+                      <Typography variant="subtitle2">{el.product.productName}</Typography>
+                      <Typography variant="caption">
+                        {' '}
+                        Rs. {el.price} * {el.quantity}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                  <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
+                    <Typography variant="body2">
+                      <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'space-between'}>
+                        <Typography variant="subtitle2">Color</Typography>
+                        <Stack spacing={1} direction={'row'} alignItems="center" justifyContent={'space-between'}>
+                          <Card sx={{ backgroundColor: el.color.color, p: 1, width: '10px', height: '10px' }} />
+                          <Typography variant="caption">({el.color.name})</Typography>
+                        </Stack>
+                      </Stack>
+                      <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+                      {el.variants.map((vr) => (
+                        <>
+                          <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
+                            <Typography>{vr.type}</Typography>
+                            <Typography>{vr.name.name}</Typography>
+                          </Stack>
+                          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+                        </>
+                      ))}
                     </Typography>
                   </Stack>
-                </Stack>
-                <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
-                  <Typography variant="body2">
-                    <Stack spacing={2} direction={"row"} alignItems="center" justifyContent={"space-between"}>
-                      <Typography variant='subtitle2'>Color</Typography>
-                     <Stack  spacing={1} direction={"row"} alignItems="center" justifyContent={"space-between"}>
-                     <Card sx={{backgroundColor: el.color.color, p:1, width: "10px", height: "10px"}} />
-                      <Typography variant='caption'>({el.color.name})</Typography>
-                     </Stack>
-
-                   
-                     
-                    </Stack>
-                    <Divider sx={{borderStyle: 'dashed', my: 1}} />
-                    {el.variants.map((vr) => (
-                      <>
-                      <Stack direction={"row"} alignItems="center" justifyContent={"space-between"}>
-                          <Typography>{vr.type}</Typography>
-                          <Typography>{vr.name.name}</Typography>
-                        </Stack>
-                        <Divider sx={{borderStyle: 'dashed', my: 1}} />
-                      </>
-                        
-                      ) )}
-                  </Typography>
-                </Stack>
-                <Stack direction={'row'} alignItems="center" justifyContent={'end'}>
-                  <Button variant="outlined" startIcon={<MessageIcon />} color="success">
-                    Ask for review
-                  </Button>
-                </Stack>
-              </Box>
-              <Divider sx={{ my: 1 }} />
-            </div>
-          )})}
+                </Box>
+                <Divider sx={{ my: 1 }} />
+              </div>
+            );
+          })}
         </Card>
         {/* // TODO Similarly render list of given products */}
         <Typography variant="subtitle1" sx={{ mb: 2 }}>
@@ -397,7 +439,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                   display: 'grid',
                   columnGap: 2,
                   rowGap: 3,
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                 }}
               >
                 <Stack direction={'row'} alignItems="center" spacing={2}>
@@ -416,11 +458,6 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                 </Stack>
                 <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
                   <Typography variant="body2">{'------------'}</Typography>
-                </Stack>
-                <Stack direction={'row'} alignItems="center" justifyContent={'end'}>
-                  <Button variant="outlined" startIcon={<MessageIcon />} color="success">
-                    Ask for review
-                  </Button>
                 </Stack>
               </Box>
               <Divider sx={{ my: 1 }} />
@@ -707,14 +744,18 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
 });
 
 const OrderReceipt = ({ open, handleClose, id }) => {
+  const dispatch = useDispatch();
   const componentRef = useRef();
 
   const [openReject, setOpenReject] = useState(false);
   const [openCancel, setOpenCancel] = useState(false);
 
   const { orders } = useSelector((state) => state.order);
+  const { reviews } = useSelector((state) => state.review);
 
   const order = orders.find((el) => el._id === id);
+
+  const customerReviews = reviews.filter((el) => el.customer._id === order.customer._id);
 
   const handleCloseReject = () => {
     setOpenReject(false);
@@ -723,6 +764,20 @@ const OrderReceipt = ({ open, handleClose, id }) => {
   const handleCloseCancel = () => {
     setOpenCancel(false);
   };
+
+  const [reviewed, setReviewed] = useState(false);
+
+  useEffect(() => {
+    customerReviews.forEach((el) => {
+      if (order.items.map((a) => a.product).includes(el.product)) {
+        setReviewed(true);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchReviews());
+  }, []);
 
   return (
     <>
@@ -735,7 +790,25 @@ const OrderReceipt = ({ open, handleClose, id }) => {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogActions>
-          <Chip sx={{ mr: 3 }} label={order.status} color="primary" variant="outlined" />
+          <Chip label={order.status} color="primary" variant="outlined" />
+          <Stack sx={{ mx: 3 }} direction={'row'} alignItems="center" justifyContent={'end'}>
+            {reviewed ? (
+              <Chip label={'Review Received'} color="primary" variant="outlined" />
+            ) : (
+              <Button
+                onClick={() => {
+                  dispatch(askForReview(id));
+                }}
+                disabled={order.orderStatus === 'cancelled'}
+                variant="outlined"
+                startIcon={<MessageIcon />}
+                color="success"
+              >
+                Ask for review
+              </Button>
+            )}
+          </Stack>
+
           <Button
             variant="outlined"
             onClick={() => exportComponentAsPNG(componentRef)}

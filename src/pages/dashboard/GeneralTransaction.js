@@ -189,7 +189,7 @@ export default function GeneralTransaction() {
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{order.ref}</TableCell>
+                      <TableCell style={{ minWidth: 160 }}>{order?.ref}</TableCell>
                       <TableCell style={{ minWidth: 160 }}>Rs.{((amount *1)/100).toFixed(2)}</TableCell>
                       <TableCell align="left">
                         {customer.name}

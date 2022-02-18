@@ -13,12 +13,12 @@ import {
   TablePagination,
   IconButton,
   Stack,
+  Chip,
   ToggleButtonGroup,
-  ToggleButton,
-  Paper,
 } from '@mui/material';
 // redux
 import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
+import dateFormat from 'dateformat';
 import { useDispatch, useSelector } from '../../redux/store';
 // hooks
 // components
@@ -29,34 +29,17 @@ import {
   TransactionListHead,
   TransactionListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
-import { fetchTransactions } from '../../actions';
+import { fetchRefunds } from '../../actions';
 
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  '& .MuiToggleButtonGroup-grouped': {
-    margin: theme.spacing(0.5),
-    border: 0,
-    '&.Mui-disabled': {
-      border: 0,
-    },
-    '&:not(:first-of-type)': {
-      borderRadius: theme.shape.borderRadius,
-    },
-    '&:first-of-type': {
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-}));
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'transactionId', label: 'Transaction Id', alignRight: false },
+  { id: 'customerName', label: 'Customer Name', alignRight: false },
   { id: 'orderId', label: 'Order Id', alignRight: false },
   { id: 'amount', label: 'Amount', alignRight: false },
-  { id: 'type', label: 'Type', alignRight: false },
+  { id: 'date', label: 'Date', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
-  
-  { id: 'destination', label: 'Destination', alignRight: true  },
 ];
 
 // ----------------------------------------------------------------------
@@ -69,7 +52,7 @@ export default function GeneralTransaction() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      dispatch(fetchTransactions(term));
+      dispatch(fetchRefunds(term));
     }, 800);
 
     return () => {
@@ -77,20 +60,10 @@ export default function GeneralTransaction() {
     };
   }, [term]);
 
-  const [IdToEdit, setIdToEdit] = useState();
 
-  const [openUpdate, setOpenUpdate] = useState(false);
 
-  const handleOpenUpdate = (id) => {
-    setIdToEdit(id);
-    setOpenUpdate(true);
-  };
 
-  const handleCloseUpdate = () => {
-    setOpenUpdate(false);
-  };
-
-  const { transactions } = useSelector((state) => state.transaction);
+  const { refunds } = useSelector((state) => state.transaction);
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -107,7 +80,7 @@ export default function GeneralTransaction() {
 
   const handleSelectAllClick = (checked) => {
     if (checked) {
-      const selected = transactions.map((n) => n._id);
+      const selected = refunds.map((n) => n._id);
       setSelected(selected);
     } else {
       setSelected([]);
@@ -123,16 +96,16 @@ export default function GeneralTransaction() {
     setFilterName(filterName);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - transactions.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - refunds.length) : 0;
 
-  const filteredTransactions = applySortFilter(transactions, getComparator(order, orderBy), filterName);
+  const filteredTransactions = applySortFilter(refunds, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredTransactions.length && Boolean(filterName);
 
   const processTransactionsData = () => {
     const processedArray = [];
 
-    transactions.map((transaction) => {
+    refunds.map((transaction) => {
       const array = Object.entries(transaction);
 
       const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
@@ -158,7 +131,7 @@ export default function GeneralTransaction() {
     const hiddenElement = document.createElement('a');
     hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
     hiddenElement.target = '_blank';
-    hiddenElement.download = 'transactions.csv';
+    hiddenElement.download = 'refunds.csv';
     hiddenElement.click();
   };
 
@@ -166,13 +139,7 @@ export default function GeneralTransaction() {
     CreateAndDownloadCSV(processTransactionsData());
   };
 
-  const [filter, setFilter] = React.useState('all');
 
-  const handleFilter = (event, newValue) => {
-    if (newValue !== null) {
-      setFilter(newValue);
-    }
-  };
 
   return (
     <>
@@ -194,14 +161,14 @@ export default function GeneralTransaction() {
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={transactions.length}
+                rowCount={refunds.length}
                 numSelected={selected.length}
                 onRequestSort={handleRequestSort}
                 onSelectAllClick={handleSelectAllClick}
               />
 
               <TableBody>
-                {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                {refunds.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                   const { _id, name, image, products, outOfStock, hidden, totalSales } = row;
 
                   const isItemSelected = selected.indexOf(_id) !== -1;
@@ -211,23 +178,15 @@ export default function GeneralTransaction() {
                       <TableCell>
                         <Stack direction={'row'} alignItems={'center'}>
                           <Typography variant="subtitle2" noWrap>
-                            {/* {name} */}
+                           {row.customer.name}
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{/*  */}</TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{/*  */}</TableCell>
-                      <TableCell align="left">{/*  */}</TableCell>
-                      <TableCell align="right">
-                        <IconButton
-                          onClick={() => {
-                            handleOpenUpdate(_id);
-                          }}
-                          className="me-2"
-                        >
-                          <ModeEditOutlineRoundedIcon style={{ fontSize: '20px' }} />
-                        </IconButton>
-                      </TableCell>
+                      <TableCell style={{ minWidth: 160 }}>{row.order.ref}</TableCell>
+                      <TableCell style={{ minWidth: 160 }}>Rs.{row.order.charges.total}</TableCell>
+                      <TableCell align="left">{dateFormat(new Date(row.createdAt || Date.now()), 'ddd mmm dS, yy hh:mm TT')}</TableCell>
+                      <TableCell align="left">{row.resolved ? <Chip label="Proccessed" color="primary" variant="outlined" /> : <Chip label="Processing" color="info" variant="outlined" /> }</TableCell>
+                      
                     </TableRow>
                   );
                 })}
@@ -257,7 +216,7 @@ export default function GeneralTransaction() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={transactions.length}
+          count={refunds.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(event, value) => setPage(value)}
