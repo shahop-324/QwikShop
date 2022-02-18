@@ -29,8 +29,8 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-// const BaseURL = 'https://api.app.qwikshop.online/v1/'
-const BaseURL = 'http://localhost:8000/v1/';
+const BaseURL = 'https://api.app.qwikshop.online/v1/'
+// const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
