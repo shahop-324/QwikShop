@@ -128,7 +128,7 @@ const AccountCheckout = () => {
     <>
       <Grid className="px-4 pt-3" container spacing={3}>
         <Grid item xs={12} md={12}>
-          <Card sx={{ p: 3, position: 'relative' }}>
+          {/* <Card sx={{ p: 3, position: 'relative' }}>
             <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
               <Stack direction={'column'} spacing={1}>
                 <Typography variant="subtitle1">Guest Checkout</Typography>
@@ -147,7 +147,7 @@ const AccountCheckout = () => {
                 label={store.guestCheckout ? 'Enabled' : 'Disabled'}
               />
             </Stack>
-          </Card>
+          </Card> */}
         </Grid>
       </Grid>
       <Stack direction="column" spacing={2}>

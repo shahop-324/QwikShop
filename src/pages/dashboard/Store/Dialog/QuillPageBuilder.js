@@ -64,6 +64,9 @@ const QuillPageBuilder = ({ open, handleClose, isEdit, id }) => {
         </Grid>
 
         <Stack spacing={3} direction="row" alignItems="center" justifyContent="end" sx={{ px: 4, py: 3 }}>
+        <LoadingButton onClick={handleClose} variant="outlined">
+           Close
+          </LoadingButton>
           <LoadingButton loading={isEdit ? isCreatingPage : isUpdatingPage} onClick={onSubmit} variant="contained">
             Save & Publish
           </LoadingButton>

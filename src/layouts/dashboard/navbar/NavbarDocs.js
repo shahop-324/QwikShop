@@ -21,7 +21,7 @@ export default function NavbarDocs() {
         </Typography>
       </div>
 
-      <Button href={PATH_DOCS} target="_blank" rel="noopener" variant="contained">
+      <Button href={`/dashboard/store/settings`} target="_blank" rel="noopener" variant="contained">
         Get Premium
       </Button>
     </Stack>

@@ -125,10 +125,11 @@ export default function PricingPlanCard({ card, index, isHome }) {
       </Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+        {index !== 0 &&  <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
           Rs.
         </Typography>
-
+}
+       
         <Typography variant="h2" sx={{ mx: 1 }}>
           {price === 0 ? 'Free' : price}
         </Typography>

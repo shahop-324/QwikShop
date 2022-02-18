@@ -85,6 +85,15 @@ const DnDPageBuilder = ({ open, handleClose, isEdit, id }) => {
                 }}
               />
 
+<LoadingButton
+                
+                onClick={handleClose}
+                variant="outlined"
+                color="primary"
+              >
+                Close
+              </LoadingButton>
+
               <LoadingButton
                 loading={isEdit ? isUpdating : isCreating}
                 onClick={onSubmit}

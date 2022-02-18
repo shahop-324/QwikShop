@@ -39,7 +39,7 @@ export default function ComingSoon() {
 
   return (
     <Page title="Coming Soon" sx={{ height: 1 }}>
-      {/* <RootStyle>
+      <RootStyle>
         <Container>
           <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
             <Typography variant="h3" paragraph>
@@ -97,7 +97,7 @@ export default function ComingSoon() {
             </Stack>
           </Box>
         </Container>
-      </RootStyle> */}
+      </RootStyle>
     </Page>
   );
 }

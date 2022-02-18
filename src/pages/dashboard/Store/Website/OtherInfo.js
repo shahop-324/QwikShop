@@ -225,6 +225,7 @@ const StoreOtherInfo = () => {
                     value={false}
                     control={
                       <Radio
+
                         onClick={() => {
                           setReplacementAccepted(false);
                         }}
@@ -234,7 +235,7 @@ const StoreOtherInfo = () => {
                   />
                 </RadioGroup>
               </FormControl>
-              <Autocomplete
+              {returnAccepted && <Autocomplete
                 value={returnPeriod}
                 onChange={(e, value) => {
                   setReturnPeriod(value);
@@ -254,8 +255,9 @@ const StoreOtherInfo = () => {
                     }}
                   />
                 )}
-              />
-              <Autocomplete
+              /> }
+              
+              {replacementAccepted && <Autocomplete
                 value={replacementPeriod}
                 onChange={(e, value) => {
                   setReplacementPeriod(value);
@@ -275,153 +277,10 @@ const StoreOtherInfo = () => {
                     }}
                   />
                 )}
-              />
+              />}
+              
             </Box>
-            <FormControl sx={{ mb: 3 }}>
-              <FormLabel id="demo-row-radio-buttons-group-label">Delivery Happens within ?</FormLabel>
-              <RadioGroup
-                value={deliveryHappensWithin}
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                <FormControlLabel
-                  value="international"
-                  control={
-                    <Radio
-                      onClick={() => {
-                        setDeliveryHappensWithin('international');
-                      }}
-                    />
-                  }
-                  label="International"
-                />
-                <FormControlLabel
-                  value="india"
-                  control={
-                    <Radio
-                      onClick={() => {
-                        setDeliveryHappensWithin('india');
-                      }}
-                    />
-                  }
-                  label="India"
-                />
-                <FormControlLabel
-                  value="state"
-                  control={
-                    <Radio
-                      onClick={() => {
-                        setDeliveryHappensWithin('state');
-                      }}
-                    />
-                  }
-                  label="State"
-                />
-                <FormControlLabel
-                  value="city"
-                  control={
-                    <Radio
-                      onClick={() => {
-                        setDeliveryHappensWithin('city');
-                      }}
-                    />
-                  }
-                  label="City"
-                />
-                <FormControlLabel
-                  value="distanceRange"
-                  control={
-                    <Radio
-                      onClick={() => {
-                        setDeliveryHappensWithin('distanceRange');
-                      }}
-                    />
-                  }
-                  label="In a fixed Distance"
-                />
-              </RadioGroup>
-            </FormControl>
-            <Box
-              sx={{
-                mb: 4,
-                display: 'grid',
-                columnGap: 2,
-                rowGap: 3,
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-              }}
-            >
-              <TextField
-                name="deliveryState"
-                label="State"
-                fullWidth
-                value={state}
-                onChange={(e) => {
-                  setState(e.target.value);
-                }}
-              />
-              <TextField
-                name="city"
-                label="City"
-                fullWidth
-                value={city}
-                onChange={(e) => {
-                  setCity(e.target.value);
-                }}
-              />
-            </Box>
-
-            <Slider
-              sx={{ my: 3, px: 4 }}
-              getAriaLabel={() => 'Distannce Range'}
-              value={[minRange, maxRange]}
-              min={1}
-              max={100}
-              onChange={(e, newValue) => {
-                setMinRange(newValue[0]);
-                setMaxRange(newValue[1]);
-              }}
-              valueLabelDisplay="on"
-              getAriaValueText={valuetext}
-            />
-            <Box
-              sx={{
-                mb: 4,
-                display: 'grid',
-                columnGap: 2,
-                rowGap: 3,
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-              }}
-            >
-              <TextField
-                name="minRange"
-                label="Minimum Distance"
-                fullWidth
-                value={minRange}
-                onChange={(e) => {
-                  setMinRange(e.target.value);
-                }}
-              />
-              <TextField
-                name="maxRange"
-                label="Maximum Distance"
-                fullWidth
-                value={maxRange}
-                onChange={(e) => {
-                  setMaxRange(e.target.value);
-                }}
-              />
-            </Box>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography>Show my shop only to visitors in my delivery zone?</Typography>
-              <AntSwitch
-                checked={showShopInDeliveryZoneOnly}
-                onClick={(e) => {
-                  setShowShopInDeliveryZoneOnly(e.target.checked);
-                }}
-                inputProps={{ 'aria-label': 'ant design' }}
-              />
-            </Stack>
+            
           </Card>
           <div style={{width: "100%"}} className='d-flex flex-row align-items-center justify-content-end mt-3' >
             <LoadingButton

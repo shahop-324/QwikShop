@@ -60,6 +60,7 @@ const StorePages = () => {
   const dispatch = useDispatch();
 
   const { pages } = useSelector((state) => state.page);
+  const {store} = useSelector((state) => state.store);
 
   const [term, setTerm] = useState('');
 
@@ -145,9 +146,12 @@ const StorePages = () => {
         console.log(params);
         return (
           <Stack spacing={2} direction={'row'} alignItems={'center'} justifyContent={'space-around'}>
+            <a target="_blank" rel="noreferrer" href={`//https://qwikshop.online/${store.subName}/pages/${params.row.slug}`}>
             <IconButton color="primary">
               <RemoveRedEyeRoundedIcon />
             </IconButton>
+            </a>
+           
             <IconButton
               onClick={() => {
                 setId(params.id);
@@ -178,6 +182,7 @@ const StorePages = () => {
     status: 'Live',
     date: dateFormat(new Date(el.createdAt), 'dd, mm dS, yy, h:MM TT'),
     type: el.type,
+    slug: el.slug,
   }));
 
   // const rows = [

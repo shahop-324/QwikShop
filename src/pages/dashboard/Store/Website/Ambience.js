@@ -24,55 +24,7 @@ const StoreAmbience = () => {
         </Button>
       </div>
 
-      <Typography variant="h6" className="mb-3">
-        Mode
-      </Typography>
-
-      <RadioGroup
-        value={mode}
-        sx={{ width: '100%', mb: 4 }}
-        row
-        aria-labelledby="demo-row-radio-buttons-group-label"
-        name="row-radio-buttons-group"
-      >
-        <Box
-          sx={{
-            display: 'grid',
-            columnGap: 2,
-            rowGap: 3,
-            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-          }}
-        >
-          <Card sx={{ p: 3, width: '400px' }}>
-            {' '}
-            <FormControlLabel
-              value="light"
-              control={
-                <Radio
-                  onClick={() => {
-                    setMode('light');
-                  }}
-                />
-              }
-              label="Light"
-            />
-          </Card>
-          <Card sx={{ p: 3, width: '400px' }}>
-            {' '}
-            <FormControlLabel
-              value="dark"
-              control={
-                <Radio
-                  onClick={() => {
-                    setMode('dark');
-                  }}
-                />
-              }
-              label="Dark"
-            />
-          </Card>
-        </Box>
-      </RadioGroup>
+      
       <Typography variant="h6" className="mb-3">
         Primary Color
       </Typography>

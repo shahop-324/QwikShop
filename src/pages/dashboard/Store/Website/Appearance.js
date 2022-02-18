@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack, Button, Typography, Card, Box, CardActionArea, IconButton } from '@mui/material';
+import { Stack, Button, Typography, Card, Box, CardActionArea, IconButton, Chip } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -14,100 +14,42 @@ const StoreAppearance = () => {
   const dispatch = useDispatch();
 
   const [superstore, setSuperstore] = useState(false);
-  const [electronics, setElectronics] = useState(false);
-  const [groceryBeta, setGroceryBeta] = useState(false);
-  const [fashion, setFashion] = useState(false);
-  const [grocery, setGrocery] = useState(false);
-  const [furniture, setFurniture] = useState(false);
-  const [healthBeauty, setHealthBeauty] = useState(false);
-  const [groceryAlpha, setGroceryAlpha] = useState(false);
-  const [gift, setGift] = useState(false);
-  const [lite, setLite] = useState(false);
-  const [eureka, setEureka] = useState(false);
 
   const handleCloseSuperstore = () => {
     setSuperstore(false);
   };
-  const handleCloseElectronics = () => {
-    setElectronics(false);
-  };
-  const handleCloseGroceryBeta = () => {
-    setGroceryBeta(false);
-  };
-  const handleCloseFashion = () => {
-    setFashion(false);
-  };
-  const handleCloseGrocery = () => {
-    setGrocery(false);
-  };
-  const handleCloseHealthBeauty = () => {
-    setHealthBeauty(false);
-  };
-  const handleCloseGroceryAlpha = () => {
-    setGroceryAlpha(false);
-  };
-  const handleCloseGift = () => {
-    setGift(false);
-  };
-  const handleCloseLite = () => {
-    setLite(false);
-  };
-  const handleCloseEureka = () => {
-    setEureka(false);
-  };
 
-  const handleOpen = (theme) => {
-    switch (theme) {
-      case 'Grocery Beta':
-        setGroceryBeta(true);
-        break;
-      case 'Electronics':
-        setElectronics(true);
-        break;
-      case 'Superstore':
-        setSuperstore(true);
-        break;
-      case 'Fashion':
-        setFashion(true);
-        break;
-      case 'Grocery':
-        setGrocery(true);
-        break;
-      case 'Furniture':
-        setFurniture(true);
-        break;
-      case 'Health & Beauty':
-        setHealthBeauty(true);
-        break;
-      case 'Grocery Alpha':
-        setGroceryAlpha(true);
-        break;
-      case 'Gift':
-        setGift(true);
-        break;
-      case 'Lite':
-        setLite(true);
-        break;
-      case 'Eureka':
-        setEureka(true);
-        break;
-
-      default:
-        break;
-    }
+  const handleOpen = () => {
+    setSuperstore(true);
   };
 
   return (
     <div>
       <div style={{ width: '100%' }} className="d-flex flex-row align-items-center justify-content-end mb-3">
-        <Button variant="contained" startIcon={<RemoveRedEyeIcon />}>
-          Preview
-        </Button>
+        <a style={{textDecoration: "none"}} href={`//https://qwikshop.online/${store.subName}`} target="_blank" rel="noreferrer">
+          <Button variant="outlined" startIcon={<RemoveRedEyeIcon />}>
+            Preview
+          </Button>
+        </a>
       </div>
 
+      <Stack sx={{mb: 3, mt: 2}} direction={"row"} alignItems="center" justifyContent={"space-between"}>
       <Typography variant="subtitle1" className="mb-3">
         Theme
       </Typography>
+
+      <Button
+        onClick={() => {
+          handleOpen();
+        }}
+        variant="contained"
+        startIcon={<SettingsIcon />}
+      >
+        Customise
+      </Button>
+      </Stack>
+
+      
 
       <Box
         sx={{
@@ -137,13 +79,8 @@ const StoreAppearance = () => {
                         Preview
                       </Button>
                       {store.theme === el.label ? (
-                        <IconButton
-                          onClick={() => {
-                            handleOpen(el.label);
-                          }}
-                        >
-                          <SettingsIcon />
-                        </IconButton>
+                        <Chip label="Applied" color="primary" variant="conatined" />
+                        
                       ) : (
                         <Button
                           onClick={() => {

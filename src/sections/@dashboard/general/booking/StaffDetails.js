@@ -1,4 +1,6 @@
 import { useState } from 'react';
+// @mui
+import { styled } from '@mui/material/styles';
 import {
   Box,
   Card,
@@ -14,6 +16,8 @@ import {
   Button,
   Chip,
   TableContainer,
+  Container,
+  InputAdornment
 } from '@mui/material';
 //
 import { useSelector } from 'react-redux';
@@ -22,6 +26,39 @@ import AddStaffMember from '../../../../Dialogs/AddStaffMember';
 import UpdateStaffMember from '../../../../Dialogs/Staff/updateStaff';
 import RemoveStaff from '../../../../Dialogs/Staff/removeStaff';
 import { ProductMoreMenu } from '../../e-commerce/product-list';
+
+// hooks
+import useCountdown from '../../../../hooks/useCountdown';
+// components
+import Page from '../../../../components/Page';
+import InputStyle from '../../../../components/InputStyle';
+import SocialsButton from '../../../../components/SocialsButton';
+// assets
+import { ComingSoonIllustration } from '../../../../assets';
+
+// ----------------------------------------------------------------------
+
+const RootStyle = styled('div')(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  paddingTop: theme.spacing(15),
+  paddingBottom: theme.spacing(10),
+}));
+
+const CountdownStyle = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+});
+
+const SeparatorStyle = styled(Typography)(({ theme }) => ({
+  margin: theme.spacing(0, 1),
+  [theme.breakpoints.up('sm')]: {
+    margin: theme.spacing(0, 2.5),
+  },
+}));
+
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
@@ -58,9 +95,11 @@ export default function StaffDetails() {
     setOpen(false);
   };
 
+  const countdown = useCountdown(new Date('02/25/2022 21:30'));
+
   return (
     <>
-      <Stack sx={{ mb: 3 }} direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+      {/* <Stack sx={{ mb: 3 }} direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
         <div>{''}</div>
         <Stack direction={'row'} spacing={3} alignItems={'center'}>
           <Button
@@ -140,7 +179,52 @@ export default function StaffDetails() {
         <Divider />
 
         <Box sx={{ p: 2, textAlign: 'right' }}> </Box>
-      </Card>
+      </Card> */}
+
+<Container>
+          <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
+            <Typography variant="h3" paragraph>
+              Coming Soon!
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>We are currently working hard on this feature!</Typography>
+
+            <ComingSoonIllustration sx={{ my: 10, height: 240 }} />
+
+            <CountdownStyle>
+              <div>
+                <Typography variant="h2">{countdown.days}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Days</Typography>
+              </div>
+
+              <SeparatorStyle variant="h2">:</SeparatorStyle>
+
+              <div>
+                <Typography variant="h2">{countdown.hours}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Hours</Typography>
+              </div>
+
+              <SeparatorStyle variant="h2">:</SeparatorStyle>
+
+              <div>
+                <Typography variant="h2">{countdown.minutes}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Minutes</Typography>
+              </div>
+
+              <SeparatorStyle variant="h2">:</SeparatorStyle>
+
+              <div>
+                <Typography variant="h2">{countdown.seconds}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Seconds</Typography>
+              </div>
+            </CountdownStyle>
+
+            
+
+            <Stack sx={{my: 4}} alignItems="center">
+              <SocialsButton size="large" initialColor />
+            </Stack>
+          </Box>
+        </Container>
       {open && <AddStaffMember open={open} handleClose={handleClose} />}
       {openUpdate && <UpdateStaffMember open={openUpdate} handleClose={handleCloseUpdate} id={id} />}
       {openRemove && <RemoveStaff open={openRemove} handleClose={handleCloseRemove} id={id} />}
