@@ -20,12 +20,12 @@ import {
 import React, { useState, useEffect } from 'react';
 import Chip from '@mui/material/Chip';
 import dateFormat from 'dateformat';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import { ReferralListHead } from '../../sections/@dashboard/e-commerce/product-list';
 import useSettings from '../../hooks/useSettings';
-import {updateReferralPurchase} from "../../actions";
+import { updateReferralPurchase } from '../../actions';
 
 const TABLE_HEAD = [
   { id: 'orderRef', label: 'Order Id', alignRight: false },
@@ -37,12 +37,11 @@ const TABLE_HEAD = [
 ];
 
 const ReferralDetails = ({ open, handleClose, id }) => {
-
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const { themeStretch } = useSettings();
 
-  const {  purchases } = useSelector((state) => state.referral);
+  const { purchases } = useSelector((state) => state.referral);
 
   const myPurchases = purchases.filter((el) => el.ref === id);
 
@@ -56,8 +55,6 @@ const dispatch = useDispatch();
       status: 'Not paid',
     },
   ];
-
-
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -137,7 +134,16 @@ const dispatch = useDispatch();
 
                   <TableBody>
                     {myPurchases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                      const { _id, order, paid, customer, commissionPercent, commissionAmount, timestamp, status } = row;
+                      const {
+                        _id,
+                        order,
+                        paid,
+                        customer,
+                        commissionPercent,
+                        commissionAmount,
+                        timestamp,
+                        status,
+                      } = row;
 
                       return (
                         <TableRow key={_id} hover tabIndex={-1} role="checkbox">
@@ -162,21 +168,22 @@ const dispatch = useDispatch();
                             {' '}
                             {dateFormat(new Date(timestamp), 'ddd, mmm dS, yy, hh:MM TT')}{' '}
                           </TableCell>
-                          {
-                            paid ? 
+                          {paid ? (
                             <TableCell align="right">
                               <Chip label={`Paid`} color="success" />
                             </TableCell>
-                            
-                            : <TableCell align="right">
-                            <Button onClick={() => {
-                              dispatch(updateReferralPurchase({paid: true}, _id));
-                            }} variant="outlined" >
-                              Mark as paid
-                            </Button>
-                          </TableCell>
-                          }
-                          
+                          ) : (
+                            <TableCell align="right">
+                              <Button
+                                onClick={() => {
+                                  dispatch(updateReferralPurchase({ paid: true }, _id));
+                                }}
+                                variant="outlined"
+                              >
+                                Mark as paid
+                              </Button>
+                            </TableCell>
+                          )}
                         </TableRow>
                       );
                     })}

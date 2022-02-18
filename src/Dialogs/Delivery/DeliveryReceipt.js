@@ -32,22 +32,24 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
 
   const shipment = shipments.find((el) => el._id === id);
 
-  const order = shipment.order;
+  const { order } = shipment;
 
-  const appliedDiscount = discounts.find((el) => el._id === order.couponId);
+  // const appliedDiscount = discounts.find((el) => el._id === order.couponId);
 
   let orderedProducts = [];
 
-  orderedProducts = order.items.map((el) => {
-    const matchedProduct = products.find((elm) => elm._id === el.product);
-    return {
-      product: matchedProduct,
-      color: matchedProduct?.colorList?.find((col) => col.index === el.color),
-      price: el.pricePerUnit,
-      quantity: el.quantity,
-      //   Similarly find populate array of custom variants
-    };
-  });
+  if (order && order?.items) {
+    orderedProducts = order.items.map((el) => {
+      const matchedProduct = products.find((elm) => elm._id === el.product);
+      return {
+        product: matchedProduct,
+        color: matchedProduct?.colorList?.find((col) => col.index === el.color),
+        price: el.pricePerUnit,
+        quantity: el.quantity,
+        //   Similarly find populate array of custom variants
+      };
+    });
+  }
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -61,21 +63,25 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
 
   console.log(finalArr);
 
-  const barcodeValue = {
-    deliveredVia: shipment.carrier,
-    seller: store._id,
-    sellerName: store.name,
-    orderId: order.ref,
-    shipmentId: shipment._id,
-    amountToCollect: order.charges.total - order.paidAmount,
-    customer: order.customer._id,
-    timestamp: Date.now(),
-    shippingName: order.shippingAddress.shipping_name,
-    shippingLandmark: order.shippingAddress.shipping_landmark,
-    shippingContact: order.shippingAddress.shipping_contact,
-    shippingAddress1: order.shippingAddress.shipping_address1,
-    shippingZip: order.shippingAddress.shipping_zip,
-  };
+  let barcodeValue = {};
+
+  if (order) {
+    barcodeValue = {
+      deliveredVia: shipment.carrier,
+      seller: store._id,
+      sellerName: store.name,
+      orderId: order?.ref,
+      shipmentId: shipment._id,
+      amountToCollect: order?.charges?.total - order?.paidAmount,
+      customer: order.customer._id,
+      timestamp: Date.now(),
+      shippingName: order?.shippingAddress.shipping_name,
+      shippingLandmark: order?.shippingAddress.shipping_landmark,
+      shippingContact: order?.shippingAddress.shipping_contact,
+      shippingAddress1: order?.shippingAddress.shipping_address1,
+      shippingZip: order?.shippingAddress.shipping_zip,
+    };
+  }
 
   return (
     <div ref={ref}>
@@ -86,40 +92,42 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
 
             <Stack sx={{ width: 350 }}>
               <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                <Typography variant='subtitle2'>Deliver to </Typography>
+                <Typography variant="subtitle2">Deliver to </Typography>
 
-                <Typography variant='subtitle2'>Shreyansh shah</Typography>
+                <Typography variant="subtitle2">Shreyansh shah</Typography>
               </Stack>
               <Stack sx={{ width: 350 }}>
                 <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                  <Typography variant='subtitle2'>Delivered Via </Typography>
+                  <Typography variant="subtitle2">Delivered Via </Typography>
 
-                  <Typography variant='subtitle2'>Delhivery</Typography>
+                  <Typography variant="subtitle2">Delhivery</Typography>
                 </Stack>
                 <Stack sx={{ width: 350 }}>
                   <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                    <Typography variant='subtitle2'>Seller </Typography>
+                    <Typography variant="subtitle2">Seller </Typography>
 
-                    <Typography variant='subtitle2'>Uncle Kirana Store</Typography>
+                    <Typography variant="subtitle2">Uncle Kirana Store</Typography>
                   </Stack>
                   <Stack sx={{ width: 350 }}>
                     <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                      <Typography variant='subtitle2'>Pincode </Typography>
+                      <Typography variant="subtitle2">Pincode </Typography>
 
-                      <Typography variant='subtitle2'>474020</Typography>
+                      <Typography variant="subtitle2">474020</Typography>
                     </Stack>
                     <Stack sx={{ width: 350 }}>
                       <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                        <Typography variant='subtitle2'>Amount to Collect </Typography>
+                        <Typography variant="subtitle2">Amount to Collect </Typography>
 
-                        <Typography variant='subtitle2'>Rs. 450</Typography>
+                        <Typography variant="subtitle2">Rs. 450</Typography>
                       </Stack>
                     </Stack>
                     <Stack sx={{ width: 350 }}>
                       <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                        <Typography variant='subtitle2'>Generated on </Typography>
+                        <Typography variant="subtitle2">Generated on </Typography>
 
-                        <Typography variant='subtitle2'>{dateFormat(new Date(), "ddd mmm dS, yy, hh:mm TT")}</Typography>
+                        <Typography variant="subtitle2">
+                          {dateFormat(new Date(), 'ddd mmm dS, yy, hh:mm TT')}
+                        </Typography>
                       </Stack>
                     </Stack>
                   </Stack>
@@ -127,8 +135,6 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
               </Stack>
             </Stack>
           </Stack>
-
-          
         </Card>
         <Card sx={{ p: 3, mb: 3 }}>
           <Box
@@ -142,11 +148,12 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
           >
             <Typography variant="subtitle2" sx={{ fontSize: '12px' }}>
               <span style={{ marginRight: '10px' }}>Order Id:</span>
-              {order.ref}
+              {order?.ref}
             </Typography>
             <Typography variant="subtitle2" sx={{ fontSize: '12px' }}>
               <span style={{ marginRight: '10px' }}>Placed On:</span>
-              {dateFormat(new Date(order.createdAt), 'ddd, mmm dS, yy, h:MM TT')}
+              {order && dateFormat(new Date(order?.createdAt), 'ddd, mmm dS, yy, h:MM TT')}
+             
             </Typography>
             <Typography variant="subtitle2" sx={{ fontSize: '12px' }}>
               {' '}
@@ -207,24 +214,24 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
             </Typography>
 
             <Typography variant="caption">Name</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_name}</Typography>
+            <Typography variant="subtitle2">{order?.shippingAddress.shipping_name}</Typography>
 
             <Divider sx={{ my: 1 }} />
             <Typography variant="caption">Address</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_address1}</Typography>
+            <Typography variant="subtitle2">{order?.shippingAddress.shipping_address1}</Typography>
 
             <Divider sx={{ my: 1 }} />
             <Typography variant="caption">Pincode</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_zip}</Typography>
+            <Typography variant="subtitle2">{order?.shippingAddress.shipping_zip}</Typography>
 
             <Divider sx={{ my: 1 }} />
             <Typography variant="caption">Contact Number</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_contact}</Typography>
+            <Typography variant="subtitle2">{order?.shippingAddress.shipping_contact}</Typography>
 
             <Divider sx={{ my: 1 }} />
 
             <Typography variant="caption">Landmark</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_landmark}</Typography>
+            <Typography variant="subtitle2">{order?.shippingAddress.shipping_landmark}</Typography>
           </Card>
 
           <Card sx={{ p: 3 }}>
@@ -233,23 +240,23 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="caption">Subtotal</Typography>
-                <Typography variant="subtitle2">Rs.{order.charges.items_total}</Typography>
+                <Typography variant="subtitle2">Rs.{order?.charges.items_total}</Typography>
               </Stack>
             </div>
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="caption">Shipping Fees</Typography>
-                <Typography variant="subtitle2">Rs.{order.charges.shipping_charge}</Typography>
+                <Typography variant="subtitle2">Rs.{order?.charges.shipping_charge}</Typography>
               </Stack>
             </div>
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="caption">Discount</Typography>
-                <Typography variant="subtitle2">- Rs.{order.charges.discount}</Typography>
+                <Typography variant="subtitle2">- Rs.{order?.charges.discount}</Typography>
               </Stack>
             </div>
 
-            {order.charges.extra_charges.map((el) => (
+            {order?.charges.extra_charges.map((el) => (
               <div key={el.name}>
                 <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
                   <Typography variant="caption">{el.name}</Typography>
@@ -262,7 +269,7 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
 
             <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">{'Total'}</Typography>
-              <Typography variant="subtitle2">Rs.{order.charges.total}</Typography>
+              <Typography variant="subtitle2">Rs.{order?.charges.total}</Typography>
             </Stack>
 
             <Divider sx={{ my: 2 }} />
@@ -270,7 +277,7 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
             <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
               <Typography>Mode of payment</Typography>
 
-              <Chip color={'primary'} label={order.paymentMode} />
+              <Chip color={'primary'} label={order?.paymentMode} />
             </Stack>
           </Card>
         </Box>
@@ -291,32 +298,32 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
 
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Name</Typography>
-              <Typography variant="subtitle2">{order.billingAddress.shipping_name}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.shipping_name}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Address</Typography>
-              <Typography variant="subtitle2">{order.billingAddress.shipping_address1}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.shipping_address1}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Pincode</Typography>
-              <Typography variant="subtitle2">{order.billingAddress.shipping_zip}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.shipping_zip}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Contact Number</Typography>
-              <Typography variant="subtitle2">{order.billingAddress.shipping_contact}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.shipping_contact}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
 
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Landmark</Typography>
-              <Typography variant="subtitle2">{order.shippingAddress.shipping_landmark}</Typography>
+              <Typography variant="subtitle2">{order?.shippingAddress.shipping_landmark}</Typography>
             </Stack>
           </Card>
         </Box>

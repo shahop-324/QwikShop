@@ -165,6 +165,8 @@ ColorlibStepIcon.propTypes = {
 const steps = ['Waiting for acceptance', 'Packaging', 'Shipped', 'Delivered'];
 
 const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject }, ref) => {
+  const [activeStep, setActiveStep] = useState(0);
+
   const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.order);
   const { products } = useSelector((state) => state.product);
@@ -176,15 +178,35 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
   const appliedDiscount = discounts.find((el) => el._id === order.couponId);
 
   let orderedProducts = [];
+  let givenProducts = [];
 
   orderedProducts = order.items.map((el) => {
     const matchedProduct = products.find((elm) => elm._id === el.product);
+    console.log(el);
     return {
       product: matchedProduct,
-      color: matchedProduct?.colorList?.find((col) => col.index === el.color),
+      // color: matchedProduct?.colorList?.find((col) => col.index === el.color),
       price: el.pricePerUnit,
       quantity: el.quantity,
-      //   Similarly find populate array of custom variants
+      color: matchedProduct.colorsList.find((col) => col.index === el.color),
+      variants: el.variants.map((v) => {
+        const variant = matchedProduct.customVariants.find((op) => op.index === v.index);
+        const selected = variant !== undefined ?  variant.options.find((ab) => ab.index === v.selectedOption) : {};
+        return {
+          name: selected,
+          type: variant ? variant.title : null,
+        };
+      }),
+      // TODO Similarly find populate array of custom variants
+    };
+  });
+
+  givenProducts = order.givenProducts.map((el) => {
+    const matchedProduct = products.find((elm) => elm._id.toString() === el.productId.toString());
+    return {
+      product: matchedProduct,
+      quantity: el.quantity,
+      price: matchedProduct.price,
     };
   });
 
@@ -280,13 +302,13 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             <Typography variant="subtitle2">
               {' '}
               <span style={{ marginRight: '10px' }}>Delivered On:</span>{' '}
-              {dateFormat(new Date(order.createdAt) + 2 * 24 * 60 * 60 * 1000, 'ddd, mmm dS, yy, h:MM TT')}
+              {order.deliveredAt ? dateFormat(new Date(order.deliveredAt)) : '----'}
             </Typography>
           </Box>
         </Card>
 
         <Card sx={{ p: 3, mb: 3 }}>
-          <Stepper alternativeLabel activeStep={1} connector={<ColorlibConnector />}>
+          <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
@@ -299,7 +321,9 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
           Bought Products
         </Typography>
         <Card sx={{ p: 3, mb: 3 }}>
-          {orderedProducts.map((el) => (
+          {orderedProducts.map((el) => {
+            console.log(el)
+            return(
             <div key={el._id}>
               <Box
                 className="mb-2"
@@ -325,7 +349,73 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                   </Stack>
                 </Stack>
                 <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
-                  <Typography variant="body2">{'Product variants'}</Typography>
+                  <Typography variant="body2">
+                    <Stack spacing={2} direction={"row"} alignItems="center" justifyContent={"space-between"}>
+                      <Typography variant='subtitle2'>Color</Typography>
+                     <Stack  spacing={1} direction={"row"} alignItems="center" justifyContent={"space-between"}>
+                     <Card sx={{backgroundColor: el.color.color, p:1, width: "10px", height: "10px"}} />
+                      <Typography variant='caption'>({el.color.name})</Typography>
+                     </Stack>
+
+                   
+                     
+                    </Stack>
+                    <Divider sx={{borderStyle: 'dashed', my: 1}} />
+                    {el.variants.map((vr) => (
+                      <>
+                      <Stack direction={"row"} alignItems="center" justifyContent={"space-between"}>
+                          <Typography>{vr.type}</Typography>
+                          <Typography>{vr.name.name}</Typography>
+                        </Stack>
+                        <Divider sx={{borderStyle: 'dashed', my: 1}} />
+                      </>
+                        
+                      ) )}
+                  </Typography>
+                </Stack>
+                <Stack direction={'row'} alignItems="center" justifyContent={'end'}>
+                  <Button variant="outlined" startIcon={<MessageIcon />} color="success">
+                    Ask for review
+                  </Button>
+                </Stack>
+              </Box>
+              <Divider sx={{ my: 1 }} />
+            </div>
+          )})}
+        </Card>
+        {/* // TODO Similarly render list of given products */}
+        <Typography variant="subtitle1" sx={{ mb: 2 }}>
+          Given Products
+        </Typography>
+
+        <Card sx={{ p: 3, mb: 3 }}>
+          {givenProducts.map((el) => (
+            <div key={el._id}>
+              <Box
+                className="mb-2"
+                sx={{
+                  display: 'grid',
+                  columnGap: 2,
+                  rowGap: 3,
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+                }}
+              >
+                <Stack direction={'row'} alignItems="center" spacing={2}>
+                  <Avatar
+                    variant="rounded"
+                    src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
+                    sx={{ width: 70, height: 70 }}
+                  />
+                  <Stack spacing={1}>
+                    <Typography variant="subtitle2">{el.product.productName}</Typography>
+                    <Typography variant="caption">
+                      {' '}
+                      Rs. {el.price} * {el.quantity}
+                    </Typography>
+                  </Stack>
+                </Stack>
+                <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
+                  <Typography variant="body2">{'------------'}</Typography>
                 </Stack>
                 <Stack direction={'row'} alignItems="center" justifyContent={'end'}>
                   <Button variant="outlined" startIcon={<MessageIcon />} color="success">
@@ -337,10 +427,6 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             </div>
           ))}
         </Card>
-        {/* // TODO Similarly render list of given products */}
-        {/* <Typography variant="subtitle1" sx={{ mb: 2 }}>
-            Given Products
-          </Typography> */}
         <Box
           className="mb-2"
           sx={{
