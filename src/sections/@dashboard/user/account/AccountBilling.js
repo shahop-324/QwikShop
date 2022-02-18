@@ -30,7 +30,7 @@ AccountBilling.propTypes = {
 
 const _pricingPlans = [
   {
-    plan_id: 'plan_IuHx2o2i0gKaUJ',
+    plan_id: 'free',
     cycle: 'forever',
     subscription: 'Free',
     img: Lifetime,
@@ -41,7 +41,7 @@ const _pricingPlans = [
   },
   {
     // plan_id: 'plan_IuHueHvdocQGNB',
-    plan_id: 'plan_IuNPJh0qpUQ1G8',
+    plan_id: 'plan_IxW85OSdILIwpV',
     cycle: 'mo',
     subscription: 'Monthly',
     img: Monthly,
@@ -51,7 +51,7 @@ const _pricingPlans = [
     labelAction: 'Choose Monthly',
   },
   {
-    plan_id: 'plan_IuHvbpfEipw5i6',
+    plan_id: 'plan_IxW8v5vM36IGIQ',
     cycle: 'yr',
     subscription: 'Yearly',
     img: Yearly,
@@ -63,9 +63,7 @@ const _pricingPlans = [
   
 ];
 
-export default function AccountBilling({ cards, addressBook, invoices }) {
-  const [open, setOpen] = useState(false);
-
+export default function AccountBilling() {
   return (
     <Grid container spacing={5}>
       <Grid container spacing={3} sx={{ mt: 3, mx: 2 }}>
@@ -113,30 +111,33 @@ export default function AccountBilling({ cards, addressBook, invoices }) {
           <div>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                <Typography>Accordion 1</Typography>
+                <Typography>Are all features of QwikShop Free?</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                  blandit leo lobortis eget.
+                  Yes, QwikShop is free for everyone everywhere forever. We just charge minimal transaction charge based on your plan.
                 </Typography>
               </AccordionDetails>
             </Accordion>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-                <Typography>Accordion 2</Typography>
+                <Typography>Can I upgrade or downgrade my plan anytime?</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet
-                  blandit leo lobortis eget.
+                  Yes, you can upgrade and downgrade your plan at any time.
                 </Typography>
               </AccordionDetails>
             </Accordion>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                <Typography>Disabled Accordion</Typography>
+                <Typography>Are all future services and features also going to be free?</Typography>
               </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  Yes, QwikShop features and services are always free to use.
+                </Typography>
+              </AccordionDetails>
             </Accordion>
           </div>
         </Stack>

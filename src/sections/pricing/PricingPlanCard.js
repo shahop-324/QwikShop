@@ -53,7 +53,7 @@ export default function PricingPlanCard({ card, index, isHome }) {
 
     try {
       const options = {
-        key: 'rzp_live_g0GDGz1KSIjfGz',
+        key: 'rzp_live_JOhvixtFUeoelr',
         subscription_id,
         currency: 'INR',
         name: store.name,
@@ -125,11 +125,12 @@ export default function PricingPlanCard({ card, index, isHome }) {
       </Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
-        {index !== 0 &&  <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-          Rs.
-        </Typography>
-}
-       
+        {index !== 0 && (
+          <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+            Rs.
+          </Typography>
+        )}
+
         <Typography variant="h2" sx={{ mx: 1 }}>
           {price === 0 ? 'Free' : price}
         </Typography>
@@ -178,20 +179,20 @@ export default function PricingPlanCard({ card, index, isHome }) {
       </Stack>
 
       <LoadingButton
+        disabled={store.currentPlan === plan_id}
         loading={store.isCreatingSubscription}
         onClick={() => {
-          if(isHome) {
+          if (isHome) {
             window.location.href = '/auth/register';
           } else {
             onSubmit(plan_id);
           }
-         
         }}
         fullWidth
         size="large"
         variant="contained"
       >
-        {labelAction}
+        {store.currentPlan === plan_id ? 'Current Plan' : labelAction}
       </LoadingButton>
     </RootStyle>
   );
