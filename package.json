@@ -132,6 +132,7 @@
     "redux-form": "^8.3.8",
     "redux-persist": "^6.0.0",
     "rehype-raw": "^6.1.0",
+    "serve": "^13.0.2",
     "simplebar": "^5.3.6",
     "simplebar-react": "^2.3.6",
     "slick-carousel": "^1.8.1",
