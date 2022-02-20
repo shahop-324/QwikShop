@@ -4,7 +4,17 @@ import styled from 'styled-components';
 // Hooks
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateGA, updateGMC, updateGSC, updatePixel, updateAdwords, updateIntercom, updateWhatsAppNumber, uninstallMailchimp } from '../../actions';
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
+import {
+  updateGA,
+  updateGMC,
+  updateGSC,
+  updatePixel,
+  updateAdwords,
+  updateIntercom,
+  updateWhatsAppNumber,
+  uninstallMailchimp,
+} from '../../actions';
 import AdwordsInfo from '../../Dialogs/Integration/AdwordsConversionTracking';
 import FacebookPixelInfo from '../../Dialogs/Integration/FacebookPixel';
 import FacebookDomainVerificationInfo from '../../Dialogs/Integration/FacebookDomainVerification';
@@ -49,6 +59,12 @@ const Logo = styled.img`
 `;
 
 export default function GeneralIntegration() {
+
+  const userAgent = typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
+
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+
+
   const { store } = useSelector((state) => state.store);
 
   const dispatch = useDispatch();
@@ -486,7 +502,7 @@ export default function GeneralIntegration() {
                   </Grid>
                 </Grid>
               </Card>
-              
+
               {/* Intercom */}
               <Card className="p-2 mb-4">
                 <Grid container>
@@ -507,7 +523,7 @@ export default function GeneralIntegration() {
                     >
                       Learn more
                     </Button>
-                    
+
                     {!store.IntercomInstalled ? (
                       <Button
                         onClick={() => {
@@ -528,7 +544,6 @@ export default function GeneralIntegration() {
                         Uninstall
                       </Button>
                     )}
-                    
                   </Grid>
                 </Grid>
               </Card>
@@ -625,11 +640,9 @@ export default function GeneralIntegration() {
                         Uninstall
                       </Button>
                     )}
-                   
                   </Grid>
                 </Grid>
               </Card>
-
 
               {/* Mailchimp */}
               <Card className="p-2 mb-4">
@@ -645,7 +658,7 @@ export default function GeneralIntegration() {
                     </div>
                   </Grid>
                   <Grid item xs={3} md={3} className="d-flex flex-row align-items-center justify-content-end">
-                  <Chip variant="outlined" color="primary" label="Coming Soon" />
+                    <Chip variant="outlined" color="primary" label="Coming Soon" />
                     {/* <Button
                       onClick={() => {
                         setOpenMailchimpInfo(true);
@@ -675,12 +688,9 @@ export default function GeneralIntegration() {
                         Uninstall
                       </Button>
                     )} */}
-                    
                   </Grid>
                 </Grid>
               </Card>
-
-              
 
               {/* Zoho Books */}
               <Card className="p-2 mb-4">
@@ -943,7 +953,46 @@ export default function GeneralIntegration() {
                 </Grid>
               </Card>
               {/* Zapier */}
-              <Card className="p-2 mb-4">
+
+              {isMobile ? <Card className="p-2 mb-4">
+                <Grid sx={{ p: 3 }} container>
+                  <Grid item className="d-flex flex-column justify-content-center align-items-center">
+                    {/*  */}
+                    <Logo
+                      className="me-3"
+                      src={
+                        'https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2017-06-20/200850512066_2d5e268a3b71c87f969c_512.png'
+                      }
+                    />
+                    <div className="d-flex flex-column justify-content-center align-items-center">
+                      <Typography variant="h6" sx={{ my: 2 }}>
+                        Zapier
+                      </Typography>
+                      <Typography variant="p1">
+                        Easy automation for busy people. Zapier moves info between your web apps automatically
+                      </Typography>
+                    </div>
+                  </Grid>
+
+                  <Grid
+                    item
+                    sx={{ width: '100%', mt: 3 }}
+                    className="d-flex flex-row align-items-center justify-content-center"
+                  >
+                    {/* <Button
+                      onClick={() => {
+                        setOpenZapierInfo(true);
+                      }}
+                      variant="outlined"
+                      className="me-3"
+                    >
+                      Learn more
+                    </Button> */}
+                    {/* <Button variant="contained">Install</Button> */}
+                    <Chip variant="outlined" color="primary" label="Coming Soon" />
+                  </Grid>
+                </Grid>
+              </Card> :  <Card className="p-2 mb-4">
                 <Grid container>
                   <Grid item xs={9} md={9} className="d-flex flex-row align-items-center">
                     <Logo
@@ -973,7 +1022,11 @@ export default function GeneralIntegration() {
                     <Chip variant="outlined" color="primary" label="Coming Soon" />
                   </Grid>
                 </Grid>
-              </Card>
+              </Card> }
+
+              
+
+             
             </Grid>
           </Grid>
         </Container>
