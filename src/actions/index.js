@@ -29,8 +29,8 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'https://api.app.qwikshop.online/v1/'
-// const BaseURL = 'http://localhost:8000/v1/';
+// const BaseURL = 'https://api.app.qwikshop.online/v1/'
+const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -2894,8 +2894,6 @@ export const updateShipment = (formValues, id, handleClose) => async (dispatch, 
 
 // ****************************************************** Transactions *************************************************** //
 
-
-
 export const fetchPayouts = (term) => async (dispatch, getState) => {
   let message;
   try {
@@ -2945,7 +2943,6 @@ export const fetchPayouts = (term) => async (dispatch, getState) => {
   }
 };
 
-
 export const fetchRefunds = (term) => async (dispatch, getState) => {
   let message;
   try {
@@ -2994,8 +2991,6 @@ export const fetchRefunds = (term) => async (dispatch, getState) => {
     dispatch(showSnackbar('error', message));
   }
 };
-
-
 
 export const fetchTransactions = (term) => async (dispatch, getState) => {
   let message;
@@ -5913,10 +5908,10 @@ export const fetchQuestions = (term) => async (dispatch, getState) => {
 
 // ******************************************************* Order ******************************************************* //
 
-export const askForReview = (id) => async(dispatch, getState) => {
+export const askForReview = (id) => async (dispatch, getState) => {
   let message;
 
-  try{
+  try {
     const res = await fetch(`${BaseURL}order/askForReview/${id}`, {
       method: 'POST',
 
@@ -5944,15 +5939,12 @@ export const askForReview = (id) => async(dispatch, getState) => {
 
     console.log(result);
 
-    dispatch(showSnackbar("success", message))
-    
-  }
-  catch(error) {
+    dispatch(showSnackbar('success', message));
+  } catch (error) {
     console.log(error);
-    dispatch(showSnackbar("error", message));
+    dispatch(showSnackbar('error', message));
   }
-
-}
+};
 
 export const acceptOrder = (id) => async (dispatch, getState) => {
   let message;
@@ -6033,9 +6025,11 @@ export const rejectOrder = (id, reason) => async (dispatch, getState) => {
         order: result.data,
       })
     );
-    dispatch(shipmentActions.UpdateShipment({
-      shipment: result.shipment,
-    }))
+    dispatch(
+      shipmentActions.UpdateShipment({
+        shipment: result.shipment,
+      })
+    );
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -6079,9 +6073,11 @@ export const cancelOrder = (id, reason) => async (dispatch, getState) => {
         order: result.data,
       })
     );
-    dispatch(shipmentActions.UpdateShipment({
-      shipment: result.shipment,
-    }))
+    dispatch(
+      shipmentActions.UpdateShipment({
+        shipment: result.shipment,
+      })
+    );
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -6654,10 +6650,10 @@ export const fetchWalletTransactions = () => async (dispatch, getState) => {
 
 // ***************************************** Assign Carrier ******************************************* //
 
-export const assignDelhivery = (pickupPointId, shipmentId, handleClose) => async (dispatch, getState) => {
+export const assignShiprocket = (pickupPointId, shipmentId, handleClose) => async (dispatch, getState) => {
   let message;
   try {
-    const res = await fetch(`${BaseURL}delivery/shipment/assignDelhivery`, {
+    const res = await fetch(`${BaseURL}delivery/shipment/assignShiprocket`, {
       method: 'POST',
 
       body: JSON.stringify({

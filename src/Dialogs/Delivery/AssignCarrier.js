@@ -96,7 +96,7 @@ const AssignCarrier = ({ open, handleClose, id }) => {
                     value="shiprocket"
                     control={
                       <Radio
-                        disabled
+                        
                         checked={carrier === 'shiprocket'}
                         onClick={() => {
                           setCarrier('shiprocket');
@@ -112,36 +112,11 @@ const AssignCarrier = ({ open, handleClose, id }) => {
                       alt="delivery"
                     />
                     <Typography variant="subtitle2">(Shiprocket)</Typography>
-                    <Chip label="coming soon" color="primary" />
+                    
                   </Stack>
                 </Stack>
               </Card>
-              <Card sx={{ p: 3, my: 3, width: '600px' }}>
-                <Stack direction={'row'} alignItems="center" spacing={1}>
-                  <FormControlLabel
-                    value="delhivery"
-                    control={
-                      <Radio
-                        checked={carrier === 'delhivery'}
-                        onClick={() => {
-                          setCarrier('delhivery');
-                        }}
-                      />
-                    }
-                    label=""
-                  />
-                  <Stack direction={'row'} alignItems="center" spacing={2}>
-                    <img
-                      src={
-                        'https://multiplesequity.com/public/images/portfolio/delhivery-owler-20190909-132150-original-1578292717.png'
-                      }
-                      style={{ height: '120px' }}
-                      alt="delivery"
-                    />
-                    <Typography variant="subtitle2">(Delhivery)</Typography>
-                  </Stack>
-                </Stack>
-              </Card>
+              
               <Card sx={{ p: 3, width: '600px' }}>
                 <Stack direction={'row'} alignItems="center" spacing={1}>
                   <FormControlLabel
@@ -176,7 +151,7 @@ const AssignCarrier = ({ open, handleClose, id }) => {
           <Button
             variant="contained"
             onClick={() => {
-              if (carrier === 'delhivery') {
+              if (carrier === 'shiprocket') {
                 handleOpenConfirmation();
               } else {
                 dispatch(updateShipment({carrier: "self"}, id, handleClose));
@@ -188,11 +163,12 @@ const AssignCarrier = ({ open, handleClose, id }) => {
                 case 'self':
                   return 'Choose Self Delivery';
 
-                case 'delhivery':
-                  return 'Ship using Delhivery';
+                case 'shiprocket':
+                  return 'Deliver via Shiprocket';
 
                 default:
                   return '';
+
               }
             })()}
           </Button>

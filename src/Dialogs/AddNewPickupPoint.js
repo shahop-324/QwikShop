@@ -211,13 +211,24 @@ const AddNewPickupPoint = ({ open, handleClose }) => {
                             setLandmark(e.target.value);
                           }}
                         />
-                        <PhoneInput
+                        {/* <PhoneInput
                           name="phoneNumber"
                           placeholder="Enter phone number"
                           value={phone}
                           onChange={setPhone}
                           inputComponent={CustomPhoneNumber}
                           defaultCountry="IN"
+                        /> */}
+                        <TextField
+                         name="phoneNumber"
+                         placeholder="Enter phone number"
+                         value={phone}
+                         onChange={(e) => {setPhone(e.target.value)}}
+                         
+                          
+                          label="Enter phone number"
+                          fullWidth
+                          
                         />
                         <TextField
                           name="contactPersonName"

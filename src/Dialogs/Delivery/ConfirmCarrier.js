@@ -3,7 +3,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Typography, Drawer, Card, Button, IconButton, Grid, Stack, Dialog, Slide, Box, Portal } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { assignDelhivery } from '../../actions';
+import { assignShiprocket } from '../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -19,7 +19,7 @@ const ConfirmCarrier = ({ open, handleClose, id, pickupPoint }) => {
   const shipment = shipments.find((el) => el._id === id);
 
   const onConfirm = () => {
-    dispatch(assignDelhivery(pickupPoint, id, handleClose)); // We will send pickup point id and shipment Id to the api for booking
+    dispatch(assignShiprocket(pickupPoint, id, handleClose)); // We will send pickup point id and shipment Id to the api for booking
   };
 
   return (
@@ -47,12 +47,11 @@ const ConfirmCarrier = ({ open, handleClose, id, pickupPoint }) => {
             </Card>
 
             {shipment.order.deliveryCharge > store.walletAmount && (
- <Card sx={{ p: 3, color: '#0F947E', mb: 2, fontWeight: '500' }}>
- Your current Wallet Balance is{' '}
- <span style={{ fontWeight: '900' }}>Rs. {store.walletAmount.toFixed(1)}</span>
-</Card>
+              <Card sx={{ p: 3, color: '#0F947E', mb: 2, fontWeight: '500' }}>
+                Your current Wallet Balance is{' '}
+                <span style={{ fontWeight: '900' }}>Rs. {store.walletAmount.toFixed(1)}</span>
+              </Card>
             )}
-           
 
             {shipment.order.deliveryCharge > store.walletAmount && (
               <Card sx={{ p: 3, color: '#CF1919', mb: 2, fontWeight: '500' }}>
@@ -73,7 +72,7 @@ const ConfirmCarrier = ({ open, handleClose, id, pickupPoint }) => {
                 color="primary"
                 startIcon={<LocalShippingRounded />}
               >
-                Ship With Delhivery
+                Ship Via Shiprocket
               </Button>
               <Button onClick={handleClose} variant="outlined" startIcon={<CloseRoundedIcon />}>
                 Cancel

@@ -24,6 +24,7 @@ import {
 // redux
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import dateFormat from 'dateformat'
 import { useDispatch, useSelector } from '../../redux/store';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -52,8 +53,8 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'city', label: 'City', alignRight: false },
   { id: 'pincode', label: 'Pincode', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: 'actions', label: 'Actions', alignRight: true },
+  { id: 'address', label: 'Address', alignRight: false },
+  { id: 'date', label: 'Date Added', alignRight: false },
 ];
 
 const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
@@ -314,7 +315,7 @@ export default function GeneralPickupPoints() {
 
               <TableBody>
                 {pickupPoints.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                  const { _id, pickupPointName, city, pincode, operational } = row;
+                  const { _id, pickupPointName, city, pincode, operational, address, createdAt } = row;
 
                   const isItemSelected = selected.indexOf(_id) !== -1;
 
@@ -350,35 +351,15 @@ export default function GeneralPickupPoints() {
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell style={{ minWidth: 160 }}>
-                        <FormControlLabel
-                          control={
-                            <IOSSwitch
-                              sx={{ m: 1 }}
-                              checked={operational}
-                              onClick={(e) => {
-                                dispatch(updatePickupPointStatus(_id, { operational: e.target.checked }));
-                              }}
-                            />
-                          }
-                          label=""
-                        />
-                        <Label
-                          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                          color={(!operational && 'error') || 'success'}
-                        >
-                          {!operational ? 'Not operational' : 'Operational'}
-                        </Label>
+                      <TableCell style={{ minWidth: 100 }}>
+                      <Typography variant="subtitle2" noWrap>
+                            {address}
+                          </Typography>
+                       
                       </TableCell>
 
-                      <TableCell align="right">
-                        <ProductMoreMenu
-                          productName={pickupPointName}
-                          onDelete={() => handleOpenDelete(_id)}
-                          onEdit={() => {
-                            handleOpenUpdate(_id);
-                          }}
-                        />
+                      <TableCell >
+                      {dateFormat(new Date(createdAt || Date.now()), 'ddd mmm dS, yy hh:mm TT')}
                       </TableCell>
                     </TableRow>
                   );

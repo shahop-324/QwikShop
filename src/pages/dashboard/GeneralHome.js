@@ -34,7 +34,7 @@ export default function GeneralApp() {
 
   const { customers } = useSelector((state) => state.customer);
 
-  const [openStoreSetup, setOpenStoreSetup] = useState(!store?.setupCompleted);
+  const [openStoreSetup, setOpenStoreSetup] = useState( store ? !store?.setupCompleted : false);
 
   const [openStoreImage, setOpenStoreImage] = useState(false);
 
