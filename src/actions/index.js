@@ -1068,7 +1068,7 @@ export const deleteMultipleCategories = (ids, handleClose) => async (dispatch, g
 export const updateCategoryStock = (id, formValues, handleClose) => async (dispatch, getState) => {
   let message;
   try {
-    const res = await fetch(`${BaseURL}category/update/${id}`, {
+    const res = await fetch(`${BaseURL}category/updateStock/${id}`, {
       method: 'PATCH',
 
       body: JSON.stringify({
@@ -1934,7 +1934,7 @@ export const deleteMultipleSubCategories = (ids, handleClose) => async (dispatch
 export const updateSubCategoryStock = (id, formValues, handleClose) => async (dispatch, getState) => {
   let message;
   try {
-    const res = await fetch(`${BaseURL}subCategory/update/${id}`, {
+    const res = await fetch(`${BaseURL}subCategory/updateStock/${id}`, {
       method: 'PATCH',
 
       body: JSON.stringify({
@@ -2348,7 +2348,7 @@ export const updateDivisionStock = (id, formValues, handleClose) => async (dispa
   let message;
 
   try {
-    const res = await fetch(`${BaseURL}division/update/${id}`, {
+    const res = await fetch(`${BaseURL}division/updateStock/${id}`, {
       method: 'PATCH',
 
       body: JSON.stringify({
