@@ -13175,6 +13175,11 @@
     "react-lifecycles-compat" "^3.0.0"
     "warning" "^4.0.3"
 
+"react-otp-input@^2.4.0":
+  "integrity" "sha512-AIgl7u4sS9BTNCxX1xlaS5fPWay/Zml8Ho5LszXZKXrH1C/TiFsTQGmtl13UecQYO3mSF3HUzG2rrDf0sjEFmg=="
+  "resolved" "https://registry.npmjs.org/react-otp-input/-/react-otp-input-2.4.0.tgz"
+  "version" "2.4.0"
+
 "react-phone-number-input@^3.1.44":
   "integrity" "sha512-+Tk+iJzImAt3s6NN2Btn4o3DSL6d1gcfoG+Wdnh9m9VMysgPrT+AGimvDobojEjYOS6nPiFqJdhFNwGMIlppVA=="
   "resolved" "https://registry.npmjs.org/react-phone-number-input/-/react-phone-number-input-3.1.44.tgz"

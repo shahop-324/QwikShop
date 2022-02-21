@@ -1,7 +1,9 @@
+import React, {useEffect} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Card, Link, Container, Typography } from '@mui/material';
+import {useDispatch} from 'react-redux';
 import useResponsive from '../../hooks/useResponsive';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
@@ -12,7 +14,7 @@ import Image from '../../components/Image';
 // sections
 import { RegisterForm } from '../../sections/auth/register';
 import ECommerce from "../../assets/ecommerce-website.png";
-
+import {resetSignupFormLoading} from '../../actions';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -59,6 +61,12 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(resetSignupFormLoading());
+  }, []);
 
 
   const smUp = useResponsive('up', 'sm');

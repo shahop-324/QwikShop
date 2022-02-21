@@ -1,137 +1,64 @@
-import * as Yup from 'yup';
-import { useSnackbar } from 'notistack';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
-// form
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { OutlinedInput, Stack } from '@mui/material';
+import { Stack, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { useDispatch, useSelector } from 'react-redux';
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import OtpInput from 'react-otp-input';
+import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { verifyEmail } from '../../../actions';
 
 // ----------------------------------------------------------------------
 
 export default function VerifyCodeForm() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const {isSubmittingVerify} = useSelector((state) => state.auth);
+  const [isValid, setIsValid] = useState(false);
+
+  const { isSubmittingVerify } = useSelector((state) => state.auth);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { enqueueSnackbar } = useSnackbar();
+  const [otp, setOtp] = useState();
 
-  const VerifyCodeSchema = Yup.object().shape({
-    code1: Yup.string().required('Code is required'),
-    code2: Yup.string().required('Code is required'),
-    code3: Yup.string().required('Code is required'),
-    code4: Yup.string().required('Code is required'),
-    code5: Yup.string().required('Code is required'),
-    code6: Yup.string().required('Code is required'),
-  });
+  const email = searchParams.get('email');
 
-  const defaultValues = {
-    code1: '',
-    code2: '',
-    code3: '',
-    code4: '',
-    code5: '',
-    code6: '',
+  const onSubmit = async () => {
+    dispatch(verifyEmail(email, otp));
   };
 
-  const {
-    watch,
-    control,
-    setValue,
-    handleSubmit,
-    formState: { isValid },
-  } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(VerifyCodeSchema),
-    defaultValues,
-  });
-
-  const values = watch();
-
-  useEffect(() => {
-    document.addEventListener('paste', handlePasteClipboard);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const onSubmit = async (data) => {
-    const email = searchParams.get('email');
-
-    console.log('code:', Object.values(data).join(''));
-
-    dispatch(verifyEmail(email, Object.values(data).join('')));
-  };
-
-  const handlePasteClipboard = (event) => {
-    let data = event?.clipboardData?.getData('Text') || '';
-
-    data = data.split('');
-
-    [].forEach.call(document.querySelectorAll('#field-code'), (node, index) => {
-      node.value = data[index];
-      const fieldIndex = `code${index + 1}`;
-      setValue(fieldIndex, data[index]);
-    });
-  };
-
-  const handleChangeWithNextField = (event, handleChange) => {
-    const { maxLength, value, name } = event.target;
-    const fieldIndex = name.replace('code', '');
-
-    const fieldIntIndex = Number(fieldIndex);
-
-    if (value.length >= maxLength) {
-      if (fieldIntIndex < 6) {
-        const nextfield = document.querySelector(`input[name=code${fieldIntIndex + 1}]`);
-
-        if (nextfield !== null) {
-          nextfield.focus();
-        }
-      }
+  const handleOTPChange = (otp) => {
+    setOtp(otp);
+    if (otp.length === 6) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
     }
-
-    handleChange(event);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <Box>
       <Stack direction="row" spacing={2} justifyContent="center">
-        {Object.keys(values).map((name, index) => (
-          <Controller
-            key={name}
-            name={`code${index + 1}`}
-            control={control}
-            render={({ field }) => (
-              <OutlinedInput
-                {...field}
-                id="field-code"
-                autoFocus={index === 0}
-                placeholder="-"
-                onChange={(event) => handleChangeWithNextField(event, field.onChange)}
-                inputProps={{
-                  maxLength: 1,
-                  sx: {
-                    p: 0,
-                    textAlign: 'center',
-                    width: { xs: 36, sm: 56 },
-                    height: { xs: 36, sm: 56 },
-                  },
-                }}
-              />
-            )}
-          />
-        ))}
+        <OtpInput
+          value={otp}
+          onChange={handleOTPChange}
+          numInputs={6}
+          separator={<span>-</span>}
+          inputStyle={{
+            width: '2.8rem',
+            height: '3rem',
+            margin: '1rem 1rem',
+            fontSize: '2rem',
+            borderRadius: 4,
+            border: '1px solid rgba(0,0,0,0.3)',
+          }}
+        />
       </Stack>
 
       <LoadingButton
+        onClick={() => {
+          onSubmit();
+        }}
         fullWidth
         size="large"
         type="submit"
@@ -142,6 +69,6 @@ export default function VerifyCodeForm() {
       >
         Verify
       </LoadingButton>
-    </form>
+    </Box>
   );
 }

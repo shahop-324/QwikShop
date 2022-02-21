@@ -22,7 +22,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import WalletPNG from '../../assets/wallet.png';
 import RechargeWallet from './RechargeWallet';
 import { WalletDetails } from '../../sections/@dashboard/general/booking';
-import {fetchWalletTransactions} from '../../actions';
+import { fetchWalletTransactions } from '../../actions';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,10 +60,9 @@ function a11yProps(index) {
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const QwikWallet = ({ open, handleClose }) => {
-
   const dispatch = useDispatch();
 
-  const {store} = useSelector((state) => state.store);
+  const { store } = useSelector((state) => state.store);
 
   const [openRecharge, setOpenRecharge] = useState(false);
 
@@ -88,7 +87,7 @@ const QwikWallet = ({ open, handleClose }) => {
         <DialogTitle sx={{ mb: 2 }}>{'QwikWallet'}</DialogTitle>
 
         <DialogContent>
-          <Box sx={{ mb: 3, width: '900px' }}>
+          <Box sx={{ mb: 3, width: { xs: '400px', md: '600px', lg: '900px' } }}>
             <Card sx={{ p: 4 }}>
               <Stack direction="row" alignItems={'center'} justifyContent="space-between">
                 <img src={WalletPNG} alt="QwikWallet" style={{ width: '150px', height: '150px' }} />

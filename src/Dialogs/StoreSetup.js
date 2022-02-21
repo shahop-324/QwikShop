@@ -2,22 +2,24 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import validator from 'validator';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import MUIStyled from 'styled-components';
 import * as Yup from 'yup';
 // form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { setupStore, showNotification } from '../actions';
+import { useFormik } from 'formik';
+import { setupStore, resetIsSubmittingStoreSetup } from '../actions';
+import Welcome from '../assets/Welcome.png';
 // utils
 // @mui
 import {
   Box,
   Card,
   Grid,
+  Button,
+  Stack,
   Dialog,
   DialogTitle,
   DialogActions,
@@ -26,7 +28,6 @@ import {
   Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import PhoneInput from 'react-phone-number-input';
 
 // eslint-disable-next-line react/prop-types
 
@@ -175,60 +176,52 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const steps = ['Basic info', 'Add logo', 'Store created'];
+const steps = ['Welcome', 'Store Info', 'Store created'];
 
 const StoreSetup = ({ open, handleClose }) => {
   const dispatch = useDispatch();
 
   const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
 
+  const formik = useFormik({
+    initialValues: {
+      storeName: store.storeName,
+
+      state: '',
+      city: '',
+      address: '',
+      pincode: '',
+      landmark: '',
+
+      phone: '',
+      gstin: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      address: Yup.string().required('Address is required'),
+      state: Yup.string().required('State is required'),
+      city: Yup.string().required('City is required'),
+      phone: Yup.string().required('Phone number is required'),
+
+      landmark: Yup.string().required('Landmark is required'),
+      pincode: Yup.string().required('Pincode is required'),
+      gstin: Yup.string(),
+    }),
+    onSubmit: (values) => {
+      console.log(values, category, country);
+      dispatch(setupStore({ ...values, category, country }, onNext, handleClose));
+    },
+  });
+
+  useEffect(() => {
+    dispatch(resetIsSubmittingStoreSetup());
+  }, []);
+
   const [activeStep, setActiveStep] = useState(0);
-
-  const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email(),
-    address: Yup.string().required('Address is required'),
-    country: Yup.string().required('country is required'),
-    company: Yup.string().required('Company is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    role: Yup.string().required('Role Number is required'),
-    avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    category: Yup.string().required('Category is required'),
-    landmark: Yup.string().required('Landmark is required'),
-    pincode: Yup.string().required('Pincode is required'),
-  });
-
-  const [storeName, setStoreName] = useState(store?.name);
-  const [country, setCountry] = useState();
-  const [state, setState] = useState();
-  const [city, setCity] = useState();
-  const [address, setAddress] = useState();
-  const [pincode, setPincode] = useState();
-  const [landmark, setLandmark] = useState();
-  const [gstin, setGstin] = useState();
   const [category, setCategory] = useState();
-  const [phone, setPhone] = useState();
-
-  const [storeNameError, setStoreNameError] = useState({ error: false, message: 'Store Name is required' });
-  const [countryError, setCountryError] = useState({ error: false, message: 'Country is required' });
-  const [stateError, setStateError] = useState({ error: false, message: 'State is required' });
-  const [cityError, setCityError] = useState({ error: false, message: 'City is required' });
-  const [addressError, setAddressError] = useState({ error: false, message: 'Address is required' });
-  const [pincodeError, setPincodeError] = useState({ error: false, message: 'Pincode is required' });
-  const [landmarkError, setLandmarkError] = useState({ error: false, message: 'Landmark is required' });
-  const [categoryError, setCategoryError] = useState({ error: false, message: 'Category is required' });
-  const [phoneError, setPhoneError] = useState({ error: false, message: 'Phone number is required' });
-
-  const [image, setImage] = useState();
-  const [fileToPreview, setFileToPreview] = useState();
-
-  const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
-  });
-
-  const { handleSubmit } = methods;
+  const [country, setCountry] = useState();
 
   const { width, height } = useWindowSize();
 
@@ -236,150 +229,6 @@ const StoreSetup = ({ open, handleClose }) => {
     if (activeStep <= 1) {
       setActiveStep((prev) => prev + 1);
     }
-  };
-
-  const onPrevious = () => {
-    if (activeStep >= 1) {
-      setActiveStep((prev) => prev - 1);
-    }
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    // validate each field
-
-    if (!storeName) {
-      setStoreNameError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!country) {
-      setCountryError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!state) {
-      setStateError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!city) {
-      setCityError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!address) {
-      setAddressError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!pincode) {
-      setPincodeError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!landmark) {
-      setLandmarkError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!category) {
-      setCategoryError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-    if (!phone) {
-      setPhoneError((prev) => {
-        prev.error = true;
-        return prev;
-      });
-    }
-
-    // e.preventDefault();
-    const formValues = {
-      storeName,
-      country,
-      state,
-      city,
-      address,
-      pincode,
-      landmark,
-      gstin,
-      category,
-      phone,
-    };
-
-    if (!storeName) {
-      // toast("Store name is required")
-      dispatch(showNotification('Store name is required'));
-    }
-    if (!country) {
-      // toast("Country is required")
-      dispatch(showNotification('Country is required'));
-    }
-    if (!state) {
-      // toast("State is required")
-      dispatch(showNotification('state is required'));
-    }
-    if (!city) {
-      // toast("State is required")
-      dispatch(showNotification('City is required'));
-    }
-    if (!landmark) {
-      // toast("State is required")
-      dispatch(showNotification('Landmark is required'));
-    }
-    if (!address) {
-      // toast("State is required")
-      dispatch(showNotification('Address is required'));
-    }
-    if (!pincode) {
-      // toast("State is required")
-      dispatch(showNotification('Pincode is required'));
-    }
-    if (!category) {
-      // toast("Category is required")
-      dispatch(showNotification('Category is required'));
-    }
-    if (!phone) {
-      // toast("Phone is required")
-      dispatch(showNotification('Phone is required'));
-    }
-
-    if (storeName && country && state && city && address && pincode && landmark && category && phone) {
-      console.log(formValues);
-      onNext();
-    }
-  };
-
-  const onSubmitImage = async () => {
-    const formValues = {
-      image,
-    };
-
-    dispatch(
-      setupStore(
-        { image, storeName, country, state, city, address, pincode, landmark, category, phone, gstin },
-        onNext,
-        handleClose
-      )
-    );
-    console.log(formValues);
-  };
-
-  const handleDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    console.log(file);
-    setImage(file);
-    setFileToPreview(URL.createObjectURL(file));
   };
 
   return (
@@ -397,7 +246,44 @@ const StoreSetup = ({ open, handleClose }) => {
           switch (activeStep * 1) {
             case 0:
               return (
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                <Box>
+                  {/*  */}
+
+                  <Card sx={{ m: 4, p: 3 }}>
+                    <Stack alignItems="center" justifyContent="center" spacing={3}>
+                      <img
+                        src={Welcome}
+                        style={{ height: '240px' }}
+                        alt="welcome to QwikShop, We are glad to have you."
+                      />
+
+                      <Typography variant="caption">
+                        We are glad to have you, You are not a part of fastest growing community of online Business
+                        owners.
+                      </Typography>
+                      <Typography variant="h6">
+                        Just provide us a little bit info so we can get you started...
+                      </Typography>
+                    </Stack>
+
+                    <Stack sx={{ my: 3 }} direction={'row'} alignItems="center" justifyContent={'center'}>
+                      <Button
+                        variant="contained"
+                        size="large"
+                        onClick={() => {
+                          onNext();
+                        }}
+                      >
+                        Continue
+                      </Button>
+                    </Stack>
+                  </Card>
+                </Box>
+              );
+
+            case 1:
+              return (
+                <form onSubmit={formik.handleSubmit}>
                   <Grid className="px-4 pt-3" container spacing={3}>
                     <Grid item xs={12} md={12}>
                       <Card sx={{ p: 3 }}>
@@ -410,49 +296,31 @@ const StoreSetup = ({ open, handleClose }) => {
                           }}
                         >
                           <TextField
-                            required
-                            error={storeNameError.error}
-                            helperText={storeNameError.error ? storeNameError.message : ''}
-                            name="name"
-                            label="Store name"
+                            disabled
+                            value={formik.values.storeName}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
                             fullWidth
-                            value={storeName}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setStoreNameError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setStoreNameError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-
-                              setStoreName(e.target.value);
-                            }}
+                            label="Store Name"
+                            variant="outlined"
+                            name="storeName"
+                            error={!!formik.touched.storeName && !!formik.errors.storeName}
+                            helperText={'You can change your store name later.'}
                           />
 
                           <Autocomplete
                             required
                             value={country}
                             onChange={(e, value) => {
-                              if (!value) {
-                                setCountryError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setCountryError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
                               setCountry(value);
                             }}
-                            id=""
+                            onBlur={formik.handleBlur}
                             fullWidth
+                            label="Choose a country"
+                            variant="outlined"
+                            name="country"
+                            error={!!formik.touched.country && !!formik.errors.country}
+                            helperText={formik.touched.country && formik.errors.email}
                             options={countries}
                             autoHighlight
                             getOptionLabel={(option) => option.label}
@@ -470,8 +338,6 @@ const StoreSetup = ({ open, handleClose }) => {
                             )}
                             renderInput={(params) => (
                               <TextField
-                                error={countryError.error}
-                                helperText={countryError.error ? countryError.message : ''}
                                 {...params}
                                 label="Choose a country"
                                 inputProps={{
@@ -482,151 +348,83 @@ const StoreSetup = ({ open, handleClose }) => {
                             )}
                           />
                           <TextField
-                            error={stateError.error}
-                            helperText={stateError.error ? stateError.message : ''}
-                            required
+                            value={formik.values.state}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="State / Province"
+                            variant="outlined"
                             name="state"
-                            label="State/Region"
-                            fullWidth
-                            value={state}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setStateError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setStateError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setState(e.target.value);
-                            }}
+                            error={!!formik.touched.state && !!formik.errors.state}
+                            helperText={formik.touched.state && formik.errors.state}
                           />
                           <TextField
-                            required
-                            error={cityError.error}
-                            helperText={cityError.error ? cityError.message : ''}
-                            name="city"
+                            value={formik.values.city}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
                             label="City"
-                            fullWidth
-                            value={city}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setCityError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setCityError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setCity(e.target.value);
-                            }}
+                            variant="outlined"
+                            name="city"
+                            error={!!formik.touched.city && !!formik.errors.city}
+                            helperText={formik.touched.city && formik.errors.city}
                           />
                           <TextField
-                            error={addressError.error}
-                            helperText={addressError.error ? addressError.message : ''}
-                            required
-                            name="address"
+                            value={formik.values.address}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
                             label="Address"
-                            fullWidth
-                            value={address}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setAddressError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setAddressError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setAddress(e.target.value);
-                            }}
+                            variant="outlined"
+                            name="address"
+                            error={!!formik.touched.address && !!formik.errors.address}
+                            helperText={formik.touched.address && formik.errors.address}
                           />
                           <TextField
-                            required
-                            error={pincodeError.error}
-                            helperText={pincodeError.error ? pincodeError.message : ''}
-                            name="pincode"
+                            value={formik.values.pincode}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
                             label="Pincode"
-                            fullWidth
-                            value={pincode}
-                            onChange={(e) => {
-                              if (!e.target.value || !validator.isPostalCode(e.target.value, 'IN')) {
-                                setPincodeError((prev) => {
-                                  prev.error = true;
-                                  if (!validator.isPostalCode(e.target.value, 'IN')) {
-                                    prev.message = 'Please provide valid 6 digit pincode';
-                                  }
-                                  return prev;
-                                });
-                              } else {
-                                setPincodeError((prev) => {
-                                  prev.error = false;
-                                  prev.message = 'Pincode is required';
-                                  return prev;
-                                });
-                              }
-                              setPincode(e.target.value);
-                            }}
+                            variant="outlined"
+                            name="pincode"
+                            error={!!formik.touched.pincode && !!formik.errors.pincode}
+                            helperText={formik.touched.pincode && formik.errors.pincode}
                           />
                           <TextField
-                            required
-                            error={landmarkError.error}
-                            helperText={landmarkError.error ? landmarkError.message : ''}
-                            name="landmark"
+                            value={formik.values.landmark}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
                             label="Landmark"
-                            fullWidth
-                            value={landmark}
-                            onChange={(e) => {
-                              if (!e.target.value) {
-                                setLandmarkError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setLandmarkError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setLandmark(e.target.value);
-                            }}
+                            variant="outlined"
+                            name="landmark"
+                            error={!!formik.touched.landmark && !!formik.errors.landmark}
+                            helperText={formik.touched.landmark && formik.errors.landmark}
                           />
                           <TextField
-                            name="GSTIN"
-                            label="GSTIN"
+                            value={formik.values.gstin}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
                             fullWidth
-                            value={gstin}
-                            onChange={(e) => {
-                              setGstin(e.target.value);
-                            }}
+                            label="GSTIN (Optional)"
+                            variant="outlined"
+                            name="gstin"
+                            error={!!formik.touched.gstin && !!formik.errors.gstin}
+                            helperText={formik.touched.gstin && formik.errors.gstin}
                           />
                           <Autocomplete
-                            required
                             value={category}
                             onChange={(e, value) => {
-                              if (!value) {
-                                setCategoryError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setCategoryError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
                               setCategory(value);
                             }}
+                            onBlur={formik.handleBlur}
                             fullWidth
+                            label="Category"
+                            variant="outlined"
+                            name="category"
+                            error={!!formik.touched.category && !!formik.errors.category}
+                            helperText={formik.touched.category && formik.errors.category}
                             disablePortal
                             autoHighlight
                             getOptionLabel={(option) => option.label}
@@ -644,91 +442,20 @@ const StoreSetup = ({ open, handleClose }) => {
                             )}
                             options={categoryOptions}
                             renderInput={(params) => (
-                              <TextField
-                                required
-                                error={categoryError.error}
-                                helperText={categoryError.error ? categoryError.message : ''}
-                                {...params}
-                                label="Category"
-                                fullWidth
-                                name="category"
-                              />
+                              <TextField required {...params} label="Category" fullWidth name="category" />
                             )}
                           />
-                          <PhoneInput
-                            required
-                            error={phoneError.error}
-                            helperText={phoneError.error ? phoneError.message : ''}
-                            name="phoneNumber"
-                            placeholder="Enter phone number"
-                            value={phone}
-                            onChange={(value) => {
-                              if (!value) {
-                                setPhoneError((prev) => {
-                                  prev.error = true;
-                                  return prev;
-                                });
-                              } else {
-                                setPhoneError((prev) => {
-                                  prev.error = false;
-                                  return prev;
-                                });
-                              }
-                              setPhone(value);
-                            }}
-                            inputComponent={CustomPhoneNumber}
-                            defaultCountry="IN"
-                          />
-                        </Box>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                  <DialogActions>
-                    <LoadingButton
-                      onClick={(e) => {
-                        onSubmit(e);
-                      }}
-                      type="submit"
-                      variant="contained"
-                      loading={false}
-                    >
-                      Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                    </LoadingButton>
-                  </DialogActions>
-                </FormProvider>
-              );
 
-            case 1:
-              return (
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                  <Grid className="px-4 pt-3" container spacing={3}>
-                    <Grid item xs={12} md={12}>
-                      <Card sx={{ py: 10, px: 3 }}>
-                        <Typography className="mb-4 text-center" variant="h6">
-                          Image
-                        </Typography>
-                        <Box sx={{ mb: 5 }}>
-                          <UploadAvatar
-                            name="avatarUrl"
-                            accept="image/*"
-                            maxSize={3145728}
-                            onDrop={handleDrop}
-                            file={fileToPreview}
-                            helperText={
-                              <Typography
-                                variant="caption"
-                                sx={{
-                                  mt: 2,
-                                  mx: 'auto',
-                                  display: 'block',
-                                  textAlign: 'center',
-                                  color: 'text.secondary',
-                                }}
-                              >
-                                Allowed *.jpeg, *.jpg, *.png, *.gif
-                                <br /> max size of {fData(3145728)}
-                              </Typography>
-                            }
+                          <TextField
+                            value={formik.values.phone}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="Enter Phone Number"
+                            variant="outlined"
+                            name="phone"
+                            error={!!formik.touched.phone && !!formik.errors.phone}
+                            helperText={formik.touched.phone && formik.errors.phone}
                           />
                         </Box>
                       </Card>
@@ -736,17 +463,15 @@ const StoreSetup = ({ open, handleClose }) => {
                   </Grid>
                   <DialogActions>
                     <LoadingButton
-                      onClick={() => {
-                        onSubmitImage();
-                      }}
+                      disabled={!(formik.isValid && formik.dirty)}
                       type="submit"
                       variant="contained"
                       loading={isSubmittingStoreSetup}
                     >
-                      Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                      Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
                     </LoadingButton>
                   </DialogActions>
-                </FormProvider>
+                </form>
               );
 
             case 2:
@@ -757,7 +482,7 @@ const StoreSetup = ({ open, handleClose }) => {
                   <Container className="d-flex flex-column align-items-center justify-content-center">
                     <StoreMallDirectoryRoundedIcon className="mb-3" style={{ fontSize: '200', color: 'green' }} />
                     <Typography variant="p2">
-                      Now, you can easily run your business online with 0% commision.
+                      Now, you can easily run your business online for free in hasslefree & Efficient manner.
                     </Typography>
                   </Container>
                 </>

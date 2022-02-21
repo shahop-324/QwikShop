@@ -42,7 +42,7 @@ const UserReferral = ({ open, handleClose }) => {
       >
         <DialogTitle sx={{ mb: 2 }}>{'My Referrals'}</DialogTitle>
         <DialogContent>
-          <Box sx={{ width: '900px' }}>
+          <Box sx={{ mb: 3, width: { xs: '400px', md: '600px', lg: '900px' } }}>
             <Card sx={{ p: 3 }}>
               <Stack direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="subtitle2">Total Accounts Created</Typography>
@@ -57,7 +57,7 @@ const UserReferral = ({ open, handleClose }) => {
               </Stack>
             </Card>
 
-            <Box sx={{ my: 3, gridAutoFlow: 'column', gridColumn: '1fr 1fr', gridGap: 5, width: '100%', display: 'grid', alignItems: 'center' }} spacing={2}>
+            <Box sx={{ my: 3, gridAutoFlow: {sx: 'row', md: 'column'}, gridColumn: '1fr 1fr', gridGap: 5, width: '100%', display: 'grid', alignItems: 'center' }} spacing={2}>
               <Button
                 disabled
                 startIcon={<LockIcon style={{ fontSize: '20px' }} />}

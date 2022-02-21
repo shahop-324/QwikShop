@@ -1,83 +1,69 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import * as Yup from 'yup';
-// form
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
 // @mui
+// @mui
+import { useFormik } from 'formik';
 import { Stack, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// hooks
-import { Formik } from 'formik';
-import { useDispatch } from 'react-redux';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
-// components
-import { FormProvider } from '../../../components/hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {forgotPassword} from '../../../actions';
+import { useSearchParams } from 'react-router-dom';
+import { forgotPassword, resetIsSubmittingForgotPassword } from '../../../actions';
 
 // ----------------------------------------------------------------------
 
 ResetPasswordForm.propTypes = {
   onSent: PropTypes.func,
-  onGetEmail: PropTypes.func,
 };
 
-export default function ResetPasswordForm({ onSent, onGetEmail }) {
-  const isMountedRef = useIsMountedRef();
+export default function ResetPasswordForm({ onSent }) {
+  const { isSubmittingForgotPassword } = useSelector((state) => state.auth);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const dispatch = useDispatch();
 
-  const ResetPasswordSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+  useEffect(() => {
+    dispatch(resetIsSubmittingForgotPassword());
+  }, []);
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    }),
+    onSubmit: (values) => {
+       console.log(values)
+      setSearchParams(`email=${values.email}`);
+      dispatch(forgotPassword(values, onSent));
+    },
   });
-
-  const methods = useForm({
-    resolver: yupResolver(ResetPasswordSchema),
-    defaultValues: { email: '' },
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-  
-  const handleFormSubmit = async (values) => {
-    console.log(values);
-    dispatch(forgotPassword(values, onSent));
-  };
-
-  const initialValues = {};
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={ResetPasswordSchema}
-      onSubmit={handleFormSubmit}
-      // enableReinitialize={true}
-    >
-      {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
-        <form onSubmit={handleSubmit}>
-          <Stack spacing={3}>
-            <TextField
-              fullWidth
-              label="Email"
-              variant="outlined"
-              name="email"
-              value={values.email}
-              onBlur={handleBlur}
-              onChange={handleChange}
-              error={!!touched.email && !!errors.email}
-              helperText={touched.email && errors.email}
-            />
+    <form onSubmit={formik.handleSubmit}>
+      <Stack spacing={3}>
+        <TextField
+          fullWidth
+          label="Email"
+          variant="outlined"
+          name="email"
+          value={formik.values.email}
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          error={!!formik.touched.email && !!formik.errors.email}
+          helperText={formik.touched.email && formik.errors.email}
+        />
 
-            <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-              Reset Password
-            </LoadingButton>
-          </Stack>
-        </form>
-      )}
-    </Formik>
+        <LoadingButton  disabled={!(formik.isValid && formik.dirty)} fullWidth size="large" type="submit" variant="contained" loading={isSubmittingForgotPassword}>
+          Reset Password
+        </LoadingButton>
+      </Stack>
+    </form>
   );
 }

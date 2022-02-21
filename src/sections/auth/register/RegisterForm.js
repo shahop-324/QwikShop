@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
+import * as Yup from 'yup';
 // form
-import { reduxForm } from 'redux-form';
 import { useDispatch, useSelector } from 'react-redux';
 // @mui
+import { useFormik } from 'formik';
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
@@ -16,85 +17,102 @@ import Iconify from '../../../components/Iconify';
 
 import { register } from '../../../actions';
 
-const RegisterForm = ({ handleSubmit }) => {
+const RegisterForm = () => {
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      shopName: '',
+      email: '',
+      password: '',
+      referralCode: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      firstName: Yup.string().required('First name is required'),
+      lastName: Yup.string().required('First name is required'),
+      shopName: Yup.string().required('Shop name is required'),
+      email: Yup.string().required('Email is required'),
+      password: Yup.string().required('Password is required'),
+      referralCode: Yup.string(),
+    }),
+    onSubmit: (values) => {
+      const currentLocation = window.location.href;
+      console.log(values);
+      dispatch(register(values, values.email, currentLocation));
+    },
+  });
+
+
   const dispatch = useDispatch();
   const { isSubmittingRegister } = useSelector((state) => state.auth);
 
-  // const [phone, setPhone] = useState();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [shopName, setShopName] = useState('');
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [referralCode, setReferralCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = () => {
-    const currentLocation = window.location.href;
-
-    const formValues = {
-      firstName,
-      lastName,
-      shopName,
-      email,
-      password,
-      referralCode,
-    };
-
-    console.log(formValues);
-    dispatch(register(formValues, email, currentLocation));
-  };
-
   return (
-    <form className="ui form error" onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={formik.handleSubmit}>
       <Stack spacing={3}>
-        {/* {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>} */}
-
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <TextField
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={formik.values.firstName}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
             fullWidth
             label="First name"
             variant="outlined"
             name="firstName"
+            error={!!formik.touched.firstName && !!formik.errors.firstName}
+            helperText={formik.touched.firstName && formik.errors.firstName}
           />
           <TextField
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            value={formik.values.lastName}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
             fullWidth
-            label="Last name"
+            label="Last Name"
             variant="outlined"
             name="lastName"
+            error={!!formik.touched.lastName && !!formik.errors.lastName}
+            helperText={formik.touched.lastName && formik.errors.lastName}
           />
         </Stack>
 
         <TextField
-          value={shopName}
-          onChange={(e) => setShopName(e.target.value)}
+          value={formik.values.shopName}
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
           fullWidth
-          label="Shop name"
+          label="Shop Name"
           variant="outlined"
           name="shopName"
+          error={!!formik.touched.shopName && !!formik.errors.shopName}
+          helperText={formik.touched.shopName && formik.errors.shopName}
         />
 
         <TextField
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formik.values.email}
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
           fullWidth
           label="Email"
           variant="outlined"
           name="email"
+          error={!!formik.touched.email && !!formik.errors.email}
+          helperText={formik.touched.email && formik.errors.email}
         />
 
         <TextField
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formik.values.password}
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
           fullWidth
           label="Password"
           variant="outlined"
           name="password"
+          error={!!formik.touched.password && !!formik.errors.password}
+          helperText={formik.touched.password && formik.errors.password}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -108,24 +126,25 @@ const RegisterForm = ({ handleSubmit }) => {
         />
 
         <TextField
-          value={referralCode}
-          onChange={(e) => setReferralCode(e.target.value)}
+          value={formik.values.referralCode}
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
           fullWidth
-          label="Referral Code"
+          label="Referral Code (Optional)"
           variant="outlined"
           name="referralCode"
+          error={!!formik.touched.referralCode && !!formik.errors.referralCode}
+          helperText={formik.touched.referralCode && formik.errors.referralCode}
         />
 
-        {/* <PhoneInput
-          name="mobile"
-          placeholder="Enter phone number"
-          value={phone}
-          onChange={setPhone}
-          inputComponent={CustomPhoneNumber}
-          defaultCountry="IN"
-        /> */}
-
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmittingRegister}>
+        <LoadingButton
+          disabled={!(formik.isValid && formik.dirty)}
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmittingRegister}
+        >
           Register
         </LoadingButton>
       </Stack>
@@ -133,6 +152,4 @@ const RegisterForm = ({ handleSubmit }) => {
   );
 };
 
-export default reduxForm({
-  form: 'register',
-})(RegisterForm);
+export default RegisterForm;

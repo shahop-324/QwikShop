@@ -29,8 +29,8 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'https://api.app.qwikshop.online/v1/'
-// const BaseURL = 'http://localhost:8000/v1/';
+// const BaseURL = 'https://api.app.qwikshop.online/v1/'
+const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -94,9 +94,9 @@ export const register = (formValues, email, location) => async (dispatch, _getSt
 
     if (!res.ok) {
       if (!res.message) {
-        throw new Error('Failed to register user. Please try again.');
+        throw new Error(message);
       } else {
-        throw new Error(res.message);
+        throw new Error(message);
       }
     }
 
@@ -149,9 +149,9 @@ export const verifyEmail = (email, otp) => async (dispatch, _getState) => {
 
     if (!res.ok) {
       if (!res.message) {
-        throw new Error('Failed to register user. Please try again.');
+        throw new Error(message);
       } else {
-        throw new Error(res.message);
+        throw new Error(message);
       }
     }
 
@@ -190,7 +190,10 @@ export const verifyEmail = (email, otp) => async (dispatch, _getState) => {
     dispatch(showSnackbar('success', message));
 
     // Send user to dashboard
-    // window.location.href = `/dashboard/home`;
+
+    setTimeout(() => {
+      window.location.href = `/dashboard/home`;
+    }, 1000);
 
     dispatch(
       authActions.SetIsSubmittingVerify({
@@ -231,7 +234,7 @@ export const switchStore = (storeId) => async (dispatch, getState) => {
       if (!res.message) {
         throw new Error(message);
       } else {
-        throw new Error(res.message);
+        throw new Error(message);
       }
     }
 
@@ -280,7 +283,7 @@ export const login = (email, password) => async (dispatch, _getState) => {
   let message;
 
   try {
-    let res = await fetch(`${BaseURL}auth/login`, {
+    const res = await fetch(`${BaseURL}auth/login`, {
       method: 'POST',
 
       body: JSON.stringify({
@@ -293,41 +296,41 @@ export const login = (email, password) => async (dispatch, _getState) => {
       },
     });
 
+    const result = await res.json();
+
+    message = result.message;
+
     if (!res.ok) {
       if (!res.message) {
-        throw new Error('Failed to login. Please try again.');
+        throw new Error(message);
       } else {
         throw new Error(res.message);
       }
     }
 
-    res = await res.json();
-
-    message = res.message;
-
     // Store token in auth state => redux store
 
     dispatch(
       authActions.SignIn({
-        token: res.token,
+        token: result.token,
       })
     );
 
     dispatch(
       userActions.FetchUser({
-        user: res.user,
+        user: result.user,
       })
     );
 
     dispatch(
       storeActions.FetchStore({
-        store: res.store,
+        store: result.store,
       })
     );
 
     dispatch(
       storeActions.FetchPermissions({
-        permissions: res.permissions,
+        permissions: result.permissions,
       })
     );
 
@@ -339,9 +342,8 @@ export const login = (email, password) => async (dispatch, _getState) => {
       })
     );
   } catch (error) {
-    console.log(error);
-
     dispatch(showSnackbar('error', message));
+    console.log(error);
 
     dispatch(
       authActions.SetIsSubmittingLogin({
@@ -360,8 +362,14 @@ export const logout = () => async (dispatch, _getState) => {
 export const resendEmailOTP = (email) => async (dispatch, _getState) => {
   let message;
 
+  dispatch(
+    authActions.SetIsReSendingOTP({
+      state: true,
+    })
+  );
+
   try {
-    let res = await fetch(`${BaseURL}auth/resend-email-otp`, {
+    const res = await fetch(`${BaseURL}auth/resend-email-otp`, {
       method: 'POST',
 
       body: JSON.stringify({
@@ -373,23 +381,35 @@ export const resendEmailOTP = (email) => async (dispatch, _getState) => {
       },
     });
 
+    const result = await res.json();
+
+    message = result.message;
+
     if (!res.ok) {
       if (!res.message) {
-        throw new Error('Failed to login. Please try again.');
+        throw new Error(message);
       } else {
         throw new Error(res.message);
       }
     }
 
-    res = await res.json();
-
-    message = res.message;
-
     dispatch(showSnackbar('success', message));
+
+    dispatch(
+      authActions.SetIsReSendingOTP({
+        state: false,
+      })
+    );
   } catch (error) {
     console.log(error);
 
     dispatch(showSnackbar('error', message));
+
+    dispatch(
+      authActions.SetIsReSendingOTP({
+        state: false,
+      })
+    );
   }
 };
 
@@ -401,7 +421,7 @@ export const stopLoginBtnLoader = () => async (dispatch, _getState) => {
   );
 };
 
-export const createNewStore = (formValues, file, onNext, handleClose) => async (dispatch, getState) => {
+export const createNewStore = (formValues, onNext, handleClose) => async (dispatch, getState) => {
   let message;
 
   dispatch(
@@ -410,165 +430,74 @@ export const createNewStore = (formValues, file, onNext, handleClose) => async (
     })
   );
 
-  const key = `store/profile/${uuidv4()}.${file.type}`;
-
   try {
-    if (file) {
-      // Upload image to s3
+    const res = await fetch(`${BaseURL}store/createNew`, {
+      method: 'POST',
 
-      s3.getSignedUrl(
-        'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
-        async (_err, presignedURL) => {
-          await fetch(presignedURL, {
-            method: 'PUT',
+      body: JSON.stringify({
+        ...formValues,
+      }),
 
-            body: file,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
 
-            headers: {
-              'Content-Type': file.type,
-            },
-          });
-        }
-      );
+    const result = await res.json();
 
-      const res = await fetch(`${BaseURL}store/createNew`, {
-        method: 'POST',
+    message = result.message;
 
-        body: JSON.stringify({
-          ...formValues,
-          logo: key,
-        }),
-
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      });
-
-      const result = await res.json();
-
-      message = result.message;
-
-      if (!res.ok) {
-        if (!res.message) {
-          throw new Error('Failed to create store, Please try again!');
-        } else {
-          throw new Error(res.message);
-        }
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
       }
-
-      console.log(result);
-
-      // Result will contain new store, new token, and updated user
-
-      dispatch(
-        storeActions.UpdateStore({
-          store: result.store,
-        })
-      );
-
-      dispatch(
-        authActions.SignIn({
-          token: result.token,
-        })
-      );
-
-      dispatch(
-        userActions.FetchUser({
-          user: result.user,
-        })
-      );
-
-      dispatch(
-        storeActions.FetchPermissions({
-          permissions: result.permissions,
-        })
-      );
-
-      dispatch(showSnackbar('success', message));
-
-      onNext();
-
-      setTimeout(() => {
-        handleClose();
-      }, 4000);
-
-      dispatch(
-        storeActions.SetIsSubmittingSteup({
-          isSubmitting: false,
-        })
-      );
-    } else {
-      const res = await fetch(`${BaseURL}store/createNew`, {
-        method: 'POST',
-
-        body: JSON.stringify({
-          ...formValues,
-        }),
-
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getState().auth.token}`,
-        },
-      });
-
-      const result = await res.json();
-
-      message = result.message;
-
-      if (!res.ok) {
-        if (!res.message) {
-          throw new Error('Failed to create store, Please try again!');
-        } else {
-          throw new Error(res.message);
-        }
-      }
-
-      console.log(result);
-
-      // Result will contain new store, new token, and updated user
-
-      dispatch(
-        storeActions.UpdateStore({
-          store: result.store,
-        })
-      );
-
-      dispatch(
-        authActions.SignIn({
-          token: result.token,
-        })
-      );
-
-      dispatch(
-        userActions.FetchUser({
-          user: result.user,
-        })
-      );
-
-      dispatch(
-        storeActions.FetchPermissions({
-          permissions: result.permissions,
-        })
-      );
-
-      dispatch();
-
-      dispatch(showSnackbar('success', message));
-
-      onNext();
-
-      setTimeout(() => {
-        handleClose();
-      }, 4000);
-
-      dispatch(
-        storeActions.SetIsSubmittingSteup({
-          isSubmitting: false,
-        })
-      );
     }
+
+    console.log(result);
+
+    // Result will contain new store, new token, and updated user
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+      })
+    );
+
+    dispatch(
+      userActions.FetchUser({
+        user: result.user,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchPermissions({
+        permissions: result.permissions,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    onNext();
+
+    setTimeout(() => {
+      handleClose();
+      window.location.reload();
+    }, 4000);
+
+    dispatch(
+      storeActions.SetIsSubmittingSteup({
+        isSubmitting: false,
+      })
+    );
   } catch (error) {
     console.log(error);
     dispatch(
@@ -609,7 +538,7 @@ export const setupStore = (formValues, onNext, handleClose) => async (dispatch, 
 
     if (!res.ok) {
       if (!res.message) {
-        throw new Error('Failed to setup store, Please try again!');
+        throw new Error(message);
       } else {
         throw new Error(res.message);
       }
@@ -6397,10 +6326,16 @@ export const deleteMenuItem = (menuId) => async (dispatch, getState) => {
 
 export const updateUserProfile = (formValues, file) => async (dispatch, getState) => {
   let message;
+  dispatch(
+    userActions.SetIsUpdatingUser({
+      state: true,
+    })
+  );
   try {
-    const key = `user/profile/${uuidv4()}.${file.type}`;
+    const key = `user/profile/${uuidv4()}.${file?.type}`;
 
     if (file) {
+      console.log('entered into file case');
       s3.getSignedUrl(
         'putObject',
         { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
@@ -6445,12 +6380,18 @@ export const updateUserProfile = (formValues, file) => async (dispatch, getState
       console.log(result);
 
       dispatch(
-        userActions.FetchUser({
-          user: result.data,
+        userActions.SetIsUpdatingUser({
+          state: false,
         })
       );
 
       dispatch(showSnackbar('success', message));
+
+      dispatch(
+        userActions.FetchUser({
+          user: result.data,
+        })
+      );
     } else {
       const res = await fetch(`${BaseURL}user/update`, {
         method: 'PATCH',
@@ -6480,21 +6421,37 @@ export const updateUserProfile = (formValues, file) => async (dispatch, getState
       console.log(result);
 
       dispatch(
-        userActions.FetchUser({
-          user: result.data,
+        userActions.SetIsUpdatingUser({
+          state: false,
         })
       );
 
       dispatch(showSnackbar('success', message));
+
+      dispatch(
+        userActions.FetchUser({
+          user: result.data,
+        })
+      );
     }
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
+    dispatch(
+      userActions.SetIsUpdatingUser({
+        state: false,
+      })
+    );
   }
 };
 
 export const updateUserPassword = (formValues) => async (dispatch, getState) => {
   let message;
+
+  dispatch(userActions.SetIsUpdatingPassword({
+    state: true,
+  }))
+
   try {
     const res = await fetch(`${BaseURL}auth/update-password`, {
       method: 'PATCH',
@@ -6530,14 +6487,29 @@ export const updateUserPassword = (formValues) => async (dispatch, getState) => 
     );
 
     dispatch(showSnackbar('success', message));
+
+    dispatch(userActions.SetIsUpdatingPassword({
+      state: false,
+    }))
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
+
+    dispatch(userActions.SetIsUpdatingPassword({
+      state: false,
+    }))
   }
 };
 
 export const forgotPassword = (formValues, onSent) => async (dispatch, getState) => {
   let message;
+
+  dispatch(
+    authActions.SetIsSubmittingForgotPassword({
+      state: true,
+    })
+  );
+
   try {
     const res = await fetch(`${BaseURL}auth/forgot-password`, {
       method: 'POST',
@@ -6566,14 +6538,32 @@ export const forgotPassword = (formValues, onSent) => async (dispatch, getState)
     console.log(result);
 
     onSent();
+
+    dispatch(
+      authActions.SetIsSubmittingForgotPassword({
+        state: false,
+      })
+    );
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
+
+    dispatch(
+      authActions.SetIsSubmittingForgotPassword({
+        state: false,
+      })
+    );
   }
 };
 
 export const resetPassword = (formValues, token) => async (dispatch, getState) => {
   let message;
+
+  dispatch(
+    authActions.SetIsSubmittingResetPassword({
+      state: true,
+    })
+  );
 
   try {
     const res = await fetch(`${BaseURL}auth/reset-password/${token}`, {
@@ -6603,9 +6593,23 @@ export const resetPassword = (formValues, token) => async (dispatch, getState) =
     console.log(result);
 
     dispatch(showSnackbar('success', message));
+    dispatch(
+      authActions.SetIsSubmittingResetPassword({
+        state: false,
+      })
+    );
+
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1000);
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
+    dispatch(
+      authActions.SetIsSubmittingResetPassword({
+        state: false,
+      })
+    );
   }
 };
 
@@ -7537,3 +7541,77 @@ export const updateReferralPurchase = (formValues, id) => async (dispatch, getSt
     dispatch(showSnackbar('error', message));
   }
 };
+
+// **************************************************** Reset Form Loading **************************************************** //
+
+export const resetSignupFormLoading = () => async (dispatch, getState) => {
+  dispatch(
+    authActions.SetIsSubmittingRegister({
+      state: false,
+    })
+  );
+};
+
+export const resetLoginFormLoading = () => async (dispatch, getState) => {
+  dispatch(
+    authActions.SetIsSubmittingLogin({
+      state: false,
+    })
+  );
+};
+
+export const resetVerifyEmailViaOTP = () => async (dispatch, getState) => {
+  dispatch(
+    authActions.SetIsSubmittingVerify({
+      isSubmitting: false,
+    })
+  );
+};
+
+export const resetIsReSendingOTP = () => async (dispatch, getState) => {
+  dispatch(
+    authActions.SetIsReSendingOTP({
+      state: false,
+    })
+  );
+};
+
+export const resetIsSubmittingForgotPassword = () => async (dispatch, getState) => {
+  dispatch(
+    authActions.SetIsSubmittingForgotPassword({
+      state: false,
+    })
+  );
+};
+
+export const resetIsSubmittingResetPassword = () => async (dispatch, getState) => {
+  dispatch(
+    authActions.SetIsSubmittingResetPassword({
+      state: false,
+    })
+  );
+};
+
+export const resetIsSubmittingStoreSetup = () => async (dispatch, getState) => {
+  dispatch(
+    storeActions.SetIsSubmittingSteup({
+      isSubmitting: false,
+    })
+  );
+};
+
+export const resetIsUpdatingUser = () => async (dispatch, getState) => {
+  dispatch(
+    userActions.SetIsUpdatingUser({
+      state: false,
+    })
+  );
+};
+
+export const resetIsUpdatingPassword = () => async(dispatch, getState) => {
+  dispatch(
+    userActions.SetIsUpdatingPassword({
+      state: false,
+    })
+  )
+}

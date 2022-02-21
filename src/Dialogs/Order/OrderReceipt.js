@@ -270,7 +270,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
 
   return (
     <div ref={ref}>
-      <Box sx={{ width: '1200px', p: 3 }}>
+      <Box sx={{ width: {xs: '480px', md: '600px', lg: '1200px'}, p: 3 }}>
         <Stack sx={{ mb: 3 }} direction={'row'} alignItems="center" justifyContent={'space-between'}>
           <DialogTitle sx={{ mb: 2 }}>{'Order Receipt'}</DialogTitle>
 
@@ -278,7 +278,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             switch (order.status) {
               case 'Pending':
                 return (
-                  <Stack spacing={2} direction="row" alignItems="center">
+                  <Stack spacing={2} sx={{flexDirection: {sx: 'column', md: 'row'}, alignItems: 'center'}} >
                     {' '}
                     <Button
                       onClick={() => {

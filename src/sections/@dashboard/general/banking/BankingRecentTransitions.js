@@ -47,7 +47,7 @@ import Scrollbar from '../../../../components/Scrollbar';
 import MenuPopover from '../../../../components/MenuPopover';
 
 import NoOrder from '../../../../assets/shopping-basket.png';
-import { fetchRecentOrder } from '../../../../actions';
+import { fetchProducts, fetchRecentOrder } from '../../../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +61,7 @@ export default function BankingRecentTransitions({ link, storeName }) {
 
   useEffect(() => {
     dispatch(fetchRecentOrder());
+    dispatch(fetchProducts());
   }, []);
 
   const [id, setId] = useState('');
@@ -75,6 +76,41 @@ export default function BankingRecentTransitions({ link, storeName }) {
     setId(id);
     setOpenReceipt(true);
   };
+
+  const findColor = (status) => {
+    let color = 'info';
+    switch (status) {
+      case 'Pending':
+        color = 'warning';
+        break;
+      case 'Cancelled':
+        color = 'error';
+        break;
+      case 'Accepted':
+        color = 'success';
+        break;
+      case 'Rejected':
+        color = 'error';
+        break;
+      case 'Requested Return':
+        color = 'info';
+        break;
+      case 'Requested Replacement':
+        color = 'info';
+        break;
+      case 'Returned':
+        color = 'error';
+        break;
+      case 'Replaced':
+        color = 'info';
+        break;
+
+      default:
+        break;
+    }
+
+    return color;
+  }
 
   return (
     <>
@@ -110,11 +146,7 @@ export default function BankingRecentTransitions({ link, storeName }) {
                     <TableCell>
                       <Label
                         variant={isLight ? 'ghost' : 'filled'}
-                        color={
-                          (row.status === 'completed' && 'success') ||
-                          (row.status === 'in_progress' && 'warning') ||
-                          'error'
-                        }
+                        color={findColor(row.status)}
                       >
                         {sentenceCase(row.status)}
                       </Label>

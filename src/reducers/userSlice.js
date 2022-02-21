@@ -5,6 +5,8 @@ const userSlice = createSlice({
 
   initialState: {
     user: {},
+    isUpdatingUser: false,
+    isUpdatingPassword: false,
     error: false,
   },
 
@@ -12,6 +14,12 @@ const userSlice = createSlice({
     FetchUser(state, action) {
       state.user = action.payload.user;
     },
+    SetIsUpdatingUser(state, action) {
+      state.isUpdatingUser = action.payload.state;
+    },
+    SetIsUpdatingPassword(state, action) {
+      state.isUpdatingPassword = action.payload.state;
+    }
   },
 });
 

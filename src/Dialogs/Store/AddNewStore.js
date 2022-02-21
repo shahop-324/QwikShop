@@ -3,15 +3,14 @@
 /* eslint-disable import/order */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import MUIStyled from 'styled-components';
 import * as Yup from 'yup';
-import { Formik } from 'formik';
-import { createNewStore } from '../../actions';
-import CloseIcon from '@mui/icons-material/Close';
+import { useFormik } from 'formik';
+import { createNewStore, resetIsSubmittingStoreSetup } from '../../actions';
 // utils
 // @mui
 import {
@@ -28,10 +27,6 @@ import {
   Stack,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import PhoneInput from 'react-phone-number-input';
-// eslint-disable-next-line react/prop-types
-// Phone Input
-import 'react-phone-number-input/style.css';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Stepper from '@mui/material/Stepper';
@@ -174,87 +169,65 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const steps = ['Basic info', 'Add logo', 'Store created'];
+const steps = ['Provide store info', 'Store created'];
 
 const AddNewStore = ({ open, handleClose }) => {
   const dispatch = useDispatch();
 
-  const { store } = useSelector((state) => state.store);
+  const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
+
+  useEffect(() => {
+    dispatch(resetIsSubmittingStoreSetup());
+  }, []);
+
+  const formik = useFormik({
+    initialValues: {
+      storeName: '',
+
+      state: '',
+      city: '',
+      address: '',
+      pincode: '',
+      landmark: '',
+
+      phone: '',
+      gstin: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+
+      storeName: Yup.string().required('Store Name is required'),
+      address: Yup.string().required('Address is required'),
+      state: Yup.string().required('State is required'),
+      city: Yup.string().required('City is required'),
+      phone: Yup.string().required('Phone number is required'),
+
+      landmark: Yup.string().required('Landmark is required'),
+      pincode: Yup.string().required('Pincode is required'),
+      gstin: Yup.string(),
+    }),
+    onSubmit: (values) => {
+      console.log(values, category, country);
+      dispatch(createNewStore({ ...values, category, country }, onNext, handleClose));
+    },
+  });
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const [storeName, setStoreName] = useState(store?.name);
+ 
   const [country, setCountry] = useState();
-  const [state, setState] = useState();
-  const [city, setCity] = useState();
-  const [address, setAddress] = useState();
-  const [pincode, setPincode] = useState();
-  const [landmark, setLandmark] = useState();
-  const [gstin, setGstin] = useState();
-  const [category, setCategory] = useState();
-  const [phone, setPhone] = useState();
 
-  const [image, setImage] = useState();
-  const [fileToPreview, setFileToPreview] = useState();
+  const [category, setCategory] = useState();
 
   const { width, height } = useWindowSize();
 
   const onNext = () => {
-    if (activeStep <= 1) {
+    if (activeStep <= 0) {
       setActiveStep((prev) => prev + 1);
     }
   };
-
-  const onPrevious = () => {
-    if (activeStep >= 1) {
-      setActiveStep((prev) => prev - 1);
-    }
-  };
-
-  const onSubmitImage = async () => {
-    const formValues = {
-      image,
-    };
-
-    dispatch(
-      createNewStore(
-        { storeName, country, state, city, address, pincode, landmark, category, phone, gstin },
-        image,
-        onNext,
-        handleClose
-      )
-    );
-    console.log(formValues);
-  };
-
-  const handleDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    console.log(file);
-    setImage(file);
-    setFileToPreview(URL.createObjectURL(file));
-  };
-
-  const handleFormSubmit = async (values) => {
-    console.log(values);
-    setStoreName(values.store_name);
-    setCity(values.store_city);
-    setState(values.store_state);
-    setAddress(values.store_address);
-    setPincode(values.store_pincode);
-    setLandmark(values.store_pincode);
-    onNext();
-  };
-
-  const new_store_schema = Yup.object().shape({
-    store_name: Yup.string().required('Store Name is required'),
-    store_city: Yup.string().required('Store City is required'),
-    store_state: Yup.string().required('Store State / Region is required'),
-    store_address: Yup.string().required('Store Address is required'),
-    store_pincode: Yup.string().required('Store Pincode is required'),
-    store_landmark: Yup.string().required('Store Landmark is required'),
-  });
-
-  const initialValues = {};
 
   return (
     <>
@@ -262,9 +235,11 @@ const AddNewStore = ({ open, handleClose }) => {
         <Stack spacing={2} direction="row" alignItems="center" justifyContent="space-between">
           <DialogTitle>Add New Store</DialogTitle>
 
-          <IconButton sx={{ px: 3, width: 'max-content' }} style={{ color: '#000000' }} onClick={handleClose}>
-            <CancelRounded />
-          </IconButton>
+          <Stack>
+            <IconButton sx={{ px: 3, width: 'max-content' }} style={{ color: '#000000' }} onClick={handleClose}>
+              <CancelRounded />
+            </IconButton>
+          </Stack>
         </Stack>
 
         <Stepper className="mt-3" alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
@@ -275,281 +250,221 @@ const AddNewStore = ({ open, handleClose }) => {
           ))}
         </Stepper>
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={new_store_schema}
-          onSubmit={handleFormSubmit}
-          // enableReinitialize={true}
-        >
-          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
-            <form onSubmit={handleSubmit}>
-              {(() => {
-                switch (activeStep * 1) {
-                  case 0:
-                    return (
-                      <>
-                        <Grid className="px-4 pt-3" container spacing={3}>
-                          <Grid item xs={12} md={12}>
-                            <Card sx={{ p: 3 }}>
-                              <Box
-                                sx={{
-                                  display: 'grid',
-                                  columnGap: 2,
-                                  rowGap: 3,
-                                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                                }}
-                              >
-                                <TextField
-                                  value={values.store_name}
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                  error={!!touched.store_name && !!errors.store_name}
-                                  helperText={touched.store_name && errors.store_name}
-                                  name="store_name"
-                                  label="Store name"
-                                  fullWidth
-                                />
+        {(() => {
+          switch (activeStep * 1) {
+            case 0:
+              return (
+                <>
+                  <form onSubmit={formik.handleSubmit}>
+                    <Grid className="px-4 pt-3" container spacing={3}>
+                      <Grid item xs={12} md={12}>
+                        <Card sx={{ p: 3 }}>
+                          <Box
+                            sx={{
+                              display: 'grid',
+                              columnGap: 2,
+                              rowGap: 3,
+                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                            }}
+                          >
+                            <TextField
+                             
+                              value={formik.values.storeName}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="Store Name"
+                              variant="outlined"
+                              name="storeName"
+                              error={!!formik.touched.storeName && !!formik.errors.storeName}
+                              helperText={formik.touched.storeName && formik.errors.storeName}
+                            />
 
-                                <Autocomplete
-                                  id=""
-                                  fullWidth
-                                  value={country}
-                                  onChange={(e, value) => {
-                                    setCountry(value);
-                                  }}
-                                  options={countries}
-                                  autoHighlight
-                                  getOptionLabel={(option) => option.label}
-                                  renderOption={(props, option) => (
-                                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                      <img
-                                        loading="lazy"
-                                        width="20"
-                                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                                        alt=""
-                                      />
-                                      {option.label} ({option.code}) +{option.phone}
-                                    </Box>
-                                  )}
-                                  renderInput={(params) => (
-                                    <TextField
-                                      //   value={values.store_country}
-                                      error={!!touched.store_country && !!errors.store_country}
-                                      helperText={touched.store_country && errors.store_country}
-                                      {...params}
-                                      label="Choose a country"
-                                      onBlur={handleBlur}
-                                      name="store_country"
-                                      //   onChange={(e) => {
-                                      //     handleChange(e);
-                                      //   }}
-                                      inputProps={{
-                                        ...params.inputProps,
-                                        autoComplete: '', // disable autocomplete and autofill
-                                      }}
-                                    />
-                                  )}
-                                />
+                            <Autocomplete
+                              required
+                              value={country}
+                              onChange={(e, value) => {
+                                setCountry(value);
+                              }}
+                              onBlur={formik.handleBlur}
+                              fullWidth
+                              label="Choose a country"
+                              variant="outlined"
+                              name="country"
+                              error={!!formik.touched.country && !!formik.errors.country}
+                              helperText={formik.touched.country && formik.errors.email}
+                              options={countries}
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderOption={(props, option) => (
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                  <img
+                                    loading="lazy"
+                                    width="20"
+                                    src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                    srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                    alt=""
+                                  />
+                                  {option.label} ({option.code}) +{option.phone}
+                                </Box>
+                              )}
+                              renderInput={(params) => (
                                 <TextField
-                                  value={values.store_state}
-                                  error={!!touched.store_state && !!errors.store_state}
-                                  helperText={touched.store_state && errors.store_state}
-                                  name="store_state"
-                                  label="State/Region"
-                                  fullWidth
-                                  onBlur={handleBlur}
-                                  onChange={(e) => {
-                                    handleChange(e);
+                                  {...params}
+                                  label="Choose a country"
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: '', // disable autocomplete and autofill
                                   }}
                                 />
-                                <TextField
-                                  value={values.store_city}
-                                  error={!!touched.store_city && !!errors.store_city}
-                                  helperText={touched.store_city && errors.store_city}
-                                  name="store_city"
-                                  label="City"
-                                  fullWidth
-                                  onBlur={handleBlur}
-                                  onChange={(e) => {
-                                    handleChange(e);
-                                  }}
-                                />
-                                <TextField
-                                  value={values.store_address}
-                                  error={!!touched.store_address && !!errors.store_address}
-                                  helperText={touched.store_address && errors.store_address}
-                                  required
-                                  name="store_address"
-                                  label="Address"
-                                  fullWidth
-                                  onBlur={handleBlur}
-                                  onChange={(e) => {
-                                    handleChange(e);
-                                  }}
-                                />
-                                <TextField
-                                  value={values.store_pincode}
-                                  error={!!touched.store_pincode && !!errors.store_pincode}
-                                  helperText={touched.store_pincode && errors.store_pincode}
-                                  name="store_pincode"
-                                  label="Pincode"
-                                  fullWidth
-                                  onBlur={handleBlur}
-                                  onChange={(e) => {
-                                    handleChange(e);
-                                  }}
-                                />
-                                <TextField
-                                  value={values.store_landmark}
-                                  error={!!touched.store_landmark && !!errors.store_landmark}
-                                  helperText={touched.store_landmark && errors.store_landmark}
-                                  name="store_landmark"
-                                  label="Landmark"
-                                  fullWidth
-                                  onBlur={handleBlur}
-                                  onChange={(e) => {
-                                    handleChange(e);
-                                  }}
-                                />
-                                <TextField
-                                  value={values.store_gstin}
-                                  error={!!touched.store_gstin && !!errors.store_gstin}
-                                  helperText={touched.store_gstin && errors.store_gstin}
-                                  name="store_gstin"
-                                  label="GSTIN"
-                                  fullWidth
-                                  onBlur={handleBlur}
-                                  onChange={handleChange}
-                                />
-                                <Autocomplete
-                                  id="store_category"
-                                  value={category}
-                                  onChange={(e, value) => {
-                                    setCategory(value);
-                                  }}
-                                  fullWidth
-                                  disablePortal
-                                  autoHighlight
-                                  getOptionLabel={(option) => option.label}
-                                  renderOption={(props, option) => (
-                                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                      <img
-                                        loading="lazy"
-                                        width="50"
-                                        src={option.image}
-                                        srcSet={`${option.image} 2x`}
-                                        alt=""
-                                      />
-                                      {option.label}
-                                    </Box>
-                                  )}
-                                  options={categoryOptions}
-                                  renderInput={(params) => (
-                                    <TextField
-                                      //   value={values.store_category}
-                                      error={!!touched.store_category && !!errors.store_category}
-                                      helperText={touched.store_category && errors.store_category}
-                                      name="store_category"
-                                      onBlur={handleBlur}
-                                      {...params}
-                                      label="Category"
-                                      fullWidth
-                                      //   onChange={(e) => {
-                                      //     handleChange(e);
-                                      //   }}
-                                    />
-                                  )}
-                                />
-                                <PhoneInput
-                                  required
-                                  value={phone}
-                                  name="store_contact"
-                                  placeholder="Enter phone number"
-                                  onChange={(value) => {
-                                    setPhone(value);
-                                  }}
-                                  inputComponent={CustomPhoneNumber}
-                                  defaultCountry="IN"
-                                />
-                              </Box>
-                            </Card>
-                          </Grid>
-                        </Grid>
-                        <DialogActions>
-                          <LoadingButton type="submit" variant="contained" loading={false}>
-                            Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                          </LoadingButton>
-                        </DialogActions>
-                      </>
-                    );
+                              )}
+                            />
+                            <TextField
+                              value={formik.values.state}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="State / Province"
+                              variant="outlined"
+                              name="state"
+                              error={!!formik.touched.state && !!formik.errors.state}
+                              helperText={formik.touched.state && formik.errors.state}
+                            />
+                            <TextField
+                              value={formik.values.city}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="City"
+                              variant="outlined"
+                              name="city"
+                              error={!!formik.touched.city && !!formik.errors.city}
+                              helperText={formik.touched.city && formik.errors.city}
+                            />
+                            <TextField
+                              value={formik.values.address}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="Address"
+                              variant="outlined"
+                              name="address"
+                              error={!!formik.touched.address && !!formik.errors.address}
+                              helperText={formik.touched.address && formik.errors.address}
+                            />
+                            <TextField
+                              value={formik.values.pincode}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="Pincode"
+                              variant="outlined"
+                              name="pincode"
+                              error={!!formik.touched.pincode && !!formik.errors.pincode}
+                              helperText={formik.touched.pincode && formik.errors.pincode}
+                            />
+                            <TextField
+                              value={formik.values.landmark}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="Landmark"
+                              variant="outlined"
+                              name="landmark"
+                              error={!!formik.touched.landmark && !!formik.errors.landmark}
+                              helperText={formik.touched.landmark && formik.errors.landmark}
+                            />
+                            <TextField
+                              value={formik.values.gstin}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="GSTIN (Optional)"
+                              variant="outlined"
+                              name="gstin"
+                              error={!!formik.touched.gstin && !!formik.errors.gstin}
+                              helperText={formik.touched.gstin && formik.errors.gstin}
+                            />
+                            <Autocomplete
+                              value={category}
+                              onChange={(e, value) => {
+                                setCategory(value);
+                              }}
+                              onBlur={formik.handleBlur}
+                              fullWidth
+                              label="Category"
+                              variant="outlined"
+                              name="category"
+                              error={!!formik.touched.category && !!formik.errors.category}
+                              helperText={formik.touched.category && formik.errors.category}
+                              disablePortal
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderOption={(props, option) => (
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                  <img
+                                    loading="lazy"
+                                    width="50"
+                                    src={option.image}
+                                    srcSet={`${option.image} 2x`}
+                                    alt=""
+                                  />
+                                  {option.label}
+                                </Box>
+                              )}
+                              options={categoryOptions}
+                              renderInput={(params) => (
+                                <TextField required {...params} label="Category" fullWidth name="category" />
+                              )}
+                            />
 
-                  case 1:
-                    return (
-                      <>
-                        <Grid className="px-4 pt-3" container spacing={3}>
-                          <Grid item xs={12} md={12}>
-                            <Card sx={{ py: 10, px: 3 }}>
-                              <Typography className="mb-4 text-center" variant="h6">
-                                Image
-                              </Typography>
-                              <Box sx={{ mb: 5 }}>
-                                <UploadAvatar
-                                  name="avatarUrl"
-                                  accept="image/*"
-                                  maxSize={3145728}
-                                  onDrop={handleDrop}
-                                  file={fileToPreview}
-                                  helperText={
-                                    <Typography
-                                      variant="caption"
-                                      sx={{
-                                        mt: 2,
-                                        mx: 'auto',
-                                        display: 'block',
-                                        textAlign: 'center',
-                                        color: 'text.secondary',
-                                      }}
-                                    >
-                                      Allowed *.jpeg, *.jpg, *.png, *.gif
-                                      <br /> max size of {fData(3145728)}
-                                    </Typography>
-                                  }
-                                />
-                              </Box>
-                            </Card>
-                          </Grid>
-                        </Grid>
-                        <DialogActions>
-                          {/* <button type="submit">Finish</button> */}
-                          <LoadingButton onClick={onSubmitImage} type="button" variant="contained">
-                            Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                          </LoadingButton>
-                        </DialogActions>
-                      </>
-                    );
+                            <TextField
+                              value={formik.values.phone}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="Enter Phone Number"
+                              variant="outlined"
+                              name="phone"
+                              error={!!formik.touched.phone && !!formik.errors.phone}
+                              helperText={formik.touched.phone && formik.errors.phone}
+                            />
+                          </Box>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                    <DialogActions>
+                      <LoadingButton
+                        disabled={!(formik.isValid && formik.dirty)}
+                        type="submit"
+                        variant="contained"
+                        loading={isSubmittingStoreSetup}
+                      >
+                        Create store <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                      </LoadingButton>
+                    </DialogActions>
+                  </form>
+                </>
+              );
 
-                  case 2:
-                    return (
-                      <>
-                        <Confetti width={width} height={height} />
-                        <DialogTitle className="text-center">Store Created</DialogTitle>
-                        <Container className="d-flex flex-column align-items-center justify-content-center">
-                          <StoreMallDirectoryRoundedIcon className="mb-3" style={{ fontSize: '200', color: 'green' }} />
-                          <Typography variant="p2">
-                            Now, you can easily run your business online with 0% commision.
-                          </Typography>
-                        </Container>
-                      </>
-                    );
+            case 1:
+              return (
+                <>
+                  <Confetti width={width} height={height} />
+                  <DialogTitle className="text-center">Store Created</DialogTitle>
+                  <Container className="d-flex flex-column align-items-center justify-content-center">
+                    <StoreMallDirectoryRoundedIcon className="mb-3" style={{ fontSize: '200', color: 'green' }} />
+                    <Typography variant="p2">
+                      Now, you can easily run your business online for free in hasslefree and efficient manner.
+                    </Typography>
+                  </Container>
+                </>
+              );
 
-                  default:
-                    break;
-                }
-              })()}
-            </form>
-          )}
-        </Formik>
+            default:
+              break;
+          }
+        })()}
       </Dialog>
     </>
   );

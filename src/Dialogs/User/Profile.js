@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import {LoadingButton} from '@mui/lab';
 import {
   Box,
   Typography,
@@ -10,7 +11,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Slide,
   Grid,
@@ -24,7 +24,7 @@ import { Formik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { UploadAvatar } from '../../components/upload';
 import { fData } from '../../utils/formatNumber';
-import { updateUserProfile, showSnackbar, updateUserPassword } from '../../actions';
+import { updateUserProfile, showSnackbar, updateUserPassword, resetIsUpdatingUser, resetIsUpdatingPassword } from '../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -69,7 +69,7 @@ const Profile = ({ open, handleClose }) => {
   const [oldPass, setOldPass] = useState('');
   const [passConfirm, setPassConfirm] = useState('');
 
-  const { user } = useSelector((state) => state.user);
+  const { user, isUpdatingUser, isUpdatingPassword } = useSelector((state) => state.user);
 
   const [image, setImage] = useState();
   const [fileToPreview, setFileToPreview] = useState(`https://qwikshop.s3.ap-south-1.amazonaws.com/${user.image}`);
@@ -104,6 +104,11 @@ const Profile = ({ open, handleClose }) => {
     phone: user.phone,
   };
 
+  useEffect(() => {
+    dispatch(resetIsUpdatingUser());
+    dispatch(resetIsUpdatingPassword());
+  }, []);
+
   return (
     <>
       <Dialog
@@ -117,7 +122,7 @@ const Profile = ({ open, handleClose }) => {
         <DialogTitle sx={{ mb: 2 }}>{'My Profile'}</DialogTitle>
 
         <DialogContent>
-          <Box sx={{ width: '600px' }}>
+          <Box sx={{ width: {xs: '400px', md: '600px'} }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                 <Tab label="Profile" {...a11yProps(0)} />
@@ -194,6 +199,7 @@ const Profile = ({ open, handleClose }) => {
                               required
                             />
                             <TextField
+                            disabled
                               value={values.email}
                               onBlur={handleBlur}
                               onChange={handleChange}
@@ -220,9 +226,9 @@ const Profile = ({ open, handleClose }) => {
                       </Grid>
                     </Grid>
                     <Stack sx={{ mt: 2 }} direction="row" alignItems={'center'} justifyContent="end">
-                      <Button variant="contained" type={'submit'}>
+                      <LoadingButton loading={isUpdatingUser} variant="contained" type={'submit'}>
                         Save Changes
-                      </Button>
+                      </LoadingButton>
                     </Stack>
                   </form>
                 )}
@@ -287,6 +293,7 @@ const Profile = ({ open, handleClose }) => {
                     }}
                     variant="contained"
                     type={'button'}
+                    loading={isUpdatingPassword}
                   >
                     Update Password
                   </Button>

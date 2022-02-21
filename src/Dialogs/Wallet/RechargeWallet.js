@@ -14,7 +14,8 @@ const RechargeWallet = ({ open, handleClose }) => {
   const { store } = useSelector((state) => state.store);
   const { user } = useSelector((state) => state.user);
 
-  const BaseURL = 'http://api.app.qwikshop.online/v1/';
+  // const BaseURL = 'https://api.app.qwikshop.online/v1/';
+  const BaseURL = 'http://localhost:8000/v1/'
 
   const dispatch = useDispatch();
 
@@ -54,15 +55,18 @@ const RechargeWallet = ({ open, handleClose }) => {
       console.log(order);
 
       const options = {
-        key: 'rzp_live_g0GDGz1KSIjfGz',
+        key: 'rzp_live_JOhvixtFUeoelr',
         amount: order.data.amount,
         currency: 'INR',
-        name: store.name,
+        name: store.storeName,
         description: `Wallet Recharge`,
         image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`,
         order_id: order.data.id,
         handler(response) {
           dispatch(showSnackbar('success', 'Your wallet recharge has been successfully processed!'));
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         },
         prefill: {
           name: `${user.firstName} ${user.lastName}`,
@@ -71,10 +75,10 @@ const RechargeWallet = ({ open, handleClose }) => {
         },
         notes: {
           // We can add some notes here
+          type: 'wallet-recharge',
           storeId: store._id,
           userId: user._id,
           amount,
-          type: 'wallet-recharge',
         },
         theme: {
           color: '#538BF7',

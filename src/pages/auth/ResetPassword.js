@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Button, Container, Typography } from '@mui/material';
@@ -27,14 +27,16 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function ResetPassword() {
-  const [email, setEmail] = useState('');
   const [sent, setSent] = useState(true);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setSent(false);
   }, []);
 
-  
+  const params = new URLSearchParams(document.location.search);
+  const email = params.get('email'); //
 
   return (
     <Page title="Reset Password" sx={{ height: 1 }}>
@@ -53,7 +55,7 @@ export default function ResetPassword() {
                   password.
                 </Typography>
 
-                <ResetPasswordForm onSent={() => setSent(true)} onGetEmail={(value) => setEmail(value)} />
+                <ResetPasswordForm onSent={() => setSent(true)} />
 
                 <Button fullWidth size="large" component={RouterLink} to={PATH_AUTH.login} sx={{ mt: 1 }}>
                   Back
@@ -67,7 +69,8 @@ export default function ResetPassword() {
                   Request sent successfully
                 </Typography>
                 <Typography>
-                  We have sent a confirmation email to {email} &nbsp;
+                  {console.log(searchParams)}
+                  We have sent a confirmation email to &nbsp;
                   <strong>{email}</strong>
                   <br />
                   Please check your email.

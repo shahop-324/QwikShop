@@ -8,6 +8,9 @@ const authSlice = createSlice({
     isSubmittingRegister: false,
     isSubmittingLogin: false,
     isSubmittingVerify: false,
+    isReSendingOTP: false,
+    isSubmittingForgotPassword: false,
+    isSubmittingResetPassword: false,
     token: null,
     error: false,
   },
@@ -31,6 +34,15 @@ const authSlice = createSlice({
     },
     SetIsSubmittingVerify(state, action) {
       state.isSubmittingVerify = action.payload.isSubmitting;
+    },
+    SetIsReSendingOTP(state, action) {
+      state.isReSendingOTP = action.payload.state;
+    },
+    SetIsSubmittingForgotPassword(state, action) {
+      state.isSubmittingForgotPassword = action.payload.state;
+    },
+    SetIsSubmittingResetPassword(state, action) {
+      state.isSubmittingResetPassword = action.payload.state;
     }
   },
 });
