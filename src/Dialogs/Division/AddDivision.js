@@ -2,9 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useFormik } from 'formik';
 
 import {
   Box,
@@ -15,13 +13,11 @@ import {
   TextField,
   Autocomplete,
   Button,
-  InputAdornment,
   Typography,
   DialogTitle,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider } from '../../components/hook-form';
 import { UploadAvatar } from '../../components/upload';
 
 // utils
@@ -32,28 +28,28 @@ const AddDivision = ({ open, handleClose }) => {
   useEffect(() => {
     dispatch(fetchSubCategory());
   }, []);
+
+  const formik = useFormik({
+    initialValues: {
+      divisionName: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      divisionName: Yup.string().required('Division Name is required'),
+    }),
+    onSubmit: (values) => {
+      dispatch(createDivision(file.value, values.divisionName, subCategory, handleClose));
+    },
+  });
+
   const { subCategories } = useSelector((state) => state.subCategory);
   const dispatch = useDispatch();
   const { isCreating } = useSelector((state) => state.division);
   const [file, setFile] = useState({ error: false, message: 'Division Image is required', value: '' });
   const [fileToPreview, setFileToPreview] = useState();
-  const [divisionName, setDivisionName] = useState();
   const [subCategory, setSubCategory] = useState();
-
-  const NewSubCategorySchema = Yup.object().shape({
-    avatarUrl: Yup.mixed().test('required', 'Sub Category image is required', (value) => value !== ''),
-  });
-
-  const defaultValues = () => ({
-    avatarUrl: '',
-  });
-
-  const methods = useForm({
-    resolver: yupResolver(NewSubCategorySchema),
-    defaultValues,
-  });
-
-  const { handleSubmit } = methods;
 
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -66,17 +62,12 @@ const AddDivision = ({ open, handleClose }) => {
     setFileToPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = () => {
-    console.log(file.value, divisionName);
-    dispatch(createDivision(file.value, divisionName, subCategory, handleClose));
-  };
-
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
         <DialogTitle>Add Division</DialogTitle>
         <div className="p-4">
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={formik.handleSubmit}>
             <Grid className="px-4 pt-3" container spacing={3}>
               <Grid item xs={12} md={12}>
                 <Card sx={{ p: 3 }}>
@@ -104,6 +95,7 @@ const AddDivision = ({ open, handleClose }) => {
                     }
                   />
                   <Autocomplete
+                    required
                     sx={{ mt: 3 }}
                     value={subCategory}
                     onChange={(e, value) => {
@@ -132,6 +124,7 @@ const AddDivision = ({ open, handleClose }) => {
                     )}
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Choose a Sub Category"
                         inputProps={{
@@ -142,39 +135,39 @@ const AddDivision = ({ open, handleClose }) => {
                     )}
                   />
                   <TextField
-                    className="mt-4"
-                    name="divisionName"
-                    label="Division Name"
+                    value={formik.values.divisionName}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     fullWidth
-                    value={divisionName}
-                    onChange={(e) => {
-                      setDivisionName(e.target.value);
-                    }}
+                    label="Division Name"
+                    variant="outlined"
+                    name="divisionName"
+                    error={!!formik.touched.divisionName && !!formik.errors.divisionName}
+                    helperText={formik.touched.divisionName && formik.errors.divisionName}
+                    className="mt-4"
                   />
                 </Card>
               </Grid>
             </Grid>
-          </FormProvider>
+            <DialogActions>
+              <LoadingButton
+                disabled={!(formik.isValid && formik.dirty)}
+                type="submit"
+                variant="contained"
+                loading={isCreating}
+              >
+                Create Division
+              </LoadingButton>
+              <Button
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </form>
         </div>
-        <DialogActions>
-          <LoadingButton
-            onClick={() => {
-              onSubmit();
-            }}
-            type="submit"
-            variant="contained"
-            loading={isCreating}
-          >
-            Create Division
-          </LoadingButton>
-          <Button
-            onClick={() => {
-              handleClose();
-            }}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

@@ -2,9 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useFormik } from 'formik';
 
 import {
   Box,
@@ -15,13 +13,11 @@ import {
   TextField,
   Autocomplete,
   Button,
-  InputAdornment,
   Typography,
   DialogTitle,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider } from '../../components/hook-form';
 import { UploadAvatar } from '../../components/upload';
 
 // utils
@@ -39,27 +35,25 @@ const EditSubCategory = ({ open, handleClose, id }) => {
 
   const { name, image } = subCategory;
 
+  const formik = useFormik({
+    initialValues: {
+      subCategoryName: name,
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      subCategoryName: Yup.string().required('Sub Category Name is required'),
+    }),
+    onSubmit: (values) => {
+      dispatch(updateSubCategory(file.value, values.subCategoryName, category, id, handleClose));
+    },
+  });
+
   const dispatch = useDispatch();
-  const { isCreating } = useSelector((state) => state.subCategory);
   const [file, setFile] = useState({ error: false, message: 'Sub Category Image is required', value: '' });
   const [fileToPreview, setFileToPreview] = useState(`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`);
-  const [subCategoryName, setSubCategoryName] = useState(name);
   const [category, setCategory] = useState(subCategory.category);
-
-  const NewSubCategorySchema = Yup.object().shape({
-    avatarUrl: Yup.mixed().test('required', 'Sub Category image is required', (value) => value !== ''),
-  });
-
-  const defaultValues = () => ({
-    avatarUrl: '',
-  });
-
-  const methods = useForm({
-    resolver: yupResolver(NewSubCategorySchema),
-    defaultValues,
-  });
-
-  const { handleSubmit } = methods;
 
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -72,17 +66,12 @@ const EditSubCategory = ({ open, handleClose, id }) => {
     setFileToPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = () => {
-    console.log(file.value, subCategoryName);
-    dispatch(updateSubCategory(file.value, subCategoryName, category, id, handleClose));
-  };
-
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
         <DialogTitle>Edit Sub Category</DialogTitle>
         <div className="p-4">
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={formik.handleSubmit}>
             <Grid className="px-4 pt-3" container spacing={3}>
               <Grid item xs={12} md={12}>
                 <Card sx={{ p: 3 }}>
@@ -110,6 +99,7 @@ const EditSubCategory = ({ open, handleClose, id }) => {
                     }
                   />
                   <Autocomplete
+                    required
                     sx={{ mt: 3 }}
                     value={category}
                     onChange={(e, value) => {
@@ -138,6 +128,7 @@ const EditSubCategory = ({ open, handleClose, id }) => {
                     )}
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Choose a Category"
                         inputProps={{
@@ -148,39 +139,39 @@ const EditSubCategory = ({ open, handleClose, id }) => {
                     )}
                   />
                   <TextField
-                    className="mt-4"
-                    name="subCategoryName"
-                    label="Sub Category Name"
+                    value={formik.values.subCategoryName}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     fullWidth
-                    value={subCategoryName}
-                    onChange={(e) => {
-                      setSubCategoryName(e.target.value);
-                    }}
+                    label="Sub Category Name"
+                    variant="outlined"
+                    name="subCategoryName"
+                    error={!!formik.touched.subCategoryName && !!formik.errors.subCategoryName}
+                    helperText={formik.touched.subCategoryName && formik.errors.subCategoryName}
+                    className="mt-4"
                   />
                 </Card>
               </Grid>
             </Grid>
-          </FormProvider>
+            <DialogActions>
+              <LoadingButton
+                disabled={!(formik.isValid && formik.dirty)}
+                type="submit"
+                variant="contained"
+                loading={isUpdating}
+              >
+                Update Sub Category
+              </LoadingButton>
+              <Button
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </form>
         </div>
-        <DialogActions>
-          <LoadingButton
-            onClick={() => {
-              onSubmit();
-            }}
-            type="submit"
-            variant="contained"
-            loading={isUpdating}
-          >
-            Update Sub Category
-          </LoadingButton>
-          <Button
-            onClick={() => {
-              handleClose();
-            }}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

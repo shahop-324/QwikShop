@@ -3,25 +3,20 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 // form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useFormik } from 'formik';
 
 import {
-  Box,
   Card,
   Grid,
   Dialog,
   DialogActions,
   TextField,
-  Autocomplete,
   Button,
-  InputAdornment,
   Typography,
   DialogTitle,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider } from '../components/hook-form';
 import { UploadAvatar } from '../components/upload';
 
 // utils
@@ -29,26 +24,26 @@ import { fData } from '../utils/formatNumber';
 import { createCategory } from '../actions';
 
 const AddNewCategory = ({ open, handleClose }) => {
-  const  dispatch = useDispatch();
-  const {isCreating} = useSelector((state) => state.category);
+  const dispatch = useDispatch();
+
+  const formik = useFormik({
+    initialValues: {
+      categoryName: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      categoryName: Yup.string().required('Category Name is required'),
+    }),
+    onSubmit: (values) => {
+      dispatch(createCategory(file.value, values.categoryName, handleClose));
+    },
+  });
+
+  const { isCreating } = useSelector((state) => state.category);
   const [file, setFile] = useState({ error: false, message: 'Category Image is required', value: '' });
   const [fileToPreview, setFileToPreview] = useState();
-  const [categoryName, setCategoryName] = useState();
-
-  const NewCategorySchema = Yup.object().shape({
-    avatarUrl: Yup.mixed().test('required', 'Category image is required', (value) => value !== ''),
-  });
-
-  const defaultValues = () => ({
-    avatarUrl: '',
-  });
-
-  const methods = useForm({
-    resolver: yupResolver(NewCategorySchema),
-    defaultValues,
-  });
-
-  const { handleSubmit } = methods;
 
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -61,17 +56,12 @@ const AddNewCategory = ({ open, handleClose }) => {
     setFileToPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = () => {
-    console.log(file.value, categoryName);
-    dispatch(createCategory(file.value, categoryName, handleClose))
-  };
-
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
         <DialogTitle>Add Category</DialogTitle>
         <div className="p-4">
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={formik.handleSubmit}>
             <Grid className="px-4 pt-3" container spacing={3}>
               <Grid item xs={12} md={12}>
                 <Card sx={{ p: 3 }}>
@@ -99,39 +89,39 @@ const AddNewCategory = ({ open, handleClose }) => {
                     }
                   />
                   <TextField
-                    className="mt-4"
-                    name="categoryName"
-                    label="Category Name"
+                    value={formik.values.categoryName}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     fullWidth
-                    value={categoryName}
-                    onChange={(e) => {
-                      setCategoryName(e.target.value);
-                    }}
+                    label="Category Name"
+                    variant="outlined"
+                    name="categoryName"
+                    error={!!formik.touched.categoryName && !!formik.errors.categoryName}
+                    helperText={formik.touched.categoryName && formik.errors.categoryName}
+                    className="mt-4"
                   />
                 </Card>
               </Grid>
             </Grid>
-          </FormProvider>
+            <DialogActions>
+              <LoadingButton
+                disabled={!(formik.isValid && formik.dirty)}
+                type="submit"
+                variant="contained"
+                loading={isCreating}
+              >
+                Create category
+              </LoadingButton>
+              <Button
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </form>
         </div>
-        <DialogActions>
-          <LoadingButton
-            onClick={() => {
-              onSubmit();
-            }}
-            type="submit"
-            variant="contained"
-            loading={isCreating}
-          >
-            Create category
-          </LoadingButton>
-          <Button
-            onClick={() => {
-              handleClose();
-            }}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

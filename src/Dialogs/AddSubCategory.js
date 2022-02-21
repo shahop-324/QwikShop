@@ -2,9 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useFormik } from 'formik';
 
 import {
   Box,
@@ -15,13 +13,11 @@ import {
   TextField,
   Autocomplete,
   Button,
-  InputAdornment,
   Typography,
   DialogTitle,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider } from '../components/hook-form';
 import { UploadAvatar } from '../components/upload';
 
 // utils
@@ -29,31 +25,30 @@ import { fData } from '../utils/formatNumber';
 import { createSubCategory, fetchCategory } from '../actions';
 
 const AddSubCategory = ({ open, handleClose }) => {
-    useEffect(() => {
-        dispatch(fetchCategory());
-      }, []);
+  useEffect(() => {
+    dispatch(fetchCategory());
+  }, []);
+
+  const formik = useFormik({
+    initialValues: {
+      subCategoryName: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      subCategoryName: Yup.string().required('Sub Category Name is required'),
+    }),
+    onSubmit: (values) => {
+      dispatch(createSubCategory(file.value, values.subCategoryName, category, handleClose));
+    },
+  });
+
   const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
-  const { isCreating } = useSelector((state) => state.subCategory);
   const [file, setFile] = useState({ error: false, message: 'Sub Category Image is required', value: '' });
   const [fileToPreview, setFileToPreview] = useState();
-  const [subCategoryName, setSubCategoryName] = useState();
   const [category, setCategory] = useState();
-
-  const NewSubCategorySchema = Yup.object().shape({
-    avatarUrl: Yup.mixed().test('required', 'Sub Category image is required', (value) => value !== ''),
-  });
-
-  const defaultValues = () => ({
-    avatarUrl: '',
-  });
-
-  const methods = useForm({
-    resolver: yupResolver(NewSubCategorySchema),
-    defaultValues,
-  });
-
-  const { handleSubmit } = methods;
 
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -66,17 +61,12 @@ const AddSubCategory = ({ open, handleClose }) => {
     setFileToPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = () => {
-    console.log(file.value, subCategoryName);
-    dispatch(createSubCategory(file.value, subCategoryName, category, handleClose));
-  };
-
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
         <DialogTitle>Add Sub Category</DialogTitle>
         <div className="p-4">
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={formik.handleSubmit}>
             <Grid className="px-4 pt-3" container spacing={3}>
               <Grid item xs={12} md={12}>
                 <Card sx={{ p: 3 }}>
@@ -104,6 +94,7 @@ const AddSubCategory = ({ open, handleClose }) => {
                     }
                   />
                   <Autocomplete
+                    required
                     sx={{ mt: 3 }}
                     value={category}
                     onChange={(e, value) => {
@@ -120,12 +111,19 @@ const AddSubCategory = ({ open, handleClose }) => {
                     getOptionLabel={(option) => option.label}
                     renderOption={(props, option) => (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                        <img loading="lazy" width="20" src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image}`} srcSet={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image} 2x`} alt="" />
+                        <img
+                          loading="lazy"
+                          width="20"
+                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image}`}
+                          srcSet={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image} 2x`}
+                          alt=""
+                        />
                         {option.label}
                       </Box>
                     )}
                     renderInput={(params) => (
                       <TextField
+                        required
                         {...params}
                         label="Choose a Category"
                         inputProps={{
@@ -136,39 +134,39 @@ const AddSubCategory = ({ open, handleClose }) => {
                     )}
                   />
                   <TextField
-                    className="mt-4"
-                    name="subCategoryName"
-                    label="Sub Category Name"
+                    value={formik.values.subCategoryName}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     fullWidth
-                    value={subCategoryName}
-                    onChange={(e) => {
-                      setSubCategoryName(e.target.value);
-                    }}
+                    label="Sub Category Name"
+                    variant="outlined"
+                    name="subCategoryName"
+                    error={!!formik.touched.subCategoryName && !!formik.errors.subCategoryName}
+                    helperText={formik.touched.subCategoryName && formik.errors.subCategoryName}
+                    className="mt-4"
                   />
                 </Card>
               </Grid>
             </Grid>
-          </FormProvider>
+            <DialogActions>
+              <LoadingButton
+                disabled={!(formik.isValid && formik.dirty)}
+                type="submit"
+                variant="contained"
+                loading={false}
+              >
+                Create Sub Category
+              </LoadingButton>
+              <Button
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </form>
         </div>
-        <DialogActions>
-          <LoadingButton
-            onClick={() => {
-              onSubmit();
-            }}
-            type="submit"
-            variant="contained"
-            loading={false}
-          >
-            Create Sub Category
-          </LoadingButton>
-          <Button
-            onClick={() => {
-              handleClose();
-            }}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

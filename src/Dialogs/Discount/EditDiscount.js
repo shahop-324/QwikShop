@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../index.css';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
@@ -12,11 +14,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import PercentIcon from '@mui/icons-material/Percent';
 
-import { MobileDateTimePicker } from '@mui/lab';
+import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 
 // @mui
-import { Grid, Typography, Button, Box, Autocomplete, Dialog, DialogTitle } from '@mui/material';
+import { Grid, Typography, Box, Autocomplete, Dialog, DialogTitle, IconButton, DialogActions } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import CancelRounded from '@mui/icons-material/CancelRounded';
 import { updateDiscount, fetchCategory, fetchSubCategory, fetchProducts, fetchDivision } from '../../actions';
 
 // ----------------------------------------------------------------------
@@ -74,6 +77,66 @@ export default function EditDiscount({ open, handleClose, id }) {
 
   const discount = discounts.find((el) => el._id === id);
 
+  const formik = useFormik({
+    initialValues: {
+      buyX: discount?.buyX,
+      getY: discount?.getY,
+      numberOfCoupons: discount?.numberOfCoupons,
+      discountCode: discount?.discountCode,
+      usesPerCustomer: discount?.usesPerCustomer,
+      discountPercentage: discount?.discountPercentage,
+      discountAmount: discount?.discountAmount,
+      minOrderValue: discount?.minOrderValue,
+      maxDiscount: discount?.maxDiscount,
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      buyX: Yup.number().min(1, 'Must be minimum 1'),
+      getY: Yup.number().min(1, 'Must be minimum 1'),
+      numberOfCoupons: Yup.number().min(1, 'Must be minimum 1').required('Number of coupons is required'),
+      discountCode: Yup.string()
+        .uppercase('Must be completely Uppercase')
+        .min(1, 'Must be more than 5 characters')
+        .required('Discount Code is required'),
+      usesPerCustomer: Yup.string().min(1, 'Must be more than 5 characters').required('Discount Code is required'),
+      discountPercentage: Yup.number().min(1, 'Must be minimum 1'),
+      discountAmount: Yup.number().min(1, 'Must be minimum Rs.1'),
+      minOrderValue: Yup.number().min(1, 'Must be minimum Rs.1'),
+      maxDiscount: Yup.number(),
+    }),
+    onSubmit: (values) => {
+      const formValues = {
+        buyX: values.buyX,
+        getY: values.getY,
+        numberOfCoupons: values.numberOfCoupons,
+        discountCode: values.discountCode,
+        usesPerCustomer: values.usesPerCustomer,
+        discountPercentage: values.discountPercentage,
+        discountAmount: values.discountAmount,
+        minOrderValue: values.minOrderValue,
+        maxDiscount: values.maxDiscount,
+
+        discountType,
+        applicableOn,
+        type,
+
+        applicableFromDateTime,
+        applicableTillDateTime,
+        boughtProduct,
+        givenProduct,
+        applicableCategories,
+        applicableSubCategories,
+        applicableDivisions,
+        applicableProducts,
+        showToCustomer,
+      };
+
+      dispatch(updateDiscount(formValues, id, handleClose));
+    },
+  });
+
   useEffect(() => {
     dispatch(fetchCategory());
     dispatch(fetchSubCategory());
@@ -83,8 +146,6 @@ export default function EditDiscount({ open, handleClose, id }) {
 
   const [discountType, setDiscountType] = useState(discount?.discountType);
   const [type, setType] = useState(discount?.type);
-  const [buyX, setBuyX] = useState(discount?.buyX);
-  const [getY, setGetY] = useState(discount?.getY);
   const [applicableOn, setApplicableOn] = useState(discount?.applicableOn);
   const [applicableFromDateTime, setApplicableFromDateTime] = useState(discount?.applicableFromDateTime);
   const [applicableTillDateTime, setApplicableTillDateTime] = useState(discount?.applicableTillDateTime);
@@ -111,42 +172,8 @@ export default function EditDiscount({ open, handleClose, id }) {
   );
   const [boughtProduct, setBoughtProduct] = useState(discount?.boughtProduct);
   const [givenProduct, setGivenProduct] = useState(discount?.givenProduct);
-  const [numberOfCoupons, setNumberOfCoupons] = useState(discount?.numberOfCoupons);
-  const [discountCode, setDiscountCode] = useState(discount?.discountCode);
-  const [usesPerCustomer, setUsesPerCustomer] = useState(discount?.usesPerCustomer);
-  const [discountPercentage, setDiscountPercentage] = useState(discount?.discountPercentage);
-  const [discountAmount, setDiscountAmount] = useState(discount?.discountAmount);
-  const [minOrderValue, setMinOrderValue] = useState(discount?.minOrderValue);
-  const [maxDiscount, setMaxDiscount] = useState(discount?.maxDiscount);
+
   const [showToCustomer, setShowToCustomer] = useState(discount?.showToCustomer);
-
-  const onSubmit = () => {
-    const formValues = {
-      discountType,
-      applicableOn,
-      type,
-      applicableFromDateTime,
-      applicableTillDateTime,
-      buyX,
-      getY,
-      boughtProduct,
-      givenProduct,
-      applicableCategories,
-      applicableSubCategories,
-      applicableDivisions,
-      applicableProducts,
-      numberOfCoupons,
-      discountCode,
-      usesPerCustomer,
-      discountPercentage,
-      discountAmount,
-      minOrderValue,
-      maxDiscount,
-      showToCustomer,
-    };
-
-    dispatch(updateDiscount(formValues, id, handleClose));
-  };
 
   const categoryOptions = categories.map((el) => ({
     label: el.name,
@@ -174,671 +201,487 @@ export default function EditDiscount({ open, handleClose, id }) {
 
   return (
     <Dialog fullWidth maxWidth="md" open={open}>
-      <DialogTitle>Edit Discount</DialogTitle>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={12}>
-          <div className="mt-5 px-4">
-            <FormLabel component="legend">Type</FormLabel>
-            <RadioGroup
-              defaultValue={type}
-              className="mb-4"
-              row
-              aria-label="Discount type"
-              name="row-radio-buttons-group"
-            >
-              <FormControlLabel
-                value="regular"
-                control={<Radio onClick={() => setType('regular')} />}
-                label="Regular Discount"
-              />
-              <FormControlLabel
-                value="buyXGetYFree"
-                control={<Radio onClick={() => setType('buyXGetYFree')} />}
-                label="Buy X get Y free"
-              />
-              <FormControlLabel
-                value="buyXGetYPercentOff"
-                control={<Radio onClick={() => setType('buyXGetYPercentOff')} />}
-                label="Buy X get Y% Off"
-              />
-              <FormControlLabel
-                value="firstPurchase"
-                control={<Radio onClick={() => setType('firstPurchase')} />}
-                label="First Purchase"
-              />
-            </RadioGroup>
-            {type !== 'buyXgetYFree' && (
-              <>
-                <FormLabel component="legend">Applicable on</FormLabel>
-                <RadioGroup
-                  defaultValue={applicableOn}
-                  className="mb-4"
-                  row
-                  aria-label="Discount type"
-                  name="row-radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="allProducts"
-                    control={<Radio onClick={() => setApplicableOn('allProducts')} />}
-                    label="All Products"
-                  />
-                  <FormControlLabel
-                    value="selectedCategory"
-                    control={<Radio onClick={() => setApplicableOn('selectedCategory')} />}
-                    label="Selected category"
-                  />
-                  <FormControlLabel
-                    value="selectedSubCategory"
-                    control={<Radio onClick={() => setApplicableOn('selectedSubCategory')} />}
-                    label="Selected Sub category"
-                  />
-                  <FormControlLabel
-                    value="selectedDivision"
-                    control={<Radio onClick={() => setApplicableOn('selectedDivision')} />}
-                    label="Selected division"
-                  />
-                  <FormControlLabel
-                    value="selectedProducts"
-                    control={<Radio onClick={() => setApplicableOn('selectedProducts')} />}
-                    label="Selected products"
-                  />
-                </RadioGroup>
-              </>
-            )}
-
-            {type !== 'buyXGetYFree' && (
-              <Stack>
-                <FormLabel component="legend">Discount type</FormLabel>
-                <RadioGroup
-                  defaultValue={discountType}
-                  className="mb-4"
-                  row
-                  aria-label="Discount type"
-                  name="row-radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="percentage"
-                    control={<Radio onClick={() => setDiscountType('percentage')} />}
-                    label="Percentage"
-                  />
-                  <FormControlLabel
-                    value="flat"
-                    control={<Radio onClick={() => setDiscountType('flat')} />}
-                    label="Flat"
-                  />
-                </RadioGroup>
-              </Stack>
-            )}
-
-            <Box
-              sx={{
-                display: 'grid',
-                columnGap: 2,
-                rowGap: 3,
-                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-              }}
-            >
-              <MobileDateTimePicker
-                value={applicableFromDateTime}
-                onChange={(newValue) => {
-                  setApplicableFromDateTime(newValue);
-                }}
-                label="Applicable from Date & Time"
-                minDate={new Date('2018-01-01T00:00')}
-                inputFormat="yyyy/MM/dd hh:mm a"
-                mask="___/__/__ __:__ _M"
-                renderInput={(params) => <TextField {...params} />}
-              />
-              <MobileDateTimePicker
-                value={applicableTillDateTime}
-                onChange={(newValue) => {
-                  setApplicableTillDateTime(newValue);
-                }}
-                label="Applicable till Date & Time"
-                minDate={new Date('2018-01-01T00:00')}
-                inputFormat="yyyy/MM/dd hh:mm a"
-                mask="___/__/__ __:__ _M"
-                renderInput={(params) => <TextField {...params} />}
-              />
-
-              {type === 'buyXGetYFree' && (
-                <TextField
-                  value={buyX}
-                  onChange={(e) => {
-                    setBuyX(e.target.value);
-                  }}
-                  className="mb-4"
-                  fullWidth
-                  id="outlined-basic"
-                  label="Buy X"
-                  variant="outlined"
-                />
-              )}
-
-              {type === 'buyXGetYFree' && (
-                <TextField
-                  value={getY}
-                  onChange={(e) => {
-                    setGetY(e.target.value);
-                  }}
-                  className="mb-4"
-                  fullWidth
-                  id="outlined-basic"
-                  label="Get Y"
-                  variant="outlined"
-                />
-              )}
-
-              {type === 'buyXGetYFree' && (
-                <Autocomplete
-                  required
-                  value={boughtProduct}
-                  onChange={(e, value) => {
-                    setBoughtProduct(value);
-                  }}
-                  fullWidth
-                  disablePortal
-                  autoHighlight
-                  getOptionLabel={(option) => option.label}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                      {option.label}
-                    </Box>
-                  )}
-                  options={productOptions}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Bought Product" fullWidth name="boughtProduct" />
-                  )}
-                />
-              )}
-
-              {type === 'buyXGetYFree' && (
-                <Autocomplete
-                  required
-                  value={givenProduct}
-                  onChange={(e, value) => {
-                    setGivenProduct(value);
-                  }}
-                  fullWidth
-                  disablePortal
-                  autoHighlight
-                  getOptionLabel={(option) => option.label}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                      {option.label}
-                    </Box>
-                  )}
-                  options={productOptions}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Given Product" fullWidth name="givenProduct" />
-                  )}
-                />
-              )}
-
-              {applicableOn === 'selectedCategory' && (
-                <Autocomplete
-                  multiple
-                  required
-                  value={applicableCategories}
-                  onChange={(e, value) => {
-                    setApplicableCategoories(value);
-                  }}
-                  fullWidth
-                  disablePortal
-                  autoHighlight
-                  getOptionLabel={(option) => option.label}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                      {option.label}
-                    </Box>
-                  )}
-                  options={categoryOptions}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Applicable categories" fullWidth name="applicableCategories" />
-                  )}
-                />
-              )}
-
-              {applicableOn === 'selectedSubCategory' && (
-                <Autocomplete
-                  multiple
-                  required
-                  value={applicableSubCategories}
-                  onChange={(e, value) => {
-                    setApplicableSubCategories(value);
-                  }}
-                  fullWidth
-                  disablePortal
-                  autoHighlight
-                  getOptionLabel={(option) => option.label}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                      {option.label}
-                    </Box>
-                  )}
-                  options={subCategoryOptions}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Applicable Sub Categories" fullWidth name="applicableSubCategories" />
-                  )}
-                />
-              )}
-
-              {applicableOn === 'selectedDivision' && (
-                <Autocomplete
-                  multiple
-                  required
-                  value={applicableDivisions}
-                  onChange={(e, value) => {
-                    setApplicableDivisions(value);
-                  }}
-                  fullWidth
-                  disablePortal
-                  autoHighlight
-                  getOptionLabel={(option) => option.label}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                      {option.label}
-                    </Box>
-                  )}
-                  options={divisionOptions}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Applicable Divisions" fullWidth name="applicableDivisions" />
-                  )}
-                />
-              )}
-
-              {applicableOn === 'selectedProducts' && (
-                <Autocomplete
-                  multiple
-                  required
-                  value={applicableProducts}
-                  onChange={(e, value) => {
-                    setApplicableProducts(value);
-                  }}
-                  fullWidth
-                  disablePortal
-                  autoHighlight
-                  getOptionLabel={(option) => option.label}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
-                      {option.label}
-                    </Box>
-                  )}
-                  options={productOptions}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Applicable Products" fullWidth name="applicableProducts" />
-                  )}
-                />
-              )}
-
-              <TextField
-                value={numberOfCoupons}
-                onChange={(e) => {
-                  setNumberOfCoupons(e.target.value);
-                }}
+      <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
+        <DialogTitle>Edit Discount</DialogTitle>
+        <IconButton sx={{ mr: 3, mt: 2 }} onClick={handleClose}>
+          <CancelRounded />
+        </IconButton>
+      </Stack>
+      <form onSubmit={formik.handleSubmit}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <div className="mt-5 px-4">
+              <FormLabel component="legend">Type</FormLabel>
+              <RadioGroup
+                defaultValue={type}
                 className="mb-4"
-                fullWidth
-                id="outlined-basic"
-                label="Number of coupons"
-                variant="outlined"
-              />
-              <TextField
-                value={discountCode}
-                onChange={(e) => {
-                  setDiscountCode(e.target.value);
-                }}
-                className="mb-4"
-                fullWidth
-                id="outlined-basic"
-                label="Discount code"
-                variant="outlined"
-              />
-
-              <TextField
-                value={usesPerCustomer}
-                onChange={(e) => {
-                  setUsesPerCustomer(e.target.value);
-                }}
-                type="number"
-                className="mb-4"
-                fullWidth
-                id="outlined-basic"
-                label="Uses per customer"
-                variant="outlined"
-              />
-              {discountType !== 'flat' && (
-                <TextField
-                  value={discountPercentage}
-                  onChange={(e) => {
-                    setDiscountPercentage(e.target.value);
-                  }}
-                  className="mb-4"
-                  fullWidth
-                  id="outlined-basic"
-                  label="Discount Percentage"
-                  variant="outlined"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment>
-                        <PercentIcon style={{ fontSize: '20px' }} />
-                      </InputAdornment>
-                    ),
-                  }}
+                row
+                aria-label="Discount type"
+                name="row-radio-buttons-group"
+              >
+                <FormControlLabel
+                  value="regular"
+                  control={<Radio onClick={() => setType('regular')} />}
+                  label="Regular Discount"
                 />
-              )}
 
-              {discountType === 'flat' && (
-                <TextField
-                  value={discountAmount}
-                  onChange={(e) => {
-                    setDiscountAmount(e.target.value);
-                  }}
-                  className="mb-4"
-                  fullWidth
-                  id="outlined-basic"
-                  label="Discount amount"
-                  variant="outlined"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment>
-                        <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
-                      </InputAdornment>
-                    ),
-                  }}
+                <FormControlLabel
+                  value="buyXGetYFree"
+                  control={<Radio onClick={() => setType('buyXGetYFree')} />}
+                  label="Buy X get Y free"
                 />
-              )}
-
-              <TextField
-                value={minOrderValue}
-                onChange={(e) => {
-                  setMinOrderValue(e.target.value);
-                }}
-                className="mb-4"
-                fullWidth
-                id="outlined-basic"
-                label="Minimum order value"
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment>
-                      <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              {discountType !== 'flat' && (
-                <TextField
-                  value={maxDiscount}
-                  onChange={(e) => {
-                    setMaxDiscount(e.target.value);
-                  }}
-                  className="mb-4"
-                  fullWidth
-                  id="outlined-basic"
-                  label="Maximum discount"
-                  variant="outlined"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment>
-                        <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
-                      </InputAdornment>
-                    ),
-                  }}
+                <FormControlLabel
+                  value="firstPurchase"
+                  control={<Radio onClick={() => setType('firstPurchase')} />}
+                  label="First Purchase"
                 />
+              </RadioGroup>
+              {type !== 'buyXGetYFree' && (
+                <>
+                  <FormLabel component="legend">Applicable on</FormLabel>
+                  <RadioGroup
+                    defaultValue={applicableOn}
+                    className="mb-4"
+                    row
+                    aria-label="Discount type"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value="allProducts"
+                      control={<Radio onClick={() => setApplicableOn('allProducts')} />}
+                      label="All Products"
+                    />
+                    <FormControlLabel
+                      value="selectedCategory"
+                      control={<Radio onClick={() => setApplicableOn('selectedCategory')} />}
+                      label="Selected category"
+                    />
+                    <FormControlLabel
+                      value="selectedSubCategory"
+                      control={<Radio onClick={() => setApplicableOn('selectedSubCategory')} />}
+                      label="Selected Sub category"
+                    />
+                    <FormControlLabel
+                      value="selectedDivision"
+                      control={<Radio onClick={() => setApplicableOn('selectedDivision')} />}
+                      label="Selected division"
+                    />
+                    <FormControlLabel
+                      value="selectedProducts"
+                      control={<Radio onClick={() => setApplicableOn('selectedProducts')} />}
+                      label="Selected products"
+                    />
+                  </RadioGroup>
+                </>
               )}
-            </Box>
-
-            <Stack direction="row" spacing={4} alignItems="center">
-              <Typography>Show discount coupon on shop to customers?</Typography>
-              <AntSwitch
-                checked={showToCustomer}
-                onChange={(e) => {
-                  setShowToCustomer(e.target.checked);
-                }}
-                inputProps={{ 'aria-label': 'ant design' }}
-              />
-            </Stack>
-
-            <div className="d-flex flex-row align-items-center justify-content-end px-4 py-3">
-              <Button onClick={onSubmit} type="submit" variant="contained" className="me-3">
-                Update Discount
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  handleClose();
+              {type !== 'buyXGetYFree' && (
+                <Stack>
+                  <FormLabel component="legend">Discount type</FormLabel>
+                  <RadioGroup
+                    defaultValue={discountType}
+                    className="mb-4"
+                    row
+                    aria-label="Discount type"
+                    name="row-radio-buttons-group"
+                  >
+                    <FormControlLabel
+                      value="percentage"
+                      control={<Radio onClick={() => setDiscountType('percentage')} />}
+                      label="Percentage"
+                    />
+                    <FormControlLabel
+                      value="flat"
+                      control={<Radio onClick={() => setDiscountType('flat')} />}
+                      label="Flat"
+                    />
+                  </RadioGroup>
+                </Stack>
+              )}
+              <Box
+                sx={{
+                  display: 'grid',
+                  columnGap: 2,
+                  rowGap: 3,
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                 }}
               >
-                Cancel
-              </Button>
+                <MobileDateTimePicker
+                  value={applicableFromDateTime}
+                  onChange={(newValue) => {
+                    setApplicableFromDateTime(newValue);
+                  }}
+                  label="Applicable from Date & Time"
+                  minDate={new Date('2018-01-01T00:00')}
+                  inputFormat="yyyy/MM/dd hh:mm a"
+                  mask="___/__/__ __:__ _M"
+                  renderInput={(params) => <TextField {...params} />}
+                />
+                <MobileDateTimePicker
+                  value={applicableTillDateTime}
+                  onChange={(newValue) => {
+                    setApplicableTillDateTime(newValue);
+                  }}
+                  label="Applicable till Date & Time"
+                  minDate={new Date('2018-01-01T00:00')}
+                  inputFormat="yyyy/MM/dd hh:mm a"
+                  mask="___/__/__ __:__ _M"
+                  renderInput={(params) => <TextField {...params} />}
+                />
+
+                {type === 'buyXGetYFree' && (
+                  <TextField
+                    value={formik.values.buyX}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    label="Buy X"
+                    variant="outlined"
+                    name="buyX"
+                    error={!!formik.touched.buyX && !!formik.errors.buyX}
+                    helperText={formik.touched.buyX && formik.errors.buyX}
+                    className="mb-4"
+                    id="outlined-basic"
+                  />
+                )}
+
+                {type === 'buyXGetYFree' && (
+                  <TextField
+                    value={formik.values.getY}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    label="Get Y"
+                    variant="outlined"
+                    name="getY"
+                    error={!!formik.touched.getY && !!formik.errors.getY}
+                    helperText={formik.touched.getY && formik.errors.getY}
+                    className="mb-4"
+                    id="outlined-basic"
+                  />
+                )}
+
+                {type === 'buyXGetYFree' && (
+                  <Autocomplete
+                    required
+                    value={boughtProduct}
+                    onChange={(e, value) => {
+                      setBoughtProduct(value);
+                    }}
+                    fullWidth
+                    disablePortal
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                        {option.label}
+                      </Box>
+                    )}
+                    options={productOptions}
+                    renderInput={(params) => (
+                      <TextField required {...params} label="Bought Product" fullWidth name="boughtProduct" />
+                    )}
+                  />
+                )}
+
+                {type === 'buyXGetYFree' && (
+                  <Autocomplete
+                    required
+                    value={givenProduct}
+                    onChange={(e, value) => {
+                      setGivenProduct(value);
+                    }}
+                    fullWidth
+                    disablePortal
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                        {option.label}
+                      </Box>
+                    )}
+                    options={productOptions}
+                    renderInput={(params) => (
+                      <TextField required {...params} label="Given Product" fullWidth name="givenProduct" />
+                    )}
+                  />
+                )}
+
+                {applicableOn === 'selectedCategory' && (
+                  <Autocomplete
+                    multiple
+                    required
+                    value={applicableCategories}
+                    onChange={(e, value) => {
+                      setApplicableCategoories(value);
+                    }}
+                    fullWidth
+                    disablePortal
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                        {option.label}
+                      </Box>
+                    )}
+                    options={categoryOptions}
+                    renderInput={(params) => (
+                      <TextField
+                        required
+                        {...params}
+                        label="Applicable categories"
+                        fullWidth
+                        name="applicableCategories"
+                      />
+                    )}
+                  />
+                )}
+
+                {applicableOn === 'selectedSubCategory' && (
+                  <Autocomplete
+                    multiple
+                    required
+                    value={applicableSubCategories}
+                    onChange={(e, value) => {
+                      setApplicableSubCategories(value);
+                    }}
+                    fullWidth
+                    disablePortal
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                        {option.label}
+                      </Box>
+                    )}
+                    options={subCategoryOptions}
+                    renderInput={(params) => (
+                      <TextField
+                        required
+                        {...params}
+                        label="Applicable Sub Categories"
+                        fullWidth
+                        name="applicableSubCategories"
+                      />
+                    )}
+                  />
+                )}
+
+                {applicableOn === 'selectedDivision' && (
+                  <Autocomplete
+                    multiple
+                    required
+                    value={applicableDivisions}
+                    onChange={(e, value) => {
+                      setApplicableDivisions(value);
+                    }}
+                    fullWidth
+                    disablePortal
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                        {option.label}
+                      </Box>
+                    )}
+                    options={divisionOptions}
+                    renderInput={(params) => (
+                      <TextField
+                        required
+                        {...params}
+                        label="Applicable Divisions"
+                        fullWidth
+                        name="applicableDivisions"
+                      />
+                    )}
+                  />
+                )}
+
+                {applicableOn === 'selectedProducts' && (
+                  <Autocomplete
+                    multiple
+                    required
+                    value={applicableProducts}
+                    onChange={(e, value) => {
+                      setApplicableProducts(value);
+                    }}
+                    fullWidth
+                    disablePortal
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img loading="lazy" width="50" src={option.image} srcSet={`${option.image} 2x`} alt="" />
+                        {option.label}
+                      </Box>
+                    )}
+                    options={productOptions}
+                    renderInput={(params) => (
+                      <TextField required {...params} label="Applicable Products" fullWidth name="applicableProducts" />
+                    )}
+                  />
+                )}
+
+                <TextField
+                  value={formik.values.numberOfCoupons}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  label="Number Of Coupons"
+                  variant="outlined"
+                  name="numberOfCoupons"
+                  error={!!formik.touched.numberOfCoupons && !!formik.errors.numberOfCoupons}
+                  helperText={formik.touched.numberOfCoupons && formik.errors.numberOfCoupons}
+                  id="outlined-basic"
+                />
+                <TextField
+                  value={formik.values.discountCode}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  label="Discount Code"
+                  variant="outlined"
+                  name="discountCode"
+                  error={!!formik.touched.discountCode && !!formik.errors.discountCode}
+                  helperText={formik.touched.discountCode && formik.errors.discountCode}
+                  id="outlined-basic"
+                  className="mb-4"
+                />
+
+                <TextField
+                  value={formik.values.usesPerCustomer}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  label="Uses Per Customer"
+                  variant="outlined"
+                  name="usesPerCustomer"
+                  error={!!formik.touched.usesPerCustomer && !!formik.errors.usesPerCustomer}
+                  helperText={formik.touched.usesPerCustomer && formik.errors.usesPerCustomer}
+                  id="outlined-basic"
+                  className="mb-4"
+                  type="number"
+                />
+                {discountType !== 'flat' && (
+                  <TextField
+                    value={formik.values.discountPercentage}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    label="Discount Percentage"
+                    variant="outlined"
+                    name="discountPercentage"
+                    error={!!formik.touched.discountPercentage && !!formik.errors.discountPercentage}
+                    helperText={formik.touched.discountPercentage && formik.errors.discountPercentage}
+                    id="outlined-basic"
+                    className="mb-4"
+                    type="number"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment>
+                          <PercentIcon style={{ fontSize: '20px' }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+
+                {discountType === 'flat' && (
+                  <TextField
+                    value={formik.values.discountAmount}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    label="Discount Amount"
+                    variant="outlined"
+                    name="discountAmount"
+                    error={!!formik.touched.discountAmount && !!formik.errors.discountAmount}
+                    helperText={formik.touched.discountAmount && formik.errors.discountAmount}
+                    id="outlined-basic"
+                    className="mb-4"
+                    type="number"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment>
+                          <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+
+                <TextField
+                  value={formik.values.minOrderValue}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  label="Min. Order Value"
+                  variant="outlined"
+                  name="minOrderValue"
+                  error={!!formik.touched.minOrderValue && !!formik.errors.minOrderValue}
+                  helperText={formik.touched.minOrderValue && formik.errors.minOrderValue}
+                  id="outlined-basic"
+                  className="mb-4"
+                  type="number"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment>
+                        <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                {discountType !== 'flat' && (
+                  <TextField
+                    value={formik.values.maxDiscount}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    label="Max. Discount"
+                    variant="outlined"
+                    name="maxDiscount"
+                    error={!!formik.touched.maxDiscount && !!formik.errors.maxDiscount}
+                    helperText={formik.touched.maxDiscount && formik.errors.maxDiscount}
+                    id="outlined-basic"
+                    className="mb-4"
+                    type="number"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment>
+                          <CurrencyRupeeIcon style={{ fontSize: '20px' }} />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+              </Box>
+
+              <Stack direction="row" spacing={4} alignItems="center">
+                <Typography>Show discount coupon on shop to customers?</Typography>
+                <AntSwitch
+                  checked={showToCustomer}
+                  onChange={(e) => {
+                    setShowToCustomer(e.target.checked);
+                  }}
+                  inputProps={{ 'aria-label': 'ant design' }}
+                />
+              </Stack>
             </div>
-          </div>
+          </Grid>
         </Grid>
-      </Grid>
+        <DialogActions>
+          <div className="d-flex flex-row align-items-center justify-content-end mb-3">
+            <LoadingButton disabled={!(formik.isValid && formik.dirty)} type="submit" variant="contained">
+              {' '}
+              Update Discount{' '}
+            </LoadingButton>
+          </div>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }
-
-const productOptions = [
-  {
-    label: 'Aloo paratha',
-    id: '123',
-    image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/08/aloo-paratha-recipe.jpg',
-  },
-  { label: 'Masala Dosa', id: '1234', image: 'https://i.ytimg.com/vi/CCab5oh0ZOc/maxresdefault.jpg' },
-  {
-    label: 'Chole Bhature',
-    id: '12345678',
-    image: 'https://bigoven-res.cloudinary.com/image/upload/t_recipe-1280/chana-bhatura-0ee3ab7d0f229c6b0bd89cdc.jpg',
-  },
-];
-
-const subCategoryOptions = [
-  {
-    label: 'Kirana store, Grocery & FMCG',
-    image: 'https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2021-12/211213-wee-groceries-se-405p-a36212.jpg',
-  },
-  {
-    label: 'Restaurants & Hotels',
-    image: 'https://media-cdn.tripadvisor.com/media/photo-s/09/37/8b/94/metro-lounge.jpg',
-  },
-  {
-    label: 'Fashion, Apparel, Shoes & Accessories',
-    image: 'https://mms-images.out.customink.com/mms/images/catalog/categories/13_large.jpg',
-  },
-  {
-    label: 'Fruits & vegetables',
-    image: 'https://static.scientificamerican.com/sciam/cache/file/528E0B49-CDD0-42D4-B5BAA3EBAEC01AE6_source.jpg',
-  },
-  {
-    label: 'Mobile, Computers & Other Accessories',
-    image:
-      'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pink-select-2021?wid=940&hei=1112&fmt=png-alpha&.v=1629842709000',
-  },
-  {
-    label: 'Books & Stationary products',
-    image: 'https://m.media-amazon.com/images/I/717EIB64t7L._SL1500_.jpg',
-  },
-  {
-    label: 'Beauty & Cosmetics',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmncqVXZMJkFNp6-OOjCKUl_kxiuWm4AjvG_lKKqzAq956scFZERXWq56fXUEWYqC0WM&usqp=CAU',
-  },
-  {
-    label: 'Electronic appliances',
-    image:
-      'https://cdn.vox-cdn.com/thumbor/Atvpj5tUuIgLq55pPrG2-A-MHF8=/0x389:8426x7181/1200x800/filters:focal(3671x2467:5117x3913)/cdn.vox-cdn.com/uploads/chorus_image/image/62795169/samsung_fridge.0.jpg',
-  },
-  {
-    label: 'Home decoration',
-    image: 'https://www.mymove.com/wp-content/uploads/2021/03/Home-decorating_Followtheflow_Shutterstock.jpg',
-  },
-  {
-    label: 'Furniture',
-    image: 'https://www.ikea.com/in/en/images/products/ektorp-2-seat-sofa__0818550_pe774481_s5.jpg?f=s',
-  },
-  {
-    label: 'Pharmacy & Medical Care',
-    image:
-      'https://i.guim.co.uk/img/media/65d68c03a1e035d0670711a642f7a272d3e660eb/0_1216_3063_1838/master/3063.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=3056330a3a98cf23d2dfcbe60ba711ad',
-  },
-  {
-    label: 'Bakery & Cake shops',
-    image: 'https://preppykitchen.com/wp-content/uploads/2019/06/Chocolate-cake-recipe-1200a.jpg',
-  },
-  {
-    label: 'Fresh chicken, Fish & Meat',
-    image:
-      'https://static.freshtohome.com/media/catalog/product/cache/1/image/600x400/18ae109e34f485bd0b0c075abec96b2e/c/h/chicken-breast.jpg',
-  },
-  {
-    label: 'Local & Online services',
-    image:
-      'https://www.schroederplumbing.com/wp-content/uploads/2020/10/Modern-Plumbing-Technology-Old-School-Experience-And-Integrity-From-Your-Plumber-_-Mesa-AZ.jpg',
-  },
-  {
-    label: 'Jwellery, Gold and Gems',
-    image:
-      'https://www.candere.com/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/n/m/nmne3517-a.jpg',
-  },
-  {
-    label: 'Insurance & Financial services',
-    image:
-      'https://m.economictimes.com/thumb/msid-72304068,width-1200,height-900,resizemode-4,imgsize-191408/money10-getty.jpg',
-  },
-  {
-    label: 'Paan shop',
-    image: 'http://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
-  },
-  {
-    label: 'Gym & Sports equipment',
-    image: 'https://content.presspage.com/uploads/2110/1920_gym-covid-19-mask-risk-gettyimages.jpg?10000',
-  },
-  {
-    label: 'Educational institute, Schools & teachers',
-    image:
-      'https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F60cb2948d2b1ff3c9b86dc9c%2FBlack-teacher-wearing-face-mask-while-explaining-math-lesson-in-the-classroom-%2F960x0.jpg%3Ffit%3Dscale',
-  },
-  {
-    label: 'Hardware & Construction tools',
-    image: 'https://laysantechnologies.com/CKeditor/Images/hardwares.png',
-  },
-  {
-    label: 'Transportation, Taxi, Travel & Tourism',
-    image:
-      'https://media.wired.com/photos/5cf832279c2a7cd3975976ca/2:1/w_2000,h_1000,c_limit/Transpo_XcelsiorChargeCharging_TA.jpg',
-  },
-  {
-    label: 'Car, bike, Tractor & vehicle accessories',
-    image:
-      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2019-honda-civic-sedan-1558453497.jpg?crop=1xw:0.9997727789138833xh;center,top&resize=480:*',
-  },
-];
-
-const categoryOptions = [
-  {
-    label: 'Kirana store, Grocery & FMCG',
-    image: 'https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2021-12/211213-wee-groceries-se-405p-a36212.jpg',
-  },
-  {
-    label: 'Restaurants & Hotels',
-    image: 'https://media-cdn.tripadvisor.com/media/photo-s/09/37/8b/94/metro-lounge.jpg',
-  },
-  {
-    label: 'Fashion, Apparel, Shoes & Accessories',
-    image: 'https://mms-images.out.customink.com/mms/images/catalog/categories/13_large.jpg',
-  },
-  {
-    label: 'Fruits & vegetables',
-    image: 'https://static.scientificamerican.com/sciam/cache/file/528E0B49-CDD0-42D4-B5BAA3EBAEC01AE6_source.jpg',
-  },
-  {
-    label: 'Mobile, Computers & Other Accessories',
-    image:
-      'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pink-select-2021?wid=940&hei=1112&fmt=png-alpha&.v=1629842709000',
-  },
-  {
-    label: 'Books & Stationary products',
-    image: 'https://m.media-amazon.com/images/I/717EIB64t7L._SL1500_.jpg',
-  },
-  {
-    label: 'Beauty & Cosmetics',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmncqVXZMJkFNp6-OOjCKUl_kxiuWm4AjvG_lKKqzAq956scFZERXWq56fXUEWYqC0WM&usqp=CAU',
-  },
-  {
-    label: 'Electronic appliances',
-    image:
-      'https://cdn.vox-cdn.com/thumbor/Atvpj5tUuIgLq55pPrG2-A-MHF8=/0x389:8426x7181/1200x800/filters:focal(3671x2467:5117x3913)/cdn.vox-cdn.com/uploads/chorus_image/image/62795169/samsung_fridge.0.jpg',
-  },
-  {
-    label: 'Home decoration',
-    image: 'https://www.mymove.com/wp-content/uploads/2021/03/Home-decorating_Followtheflow_Shutterstock.jpg',
-  },
-  {
-    label: 'Furniture',
-    image: 'https://www.ikea.com/in/en/images/products/ektorp-2-seat-sofa__0818550_pe774481_s5.jpg?f=s',
-  },
-  {
-    label: 'Pharmacy & Medical Care',
-    image:
-      'https://i.guim.co.uk/img/media/65d68c03a1e035d0670711a642f7a272d3e660eb/0_1216_3063_1838/master/3063.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=3056330a3a98cf23d2dfcbe60ba711ad',
-  },
-  {
-    label: 'Bakery & Cake shops',
-    image: 'https://preppykitchen.com/wp-content/uploads/2019/06/Chocolate-cake-recipe-1200a.jpg',
-  },
-  {
-    label: 'Fresh chicken, Fish & Meat',
-    image:
-      'https://static.freshtohome.com/media/catalog/product/cache/1/image/600x400/18ae109e34f485bd0b0c075abec96b2e/c/h/chicken-breast.jpg',
-  },
-  {
-    label: 'Local & Online services',
-    image:
-      'https://www.schroederplumbing.com/wp-content/uploads/2020/10/Modern-Plumbing-Technology-Old-School-Experience-And-Integrity-From-Your-Plumber-_-Mesa-AZ.jpg',
-  },
-  {
-    label: 'Jwellery, Gold and Gems',
-    image:
-      'https://www.candere.com/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/n/m/nmne3517-a.jpg',
-  },
-  {
-    label: 'Insurance & Financial services',
-    image:
-      'https://m.economictimes.com/thumb/msid-72304068,width-1200,height-900,resizemode-4,imgsize-191408/money10-getty.jpg',
-  },
-  {
-    label: 'Paan shop',
-    image: 'http://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
-  },
-  {
-    label: 'Gym & Sports equipment',
-    image: 'https://content.presspage.com/uploads/2110/1920_gym-covid-19-mask-risk-gettyimages.jpg?10000',
-  },
-  {
-    label: 'Educational institute, Schools & teachers',
-    image:
-      'https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F60cb2948d2b1ff3c9b86dc9c%2FBlack-teacher-wearing-face-mask-while-explaining-math-lesson-in-the-classroom-%2F960x0.jpg%3Ffit%3Dscale',
-  },
-  {
-    label: 'Hardware & Construction tools',
-    image: 'https://laysantechnologies.com/CKeditor/Images/hardwares.png',
-  },
-  {
-    label: 'Transportation, Taxi, Travel & Tourism',
-    image:
-      'https://media.wired.com/photos/5cf832279c2a7cd3975976ca/2:1/w_2000,h_1000,c_limit/Transpo_XcelsiorChargeCharging_TA.jpg',
-  },
-  {
-    label: 'Car, bike, Tractor & vehicle accessories',
-    image:
-      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2019-honda-civic-sedan-1558453497.jpg?crop=1xw:0.9997727789138833xh;center,top&resize=480:*',
-  },
-];

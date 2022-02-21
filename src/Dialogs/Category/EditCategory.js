@@ -2,26 +2,20 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import * as Yup from 'yup';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import {useFormik} from 'formik';
 
 import {
-  Box,
   Card,
   Grid,
   Dialog,
   DialogActions,
   TextField,
-  Autocomplete,
   Button,
-  InputAdornment,
   Typography,
   DialogTitle,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormProvider } from '../../components/hook-form';
 import { UploadAvatar } from '../../components/upload';
 
 // utils
@@ -35,26 +29,24 @@ const EditCategory = ({ open, handleClose, id }) => {
 
   const { name, image } = category;
 
+  const formik = useFormik({
+    initialValues: {
+      categoryName: name,
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      categoryName: Yup.string().required('Category Name is required'),
+    }),
+    onSubmit: (values) => {
+      dispatch(updateCategory(file.value, values.categoryName, id, handleClose));
+    },
+  });
+
   const dispatch = useDispatch();
-  const { isCreating } = useSelector((state) => state.category);
   const [file, setFile] = useState({ error: false, message: 'Category Image is required', value: '' });
   const [fileToPreview, setFileToPreview] = useState(`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`);
-  const [categoryName, setCategoryName] = useState(name);
-
-  const NewCategorySchema = Yup.object().shape({
-    avatarUrl: Yup.mixed().test('required', 'Category image is required', (value) => value !== ''),
-  });
-
-  const defaultValues = () => ({
-    avatarUrl: '',
-  });
-
-  const methods = useForm({
-    resolver: yupResolver(NewCategorySchema),
-    defaultValues,
-  });
-
-  const { handleSubmit } = methods;
 
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -67,17 +59,12 @@ const EditCategory = ({ open, handleClose, id }) => {
     setFileToPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = () => {
-    console.log(file.value, categoryName);
-    dispatch(updateCategory(file.value, categoryName, id, handleClose));
-  };
-
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
-        <DialogTitle>Add Category</DialogTitle>
+        <DialogTitle>Edit Category</DialogTitle>
         <div className="p-4">
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={formik.handleSubmit}>
             <Grid className="px-4 pt-3" container spacing={3}>
               <Grid item xs={12} md={12}>
                 <Card sx={{ p: 3 }}>
@@ -105,25 +92,25 @@ const EditCategory = ({ open, handleClose, id }) => {
                     }
                   />
                   <TextField
-                    className="mt-4"
-                    name="categoryName"
-                    label="Category Name"
+                    value={formik.values.categoryName}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     fullWidth
-                    value={categoryName}
-                    onChange={(e) => {
-                      setCategoryName(e.target.value);
-                    }}
+                    label="Category Name"
+                    variant="outlined"
+                    name="categoryName"
+                    error={!!formik.touched.categoryName && !!formik.errors.categoryName}
+                    helperText={formik.touched.categoryName && formik.errors.categoryName}
+                    className="mt-4"
                   />
                 </Card>
               </Grid>
             </Grid>
-          </FormProvider>
+          </form>
         </div>
         <DialogActions>
           <LoadingButton
-            onClick={() => {
-              onSubmit();
-            }}
+            disabled={!(formik.isValid && formik.dirty)}
             type="submit"
             variant="contained"
             loading={isUpdating}
