@@ -5,6 +5,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Accordion from '@mui/material/Accordion';
@@ -218,11 +219,90 @@ const AddNewProduct = ({ open, handleClose }) => {
   const { categories } = useSelector((state) => state.category);
   const { isCreating } = useSelector((state) => state.product);
 
-  const [metaTitle, setMetaTitle] = useState('');
+  const formik = useFormik({
+    initialValues: {
+      metaTitle: '',
+      metaKeyword: '',
+      metaDescription: '',
+      weight: 100,
+      productName: '',
+      brand: '',
+      price: '',
+      discountedPrice: '',
+      minQuantitySold: 1,
+      quantityInStock: '',
+      productSKU: '',
+      wholesalePrice: '',
+      minWholesaleQuantity: 1,
+      coins: 0,
+      length: 10,
+      width: 10,
+      height: 10,
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      metaTitle: Yup.string().required('Meta Title is required'),
+      metaKeyword: Yup.string().required('Meta Keywords is required'),
+      metaDescription: Yup.string().required('Meta Description is required'),
+      weight: Yup.number().required('Weight in grams is required'),
+      productName: Yup.string().required('Product name is required'),
+      brand: Yup.string(),
+      price: Yup.string().required('Price is required'),
+      discountedPrice: Yup.string().required('Discounted price is required (can also be same as price)'),
+      minQuantitySold: Yup.number().required('Minimum number of quantity sold is required'),
+      quantityInStock: Yup.string().required('Quantity in stock is required'),
+      productSKU: Yup.string().required('Product SKU is required'),
+      wholesalePrice: Yup.number(),
+      minWholesaleQuantity: Yup.number(),
+      coins: Yup.number(),
+      length: Yup.string().required('Length is required'),
+      width: Yup.string().required('Width is required'),
+      height: Yup.string().required('Height is required'),
+    }),
+    onSubmit: (values) => {
+      const formValues = {
+        productName: values.productName,
+        brand: values.brand,
+        price: values.price,
+        discountedPrice: values.discountedPrice,
+        wholesalePrice: values.wholesalePrice,
+        minWholesaleQuantity: values.minWholesaleQuantity,
+        productSKU: values.productSKU,
+        weight: values.weight,
+        quantityInStock: values.quantityInStock,
+        minQuantitySold: values.minQuantitySold,
+        length: values.length,
+        width: values.width,
+        height: values.height,
+        metaDescription: values.metaDescription,
+        metaTitle: values.metaTitle,
+        metaKeyword: values.metaKeyword,
+        coins: values.coins,
 
-  const [metaKeyword, setMetaKeyword] = useState('');
+        productType,
+        category,
+        description,
+        subCategory,
+        division,
+        isFragile,
+        isVeg,
+        acceptCOD,
+        specifications,
+        productUnit,
+        dimensionUnit,
+        InTheBox,
+        colorsList,
+        customVariants,
+        addOnList,
+        priceDeterminingVariant,
+        featured,
+      };
 
-  const [metaDescription, setMetaDescription] = useState('');
+      dispatch(createNewProduct(formValues, imageFiles, videoFiles, handleClose));
+    },
+  });
 
   const [colorsList, setColorsList] = useState([]);
 
@@ -230,7 +310,7 @@ const AddNewProduct = ({ open, handleClose }) => {
 
   const [customVariants, setCustomVariants] = useState([]);
 
-  const [specifications, setSpecifications] = useState([{ index: uuidv4(), property: '', value: '' }]);
+  const [specifications, setSpecifications] = useState([]);
 
   const addSpecificationRow = () => {
     setSpecifications((prev) => [...prev, { index: uuidv4(), property: '', value: '' }]);
@@ -342,35 +422,16 @@ const AddNewProduct = ({ open, handleClose }) => {
   };
 
   const [featured, setFeatured] = useState(false);
-  const [weight, setWeight] = useState('');
-  const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState();
   const [subCategory, setSubCategory] = useState();
   const [division, setDivision] = useState();
-  const [brand, setBrand] = useState();
   const [productType, setProductType] = useState(null);
-  const [price, setPrice] = useState();
-  const [discountedPrice, setDiscountedPrice] = useState('');
-
-  const [minQuantitySold, setMinQuantitySold] = useState('');
   const [productUnit, setProductUnit] = useState({
     label: 'piece',
   });
 
-  const [quantityInStock, setQuantityInStock] = useState('');
-  const [productSKU, setProductSKU] = useState('');
-
-  const [wholesalePrice, setWholesalePrice] = useState(null);
-
-  const [minWholesaleQuantity, setMinWholesalePrice] = useState(null);
-  const [coins, setCoins] = useState(0);
-
   const [activeStep, setActiveStep] = useState(0);
-
-  const [length, setLength] = useState();
-  const [width, setWidth] = useState();
-  const [height, setHeight] = useState();
   const [dimensionUnit, setDimensionUnit] = useState({
     label: 'centimeter',
     value: 'cm',
@@ -475,47 +536,6 @@ const AddNewProduct = ({ open, handleClose }) => {
     setValue('images', filteredItems);
   };
 
-  const onSubmit = () => {
-    const formValues = {
-      productType,
-      productName,
-      category,
-      subCategory,
-      division,
-      brand,
-      price,
-      discountedPrice,
-      wholesalePrice,
-      minWholesaleQuantity,
-      isFragile,
-      isVeg,
-      acceptCOD,
-      description,
-      specifications,
-      productUnit,
-      productSKU,
-      weight,
-      quantityInStock,
-      minQuantitySold,
-      dimensionUnit,
-      length,
-      width,
-      height,
-      InTheBox,
-      colorsList,
-      customVariants,
-      metaDescription,
-      metaTitle,
-      metaKeyword,
-      addOnList,
-      coins,
-      priceDeterminingVariant,
-      featured,
-    };
-
-    dispatch(createNewProduct(formValues, imageFiles, videoFiles, handleClose));
-  };
-
   const categoryOptions = categories.map((category) => ({
     label: category.name,
     value: category._id,
@@ -556,987 +576,891 @@ const AddNewProduct = ({ open, handleClose }) => {
             ))}
           </Stepper>
 
-          {(() => {
-            switch (activeStep) {
-              case 0:
-                return (
-                  <>
-                    <Grid className="px-4 pt-3" container spacing={3}>
-                      <Grid item xs={12} md={12}>
-                        <Card sx={{ p: 3 }}>
-                          <Autocomplete
-                            sx={{ mb: 3 }}
-                            value={productType}
-                            onChange={(e, value) => {
-                              setProductType(value);
-                            }}
-                            id=""
-                            fullWidth
-                            options={productTypeOptions}
-                            autoHighlight
-                            getOptionLabel={(option) => option.label}
-                            renderOption={(props, option) => (
-                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                <img
-                                  loading="lazy"
-                                  width="20"
-                                  src={`${option.image}`}
-                                  srcSet={`${option.image} 2x`}
-                                  alt=""
+          <form onSubmit={formik.handleSubmit}>
+            {(() => {
+              switch (activeStep) {
+                case 0:
+                  return (
+                    <>
+                      <Grid className="px-4 pt-3" container spacing={3}>
+                        <Grid item xs={12} md={12}>
+                          <Card sx={{ p: 3 }}>
+                            <Autocomplete
+                              required
+                              sx={{ mb: 3 }}
+                              value={productType}
+                              onChange={(e, value) => {
+                                setProductType(value);
+                              }}
+                              id=""
+                              fullWidth
+                              options={productTypeOptions}
+                              autoHighlight
+                              getOptionLabel={(option) => option.label}
+                              renderOption={(props, option) => (
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                  <img
+                                    loading="lazy"
+                                    width="20"
+                                    src={`${option.image}`}
+                                    srcSet={`${option.image} 2x`}
+                                    alt=""
+                                  />
+                                  {option.label}
+                                </Box>
+                              )}
+                              renderInput={(params) => (
+                                <TextField
+                                  required
+                                  {...params}
+                                  label="Choose a Product Type"
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: '', // disable autocomplete and autofill
+                                  }}
                                 />
-                                {option.label}
-                              </Box>
-                            )}
-                            renderInput={(params) => (
+                              )}
+                            />
+                            <Box
+                              className="mb-4"
+                              sx={{
+                                display: 'grid',
+                                columnGap: 2,
+                                rowGap: 3,
+                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                              }}
+                            >
                               <TextField
-                                {...params}
-                                label="Choose a Product Type"
-                                inputProps={{
-                                  ...params.inputProps,
-                                  autoComplete: '', // disable autocomplete and autofill
+                                value={formik.values.productName}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Product Name"
+                                variant="outlined"
+                                name="productName"
+                                error={!!formik.touched.productName && !!formik.errors.productName}
+                                helperText={formik.touched.productName && formik.errors.productName}
+                              />
+                              <Autocomplete
+                                value={category}
+                                onChange={(e, value) => {
+                                  setCategory(value);
+                                }}
+                                id=""
+                                fullWidth
+                                options={categoryOptions}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                renderOption={(props, option) => (
+                                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                    <img
+                                      loading="lazy"
+                                      width="20"
+                                      src={`${option.image}`}
+                                      srcSet={`${option.image} 2x`}
+                                      alt=""
+                                    />
+                                    {option.label}
+                                  </Box>
+                                )}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label="Choose a category"
+                                    inputProps={{
+                                      ...params.inputProps,
+                                      autoComplete: '', // disable autocomplete and autofill
+                                    }}
+                                  />
+                                )}
+                              />
+                              <Autocomplete
+                                value={subCategory}
+                                onChange={(e, value) => {
+                                  setSubCategory(value);
+                                }}
+                                id=""
+                                fullWidth
+                                options={subCategoryOptions}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                renderOption={(props, option) => (
+                                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                    <img
+                                      loading="lazy"
+                                      width="20"
+                                      src={`${option.image}`}
+                                      srcSet={`${option.image} 2x`}
+                                      alt=""
+                                    />
+                                    {option.label}
+                                  </Box>
+                                )}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label="Choose a sub category"
+                                    inputProps={{
+                                      ...params.inputProps,
+                                      autoComplete: '', // disable autocomplete and autofill
+                                    }}
+                                  />
+                                )}
+                              />
+                              <Autocomplete
+                                value={division}
+                                onChange={(e, value) => {
+                                  setDivision(value);
+                                }}
+                                id=""
+                                fullWidth
+                                options={divisionOptions}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                renderOption={(props, option) => (
+                                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                    <img
+                                      loading="lazy"
+                                      width="20"
+                                      src={`${option.image}`}
+                                      srcSet={`${option.image} 2x`}
+                                      alt=""
+                                    />
+                                    {option.label}
+                                  </Box>
+                                )}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label="Choose a division"
+                                    inputProps={{
+                                      ...params.inputProps,
+                                      autoComplete: '', // disable autocomplete and autofill
+                                    }}
+                                  />
+                                )}
+                              />
+                              <TextField
+                                value={formik.values.brand}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Brand"
+                                variant="outlined"
+                                name="brand"
+                                error={!!formik.touched.brand && !!formik.errors.brand}
+                                helperText={formik.touched.brand && formik.errors.brand}
+                              />
+                              <TextField
+                                value={formik.values.price}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Price"
+                                variant="outlined"
+                                name="price"
+                                error={!!formik.touched.price && !!formik.errors.price}
+                                helperText={formik.touched.price && formik.errors.price}
+                                type="number"
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment>
+                                      <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
+                                    </InputAdornment>
+                                  ),
                                 }}
                               />
-                            )}
-                          />
-                          <Box
-                            className="mb-4"
-                            sx={{
-                              display: 'grid',
-                              columnGap: 2,
-                              rowGap: 3,
-                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                            }}
-                          >
-                            <TextField
-                              name="productName"
-                              label="Product Name"
-                              fullWidth
-                              value={productName}
-                              onChange={(e) => {
-                                setProductName(e.target.value);
-                              }}
-                            />
+                              <TextField
+                                value={formik.values.discountedPrice}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Discounted Price"
+                                variant="outlined"
+                                name="discountedPrice"
+                                error={!!formik.touched.discountedPrice && !!formik.errors.discountedPrice}
+                                helperText={formik.touched.discountedPrice && formik.errors.discountedPrice}
+                                type="number"
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment>
+                                      <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              />
+                              <TextField
+                                value={formik.values.wholesalePrice}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Wholesale Price"
+                                variant="outlined"
+                                name="wholesalePrice"
+                                error={!!formik.touched.wholesalePrice && !!formik.errors.wholesalePrice}
+                                helperText={formik.touched.wholesalePrice && formik.errors.wholesalePrice}
+                                type="number"
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment>
+                                      <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              />
+                              <TextField
+                                value={formik.values.minWholesaleQuantity}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Minimum Wholesale Quantity"
+                                variant="outlined"
+                                name="minWholesaleQuantity"
+                                error={!!formik.touched.minWholesaleQuantity && !!formik.errors.minWholesaleQuantity}
+                                helperText={formik.touched.minWholesaleQuantity && formik.errors.minWholesaleQuantity}
+                                type="number"
+                              />
+                              <TextField
+                                value={formik.values.coins}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Coins"
+                                variant="outlined"
+                                name="coins"
+                                error={!!formik.touched.coins && !!formik.errors.coins}
+                                helperText={formik.touched.coins && formik.errors.coins}
+                                type="number"
+                              />
+                            </Box>
 
-                            <Autocomplete
-                              value={category}
-                              onChange={(e, value) => {
-                                setCategory(value);
+                            <Box
+                              sx={{
+                                mt: 3,
+                                display: 'grid',
+                                columnGap: 2,
+                                rowGap: 2,
+                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                               }}
-                              id=""
-                              fullWidth
-                              options={categoryOptions}
-                              autoHighlight
-                              getOptionLabel={(option) => option.label}
-                              renderOption={(props, option) => (
-                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                  <img
-                                    loading="lazy"
-                                    width="20"
-                                    src={`${option.image}`}
-                                    srcSet={`${option.image} 2x`}
-                                    alt=""
-                                  />
-                                  {option.label}
-                                </Box>
+                            >
+                              {(productType?.label === 'Grocery' ||
+                                productType?.label === 'Bakery Item' ||
+                                productType?.label === 'Fast Food' ||
+                                productType?.label === 'Indian Food' ||
+                                productType?.label === 'Chocolate' ||
+                                productType?.label === 'Medicine' ||
+                                productType?.label === 'Pet supplies') && (
+                                <FormControl className="mb-3">
+                                  <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
+                                  <RadioGroup
+                                    value={isVeg}
+                                    row
+                                    aria-labelledby="demo-row-radio-buttons-group-label"
+                                    name="row-radio-buttons-group"
+                                  >
+                                    <FormControlLabel
+                                      value="true"
+                                      control={
+                                        <Radio
+                                          onClick={() => {
+                                            setIsVeg(true);
+                                          }}
+                                        />
+                                      }
+                                      label="Veg"
+                                    />
+                                    <FormControlLabel
+                                      value="false"
+                                      control={<Radio onClick={() => setIsVeg(false)} />}
+                                      label="Non Veg"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
                               )}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label="Choose a category"
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: '', // disable autocomplete and autofill
-                                  }}
-                                />
-                              )}
-                            />
-                            <Autocomplete
-                              value={subCategory}
-                              onChange={(e, value) => {
-                                setSubCategory(value);
-                              }}
-                              id=""
-                              fullWidth
-                              options={subCategoryOptions}
-                              autoHighlight
-                              getOptionLabel={(option) => option.label}
-                              renderOption={(props, option) => (
-                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                  <img
-                                    loading="lazy"
-                                    width="20"
-                                    src={`${option.image}`}
-                                    srcSet={`${option.image} 2x`}
-                                    alt=""
-                                  />
-                                  {option.label}
-                                </Box>
-                              )}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label="Choose a sub category"
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: '', // disable autocomplete and autofill
-                                  }}
-                                />
-                              )}
-                            />
-                            <Autocomplete
-                              value={division}
-                              onChange={(e, value) => {
-                                setDivision(value);
-                              }}
-                              id=""
-                              fullWidth
-                              options={divisionOptions}
-                              autoHighlight
-                              getOptionLabel={(option) => option.label}
-                              renderOption={(props, option) => (
-                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                  <img
-                                    loading="lazy"
-                                    width="20"
-                                    src={`${option.image}`}
-                                    srcSet={`${option.image} 2x`}
-                                    alt=""
-                                  />
-                                  {option.label}
-                                </Box>
-                              )}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label="Choose a division"
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: '', // disable autocomplete and autofill
-                                  }}
-                                />
-                              )}
-                            />
-                            <TextField
-                              name="brand"
-                              label="Brand"
-                              fullWidth
-                              value={brand}
-                              onChange={(e) => {
-                                setBrand(e.target.value);
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="price"
-                              label="Price"
-                              fullWidth
-                              value={price}
-                              onChange={(e) => {
-                                setPrice(e.target.value);
-                              }}
-                              InputProps={{
-                                startAdornment: (
-                                  <InputAdornment>
-                                    <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                  </InputAdornment>
-                                ),
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="discountedPrice"
-                              label="Discounted price"
-                              fullWidth
-                              value={discountedPrice}
-                              onChange={(e) => {
-                                setDiscountedPrice(e.target.value);
-                              }}
-                              InputProps={{
-                                startAdornment: (
-                                  <InputAdornment>
-                                    <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                  </InputAdornment>
-                                ),
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="wholesalePrice"
-                              label="Wholesale Price"
-                              fullWidth
-                              value={wholesalePrice}
-                              onChange={(e) => {
-                                setWholesalePrice(e.target.value);
-                              }}
-                              InputProps={{
-                                startAdornment: (
-                                  <InputAdornment>
-                                    <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                  </InputAdornment>
-                                ),
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="minimumWholesaleQuantity"
-                              label="Minimum Wholesale Quantity"
-                              fullWidth
-                              value={minWholesaleQuantity}
-                              onChange={(e) => {
-                                setMinWholesalePrice(e.target.value);
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="coins"
-                              label="Coins"
-                              fullWidth
-                              value={coins}
-                              onChange={(e) => {
-                                setCoins(e.target.value);
-                              }}
-                            />
-                          </Box>
 
-                          <Box
-                            sx={{
-                              mt: 3,
-                              display: 'grid',
-                              columnGap: 2,
-                              rowGap: 2,
-                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                            }}
-                          >
-                            {(productType?.label === 'Grocery' ||
-                              productType?.label === 'Bakery Item' ||
-                              productType?.label === 'Fast Food' ||
-                              productType?.label === 'Indian Food' ||
-                              productType?.label === 'Chocolate' ||
-                              productType?.label === 'Medicine' ||
-                              productType?.label === 'Pet supplies') && (
                               <FormControl className="mb-3">
-                                <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
+                                <FormLabel id="demo-row-radio-buttons-group-label">
+                                  Is Fragile (something which easily breaks or gets damaged) ?
+                                </FormLabel>
                                 <RadioGroup
-                                  value={isVeg}
+                                  value={isFragile}
                                   row
                                   aria-labelledby="demo-row-radio-buttons-group-label"
                                   name="row-radio-buttons-group"
                                 >
                                   <FormControlLabel
-                                    value="true"
+                                    value={true}
                                     control={
                                       <Radio
                                         onClick={() => {
-                                          setIsVeg(true);
+                                          setIsFragile(true);
                                         }}
                                       />
                                     }
-                                    label="Veg"
+                                    label="Yes"
                                   />
                                   <FormControlLabel
-                                    value="false"
-                                    control={<Radio onClick={() => setIsVeg(false)} />}
-                                    label="Non Veg"
+                                    value={false}
+                                    control={
+                                      <Radio
+                                        onClick={() => {
+                                          setIsFragile(false);
+                                        }}
+                                      />
+                                    }
+                                    label="No"
                                   />
                                 </RadioGroup>
                               </FormControl>
-                            )}
-
-                            <FormControl className="mb-3">
-                              <FormLabel id="demo-row-radio-buttons-group-label">
-                                Is Fragile (something which easily breaks or gets damaged) ?
-                              </FormLabel>
-                              <RadioGroup
-                                value={isFragile}
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                              >
+                              <FormGroup className="mt-3">
                                 <FormControlLabel
-                                  value={true}
                                   control={
-                                    <Radio
-                                      onClick={() => {
-                                        setIsFragile(true);
-                                      }}
-                                    />
+                                    <Switch onClick={(e) => setAcceptCOD(e.target.checked)} checked={acceptCOD} />
                                   }
-                                  label="Yes"
+                                  label="Accept Cash on delivery"
                                 />
+                              </FormGroup>
+                              <FormGroup className="mt-3">
                                 <FormControlLabel
-                                  value={false}
-                                  control={
-                                    <Radio
-                                      onClick={() => {
-                                        setIsFragile(false);
-                                      }}
-                                    />
-                                  }
-                                  label="No"
+                                  control={<Switch onClick={(e) => setFeatured(e.target.checked)} checked={featured} />}
+                                  label="Featured"
                                 />
-                              </RadioGroup>
-                            </FormControl>
-                            <FormGroup className="mt-3">
-                              <FormControlLabel
-                                control={<Switch onClick={(e) => setAcceptCOD(e.target.checked)} checked={acceptCOD} />}
-                                label="Accept Cash on delivery"
-                              />
-                            </FormGroup>
-                            <FormGroup className="mt-3">
-                              <FormControlLabel
-                                control={<Switch onClick={(e) => setFeatured(e.target.checked)} checked={featured} />}
-                                label="Featured"
-                              />
-                            </FormGroup>
-                          </Box>
-                        </Card>
-                      </Grid>
-                    </Grid>
-                    <DialogActions>
-                      <LoadingButton
-                        onClick={() => {
-                          onNext();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        loading={false}
-                      >
-                        Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                      </LoadingButton>
-                      <Button onClick={handleClose}>Cancel</Button>
-                    </DialogActions>
-                  </>
-                );
-
-              case 1:
-                return (
-                  <>
-                    <Grid className="px-4 pt-3" container spacing={3}>
-                      <Grid item xs={12} md={12}>
-                        <Card sx={{ p: 3 }}>
-                          <Editor value={description} onChange={(value) => setDescription(value)} />
-                        </Card>
-                      </Grid>
-                    </Grid>
-
-                    <DialogActions>
-                      <LoadingButton
-                        onClick={() => {
-                          onPrev();
-                        }}
-                        type="submit"
-                        variant="outlined"
-                        loading={false}
-                      >
-                        Previous
-                      </LoadingButton>
-                      <LoadingButton
-                        onClick={() => {
-                          onNext();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        loading={false}
-                      >
-                        Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                      </LoadingButton>
-                      <Button onClick={handleClose}>Cancel</Button>
-                    </DialogActions>
-                  </>
-                );
-
-              case 2:
-                return (
-                  <>
-                    <div className="mt-3">
-                      <FormProvider methods={methods} onSubmit={handleSubmit(onNext)}>
-                        <Grid container spacing={3}>
-                          <Grid item xs={12} md={12}>
-                            <Card sx={{ p: 3 }}>
-                              <RHFUploadMultiFile
-                                name="images"
-                                showPreview
-                                accept="image/*, video/*"
-                                maxSize={50145728}
-                                onDrop={handleDrop}
-                                onRemove={handleRemove}
-                                onRemoveAll={handleRemoveAll}
-                              />
-                            </Card>
-                          </Grid>
+                              </FormGroup>
+                            </Box>
+                          </Card>
                         </Grid>
-                      </FormProvider>
-                    </div>
-                    <DialogActions>
-                      <LoadingButton
-                        onClick={() => {
-                          onPrev();
-                        }}
-                        type="submit"
-                        variant="outlined"
-                        loading={false}
-                      >
-                        Previous
-                      </LoadingButton>
-                      <LoadingButton
-                        onClick={() => {
-                          onNext();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        loading={false}
-                      >
-                        Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                      </LoadingButton>
-                      <Button
-                        onClick={() => {
-                          handleClose();
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </DialogActions>
-                  </>
-                );
+                      </Grid>
+                      <DialogActions>
+                        <LoadingButton
+                          onClick={() => {
+                            onNext();
+                          }}
+                          type="button"
+                          variant="contained"
+                          loading={false}
+                        >
+                          Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        </LoadingButton>
+                        <Button onClick={handleClose}>Cancel</Button>
+                      </DialogActions>
+                    </>
+                  );
 
-              case 3:
-                return (
-                  <>
-                    <Grid className="px-4 pt-3" container spacing={3}>
-                      <Grid item xs={12} md={12}>
-                        <Card sx={{ p: 3, mb: 3 }}>
-                          {specifications.map((el) => (
-                            <Stack key={el.index} spacing={2}>
-                              <Box
-                                sx={{
-                                  display: 'grid',
-                                  columnGap: 2,
-                                  rowGap: 3,
-                                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                                }}
-                              >
-                                <TextField
-                                  type="text"
-                                  name="propertyName"
-                                  label="Property Name"
-                                  fullWidth
-                                  value={el.name}
-                                  onChange={(e) => {
-                                    updateSpecification(el.index, e.target.value, 'name');
-                                  }}
-                                />
+                case 1:
+                  return (
+                    <>
+                      <Grid className="px-4 pt-3" container spacing={3}>
+                        <Grid item xs={12} md={12}>
+                          <Card sx={{ p: 3 }}>
+                            <Editor value={description} onChange={(value) => setDescription(value)} />
+                          </Card>
+                        </Grid>
+                      </Grid>
 
-                                <TextField
-                                  type="text"
-                                  name="propertyValue"
-                                  label="Property value"
-                                  fullWidth
-                                  value={el.value}
-                                  onChange={(e) => {
-                                    updateSpecification(el.index, e.target.value, 'value');
-                                  }}
+                      <DialogActions>
+                        <LoadingButton
+                          onClick={() => {
+                            onPrev();
+                          }}
+                          type="button"
+                          variant="outlined"
+                          loading={false}
+                        >
+                          Previous
+                        </LoadingButton>
+                        <LoadingButton
+                          onClick={() => {
+                            onNext();
+                          }}
+                          type="button"
+                          variant="contained"
+                          loading={false}
+                        >
+                          Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        </LoadingButton>
+                        <Button onClick={handleClose}>Cancel</Button>
+                      </DialogActions>
+                    </>
+                  );
+
+                case 2:
+                  return (
+                    <>
+                      <div className="mt-3">
+                        <FormProvider methods={methods} onSubmit={handleSubmit(onNext)}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} md={12}>
+                              <Card sx={{ p: 3 }}>
+                                <RHFUploadMultiFile
+                                  name="images"
+                                  showPreview
+                                  accept="image/*, video/*"
+                                  maxSize={50145728}
+                                  onDrop={handleDrop}
+                                  onRemove={handleRemove}
+                                  onRemoveAll={handleRemoveAll}
                                 />
-                              </Box>
-                              <Stack sx={{ px: 4 }} direction={'row'} alignItems={'center'} justifyContent={'end'}>
-                                <Button
-                                  color="error"
-                                  onClick={() => {
-                                    deleteSpecificationRow(el.index);
+                              </Card>
+                            </Grid>
+                          </Grid>
+                        </FormProvider>
+                      </div>
+                      <DialogActions>
+                        <LoadingButton
+                          onClick={() => {
+                            onPrev();
+                          }}
+                          type="button"
+                          variant="outlined"
+                          loading={false}
+                        >
+                          Previous
+                        </LoadingButton>
+                        <LoadingButton
+                          onClick={() => {
+                            onNext();
+                          }}
+                          type="button"
+                          variant="contained"
+                          loading={false}
+                        >
+                          Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        </LoadingButton>
+                        <Button
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </>
+                  );
+
+                case 3:
+                  return (
+                    <>
+                      <Grid className="px-4 pt-3" container spacing={3}>
+                        <Grid item xs={12} md={12}>
+                          <Card sx={{ p: 3, mb: 3 }}>
+                            {specifications.map((el) => (
+                              <Stack key={el.index} spacing={2}>
+                                <Box
+                                  sx={{
+                                    display: 'grid',
+                                    columnGap: 2,
+                                    rowGap: 3,
+                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                                   }}
                                 >
-                                  Remove
-                                </Button>
-                              </Stack>
-                            </Stack>
-                          ))}
-                          <Stack alignItems={'center'} justifyContent={'center'}>
-                            {' '}
-                            <Button onClick={addSpecificationRow} variant="outlined">
-                              Add Specification
-                            </Button>
-                          </Stack>
-                        </Card>
-                      </Grid>
-                    </Grid>
-                    <DialogActions>
-                      <LoadingButton
-                        onClick={() => {
-                          onPrev();
-                        }}
-                        type="submit"
-                        variant="outlined"
-                        loading={false}
-                      >
-                        Previous
-                      </LoadingButton>
-                      <LoadingButton
-                        onClick={() => {
-                          onNext();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        loading={false}
-                      >
-                        Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                      </LoadingButton>
-                      <Button
-                        onClick={() => {
-                          handleClose();
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </DialogActions>
-                  </>
-                );
-
-              case 4:
-                return (
-                  <>
-                    <Grid className="px-4 pt-3" container spacing={3}>
-                      <Grid item xs={12} md={12}>
-                        <Card sx={{ p: 3, mb: 3 }}>
-                          <Box
-                            sx={{
-                              display: 'grid',
-                              columnGap: 2,
-                              rowGap: 3,
-                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                            }}
-                          >
-                            <Autocomplete
-                              value={productUnit}
-                              onChange={(e, value) => {
-                                setProductUnit(value);
-                              }}
-                              id=""
-                              fullWidth
-                              options={productUnitOptions}
-                              autoHighlight
-                              getOptionLabel={(option) => option.label}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label="Product unit"
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: '', // disable autocomplete and autofill
-                                  }}
-                                />
-                              )}
-                            />
-                            <TextField
-                              type="number"
-                              name="minQuantitySold"
-                              label="Minimum quantity sold"
-                              fullWidth
-                              value={minQuantitySold}
-                              onChange={(e) => {
-                                setMinQuantitySold(e.target.value);
-                              }}
-                            />
-                            <TextField
-                              type="text"
-                              name="productSKU"
-                              label="Stock keeping unit"
-                              fullWidth
-                              value={productSKU}
-                              onChange={(e) => {
-                                setProductSKU(e.target.value);
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="quantityInStock"
-                              label="Quantity in stock"
-                              fullWidth
-                              value={quantityInStock}
-                              onChange={(e) => {
-                                setQuantityInStock(e.target.value);
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="weight"
-                              label="Weight (in grams)"
-                              fullWidth
-                              value={weight}
-                              onChange={(e) => {
-                                setWeight(e.target.value);
-                              }}
-                            />
-                          </Box>
-                        </Card>
-                        <Card sx={{ p: 3, mb: 3 }}>
-                          <Box
-                            sx={{
-                              display: 'grid',
-                              columnGap: 2,
-                              rowGap: 3,
-                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                            }}
-                          >
-                            <Autocomplete
-                              value={dimensionUnit}
-                              onChange={(e, value) => {
-                                setDimensionUnit(value);
-                              }}
-                              id=""
-                              fullWidth
-                              options={dimensionUnitOptions}
-                              autoHighlight
-                              getOptionLabel={(option) => option.label}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label="Dimension unit"
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: '', // disable autocomplete and autofill
-                                  }}
-                                />
-                              )}
-                            />
-                            <TextField
-                              type="number"
-                              name="length"
-                              label="Length"
-                              fullWidth
-                              value={length}
-                              onChange={(e) => {
-                                setLength(e.target.value);
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="width"
-                              label="Width"
-                              fullWidth
-                              value={width}
-                              onChange={(e) => {
-                                setWidth(e.target.value);
-                              }}
-                            />
-                            <TextField
-                              type="number"
-                              name="height"
-                              label="Height"
-                              fullWidth
-                              value={height}
-                              onChange={(e) => {
-                                setHeight(e.target.value);
-                              }}
-                            />
-                          </Box>
-                        </Card>
-                        <Card sx={{ p: 3, mb: 3 }}>
-                          <Typography sx={{ mb: 3 }} variant="subtitle1">
-                            What's included in Box
-                          </Typography>
-                          <Box
-                            sx={{
-                              mb: 3,
-                              display: 'grid',
-                              columnGap: 2,
-                              rowGap: 3,
-                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                            }}
-                          >
-                            {InTheBox.map((el, index) => (
-                              <TextField
-                                key={el.index}
-                                name="item"
-                                label={`Item ${index + 1}`}
-                                fullWidth
-                                value={el.label}
-                                onChange={(e) => {
-                                  updateInTheBox(el.index, e.target.value);
-                                }}
-                                InputProps={{
-                                  endAdornment: (
-                                    <InputAdornment>
-                                      <Button
-                                        color="error"
-                                        onClick={() => {
-                                          deleteInTheBox(el.index);
-                                        }}
-                                      >
-                                        Remove
-                                      </Button>
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-                            ))}
-                          </Box>
-
-                          <Stack direction="row" alignItems="center" justifyContent="center">
-                            <Button
-                              variant="outlined"
-                              onClick={() => {
-                                addInTheBox();
-                              }}
-                            >
-                              Add Item
-                            </Button>
-                          </Stack>
-                        </Card>
-                      </Grid>
-                    </Grid>
-
-                    <DialogActions>
-                      <LoadingButton
-                        onClick={() => {
-                          onPrev();
-                        }}
-                        type="submit"
-                        variant="outlined"
-                        loading={false}
-                      >
-                        Previous
-                      </LoadingButton>
-                      <LoadingButton
-                        onClick={() => {
-                          onNext();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        loading={false}
-                      >
-                        Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                      </LoadingButton>
-                      <Button
-                        onClick={() => {
-                          handleClose();
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </DialogActions>
-                  </>
-                );
-
-              case 5:
-                return (
-                  <>
-                    <Grid className="px-4 pt-3" container spacing={3}>
-                      <Grid item xs={12} md={12}>
-                        <FormControl>
-                          <FormLabel id="demo-row-radio-buttons-group-label">Price Determining Variant</FormLabel>
-                          <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                          >
-                            {customVariants.map((el) => (
-                              <FormControlLabel
-                                key={el.index}
-                                value={el.index}
-                                control={
-                                  <Radio
-                                    onClick={() => {
-                                      setPriceDeterminingVariant(el.index);
+                                  <TextField
+                                    required
+                                    type="text"
+                                    name="propertyName"
+                                    label="Property Name"
+                                    fullWidth
+                                    value={el.name}
+                                    onChange={(e) => {
+                                      updateSpecification(el.index, e.target.value, 'name');
                                     }}
-                                    checked={priceDeterminingVariant === el.index}
                                   />
-                                }
-                                label={el.title}
-                              />
-                            ))}
-                          </RadioGroup>
-                        </FormControl>
 
-                        <Divider sx={{ my: 2 }} />
-                        <div>
-                          <Accordion>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel2a-content"
-                              id="panel2a-header"
-                            >
-                              <Typography variant="h6">Color</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Card sx={{ p: 3 }}>
-                                {colorsList.map((el, index) => (
-                                  <div key={el.index} className="d-flex flex-column">
-                                    <Box
-                                      className="mb-3"
-                                      sx={{
-                                        display: 'grid',
-                                        columnGap: 2,
-                                        rowGap: 3,
-                                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                                      }}
-                                    >
-                                      <TextField
-                                        className="mb-2"
-                                        defaultValue={'#ffffff'}
-                                        type="color"
-                                        label={`Color ${index + 1}`}
-                                        name="color"
-                                        fullWidth
-                                        value={el.color}
-                                        onChange={(e) => {
-                                          updateColor(e.target.value, el.index, 'color');
-                                        }}
-                                      />
-
-                                      <TextField
-                                        type="text"
-                                        label={`Color Name ${index + 1}`}
-                                        name="name"
-                                        fullWidth
-                                        value={el.name}
-                                        onChange={(e) => {
-                                          updateColor(e.target.value, el.index, 'name');
-                                        }}
-                                      />
-                                    </Box>
-                                    <div className="d-flex flex-row align-items-center justify-content-end">
-                                      <Button
-                                        color="error"
-                                        size="small"
-                                        onClick={() => {
-                                          deleteColorRow(el.index);
-                                        }}
-                                      >
-                                        Remove
-                                      </Button>
-                                    </div>
-                                  </div>
-                                ))}
-
-                                <div className="d-flex flex-row align-items-center justify-content-center">
-                                  <Button
-                                    onClick={() => {
-                                      addColorRow();
+                                  <TextField
+                                    required
+                                    type="text"
+                                    name="propertyValue"
+                                    label="Property value"
+                                    fullWidth
+                                    value={el.value}
+                                    onChange={(e) => {
+                                      updateSpecification(el.index, e.target.value, 'value');
                                     }}
-                                    variant="outlined"
+                                  />
+                                </Box>
+                                <Stack sx={{ px: 4 }} direction={'row'} alignItems={'center'} justifyContent={'end'}>
+                                  <Button
+                                    color="error"
+                                    onClick={() => {
+                                      deleteSpecificationRow(el.index);
+                                    }}
                                   >
-                                    Add color
+                                    Remove
                                   </Button>
-                                </div>
-                              </Card>
-                            </AccordionDetails>
-                          </Accordion>
-                          {customVariants.map((el) => (
-                            <Accordion key={el.index}>
+                                </Stack>
+                              </Stack>
+                            ))}
+                            <Stack alignItems={'center'} justifyContent={'center'}>
+                              {' '}
+                              <Button onClick={addSpecificationRow} variant="outlined">
+                                Add Specification
+                              </Button>
+                            </Stack>
+                          </Card>
+                        </Grid>
+                      </Grid>
+                      <DialogActions>
+                        <LoadingButton
+                          onClick={() => {
+                            onPrev();
+                          }}
+                          type="button"
+                          variant="outlined"
+                          loading={false}
+                        >
+                          Previous
+                        </LoadingButton>
+                        <LoadingButton
+                          onClick={() => {
+                            onNext();
+                          }}
+                          type="button"
+                          variant="contained"
+                          loading={false}
+                        >
+                          Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        </LoadingButton>
+                        <Button
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </>
+                  );
+
+                case 4:
+                  return (
+                    <>
+                      <Grid className="px-4 pt-3" container spacing={3}>
+                        <Grid item xs={12} md={12}>
+                          <Card sx={{ p: 3, mb: 3 }}>
+                            <Box
+                              sx={{
+                                display: 'grid',
+                                columnGap: 2,
+                                rowGap: 3,
+                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                              }}
+                            >
+                              <Autocomplete
+                                required
+                                value={productUnit}
+                                onChange={(e, value) => {
+                                  setProductUnit(value);
+                                }}
+                                id=""
+                                fullWidth
+                                options={productUnitOptions}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                renderInput={(params) => (
+                                  <TextField
+                                    required
+                                    {...params}
+                                    label="Product unit"
+                                    inputProps={{
+                                      ...params.inputProps,
+                                      autoComplete: '', // disable autocomplete and autofill
+                                    }}
+                                  />
+                                )}
+                              />
+                              <TextField
+                                value={formik.values.minQuantitySold}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Minimum Quantity Sold"
+                                variant="outlined"
+                                name="minQuantitySold"
+                                error={!!formik.touched.minQuantitySold && !!formik.errors.minQuantitySold}
+                                helperText={formik.touched.minQuantitySold && formik.errors.minQuantitySold}
+                                type="number"
+                              />
+                              <TextField
+                                value={formik.values.productSKU}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Stock Keeping Unit"
+                                variant="outlined"
+                                name="productSKU"
+                                error={!!formik.touched.productSKU && !!formik.errors.productSKU}
+                                helperText={formik.touched.productSKU && formik.errors.productSKU}
+                                type="text"
+                              />
+                              <TextField
+                                value={formik.values.quantityInStock}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Quantity In Stock"
+                                variant="outlined"
+                                name="quantityInStock"
+                                error={!!formik.touched.quantityInStock && !!formik.errors.quantityInStock}
+                                helperText={formik.touched.quantityInStock && formik.errors.quantityInStock}
+                                type="number"
+                              />
+                              <TextField
+                                value={formik.values.weight}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Weight"
+                                variant="outlined"
+                                name="weight"
+                                error={!!formik.touched.weight && !!formik.errors.weight}
+                                helperText={formik.touched.weight && formik.errors.weight}
+                                type="number"
+                              />
+                            </Box>
+                          </Card>
+                          <Card sx={{ p: 3, mb: 3 }}>
+                            <Box
+                              sx={{
+                                display: 'grid',
+                                columnGap: 2,
+                                rowGap: 3,
+                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                              }}
+                            >
+                              <Autocomplete
+                                required
+                                value={dimensionUnit}
+                                onChange={(e, value) => {
+                                  setDimensionUnit(value);
+                                }}
+                                id=""
+                                fullWidth
+                                options={dimensionUnitOptions}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                renderInput={(params) => (
+                                  <TextField
+                                    required
+                                    {...params}
+                                    label="Dimension unit"
+                                    inputProps={{
+                                      ...params.inputProps,
+                                      autoComplete: '', // disable autocomplete and autofill
+                                    }}
+                                  />
+                                )}
+                              />
+                              <TextField
+                                value={formik.values.length}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Length"
+                                variant="outlined"
+                                name="length"
+                                error={!!formik.touched.length && !!formik.errors.length}
+                                helperText={formik.touched.length && formik.errors.length}
+                                type="number"
+                              />
+                              <TextField
+                                value={formik.values.width}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Width"
+                                variant="outlined"
+                                name="width"
+                                error={!!formik.touched.width && !!formik.errors.width}
+                                helperText={formik.touched.width && formik.errors.width}
+                                type="number"
+                              />
+                              <TextField
+                                value={formik.values.height}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Height"
+                                variant="outlined"
+                                name="height"
+                                error={!!formik.touched.height && !!formik.errors.height}
+                                helperText={formik.touched.height && formik.errors.height}
+                                type="number"
+                              />
+                            </Box>
+                          </Card>
+                          <Card sx={{ p: 3, mb: 3 }}>
+                            <Typography sx={{ mb: 3 }} variant="subtitle1">
+                              What's included in Box
+                            </Typography>
+                            <Box
+                              sx={{
+                                mb: 3,
+                                display: 'grid',
+                                columnGap: 2,
+                                rowGap: 3,
+                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                              }}
+                            >
+                              {InTheBox.map((el, index) => (
+                                <TextField
+                                  required
+                                  key={el.index}
+                                  name="item"
+                                  label={`Item ${index + 1}`}
+                                  fullWidth
+                                  value={el.label}
+                                  onChange={(e) => {
+                                    updateInTheBox(el.index, e.target.value);
+                                  }}
+                                  InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment>
+                                        <Button
+                                          color="error"
+                                          onClick={() => {
+                                            deleteInTheBox(el.index);
+                                          }}
+                                        >
+                                          Remove
+                                        </Button>
+                                      </InputAdornment>
+                                    ),
+                                  }}
+                                />
+                              ))}
+                            </Box>
+
+                            <Stack direction="row" alignItems="center" justifyContent="center">
+                              <Button
+                                variant="outlined"
+                                onClick={() => {
+                                  addInTheBox();
+                                }}
+                              >
+                                Add Item
+                              </Button>
+                            </Stack>
+                          </Card>
+                        </Grid>
+                      </Grid>
+
+                      <DialogActions>
+                        <LoadingButton
+                          onClick={() => {
+                            onPrev();
+                          }}
+                          type="button"
+                          variant="outlined"
+                          loading={false}
+                        >
+                          Previous
+                        </LoadingButton>
+                        <LoadingButton
+                          onClick={() => {
+                            onNext();
+                          }}
+                          type="button"
+                          variant="contained"
+                          loading={false}
+                        >
+                          Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        </LoadingButton>
+                        <Button
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </>
+                  );
+
+                case 5:
+                  return (
+                    <>
+                      <Grid className="px-4 pt-3" container spacing={3}>
+                        <Grid item xs={12} md={12}>
+                          <FormControl>
+                            <FormLabel id="demo-row-radio-buttons-group-label">Price Determining Variant</FormLabel>
+                            <RadioGroup
+                              row
+                              aria-labelledby="demo-row-radio-buttons-group-label"
+                              name="row-radio-buttons-group"
+                            >
+                              {customVariants.map((el) => (
+                                <FormControlLabel
+                                  key={el.index}
+                                  value={el.index}
+                                  control={
+                                    <Radio
+                                      onClick={() => {
+                                        setPriceDeterminingVariant(el.index);
+                                      }}
+                                      checked={priceDeterminingVariant === el.index}
+                                    />
+                                  }
+                                  label={el.title}
+                                />
+                              ))}
+                            </RadioGroup>
+                          </FormControl>
+
+                          <Divider sx={{ my: 2 }} />
+                          <div>
+                            <Accordion>
                               <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel2a-content"
                                 id="panel2a-header"
                               >
-                                <Stack direction="row" alignItems="center" spacing={3}>
-                                  <TextField
-                                    className="mb-2"
-                                    type="text"
-                                    label={`Name of variant`}
-                                    name="name"
-                                    value={el.title}
-                                    onChange={(e) => {
-                                      updateCustomVariantTitle(el.index, e.target.value);
-                                    }}
-                                  />
-                                  <IconButton
-                                    onClick={() => {
-                                      deleteCustomVariant(el.index);
-                                    }}
-                                  >
-                                    <DeleteRounded />
-                                  </IconButton>
-                                </Stack>
+                                <Typography variant="h6">Color</Typography>
                               </AccordionSummary>
                               <AccordionDetails>
                                 <Card sx={{ p: 3 }}>
-                                  {el.options.map((elm, index) => (
-                                    <div className="d-flex flex-column mb-3" key={elm.index}>
+                                  {colorsList.map((el, index) => (
+                                    <div key={el.index} className="d-flex flex-column">
                                       <Box
-                                        className="mb-2"
+                                        className="mb-3"
                                         sx={{
                                           display: 'grid',
                                           columnGap: 2,
                                           rowGap: 3,
-                                          gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+                                          gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                                         }}
                                       >
                                         <TextField
+                                          required
                                           className="mb-2"
+                                          defaultValue={'#ffffff'}
+                                          type="color"
+                                          label={`Color `}
+                                          name="color"
+                                          fullWidth
+                                          value={el.color}
+                                          onChange={(e) => {
+                                            updateColor(e.target.value, el.index, 'color');
+                                          }}
+                                        />
+
+                                        <TextField
+                                          required
                                           type="text"
-                                          label={`Type ${index + 1}`}
+                                          label={`Color Name `}
                                           name="name"
                                           fullWidth
-                                          value={elm.name}
+                                          value={el.name}
                                           onChange={(e) => {
-                                            updateCustomVariantOption(el.index, elm.index, 'name', e.target.value);
-                                          }}
-                                        />
-                                        <TextField
-                                          className="mb-2"
-                                          type="number"
-                                          label={`Price ${index + 1}`}
-                                          name="price"
-                                          fullWidth
-                                          value={elm.price}
-                                          onChange={(e) => {
-                                            updateCustomVariantOption(el.index, elm.index, 'price', e.target.value);
-                                          }}
-                                          InputProps={{
-                                            startAdornment: (
-                                              <InputAdornment>
-                                                <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        />
-                                        <TextField
-                                          className="mb-2"
-                                          type="number"
-                                          label={`Wholsale price ${index + 1}`}
-                                          name="wholesalePrice"
-                                          fullWidth
-                                          value={elm.wholesalePrice}
-                                          onChange={(e) => {
-                                            updateCustomVariantOption(
-                                              el.index,
-                                              elm.index,
-                                              'wholesalePrice',
-                                              e.target.value
-                                            );
-                                          }}
-                                          InputProps={{
-                                            startAdornment: (
-                                              <InputAdornment>
-                                                <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
-                                              </InputAdornment>
-                                            ),
-                                          }}
-                                        />
-                                        <TextField
-                                          className="mb-2"
-                                          type="number"
-                                          minValue={1}
-                                          label={`Quantity In Stock`}
-                                          name="qtyInStock"
-                                          fullWidth
-                                          value={elm.qtyInStock}
-                                          onChange={(e) => {
-                                            updateCustomVariantOption(
-                                              el.index,
-                                              elm.index,
-                                              'qtyInStock',
-                                              e.target.value
-                                            );
+                                            updateColor(e.target.value, el.index, 'name');
                                           }}
                                         />
                                       </Box>
                                       <div className="d-flex flex-row align-items-center justify-content-end">
                                         <Button
-                                          onClick={() => {
-                                            deleteCustomVariantOptionRow(el.index, elm.index);
-                                          }}
-                                          size="small"
                                           color="error"
+                                          size="small"
+                                          onClick={() => {
+                                            deleteColorRow(el.index);
+                                          }}
                                         >
                                           Remove
                                         </Button>
@@ -1547,225 +1471,372 @@ const AddNewProduct = ({ open, handleClose }) => {
                                   <div className="d-flex flex-row align-items-center justify-content-center">
                                     <Button
                                       onClick={() => {
-                                        addCustomVariantOptionRow(el.index);
+                                        addColorRow();
                                       }}
                                       variant="outlined"
                                     >
-                                      Add variant row
+                                      Add color
                                     </Button>
                                   </div>
                                 </Card>
                               </AccordionDetails>
                             </Accordion>
-                          ))}
-                          <div className="d-flex flex-row align-items-center justify-content-center">
-                            <Button
-                              onClick={() => {
-                                addCustomVariant();
-                              }}
-                              variant="outlined"
-                            >
-                              Add variant
-                            </Button>
-                          </div>
-                        </div>
-                      </Grid>
-                    </Grid>
-                    <DialogActions>
-                      <LoadingButton
-                        onClick={() => {
-                          onPrev();
-                        }}
-                        type="submit"
-                        variant="outlined"
-                        loading={false}
-                      >
-                        Previous
-                      </LoadingButton>
-                      <LoadingButton
-                        onClick={() => {
-                          onNext();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        loading={false}
-                      >
-                        Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                      </LoadingButton>
-                      <Button
-                        onClick={() => {
-                          handleClose();
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </DialogActions>
-                  </>
-                );
+                            {customVariants.map((el) => (
+                              <Accordion key={el.index}>
+                                <AccordionSummary
+                                  expandIcon={<ExpandMoreIcon />}
+                                  aria-controls="panel2a-content"
+                                  id="panel2a-header"
+                                >
+                                  <Stack direction="row" alignItems="center" spacing={3}>
+                                    <TextField
+                                      required
+                                      className="mb-2"
+                                      type="text"
+                                      label={`Name of variant`}
+                                      name="name"
+                                      value={el.title}
+                                      onChange={(e) => {
+                                        updateCustomVariantTitle(el.index, e.target.value);
+                                      }}
+                                    />
+                                    <IconButton
+                                      onClick={() => {
+                                        deleteCustomVariant(el.index);
+                                      }}
+                                    >
+                                      <DeleteRounded />
+                                    </IconButton>
+                                  </Stack>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Card sx={{ p: 3 }}>
+                                    {el.options.map((elm, index) => (
+                                      <div className="d-flex flex-column mb-3" key={elm.index}>
+                                        <Box
+                                          className="mb-2"
+                                          sx={{
+                                            display: 'grid',
+                                            columnGap: 2,
+                                            rowGap: 3,
+                                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+                                          }}
+                                        >
+                                          <TextField
+                                            required
+                                            className="mb-2"
+                                            type="text"
+                                            label={`Type`}
+                                            name="name"
+                                            fullWidth
+                                            value={elm.name}
+                                            onChange={(e) => {
+                                              updateCustomVariantOption(el.index, elm.index, 'name', e.target.value);
+                                            }}
+                                          />
+                                          <TextField
+                                            required
+                                            className="mb-2"
+                                            type="number"
+                                            label={`Price`}
+                                            name="price"
+                                            fullWidth
+                                            value={elm.price}
+                                            onChange={(e) => {
+                                              updateCustomVariantOption(el.index, elm.index, 'price', e.target.value);
+                                            }}
+                                            InputProps={{
+                                              startAdornment: (
+                                                <InputAdornment>
+                                                  <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
+                                                </InputAdornment>
+                                              ),
+                                            }}
+                                          />
+                                          <TextField
+                                            required
+                                            className="mb-2"
+                                            type="number"
+                                            label={`Wholsale price`}
+                                            name="wholesalePrice"
+                                            fullWidth
+                                            value={elm.wholesalePrice}
+                                            onChange={(e) => {
+                                              updateCustomVariantOption(
+                                                el.index,
+                                                elm.index,
+                                                'wholesalePrice',
+                                                e.target.value
+                                              );
+                                            }}
+                                            InputProps={{
+                                              startAdornment: (
+                                                <InputAdornment>
+                                                  <CurrencyRupeeRoundedIcon style={{ fontSize: '20px' }} />
+                                                </InputAdornment>
+                                              ),
+                                            }}
+                                          />
+                                          <TextField
+                                            required
+                                            className="mb-2"
+                                            type="number"
+                                            minValue={1}
+                                            label={`Quantity In Stock`}
+                                            name="qtyInStock"
+                                            fullWidth
+                                            value={elm.qtyInStock}
+                                            onChange={(e) => {
+                                              updateCustomVariantOption(
+                                                el.index,
+                                                elm.index,
+                                                'qtyInStock',
+                                                e.target.value
+                                              );
+                                            }}
+                                          />
+                                        </Box>
+                                        <div className="d-flex flex-row align-items-center justify-content-end">
+                                          <Button
+                                            onClick={() => {
+                                              deleteCustomVariantOptionRow(el.index, elm.index);
+                                            }}
+                                            size="small"
+                                            color="error"
+                                          >
+                                            Remove
+                                          </Button>
+                                        </div>
+                                      </div>
+                                    ))}
 
-              case 6:
-                return (
-                  <>
-                    <Grid className="px-4 pt-3" container spacing={3}>
-                      <Grid item xs={12} md={12}>
-                        <div>
-                          <Card sx={{ p: 3 }} className="mb-3">
-                            <Autocomplete
-                              multiple
-                              sx={{ mb: 3 }}
-                              value={addOnList}
-                              onChange={(e, value) => {
-                                setAddOnList(value);
-                              }}
-                              id=""
-                              fullWidth
-                              options={addOnOptions}
-                              autoHighlight
-                              getOptionLabel={(option) => option.label}
-                              renderOption={(props, option) => (
-                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                  <img
-                                    loading="lazy"
-                                    width="20"
-                                    src={`${option.image}`}
-                                    srcSet={`${option.image} 2x`}
-                                    alt=""
+                                    <div className="d-flex flex-row align-items-center justify-content-center">
+                                      <Button
+                                        onClick={() => {
+                                          addCustomVariantOptionRow(el.index);
+                                        }}
+                                        variant="outlined"
+                                      >
+                                        Add variant row
+                                      </Button>
+                                    </div>
+                                  </Card>
+                                </AccordionDetails>
+                              </Accordion>
+                            ))}
+                            <div className="d-flex flex-row align-items-center justify-content-center">
+                              <Button
+                                onClick={() => {
+                                  addCustomVariant();
+                                }}
+                                variant="outlined"
+                              >
+                                Add variant
+                              </Button>
+                            </div>
+                          </div>
+                        </Grid>
+                      </Grid>
+                      <DialogActions>
+                        <LoadingButton
+                          onClick={() => {
+                            onPrev();
+                          }}
+                          type="button"
+                          variant="outlined"
+                          loading={false}
+                        >
+                          Previous
+                        </LoadingButton>
+                        <LoadingButton
+                          onClick={() => {
+                            onNext();
+                          }}
+                          type="button"
+                          variant="contained"
+                          loading={false}
+                        >
+                          Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        </LoadingButton>
+                        <Button
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </>
+                  );
+
+                case 6:
+                  return (
+                    <>
+                      <Grid className="px-4 pt-3" container spacing={3}>
+                        <Grid item xs={12} md={12}>
+                          <div>
+                            <Card sx={{ p: 3 }} className="mb-3">
+                              <Autocomplete
+                                multiple
+                                sx={{ mb: 3 }}
+                                value={addOnList}
+                                onChange={(e, value) => {
+                                  setAddOnList(value);
+                                }}
+                                id=""
+                                fullWidth
+                                options={addOnOptions}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                renderOption={(props, option) => (
+                                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                    <img
+                                      loading="lazy"
+                                      width="20"
+                                      src={`${option.image}`}
+                                      srcSet={`${option.image} 2x`}
+                                      alt=""
+                                    />
+                                    {option.label}
+                                  </Box>
+                                )}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label="Choose Add ons"
+                                    inputProps={{
+                                      ...params.inputProps,
+                                      autoComplete: '', // disable autocomplete and autofill
+                                    }}
                                   />
-                                  {option.label}
-                                </Box>
-                              )}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label="Choose Add ons"
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: '', // disable autocomplete and autofill
-                                  }}
-                                />
-                              )}
+                                )}
+                              />
+                            </Card>
+                          </div>
+                        </Grid>
+                      </Grid>
+
+                      <DialogActions>
+                        <LoadingButton
+                          onClick={() => {
+                            onPrev();
+                          }}
+                          type="button"
+                          variant="outlined"
+                          loading={false}
+                        >
+                          Previous
+                        </LoadingButton>
+                        <LoadingButton
+                          onClick={() => {
+                            onNext();
+                          }}
+                          type="button"
+                          variant="contained"
+                          loading={false}
+                        >
+                          Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        </LoadingButton>
+                        <Button
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </>
+                  );
+
+                case 7:
+                  return (
+                    <>
+                      <Grid className="px-4 pt-3" container spacing={3}>
+                        <Grid item xs={12} md={12}>
+                          <Card sx={{ p: 3 }}>
+                            <Box
+                              className="mb-3"
+                              sx={{
+                                display: 'grid',
+                                columnGap: 2,
+                                rowGap: 3,
+                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                              }}
+                            >
+                              <TextField
+                                value={formik.values.metaTitle}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Meta Title"
+                                variant="outlined"
+                                name="metaTitle"
+                                error={!!formik.touched.metaTitle && !!formik.errors.metaTitle}
+                                helperText={formik.touched.metaTitle && formik.errors.metaTitle}
+                              />
+
+                              <TextField
+                                value={formik.values.metaKeyword}
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                fullWidth
+                                label="Meta Keyword"
+                                variant="outlined"
+                                name="metaKeyword"
+                                error={!!formik.touched.metaKeyword && !!formik.errors.metaKeyword}
+                                helperText={formik.touched.metaKeyword && formik.errors.metaKeyword}
+                              />
+                            </Box>
+
+                            <TextField
+                              value={formik.values.metaDescription}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              fullWidth
+                              label="Meta Description"
+                              variant="outlined"
+                              name="metaDescription"
+                              error={!!formik.touched.metaDescription && !!formik.errors.metaDescription}
+                              helperText={formik.touched.metaDescription && formik.errors.metaDescription}
                             />
                           </Card>
-                        </div>
+                        </Grid>
                       </Grid>
-                    </Grid>
+                      <DialogActions>
+                        <LoadingButton
+                          onClick={() => {
+                            onPrev();
+                          }}
+                          type="button"
+                          variant="outlined"
+                          loading={false}
+                        >
+                          Previous
+                        </LoadingButton>
+                        <LoadingButton
+                          disabled={!(formik.isValid && formik.dirty)}
+                          type="submit"
+                          variant="contained"
+                          loading={isCreating}
+                        >
+                          Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
+                        </LoadingButton>
+                        <Button
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </>
+                  );
 
-                    <DialogActions>
-                      <LoadingButton
-                        onClick={() => {
-                          onPrev();
-                        }}
-                        type="submit"
-                        variant="outlined"
-                        loading={false}
-                      >
-                        Previous
-                      </LoadingButton>
-                      <LoadingButton
-                        onClick={() => {
-                          onNext();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        loading={false}
-                      >
-                        Next <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                      </LoadingButton>
-                      <Button
-                        onClick={() => {
-                          handleClose();
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </DialogActions>
-                  </>
-                );
-
-              case 7:
-                return (
-                  <>
-                    <Grid className="px-4 pt-3" container spacing={3}>
-                      <Grid item xs={12} md={12}>
-                        <Card sx={{ p: 3 }}>
-                          <Box
-                            className="mb-3"
-                            sx={{
-                              display: 'grid',
-                              columnGap: 2,
-                              rowGap: 3,
-                              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                            }}
-                          >
-                            <TextField
-                              name="metaTitle"
-                              label="Meta Title"
-                              fullWidth
-                              value={metaTitle}
-                              onChange={(e) => {
-                                setMetaTitle(e.target.value);
-                              }}
-                            />
-
-                            <TextField
-                              name="metaKeyword"
-                              label="Meta Keyword"
-                              fullWidth
-                              value={metaKeyword}
-                              onChange={(e) => {
-                                setMetaKeyword(e.target.value);
-                              }}
-                            />
-                          </Box>
-
-                          <TextField
-                            name="metaDescription"
-                            label="Meta Description"
-                            fullWidth
-                            value={metaDescription}
-                            onChange={(e) => {
-                              setMetaDescription(e.target.value);
-                            }}
-                          />
-                        </Card>
-                      </Grid>
-                    </Grid>
-                    <DialogActions>
-                      <LoadingButton
-                        onClick={() => {
-                          onPrev();
-                        }}
-                        type="submit"
-                        variant="outlined"
-                        loading={false}
-                      >
-                        Previous
-                      </LoadingButton>
-                      <LoadingButton
-                        onClick={() => {
-                          onSubmit();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        loading={isCreating}
-                      >
-                        Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                      </LoadingButton>
-                      <Button
-                        onClick={() => {
-                          handleClose();
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </DialogActions>
-                  </>
-                );
-
-              default:
-                break;
-            }
-          })()}
+                default:
+                  break;
+              }
+            })()}
+          </form>
         </div>
       </Dialog>
     </>
@@ -2031,105 +2102,3 @@ const productTypeOptions = [
   { label: 'Dairy Products', image: 'https://news.sanfordhealth.org/wp-content/uploads/2020/06/Dairy-products.jpg' },
   { label: 'Snacks', image: 'https://m.media-amazon.com/images/I/81FfpLMWNfL._SL1500_.jpg' },
 ];
-
-// const productTypeOptions = [
-//   {
-//     label: 'Kirana store, Grocery & FMCG',
-//     image: 'https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2021-12/211213-wee-groceries-se-405p-a36212.jpg',
-//   },
-//   {
-//     label: 'Restaurants & Hotels',
-//     image: 'https://media-cdn.tripadvisor.com/media/photo-s/09/37/8b/94/metro-lounge.jpg',
-//   },
-//   {
-//     label: 'Fashion, Apparel, Shoes & Accessories',
-//     image: 'https://mms-images.out.customink.com/mms/images/catalog/categories/13_large.jpg',
-//   },
-//   {
-//     label: 'Fruits & vegetables',
-//     image: 'https://static.scientificamerican.com/sciam/cache/file/528E0B49-CDD0-42D4-B5BAA3EBAEC01AE6_source.jpg',
-//   },
-//   {
-//     label: 'Mobile, Computers & Other Accessories',
-//     image:
-//       'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pink-select-2021?wid=940&hei=1112&fmt=png-alpha&.v=1629842709000',
-//   },
-//   {
-//     label: 'Books & Stationary products',
-//     image: 'https://m.media-amazon.com/images/I/717EIB64t7L._SL1500_.jpg',
-//   },
-//   {
-//     label: 'Beauty & Cosmetics',
-//     image:
-//       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmncqVXZMJkFNp6-OOjCKUl_kxiuWm4AjvG_lKKqzAq956scFZERXWq56fXUEWYqC0WM&usqp=CAU',
-//   },
-//   {
-//     label: 'Electronic appliances',
-//     image:
-//       'https://cdn.vox-cdn.com/thumbor/Atvpj5tUuIgLq55pPrG2-A-MHF8=/0x389:8426x7181/1200x800/filters:focal(3671x2467:5117x3913)/cdn.vox-cdn.com/uploads/chorus_image/image/62795169/samsung_fridge.0.jpg',
-//   },
-//   {
-//     label: 'Home decoration',
-//     image: 'https://www.mymove.com/wp-content/uploads/2021/03/Home-decorating_Followtheflow_Shutterstock.jpg',
-//   },
-//   {
-//     label: 'Furniture',
-//     image: 'https://www.ikea.com/in/en/images/products/ektorp-2-seat-sofa__0818550_pe774481_s5.jpg?f=s',
-//   },
-//   {
-//     label: 'Pharmacy & Medical Care',
-//     image:
-//       'https://i.guim.co.uk/img/media/65d68c03a1e035d0670711a642f7a272d3e660eb/0_1216_3063_1838/master/3063.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=3056330a3a98cf23d2dfcbe60ba711ad',
-//   },
-//   {
-//     label: 'Bakery & Cake shops',
-//     image: 'https://preppykitchen.com/wp-content/uploads/2019/06/Chocolate-cake-recipe-1200a.jpg',
-//   },
-//   {
-//     label: 'Fresh chicken, Fish & Meat',
-//     image:
-//       'https://static.freshtohome.com/media/catalog/product/cache/1/image/600x400/18ae109e34f485bd0b0c075abec96b2e/c/h/chicken-breast.jpg',
-//   },
-//   {
-//     label: 'Local & Online services',
-//     image:
-//       'https://www.schroederplumbing.com/wp-content/uploads/2020/10/Modern-Plumbing-Technology-Old-School-Experience-And-Integrity-From-Your-Plumber-_-Mesa-AZ.jpg',
-//   },
-//   {
-//     label: 'Jwellery, Gold and Gems',
-//     image:
-//       'https://www.candere.com/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/n/m/nmne3517-a.jpg',
-//   },
-//   {
-//     label: 'Insurance & Financial services',
-//     image:
-//       'https://m.economictimes.com/thumb/msid-72304068,width-1200,height-900,resizemode-4,imgsize-191408/money10-getty.jpg',
-//   },
-//   {
-//     label: 'Paan shop',
-//     image: 'http://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
-//   },
-//   {
-//     label: 'Gym & Sports equipment',
-//     image: 'https://content.presspage.com/uploads/2110/1920_gym-covid-19-mask-risk-gettyimages.jpg?10000',
-//   },
-//   {
-//     label: 'Educational institute, Schools & teachers',
-//     image:
-//       'https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F60cb2948d2b1ff3c9b86dc9c%2FBlack-teacher-wearing-face-mask-while-explaining-math-lesson-in-the-classroom-%2F960x0.jpg%3Ffit%3Dscale',
-//   },
-//   {
-//     label: 'Hardware & Construction tools',
-//     image: 'https://laysantechnologies.com/CKeditor/Images/hardwares.png',
-//   },
-//   {
-//     label: 'Transportation, Taxi, Travel & Tourism',
-//     image:
-//       'https://media.wired.com/photos/5cf832279c2a7cd3975976ca/2:1/w_2000,h_1000,c_limit/Transpo_XcelsiorChargeCharging_TA.jpg',
-//   },
-//   {
-//     label: 'Car, bike, Tractor & vehicle accessories',
-//     image:
-//       'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2019-honda-civic-sedan-1558453497.jpg?crop=1xw:0.9997727789138833xh;center,top&resize=480:*',
-//   },
-// ];
