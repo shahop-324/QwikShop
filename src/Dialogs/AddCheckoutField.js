@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
-
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 // @mui
 import {
   Box,
@@ -30,7 +31,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import CustomDropdownOptions from './CustomDropdownOptions';
-import { addCheckoutField } from '../actions';
+import { addCheckoutField, resetIsCreatingCheckoutField } from '../actions';
 
 const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
   ({ theme }) => ({
@@ -85,10 +86,33 @@ const AddCheckoutField = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const [openOptions, setOpenOptions] = useState(false);
 
-  const [fieldName, setFieldName] = useState('');
-  const [type, setType] = useState();
+  useEffect(() => {
+    dispatch(resetIsCreatingCheckoutField());
+  }, []);
 
-  const [fieldNameError, setFieldNameError] = useState({ error: false, message: 'Field Name is required' });
+  const formik = useFormik({
+    initialValues: {
+      fieldName: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      fieldName: Yup.string().required('Field Name is required'),
+    }),
+    onSubmit: (values) => {
+      const formValues = {
+        fieldName: values.fieldName,
+        type,
+        options,
+        required,
+      };
+
+      dispatch(addCheckoutField(formValues, handleClose));
+    },
+  });
+
+  const [type, setType] = useState();
   const [typeError, setTypeError] = useState({ error: false, message: 'Field type is required' });
 
   const [required, setRequired] = useState(true);
@@ -127,17 +151,6 @@ const AddCheckoutField = ({ open, handleClose }) => {
     );
   };
 
-  const onSubmit = () => {
-    const formValues = {
-      fieldName,
-      type,
-      options,
-      required,
-    };
-
-    dispatch(addCheckoutField(formValues, handleClose));
-  };
-
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open}>
@@ -148,129 +161,124 @@ const AddCheckoutField = ({ open, handleClose }) => {
           </IconButton>
         </Stack>
 
-        <Grid className="px-4 pt-3" container spacing={3}>
-          <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3, mb: 2 }}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  columnGap: 2,
-                  rowGap: 3,
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                }}
-              >
-                <TextField
-                  required
-                  error={fieldNameError.error}
-                  helperText={fieldNameError.error ? fieldNameError.message : ''}
-                  name="fieldName"
-                  label="Field Name"
-                  fullWidth
-                  value={fieldName}
-                  onChange={(e) => {
-                    if (!e.target.value) {
-                      setFieldNameError((prev) => {
-                        prev.error = true;
-                        return prev;
-                      });
-                    } else {
-                      setFieldNameError((prev) => {
-                        prev.error = false;
-                        return prev;
-                      });
-                    }
-                    setFieldName(e.target.value);
+        <form onSubmit={formik.handleSubmit}>
+          <Grid className="px-4 pt-3" container spacing={3}>
+            <Grid item xs={12} md={12}>
+              <Card sx={{ p: 3, mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    columnGap: 2,
+                    rowGap: 3,
+                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                   }}
-                />
+                >
+                  <TextField
+                    value={formik.values.fieldName}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    label="Field Name"
+                    variant="outlined"
+                    name="fieldName"
+                    error={!!formik.touched.fieldName && !!formik.errors.fieldName}
+                    helperText={formik.touched.fieldName && formik.errors.fieldName}
+                  />
 
-                <Autocomplete
-                  required
-                  value={type || null}
-                  onChange={(e, value) => {
-                    if (value.title === 'Custom Dropdown') {
-                      handleOpenOptions();
-                    }
-                    if (!value) {
-                      setTypeError((prev) => {
-                        prev.error = true;
-                        return prev;
-                      });
-                    } else {
-                      setTypeError((prev) => {
-                        prev.error = false;
-                        return prev;
-                      });
-                    }
-                    setType(value);
-                  }}
-                  id=""
-                  fullWidth
-                  options={fieldTypes}
-                  autoHighlight
-                  getOptionLabel={(option) => option.title}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <Stack direction="row" alignItems="center" spacing={3}>
-                        {option.icon}
-                        <Stack direction={'column'} spacing={1}>
-                          <Typography variant="subtitle1">{option.title}</Typography>
-                          <Typography variant="caption">{option.description}</Typography>
+                  <Autocomplete
+                    required
+                    value={type || null}
+                    onChange={(e, value) => {
+                      if (value.title === 'Custom Dropdown') {
+                        handleOpenOptions();
+                      }
+                      if (!value) {
+                        setTypeError((prev) => {
+                          prev.error = true;
+                          return prev;
+                        });
+                      } else {
+                        setTypeError((prev) => {
+                          prev.error = false;
+                          return prev;
+                        });
+                      }
+                      setType(value);
+                    }}
+                    id=""
+                    fullWidth
+                    options={fieldTypes}
+                    autoHighlight
+                    getOptionLabel={(option) => option.title}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <Stack direction="row" alignItems="center" spacing={3}>
+                          {option.icon}
+                          <Stack direction={'column'} spacing={1}>
+                            <Typography variant="subtitle1">{option.title}</Typography>
+                            <Typography variant="caption">{option.description}</Typography>
+                          </Stack>
                         </Stack>
-                      </Stack>
-                    </Box>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      required
-                      error={typeError.error}
-                      helperText={typeError.error ? typeError.message : ''}
-                      {...params}
-                      label="Choose Field Type"
-                      inputProps={{
-                        ...params.inputProps,
-                        autoComplete: '', // disable autocomplete and autofill
-                      }}
-                    />
-                  )}
-                />
-              </Box>
-              {type?.title === 'Custom Dropdown' && (
-                <Button className="mt-2" onClick={handleOpenOptions}>
-                  Edit Dropdown option
-                </Button>
-              )}
-            </Card>
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        required
+                        error={typeError.error}
+                        helperText={typeError.error ? typeError.message : ''}
+                        {...params}
+                        label="Choose Field Type"
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: '', // disable autocomplete and autofill
+                        }}
+                      />
+                    )}
+                  />
+                </Box>
+                {type?.title === 'Custom Dropdown' && (
+                  <Button className="mt-2" onClick={handleOpenOptions}>
+                    Edit Dropdown option
+                  </Button>
+                )}
+              </Card>
 
-            <Card sx={{ p: 3, position: 'relative' }}>
-              <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                <Stack direction={'column'} spacing={1}>
-                  <Typography variant="subtitle1">Required?</Typography>
-                  <Typography variant="caption">
-                    This will make this field mandatory and customers will be forced to fill this field.
-                  </Typography>
+              <Card sx={{ p: 3, position: 'relative' }}>
+                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                  <Stack direction={'column'} spacing={1}>
+                    <Typography variant="subtitle1">Required?</Typography>
+                    <Typography variant="caption">
+                      This will make this field mandatory and customers will be forced to fill this field.
+                    </Typography>
+                  </Stack>
+                  <FormControlLabel
+                    control={
+                      <IOSSwitch
+                        checked={required}
+                        onChange={(e, value) => setRequired(value)}
+                        sx={{ m: 1 }}
+                        defaultChecked
+                      />
+                    }
+                    label=""
+                  />
                 </Stack>
-                <FormControlLabel
-                  control={
-                    <IOSSwitch
-                      checked={required}
-                      onChange={(e, value) => setRequired(value)}
-                      sx={{ m: 1 }}
-                      defaultChecked
-                    />
-                  }
-                  label=""
-                />
-              </Stack>
-            </Card>
+              </Card>
 
-            <Stack sx={{ px: 4, py: 3 }} direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={3}>
-              <LoadingButton loading={isCreatingCheckoutField} onClick={onSubmit} variant="contained">
-                Add Field
-              </LoadingButton>
-              <Button onClick={handleClose}>Close</Button>
-            </Stack>
+              <Stack sx={{ px: 4, py: 3 }} direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={3}>
+                <LoadingButton
+                  disabled={!(formik.isValid && formik.dirty)}
+                  loading={isCreatingCheckoutField}
+                  type="submit"
+                  variant="contained"
+                >
+                  Add Field
+                </LoadingButton>
+                <Button onClick={handleClose}>Close</Button>
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
+        </form>
       </Dialog>
       {openOptions && (
         <CustomDropdownOptions

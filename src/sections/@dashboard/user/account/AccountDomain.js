@@ -72,7 +72,8 @@ const AccountDomain = () => {
                 <Typography variant="caption">Get your own custom domain for free</Typography>
               </Stack>
 
-              <Button variant="contained">Set up</Button>
+<Chip label="Coming very soon" color="success" />
+              {/* <Button variant="contained">Set up</Button> */}
             </Stack>
           </Card>
         </Grid>
@@ -87,7 +88,8 @@ const AccountDomain = () => {
                 <Typography variant="caption">Connect your own existing domain</Typography>
               </Stack>
 
-              <Button variant="contained">Set up</Button>
+              <Chip label="Coming very soon" color="success" />
+              {/* <Button variant="contained">Set up</Button> */}
             </Stack>
           </Card>
         </Grid>

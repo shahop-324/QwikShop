@@ -38,12 +38,17 @@ export default function PricingPlanCard({ card, index, isHome }) {
   const dispatch = useDispatch();
 
   const { store } = useSelector((state) => state.store);
+  const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.user);
 
   const onSubmit = (plan_id) => {
     dispatch(createSubscription(plan_id, displayRazorpay));
   };
 
-  const displayRazorpay = async (subscription_id, plan_id) => {
+  // const BaseURL = 'https://api.app.qwikshop.online/v1/';
+  const BaseURL = 'http://localhost:8000/v1/';
+
+  const displayRazorpay = async () => {
     const res = await loadRazorpay();
 
     if (!res) {
@@ -52,20 +57,56 @@ export default function PricingPlanCard({ card, index, isHome }) {
     }
 
     try {
+      let order = await fetch(`${BaseURL}razorpay/createQwikShopPremiumOrder`, {
+        method: 'POST',
+
+        // Send body here
+        body: JSON.stringify({
+          plan_id,
+          type: 'qwikshop-plan',
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!order.ok) {
+        if (!order.message) {
+          throw new Error('Something went wrong');
+        } else {
+          throw new Error(order.message);
+        }
+      }
+
+      order = await order.json();
+      console.log(order);
+
       const options = {
         key: 'rzp_live_JOhvixtFUeoelr',
-        subscription_id,
+        amount: order.data.amount,
         currency: 'INR',
-        name: store.name,
-        description: `QwikShop Subscription`,
+        name: store.storeName,
+        description: `QwikShop Premium`,
         image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`,
+        order_id: order.data.id,
         handler(response) {
-          dispatch(showSnackbar('success', 'Congratulations, Your subscription is now active!'));
-          setTimeout(() => {}, 2000);
+          dispatch(showSnackbar('success', 'QwikShop Plan Purchase is successfully processed!'));
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        },
+        prefill: {
+          name: `${user.firstName} ${user.lastName}`,
+          contact: user.phone,
+          email: user.email,
         },
         notes: {
           // We can add some notes here
-          store_id: store._id,
+          type: 'qwikshop-plan',
+          storeId: store._id,
+          userId: user._id,
           plan_id,
         },
         theme: {
@@ -80,14 +121,17 @@ export default function PricingPlanCard({ card, index, isHome }) {
         dispatch(
           showSnackbar(
             'error',
-            'Failed to process payment, If money is deducted, it will be refunded back to you soon.'
+            'Failed to process QwikShop Premium, If money is deducted, it will be refunded back to you soon.'
           )
         );
       });
     } catch (error) {
       console.log(error);
       dispatch(
-        showSnackbar('error', 'Failed to process payment, If money is deducted, it will be refunded back to you soon.')
+        showSnackbar(
+          'error',
+          'Failed to process QwikShop Premium, If money is deducted, it will be refunded back to you soon.'
+        )
       );
     }
   };
@@ -178,21 +222,22 @@ export default function PricingPlanCard({ card, index, isHome }) {
         ))}
       </Stack>
 
+      {/* {console.log(Date.now(), new Date(store.currentPlanExpiresAt).getTime())} */}
       <LoadingButton
-        disabled={store.currentPlan === plan_id}
+        disabled={
+          store.currentPlan.toString() === subscription.toString() ||
+          (subscription === 'Free' && Date.now() < new Date(store.currentPlanExpiresAt).getTime())
+        }
         loading={store.isCreatingSubscription}
         onClick={() => {
-          if (isHome) {
-            window.location.href = '/auth/register';
-          } else {
-            onSubmit(plan_id);
-          }
+          displayRazorpay();
         }}
         fullWidth
         size="large"
         variant="contained"
       >
-        {store.currentPlan === plan_id ? 'Current Plan' : labelAction}
+        {console.log(subscription, store.currentPlan)}
+        {store.currentPlan.toString() === subscription.toString() ? 'Current Plan' : labelAction}
       </LoadingButton>
     </RootStyle>
   );

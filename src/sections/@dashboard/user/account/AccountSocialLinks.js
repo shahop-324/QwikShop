@@ -51,7 +51,7 @@ export default function AccountSocialLinks() {
 
   const onSubmit = async () => {
     console.log(facebookLink, instagramLink, twitterLink);
-    dispatch(updateSocialLinks({ facebookLink, instagramLink, twitterLink }));
+    dispatch(updateSocialLinks({ facebookLink, instagramLink, twitterLink, youtubeLink }));
   };
 
   return (

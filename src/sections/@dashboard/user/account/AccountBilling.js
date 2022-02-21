@@ -15,6 +15,8 @@ import {
 } from '@mui/material';
 //
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useSelector } from 'react-redux';
+import dateFormat from 'dateformat'
 import { PricingPlanCard } from '../../../pricing';
 import Monthly from '../../../../assets/Monthly.png';
 import Yearly from '../../../../assets/Yearly.png';
@@ -64,6 +66,9 @@ const _pricingPlans = [
 ];
 
 export default function AccountBilling() {
+
+  const {store} = useSelector((state) => state.store)
+
   return (
     <Grid container spacing={5}>
       <Grid container spacing={3} sx={{ mt: 3, mx: 2 }}>
@@ -72,9 +77,9 @@ export default function AccountBilling() {
             Your Plan
           </Typography>
           <Stack direction="row" alignItems={'center'} justifyContent="space-between">
-            <Typography variant="h4">Premium</Typography>
+            <Typography variant="h4">{store.currentPlan.toUpperCase()}</Typography>
             <Typography variant="body2" sx={{ mr: 1 }}>
-              Expires At: 24/07/22
+              Expires At: {store.currentPlan === 'free' ? "Never" : dateFormat(new Date(store?.currentPlanExpiresAt ? new Date(store?.currentPlanExpiresAt) : Date.now()), 'ddd mmm dS, yy, hh:mm TT')} 
             </Typography>
           </Stack>
 
@@ -86,9 +91,10 @@ export default function AccountBilling() {
               right: { sm: 24 },
             }}
           >
-            <Button size="small" color="inherit" variant="outlined" sx={{ mr: 1 }}>
+            
+            {/* <Button size="small" color="inherit" variant="outlined" sx={{ mr: 1 }}>
               Cancel subscription
-            </Button>
+            </Button> */}
           </Box>
         </Card>
       </Grid>

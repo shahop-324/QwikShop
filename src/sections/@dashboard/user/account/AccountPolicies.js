@@ -49,7 +49,7 @@ const AccountPolicies = () => {
     setValue(newValue);
   };
 
-  const [terms, setTerms] = useState(store?.terms?.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+  const [terms, setTerms] = useState(store?.termsOfService?.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
   const [privacyPolicy, setPrivacyPolicy] = useState(store?.privacyPolicy?.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
   const [refundPolicy, setRefundPolicy] = useState(store?.refundPolicy?.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
   const [shippingPolicy, setShippingPolicy] = useState(
