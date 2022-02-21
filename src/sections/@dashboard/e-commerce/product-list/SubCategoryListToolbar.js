@@ -84,7 +84,7 @@ SubCategoryListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
-const options = ['Add Sub Category', 'Export to excel'];
+const options = ['Add Sub Category'];
 
 export default function SubCategoryListToolbar({
   numSelected,

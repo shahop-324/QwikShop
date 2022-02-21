@@ -84,7 +84,7 @@ DivisionListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
-const options = ['Add Division', 'Export to excel'];
+const options = ['Add Division'];
 
 export default function DivisionListToolbar({
   numSelected,

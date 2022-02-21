@@ -282,8 +282,9 @@ const AddNewProduct = ({ open, handleClose }) => {
         coins: values.coins,
 
         productType,
-        category,
+
         description,
+        category,
         subCategory,
         division,
         isFragile,

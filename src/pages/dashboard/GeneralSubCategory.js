@@ -21,6 +21,7 @@ import {
 // redux
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import dateFormat from 'dateformat';
 import { useDispatch, useSelector } from '../../redux/store';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -53,7 +54,6 @@ const TABLE_HEAD = [
   { id: 'category', label: 'Category', alignRight: false },
   { id: 'products', label: 'Products', alignRight: false },
   { id: 'stock', label: 'Stock', alignRight: false },
-  { id: 'totalSale', label: 'Total Sale', alignRight: false },
   { id: 'actions', label: 'Actions', alignRight: true },
 ];
 
@@ -331,7 +331,7 @@ export default function GeneralSubCategory() {
                           {subCategories
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
-                              const { _id, name, image, products, outOfStock, hidden, totalSales, category } = row;
+                              const { _id, name, image, products, outOfStock, hidden, updatedAt, totalSales, category } = row;
 
                               const isItemSelected = selected.indexOf(_id) !== -1;
 
@@ -408,7 +408,7 @@ export default function GeneralSubCategory() {
                                           {!outOfStock ? 'In stock' : 'Out of stock'}
                                         </Label>
                                       </TableCell>
-                                      <TableCell align="left">{`Rs. ${totalSales}`}</TableCell>
+                                     
                                       <TableCell align="right">
                                         <IconButton
                                           onClick={() => {

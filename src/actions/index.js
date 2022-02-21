@@ -6448,9 +6448,11 @@ export const updateUserProfile = (formValues, file) => async (dispatch, getState
 export const updateUserPassword = (formValues) => async (dispatch, getState) => {
   let message;
 
-  dispatch(userActions.SetIsUpdatingPassword({
-    state: true,
-  }))
+  dispatch(
+    userActions.SetIsUpdatingPassword({
+      state: true,
+    })
+  );
 
   try {
     const res = await fetch(`${BaseURL}auth/update-password`, {
@@ -6488,16 +6490,20 @@ export const updateUserPassword = (formValues) => async (dispatch, getState) => 
 
     dispatch(showSnackbar('success', message));
 
-    dispatch(userActions.SetIsUpdatingPassword({
-      state: false,
-    }))
+    dispatch(
+      userActions.SetIsUpdatingPassword({
+        state: false,
+      })
+    );
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
 
-    dispatch(userActions.SetIsUpdatingPassword({
-      state: false,
-    }))
+    dispatch(
+      userActions.SetIsUpdatingPassword({
+        state: false,
+      })
+    );
   }
 };
 
@@ -7608,18 +7614,18 @@ export const resetIsUpdatingUser = () => async (dispatch, getState) => {
   );
 };
 
-export const resetIsUpdatingPassword = () => async(dispatch, getState) => {
+export const resetIsUpdatingPassword = () => async (dispatch, getState) => {
   dispatch(
     userActions.SetIsUpdatingPassword({
       state: false,
     })
-  )
-}
+  );
+};
 
-export const resetIsCreatingCheckoutField = () => async(dispatch, getState) => {
-  dispatch(storeActions.SetIsCreatingCheckoutField({state: false}));
-}
+export const resetIsCreatingCheckoutField = () => async (dispatch, getState) => {
+  dispatch(storeActions.SetIsCreatingCheckoutField({ state: false }));
+};
 
-export const resetIsUpdatingCheckoutField = () => async(dispatch, getState) => {
-  dispatch(storeActions.SetIsUpdatingCheckoutField({state: false}));
-}
+export const resetIsUpdatingCheckoutField = () => async (dispatch, getState) => {
+  dispatch(storeActions.SetIsUpdatingCheckoutField({ state: false }));
+};

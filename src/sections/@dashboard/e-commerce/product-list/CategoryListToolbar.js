@@ -84,7 +84,7 @@ CategoryListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
-const options = ['Add Category', 'Export to excel'];
+const options = ['Add Category'];
 
 export default function CategoryListToolbar({
   numSelected,
