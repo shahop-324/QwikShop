@@ -180,11 +180,13 @@ const ManageCharges = ({ open, handleClose }) => {
                   }}
                 >
                   <TextField
+                    disabled
+                    helperText="You can update GSTIN from your store Profile"
                     type="text"
                     name="gstNumber"
                     label="GSTIN Number"
                     fullWidth
-                    value={gstNumber}
+                    value={store.gstin}
                     onChange={(e) => {
                       setGSTNumber(e.target.value);
                     }}

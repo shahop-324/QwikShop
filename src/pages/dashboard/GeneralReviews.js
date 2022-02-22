@@ -4,6 +4,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useCallback } from 'react';
+import { styled, alpha, useTheme } from '@mui/material/styles';
 import {
   Typography,
   Stack,
@@ -36,10 +37,14 @@ import PushPinIcon from '@mui/icons-material/PushPin';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
+import { autoPlay } from 'react-swipeable-views-utils';
+import SwipeableViews from 'react-swipeable-views';
 import { fetchReviews, updateReview } from '../../actions';
 import Iconify from '../../components/Iconify';
 import { fDateTime } from '../../utils/formatTime';
 import MenuPopover from '../../components/MenuPopover';
+
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -98,6 +103,8 @@ const GeneralReviews = () => {
 export default GeneralReviews;
 
 function ReviewItem({ item }) {
+  const theme = useTheme();
+
   const {
     _id,
     rating,
@@ -265,7 +272,7 @@ function ReviewItem({ item }) {
             />
           </div>
         ))}
-        {isViewerOpen && (
+        {/* {isViewerOpen && (
           <ImageViewer
             src={images.map((el) => `https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`)}
             currentIndex={currentImage}
@@ -276,7 +283,7 @@ function ReviewItem({ item }) {
             closeOnClickOutside
             onClose={closeImageViewer}
           />
-        )}
+        )} */}
       </Stack>
 
       <Stack direction={'row'} alignItems="center" spacing={2}>
@@ -326,9 +333,55 @@ function ReviewItem({ item }) {
         </Stack>
       )}
 
+      {isViewerOpen && (
+        <Dialog
+          width={'400px'}
+          maxWidth={'md'}
+          open={isViewerOpen}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={() => {
+            setIsViewerOpen(false);
+          }}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <Card sx={{ p: 3 }}>
+            <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
+              <AutoPlaySwipeableViews
+                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                index={currentImage}
+                onChangeIndex={setCurrentImage}
+                enableMouseEvents
+              >
+                {images
+                  .map((el) => ({ imgPath: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`, label: '' }))
+                  .map((step, index) => (
+                    <div key={step.label}>
+                      {Math.abs(currentImage - index) <= 2 ? (
+                        <Box
+                          component="img"
+                          sx={{
+                            height: 255,
+                            display: 'block',
+                            maxWidth: 400,
+                            overflow: 'hidden',
+                            width: '100%',
+                          }}
+                          src={step.imgPath}
+                          alt={step.label}
+                        />
+                      ) : null}
+                    </div>
+                  ))}
+              </AutoPlaySwipeableViews>
+            </Box>
+          </Card>
+        </Dialog>
+      )}
+
       {openVideo && (
         <Dialog
-          width={'700px'}
+          width={'400px'}
           maxWidth={'md'}
           open={openVideo}
           TransitionComponent={Transition}
@@ -337,7 +390,7 @@ function ReviewItem({ item }) {
           aria-describedby="alert-dialog-slide-description"
         >
           <Card sx={{ p: 3 }}>
-            <video autoPlay controls src={src} style={{ width: '700px', height: '400px' }} />
+            <video autoPlay controls src={src} style={{ width: '400px' }} />
           </Card>
         </Dialog>
       )}

@@ -84,7 +84,7 @@ ReferralListToolbar.propTypes = {
   onDeleteReferrals: PropTypes.func,
 };
 
-const options = ['Add Referrer', 'Export to excel'];
+const options = ['Add Referrer'];
 
 export default function ReferralListToolbar({
   numSelected,

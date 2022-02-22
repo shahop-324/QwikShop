@@ -2,14 +2,10 @@
 import React, { useState } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import * as Yup from 'yup';
-// form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-
+import { useFormik } from 'formik';
 // @mui
 import { Box, Card, Grid, Dialog, DialogTitle, TextField, Typography, Button } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { FormProvider } from '../components/hook-form';
 import { UploadAvatar } from '../components/upload';
 // utils
 import { fData } from '../utils/formatNumber';
@@ -19,25 +15,35 @@ const SEOSettings = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store, isUpdatingStoreSEO } = useSelector((state) => state.store);
 
-  const SEOSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    metaDescription: Yup.string().required('Meta description is required'),
-    image: Yup.string().required('Image is required'),
-  });
+  const formik = useFormik({
+    initialValues: {
+      seoTitle: store.seoTitle,
+      seoMetaDescription: store.seoMetaDescription,
+      seoMetaKeywords: store.seoMetaKeywords,
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: true,
+    validationSchema: Yup.object().shape({
+      seoTitle: Yup.string().required('SEO Title is required'),
+      seoMetaDescription: Yup.string().required('Meta Description is required'),
+      seoMetaKeywords: Yup.string().required('Meta Keywords is required'),
+    }),
+    onSubmit: (values) => {
+      const formValues = {
+        seoTitle: values.seoTitle,
+        seoMetaDescription: values.seoMetaDescription,
+        seoMetaKeywords: values.seoMetaKeywords,
+      };
 
-  const [title, setTitle] = useState(store.seoTitle);
-  const [metaDescription, setMetaDescription] = useState(store.seoMetaDescription);
+      dispatch(updateStoreSEO(formValues, file, handleClose));
+    },
+  });
 
   const [file, setFile] = useState('');
   const [fileToPreview, setFileToPreview] = useState(
     store.seoImagePreview && `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.seoImagePreview}`
   );
-
-  const methods = useForm({
-    resolver: yupResolver(SEOSchema),
-  });
-
-  const { handleSubmit } = methods;
 
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -46,23 +52,12 @@ const SEOSettings = ({ open, handleClose }) => {
     setFileToPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = async () => {
-    const formValues = {
-      seoTitle: title,
-      seoMetaDescription: metaDescription,
-    };
-
-    console.log(formValues);
-
-    dispatch(updateStoreSEO(formValues, file, handleClose));
-  };
-
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
         <DialogTitle>Store SEO</DialogTitle>
 
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={formik.handleSubmit}>
           <Grid className="px-4 pt-3" container spacing={3}>
             <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
@@ -75,22 +70,37 @@ const SEOSettings = ({ open, handleClose }) => {
                   }}
                 >
                   <TextField
-                    name="title"
-                    label="Title"
+                    value={formik.values.seoTitle}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     fullWidth
-                    value={title}
-                    onChange={(e) => {
-                      setTitle(e.target.value);
-                    }}
+                    label="Meta Title"
+                    variant="outlined"
+                    name="seoTitle"
+                    error={!!formik.touched.seoTitle && !!formik.errors.seoTitle}
+                    helperText={formik.touched.seoTitle && formik.errors.seoTitle}
                   />
                   <TextField
-                    name="metaDescription"
-                    label="Meta Description"
+                    value={formik.values.seoMetaDescription}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     fullWidth
-                    value={metaDescription}
-                    onChange={(e) => {
-                      setMetaDescription(e.target.value);
-                    }}
+                    label="Meta Description"
+                    variant="outlined"
+                    name="seoMetaDescription"
+                    error={!!formik.touched.seoMetaDescription && !!formik.errors.seoMetaDescription}
+                    helperText={formik.touched.seoMetaDescription && formik.errors.seoMetaDescription}
+                  />
+                  <TextField
+                    value={formik.values.seoMetaKeywords}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    fullWidth
+                    label="Meta Keywords"
+                    variant="outlined"
+                    name="seoMetaKeywords"
+                    error={!!formik.touched.seoMetaKeywords && !!formik.errors.seoMetaKeywords}
+                    helperText={formik.touched.seoMetaKeywords && formik.errors.seoMetaKeywords}
                   />
                   <Typography>Social sharing image preview</Typography>
 
@@ -123,14 +133,19 @@ const SEOSettings = ({ open, handleClose }) => {
             </Grid>
           </Grid>
           <div className="d-flex flex-row align-items-center justify-content-end py-3 px-4">
-            <LoadingButton onClick={onSubmit} loading={isUpdatingStoreSEO} variant="contained">
+            <LoadingButton
+              disabled={!(formik.isValid && formik.dirty)}
+              type="submit"
+              loading={isUpdatingStoreSEO}
+              variant="contained"
+            >
               Save
             </LoadingButton>
             <Button onClick={handleClose} className="ms-3">
               Close
             </Button>
           </div>
-        </FormProvider>
+        </form>
       </Dialog>
     </>
   );
