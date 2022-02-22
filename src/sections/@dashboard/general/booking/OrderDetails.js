@@ -15,6 +15,7 @@ import {
   Typography,
   TableContainer,
 } from '@mui/material';
+import TimelineIcon from '@mui/icons-material/Timeline';
 //
 import { useSelector } from 'react-redux';
 import ReceiptIcon from '@mui/icons-material/Receipt';
@@ -22,6 +23,7 @@ import dateFormat from 'dateformat';
 import Label from '../../../../components/Label';
 import Scrollbar from '../../../../components/Scrollbar';
 import OrderReceipt from '../../../../Dialogs/Order/OrderReceipt';
+import OrderTimeline from '../../../../Dialogs/Order/Timeline';
 
 // ----------------------------------------------------------------------
 
@@ -29,8 +31,22 @@ export default function OrderDetails() {
   const { orders } = useSelector((state) => state.order);
 
   const [id, setId] = useState('');
+  const [shipmentId, setShipmentId] = useState();
+  const [scans, setScans] = useState();
 
   const [openReceipt, setOpenReceipt] = useState(false);
+  const [openTimeline, setOpenTimeline] = useState(false);
+
+  const handleCloseTimeline = () => {
+    setOpenTimeline(false);
+  };
+
+  const handleOpenTimeline = (orderId, shipmentId, scans) => {
+    setId(orderId);
+    setShipmentId(shipmentId);
+    setScans(scans);
+    setOpenTimeline(true);
+  };
 
   const handleCloseReceipt = () => {
     setOpenReceipt(false);
@@ -47,65 +63,65 @@ export default function OrderDetails() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Pending':
-        statusColor = 'warning'
+        statusColor = 'warning';
         break;
       case 'Cancelled':
-        statusColor = 'error'
+        statusColor = 'error';
         break;
       case 'Accepted':
-        statusColor = 'success'
+        statusColor = 'success';
         break;
       case 'Rejected':
-        statusColor = 'error'
+        statusColor = 'error';
         break;
       case 'Returned':
-        statusColor = 'error'
+        statusColor = 'error';
         break;
       case 'Replaced':
-        statusColor = 'info'
+        statusColor = 'info';
         break;
       case 'Requested Return':
-        statusColor = 'warning'
+        statusColor = 'warning';
         break;
       case 'Requested Replacement':
-        statusColor = 'warning'
+        statusColor = 'warning';
         break;
-    
+
       default:
         break;
     }
 
     return statusColor;
-  }
+  };
 
   const getDeliveryStatusColor = (deliveryStatus) => {
     switch (deliveryStatus) {
       case 'Preparing for shipment':
-        deliveryStatusColor = 'info'
+        deliveryStatusColor = 'info';
         break;
       case 'Shipped':
-        deliveryStatusColor = 'info'
+        deliveryStatusColor = 'info';
         break;
       case 'In Transit':
-        deliveryStatusColor = 'info'
+        deliveryStatusColor = 'info';
         break;
       case 'Out for delivery':
-        deliveryStatusColor = 'warning'
+        deliveryStatusColor = 'warning';
         break;
       case 'Delivered':
-        deliveryStatusColor = 'success'
+        deliveryStatusColor = 'success';
         break;
       case 'Cancelled':
-        deliveryStatusColor = 'error'
+        deliveryStatusColor = 'error';
         break;
-    
+
       default:
         break;
     }
 
     return deliveryStatusColor;
-  }
-  
+  };
+
   return (
     <>
       <Card>
@@ -138,23 +154,13 @@ export default function OrderDetails() {
 
                       <TableCell>{row?.customer?.name}</TableCell>
                       <TableCell>
-                      <Label
-                          variant={'ghost'}
-                          color={
-                            getStatusColor(row.status)
-                          }
-                        >
-                        {row?.status}
+                        <Label variant={'ghost'} color={getStatusColor(row.status)}>
+                          {row?.status}
                         </Label>
-                        </TableCell>
+                      </TableCell>
 
                       <TableCell>
-                        <Label
-                          variant={'ghost'}
-                          color={
-                            getDeliveryStatusColor(row.shipment.status)
-                          }
-                        >
+                        <Label variant={'ghost'} color={getDeliveryStatusColor(row.shipment.status)}>
                           {sentenceCase(row?.orderStatus)}
                         </Label>
                       </TableCell>
@@ -168,13 +174,23 @@ export default function OrderDetails() {
                       </TableCell>
 
                       <TableCell align="right">
-                        <IconButton
-                          onClick={() => {
-                            handleOpenReceipt(row._id);
-                          }}
-                        >
-                          <ReceiptIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
-                        </IconButton>
+                        <Stack spacing={1} direction={'row'} alignItems="center">
+                          <IconButton
+                            onClick={() => {
+                              handleOpenReceipt(row._id);
+                            }}
+                          >
+                            <ReceiptIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
+                          </IconButton>
+                          
+                          <IconButton
+                            onClick={() => {
+                              handleOpenTimeline(row._id, row.shipment, row.scans);
+                            }}
+                          >
+                            <TimelineIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
+                          </IconButton>
+                        </Stack>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -188,6 +204,15 @@ export default function OrderDetails() {
         <Box sx={{ p: 2, textAlign: 'right' }}> </Box>
       </Card>
       {openReceipt && <OrderReceipt open={openReceipt} handleClose={handleCloseReceipt} id={id} />}
+      {openTimeline && (
+        <OrderTimeline
+          open={openTimeline}
+          handleClose={handleCloseTimeline}
+          shipmentId={shipmentId}
+          scans={scans}
+          orderId={id}
+        />
+      )}
     </>
   );
 }

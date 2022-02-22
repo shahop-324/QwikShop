@@ -162,6 +162,16 @@ export default function GeneralManage() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
+              // comingSoon
+                title="Edit"
+                action={handleOpenDeliveryZones}
+                total={'Delivery Pricing'}
+                icon={<LocalShippingIcon />}
+                color={'success'}
+              />
+              </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
               comingSoon
                 title="Get Mobile App"
                 action={handleOpenSEOSettings}

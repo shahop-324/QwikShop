@@ -6,6 +6,9 @@ const shipmentSlice = createSlice({
   initialState: {
     shipments: [],
     isUpdating: false,
+    isGeneratingLabel: false,
+    isGeneratingInvoice: false,
+    isGeneratingManifest: false,
   },
 
   reducers: {
@@ -20,6 +23,15 @@ const shipmentSlice = createSlice({
     FetchShipments(state, action) {
       state.shipments = action.payload.shipments;
     },
+    SetIsGeneratingLabel(state, action) {
+      state.isGeneratingLabel = action.payload.state;
+    },
+    SetIsGeneratingInvoice(state, action) {
+      state.isGeneratingInvoice = action.payload.state;
+    },
+    SetIsGeneratingManifest(state, action) {
+      state.isGeneratingManifest = action.payload.state;
+    }
   },
 });
 

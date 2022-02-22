@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded';
 import {
   Card,
   Stack,
@@ -120,9 +121,9 @@ function ColorlibStepIcon(props) {
 
   const icons = {
     1: <FilterFramesRoundedIcon />,
-    2: <LocalShippingRoundedIcon />,
-    3: <AddRoadRoundedIcon />,
-    4: <MopedRoundedIcon />,
+    2: <ScheduleRoundedIcon />,
+    3: <LocalShippingRoundedIcon />,
+    4: <AddRoadRoundedIcon />,
     5: <CheckCircleRoundedIcon />,
   };
 
@@ -151,7 +152,7 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const steps = ['Preparing for shipment', 'Shipped', 'In Transit', 'Out for delivery', 'Delivered'];
+const steps = ['Waiting for acceptance', 'Pickup Scheduled/Generated', 'Shipped', 'In Transit', 'Delivered'];
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -166,30 +167,29 @@ const UpdateShipment = ({ open, handleClose, id }) => {
 
   const [carrier, setCarrier] = useState(shipment.carrier || shipment.partner);
 
-  let activeStep = 1;
+  const [activeStep, setActiveStep] = useState(0);
 
-  switch (shipment.status) {
-    case 'Preparing for shipment':
-      activeStep = 0;
-      break;
-    case 'Shipped':
-      activeStep = 1;
-      break;
-    case 'In Transit':
-      activeStep = 2;
-      break;
-    case 'Out for delivery':
-      activeStep = 3;
-      break;
-    case 'Delivered':
-      activeStep = 4;
-      break;
-    case 'Cancelled':
-      activeStep = 5;
-      break;
-    default:
-      break;
-  }
+  useEffect(() => {
+    switch (shipment.status) {
+      case 'Waiting For Acceptance':
+        setActiveStep(0);
+        break;
+      case 'Pickup Scheduled/Generated':
+        setActiveStep(1);
+        break;
+      case 'Shipped':
+        setActiveStep(2);
+        break;
+      case 'In Transit':
+        setActiveStep(3);
+        break;
+      case 'Delivered':
+        setActiveStep(4);
+        break;
+      default:
+        break;
+    }
+  }, [shipment]);
 
   return (
     <>
@@ -203,13 +203,25 @@ const UpdateShipment = ({ open, handleClose, id }) => {
         aria-describedby="alert-dialog-slide-description"
       >
         <Card sx={{ width: '700px', p: 4 }}>
-          <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
+          {[-1, 3, 6, 7, 18].includes(shipment.status_id * 1) ? (
+            <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          ) : (
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={1} direction={'row'} alignItems="center">
+                <Typography>Current Status is: </Typography>
+                <Typography>
+                  {' '}
+                  <strong>{shipment.status}</strong>
+                </Typography>
+              </Stack>
+            </Card>
+          )}
 
           <Typography variant="caption" sx={{ my: 4 }}>
             Note: Customers will be notified via SMS and email for shipment update
@@ -287,11 +299,25 @@ const UpdateShipment = ({ open, handleClose, id }) => {
           >
             {(() => {
               switch (shipment.status) {
-                case 'Preparing for shipment':
+                case 'Waiting For Acceptance':
                   return (
                     <Button
+                      disabled={shipment.carrier !== 'self'}
                       onClick={() => {
-                        dispatch(updateShipment({ status: 'Shipped' }, id));
+                        dispatch(updateShipment({ status: 'Pickup Scheduled/Generated', status_id: 4 }, id));
+                      }}
+                      variant="contained"
+                    >
+                      Mark as Pickup Scheduled/Generated
+                    </Button>
+                  );
+
+                case 'Pickup Scheduled/Generated':
+                  return (
+                    <Button
+                      disabled={shipment.carrier !== 'self'}
+                      onClick={() => {
+                        dispatch(updateShipment({ status: 'Shipped', status_id: 7 }, id));
                       }}
                       variant="contained"
                     >
@@ -302,8 +328,9 @@ const UpdateShipment = ({ open, handleClose, id }) => {
                 case 'Shipped':
                   return (
                     <Button
+                      disabled={shipment.carrier !== 'self'}
                       onClick={() => {
-                        dispatch(updateShipment({ status: 'In Transit' }, id));
+                        dispatch(updateShipment({ status: 'In Transit', status_id: 20 }, id));
                       }}
                       variant="contained"
                     >
@@ -314,20 +341,9 @@ const UpdateShipment = ({ open, handleClose, id }) => {
                 case 'In Transit':
                   return (
                     <Button
+                      disabled={shipment.carrier !== 'self'}
                       onClick={() => {
-                        dispatch(updateShipment({ status: 'Out for delivery' }, id));
-                      }}
-                      variant="contained"
-                    >
-                      Mark as Out for delivery
-                    </Button>
-                  );
-
-                case 'Out for delivery':
-                  return (
-                    <Button
-                      onClick={() => {
-                        dispatch(updateShipment({ status: 'Delivered' }, id));
+                        dispatch(updateShipment({ status: 'Delivered', status_id: 8 }, id));
                       }}
                       variant="contained"
                     >

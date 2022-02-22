@@ -190,34 +190,24 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
   const shipment = shipments.find((el) => el.orderRef === order.ref);
 
   useEffect(() => {
-    if (order.status === 'Accepted') {
-      switch (shipment.status) {
-        case 'Preparing for shipment':
-          setActiveStep(1);
-          break;
-        case 'Shipped':
-          setActiveStep(2);
-          break;
-        case 'In Transit':
-          setActiveStep(3);
-          break;
-        case 'Out for delivery':
-          setActiveStep(4);
-          break;
-        case 'Delivered':
-          setActiveStep(5);
-          break;
-        case 'Cancelled':
-          setActiveStep(undefined);
-          break;
-
-        default:
-          break;
-      }
-    }
-
-    if (order.status === 'Pending') {
-      setActiveStep(0);
+    switch (shipment.status) {
+      case 'Waiting For Acceptance':
+        setActiveStep(0);
+        break;
+      case 'Pickup Scheduled/Generated':
+        setActiveStep(1);
+        break;
+      case 'Shipped':
+        setActiveStep(2);
+        break;
+      case 'In Transit':
+        setActiveStep(3);
+        break;
+      case 'Delivered':
+        setActiveStep(4);
+        break;
+      default:
+        break;
     }
   }, [orders]);
 
@@ -355,7 +345,8 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
 
         <Card sx={{ p: 3, mb: 3 }}>
           {console.log(activeStep, activeStep * 1 !== 0)}
-          {activeStep !== undefined ? (
+
+          {[-1, 3, 6, 7, 18].includes(order.status_id * 1) ? (
             <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
               {steps.map((label) => (
                 <Step key={label}>
@@ -364,10 +355,17 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
               ))}
             </Stepper>
           ) : (
-            <Typography color="error" fontWeight={600}>
-              This Order has been cancelled
-            </Typography>
+            <Card sx={{p: 3}}>
+              <Stack spacing={1} direction={"row"} alignItems="center">
+              <Typography>
+                Current Status is: {" "} 
+              </Typography>
+              <Typography> <strong>{shipment.status}</strong></Typography>
+              </Stack>
+             
+            </Card>
           )}
+          
         </Card>
 
         <Typography variant="subtitle1" sx={{ mb: 2 }}>

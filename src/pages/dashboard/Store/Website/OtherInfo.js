@@ -76,7 +76,8 @@ const StoreOtherInfo = () => {
   const dispatch = useDispatch();
 
   const { isUpdatingOtherInfo, store } = useSelector((state) => state.store);
-
+  const [constantDeliveryChargeBasedOn, setConstantDeliveryChargeBasedOn] = useState(store.constantDeliveryChargeBasedOn);
+  const [deliveryChargeType, setDeliveryChargeType] = useState(store.deliveryChargeType);
   const [freeDeliveryAbove, setFreeDeliveryAbove] = useState(store.freeDeliveryAbove);
   const [shipmentTime, setShipmentTime] = useState(store.orderIsShippedIn);
   const [returnAccepted, setReturnAccepted] = useState(store.returnAccepted);
@@ -104,6 +105,8 @@ const StoreOtherInfo = () => {
       minDeliveryDistance: minRange,
       maxDeliveryDistance: maxRange,
       showShopInsideDeliveryZoneOnly: showShopInDeliveryZoneOnly,
+      deliveryChargeType,
+      constantDeliveryChargeBasedOn,
     };
 
     dispatch(updateStoreOtherInfo(formValues));
@@ -111,7 +114,7 @@ const StoreOtherInfo = () => {
 
   return (
     <div>
-      <div style={{width: "100%"}} className='d-flex flex-row align-items-center justify-content-end mb-2' >
+      <div style={{ width: '100%' }} className="d-flex flex-row align-items-center justify-content-end mb-2">
         <Button variant="contained" startIcon={<RemoveRedEyeIcon />}>
           Preview
         </Button>
@@ -120,6 +123,8 @@ const StoreOtherInfo = () => {
       <Grid className="px-4 pt-3" container spacing={3}>
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
+            
+            
             <Box
               sx={{
                 mb: 4,
@@ -129,6 +134,78 @@ const StoreOtherInfo = () => {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
+              <FormControl sx={{mb: 3}}>
+              <FormLabel id="demo-row-radio-buttons-group-label">
+                Type of delivery pricing
+              </FormLabel>
+              <RadioGroup
+                value={deliveryChargeType}
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="row-radio-buttons-group"
+              >
+                <FormControlLabel
+                  value={'dynamic'}
+                  control={
+                    <Radio
+                    
+                      onClick={() => {
+                        setDeliveryChargeType('dynamic');
+                      }}
+                    />
+                  }
+                  label="Dynamic"
+                />
+                <FormControlLabel
+                  value={'constant'}
+                  control={
+                    <Radio
+                      onClick={() => {
+                        setDeliveryChargeType('constant');
+                      }}
+                    />
+                  }
+                  label="Constant"
+                />
+              </RadioGroup>
+
+            </FormControl>
+            {deliveryChargeType === 'constant' &&  <FormControl sx={{mb: 3}}>
+              <FormLabel id="demo-row-radio-buttons-group-label">
+                Constant Delivery Pricing will be based on
+              </FormLabel>
+              <RadioGroup
+                value={constantDeliveryChargeBasedOn}
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="row-radio-buttons-group"
+              >
+                <FormControlLabel
+                  value={'distance'}
+                  control={
+                    <Radio
+                    
+                      onClick={() => {
+                        setConstantDeliveryChargeBasedOn('distance');
+                      }}
+                    />
+                  }
+                  label="Distance"
+                />
+                <FormControlLabel
+                  value={'weight'}
+                  control={
+                    <Radio
+                      onClick={() => {
+                        setConstantDeliveryChargeBasedOn('weight');
+                      }}
+                    />
+                  }
+                  label="Weight"
+                />
+              </RadioGroup>
+            </FormControl> }
+           
               <TextField
                 name="freeDeliveryAbove"
                 label="Free Delivery Above"
@@ -225,7 +302,6 @@ const StoreOtherInfo = () => {
                     value={false}
                     control={
                       <Radio
-
                         onClick={() => {
                           setReplacementAccepted(false);
                         }}
@@ -235,54 +311,58 @@ const StoreOtherInfo = () => {
                   />
                 </RadioGroup>
               </FormControl>
-              {returnAccepted && <Autocomplete
-                value={returnPeriod}
-                onChange={(e, value) => {
-                  setReturnPeriod(value);
-                }}
-                id=""
-                fullWidth
-                options={timeline}
-                autoHighlight
-                getOptionLabel={(option) => option.label}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Return Period"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: '', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              /> }
-              
-              {replacementAccepted && <Autocomplete
-                value={replacementPeriod}
-                onChange={(e, value) => {
-                  setReplacementPeriod(value);
-                }}
-                id=""
-                fullWidth
-                options={timeline}
-                autoHighlight
-                getOptionLabel={(option) => option.label}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Replacement Period"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: '', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />}
-              
+              {returnAccepted && (
+                <Autocomplete
+                  value={returnPeriod}
+                  onChange={(e, value) => {
+                    setReturnPeriod(value);
+                  }}
+                  id=""
+                  fullWidth
+                  options={timeline}
+                  autoHighlight
+                  getOptionLabel={(option) => option.label}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Return Period"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: '', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              )}
+
+              {replacementAccepted && (
+                <Autocomplete
+                  value={replacementPeriod}
+                  onChange={(e, value) => {
+                    setReplacementPeriod(value);
+                  }}
+                  id=""
+                  fullWidth
+                  options={timeline}
+                  autoHighlight
+                  getOptionLabel={(option) => option.label}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Replacement Period"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: '', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+              )}
             </Box>
-            
+
+
           </Card>
-          <div style={{width: "100%"}} className='d-flex flex-row align-items-center justify-content-end mt-3' >
+          <div style={{ width: '100%' }} className="d-flex flex-row align-items-center justify-content-end mt-3">
             <LoadingButton
               onClick={() => {
                 onSubmit();
@@ -294,6 +374,11 @@ const StoreOtherInfo = () => {
             </LoadingButton>
           </div>
         </Grid>
+        <Stack spacing={3}>
+        <Typography variant='body2'>Dynamic Pricing: Calculated based on delivery pincode, pickup pincode, weight & type of shipment.</Typography>
+            <Typography variant='body2'>Constant Pricing: This will be constant as defined by you based on distance & weight.</Typography>
+        </Stack>
+        
       </Grid>
     </div>
   );

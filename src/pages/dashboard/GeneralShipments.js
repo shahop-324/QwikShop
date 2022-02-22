@@ -18,6 +18,7 @@ import {
   Paper,
   Button,
 } from '@mui/material';
+import TimelineIcon from '@mui/icons-material/Timeline';
 // redux
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
@@ -35,22 +36,8 @@ import EditShipment from '../../Dialogs/Shipment/EditShipment';
 import AssignCarrier from '../../Dialogs/Delivery/AssignCarrier';
 import UpdateShipment from '../../Dialogs/Delivery/UpdateShipmentStatus';
 import DeliveryReceipt from '../../Dialogs/Delivery/DeliveryReceipt';
-
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  '& .MuiToggleButtonGroup-grouped': {
-    margin: theme.spacing(0.5),
-    border: 0,
-    '&.Mui-disabled': {
-      border: 0,
-    },
-    '&:not(:first-of-type)': {
-      borderRadius: theme.shape.borderRadius,
-    },
-    '&:first-of-type': {
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-}));
+import Print from '../../Dialogs/Delivery/Print';
+import OrderTimeline from '../../Dialogs/Order/Timeline';
 
 // ----------------------------------------------------------------------
 
@@ -82,17 +69,33 @@ export default function GeneralShipments() {
 
   const [Id, setId] = useState();
 
+  const [openPrint, setOpenPrint] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openAssign, setOpenAssign] = useState(false);
   const [openReceipt, setOpenReceipt] = useState(false);
 
-  const handleOpenReceipt = (id) => {
-    setId(id);
-    setOpenReceipt(true);
+  const [shipmentId, setShipmentId] = useState();
+  const [scans, setScans] = useState();
+  const [openTimeline, setOpenTimeline] = useState(false);
+
+  const handleCloseTimeline = () => {
+    setOpenTimeline(false);
   };
 
-  const handleCloseReceipt = () => {
-    setOpenReceipt(false);
+  const handleOpenTimeline = (orderId, shipmentId, scans) => {
+    setId(orderId);
+    setShipmentId(shipmentId);
+    setScans(scans);
+    setOpenTimeline(true);
+  };
+
+  const handleOpenPrint = (id) => {
+    setId(id);
+    setOpenPrint(true);
+  };
+
+  const handleClosePrint = () => {
+    setOpenPrint(false);
   };
 
   const handleOpenAssign = (id) => {
@@ -251,14 +254,25 @@ export default function GeneralShipments() {
                             >
                               <ModeEditOutlineRoundedIcon color={'primary'} style={{ fontSize: '20px' }} />
                             </IconButton>
-                            <IconButton
-                              onClick={() => {
-                                handleOpenReceipt(_id);
-                              }}
-                              className="me-2"
-                            >
-                              <ReceiptLongIcon color={'secondary'} style={{ fontSize: '20px' }} />
-                            </IconButton>
+                            {carrier === 'Shiprocket' && (
+                              <IconButton
+                                onClick={() => {
+                                  handleOpenPrint(_id);
+                                }}
+                                className="me-2"
+                              >
+                                <ReceiptLongIcon color={'secondary'} style={{ fontSize: '20px' }} />
+                              </IconButton>
+                            )}
+
+<IconButton
+                            onClick={() => {
+                              handleOpenTimeline(row.order._id, _id, row.scans);
+                            }}
+                          >
+                            <TimelineIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
+                          </IconButton>
+
                           </Stack>
                         ) : (
                           <Button
@@ -309,9 +323,18 @@ export default function GeneralShipments() {
         />
       </Card>
 
+      {openPrint && <Print open={openPrint} handleClose={handleClosePrint} id={Id} />}
       {openAssign && <AssignCarrier open={openAssign} handleClose={handleCloseAssign} id={Id} />}
       {openUpdate && <UpdateShipment open={openUpdate} handleClose={handleCloseUpdate} id={Id} />}
-      {openReceipt && <DeliveryReceipt open={openReceipt} handleClose={handleCloseReceipt} id={Id} />}
+      {openTimeline && (
+        <OrderTimeline
+          open={openTimeline}
+          handleClose={handleCloseTimeline}
+          shipmentId={shipmentId}
+          scans={scans}
+          orderId={Id}
+        />
+      )}
     </>
   );
 }

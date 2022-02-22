@@ -5,12 +5,10 @@ import {
   Dialog,
   Stack,
   Button,
-  DialogTitle,
   DialogActions,
   Box,
   Card,
   Typography,
-  Avatar,
   Chip,
   Divider,
 } from '@mui/material';

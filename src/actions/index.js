@@ -29,7 +29,7 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'https://api.app.qwikshop.online/v1/'
+const BaseURL = 'https://api.app.qwikshop.online/v1/';
 // const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
@@ -7580,4 +7580,203 @@ export const resetIsCreatingCheckoutField = () => async (dispatch, getState) => 
 
 export const resetIsUpdatingCheckoutField = () => async (dispatch, getState) => {
   dispatch(storeActions.SetIsUpdatingCheckoutField({ state: false }));
+};
+
+export const resetIsGeneratingInvoice = () => async(dispatch, getState) => {
+  dispatch(shipmentActions.SetIsGeneratingInvoice({state: false}));
+}
+export const resetIsGeneratingLabel = () => async(dispatch, getState) => {
+  dispatch(shipmentActions.SetIsGeneratingLabel({state: false}));
+}
+export const resetIsGeneratingManifest = () => async(dispatch, getState) => {
+  dispatch(shipmentActions.SetIsGeneratingManifest({state: false}));
+}
+
+// ******************************* Print Shipment Label, Invoice & Manifest **************************************** //
+
+export const printLabel = (shipmentId) => async (dispatch, getState) => {
+
+  let message;
+
+  dispatch(
+    shipmentActions.SetIsGeneratingLabel({
+      state: true,
+    })
+  );
+
+  try {
+    const res = await fetch(`${BaseURL}delivery/shipment/generateLabel/${shipmentId}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    if (result.data.label_url) {
+      const hiddenElement = document.createElement('a');
+      hiddenElement.href = result.data.label_url;
+      hiddenElement.target = '_blank';
+      hiddenElement.download = `Label_${shipmentId}`;
+      hiddenElement.click();
+
+      dispatch(showSnackbar('success', message));
+    } else {
+      dispatch(showSnackbar('info', result.data.message));
+    }
+
+    dispatch(
+      shipmentActions.SetIsGeneratingLabel({
+        state: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(
+      shipmentActions.SetIsGeneratingLabel({
+        state: false,
+      })
+    );
+  }
+
+};
+
+export const printInvoice = (shipmentId) => async (dispatch, getState) => {
+
+  let message;
+
+  dispatch(
+    shipmentActions.SetIsGeneratingInvoice({
+      state: true,
+    })
+  );
+
+  try {
+    const res = await fetch(`${BaseURL}delivery/shipment/generateInvoice/${shipmentId}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    if (result.data.invoice_url) {
+      const hiddenElement = document.createElement('a');
+      hiddenElement.href = result.data.invoice_url;
+      hiddenElement.target = '_blank';
+      hiddenElement.download = `Invoice_${shipmentId}`;
+      hiddenElement.click();
+
+      dispatch(showSnackbar('success', message));
+    } else {
+      dispatch(showSnackbar('info', result.data.message));
+    }
+
+    dispatch(
+      shipmentActions.SetIsGeneratingInvoice({
+        state: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(
+      shipmentActions.SetIsGeneratingInvoice({
+        state: false,
+      })
+    );
+  }
+
+};
+
+export const printManifest = (shipmentId) => async (dispatch, getState) => {
+  let message;
+
+  dispatch(
+    shipmentActions.SetIsGeneratingManifest({
+      state: true,
+    })
+  );
+
+  try {
+    const res = await fetch(`${BaseURL}delivery/shipment/generateManifest/${shipmentId}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    if (result.data.manifest_url) {
+      const hiddenElement = document.createElement('a');
+      hiddenElement.href = result.data.manifest_url;
+      hiddenElement.target = '_blank';
+      hiddenElement.download = `shipment_${shipmentId}`;
+      hiddenElement.click();
+
+      dispatch(showSnackbar('success', message));
+    } else {
+      dispatch(showSnackbar('info', result.data.message));
+    }
+
+    dispatch(
+      shipmentActions.SetIsGeneratingManifest({
+        state: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(
+      shipmentActions.SetIsGeneratingManifest({
+        state: false,
+      })
+    );
+  }
 };

@@ -9,8 +9,9 @@ import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import FormLabel from '@mui/material/FormLabel';
+import CurrencyRupeeRoundedIcon from '@mui/icons-material/CurrencyRupeeRounded';
 // @mui
-import { Box, Card, Grid, Dialog, DialogTitle, TextField, Button, Typography } from '@mui/material';
+import { Box, Card, Grid, Dialog, DialogTitle, TextField, Button, Typography, DialogActions, InputAdornment } from '@mui/material';
 
 import Slider from '@mui/material/Slider';
 import { useSelector, useDispatch } from 'react-redux';
@@ -112,7 +113,8 @@ const marks = [
 const DeliveryZones = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store, isUpadtingSelfDeliveryZone } = useSelector((state) => state.store);
-  const [storePincode, setStorePincode] = useState(store.storePincode);
+  const [storePincode, setStorePincode] = useState(store.pincode);
+  const [pricePer100gm, setPricePer100gm] = useState(store.pricePer100gm)
   const [value, setValue] = React.useState([0, 300]);
 
   const handleChange = (event, newValue, activeThumb, index) => {
@@ -136,7 +138,7 @@ const DeliveryZones = ({ open, handleClose }) => {
     }
   };
 
-  const [deliveryZones, setDeliveryZones] = useState(store.deliveryZones);
+  const [deliveryZones, setDeliveryZones] = useState( store.deliveryZones.map((el) => ({ ...el})));
 
   const addDeliveryZone = () => {
     setDeliveryZones((prev) => [
@@ -172,6 +174,7 @@ const DeliveryZones = ({ open, handleClose }) => {
   const onSubmit = () => {
     const formValues = {
       storePincode,
+      pricePer100gm,
       deliveryZones,
     };
 
@@ -200,7 +203,7 @@ const DeliveryZones = ({ open, handleClose }) => {
         <Grid className="px-4 pt-3" container spacing={3}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }} className="mb-4">
-              <Typography className="mb-3">
+              <Typography variant='body2' className="mb-3">
                 All delivery distances will be calculated from your store pincode.
               </Typography>
               <Box
@@ -212,6 +215,8 @@ const DeliveryZones = ({ open, handleClose }) => {
                 }}
               >
                 <TextField
+                disabled
+                helperText={"You can change your store pincode by updating store profile"}
                   name="storePincode"
                   label="Store Pincode"
                   fullWidth
@@ -223,43 +228,46 @@ const DeliveryZones = ({ open, handleClose }) => {
               </Box>
             </Card>
             <Card sx={{ p: 3 }} className="mb-4">
+
+            <Typography className="mb-3">
+               Delivery Price per 100gm Weight
+              </Typography>
+
+              <Box
+                sx={{
+                  display: 'grid',
+                  columnGap: 2,
+                  rowGap: 3,
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                }}
+              >
+                <TextField
+                  name="pricePer100gm"
+                  label="Price per 100gm weight"
+                  fullWidth
+                  value={pricePer100gm}
+                  onChange={(e) => {
+                    setPricePer100gm(e.target.value);
+                  }}
+                  InputProps={{
+                    startAdornment: <InputAdornment>
+                    <CurrencyRupeeRoundedIcon />
+                    </InputAdornment>
+                  }}
+                />
+              </Box>
+
+            </Card>
+            <Card sx={{ p: 3 }} className="mb-4">
               <Typography variant="h6" className="mb-4">
-                Self Delivery zones
+                Delivery zones
               </Typography>
 
               {deliveryZones.map((el, index) => (
                 <div key={el.index}>
-                  <FormControl component="fieldset" className="mb-3">
-                    <FormLabel component="legend">Zone {index + 1}</FormLabel>
-                    <RadioGroup row aria-label="zone type" name="row-radio-buttons-group">
-                      <FormControlLabel
-                        value="distance"
-                        control={
-                          <Radio
-                            checked={el.type === 'distance'}
-                            onClick={() => {
-                              updateDeliveryZone('distance', el.index, 'type');
-                            }}
-                          />
-                        }
-                        label="Distance"
-                      />
-                      <FormControlLabel
-                        value="pincode"
-                        control={
-                          <Radio
-                            checked={el.type === 'pincode'}
-                            onClick={() => {
-                              updateDeliveryZone('pincode', el.index, 'type');
-                            }}
-                          />
-                        }
-                        label="Pincode"
-                      />
-                    </RadioGroup>
-                  </FormControl>
+                 
 
-                  {el.type === 'distance' && (
+                 
                     <Box sx={{ width: '100%', px: 2 }} className="mb-3">
                       <Slider
                         min={0}
@@ -274,19 +282,9 @@ const DeliveryZones = ({ open, handleClose }) => {
                         marks={marks}
                       />
                     </Box>
-                  )}
+             
 
-                  {el.type === 'pincode' && (
-                    <textarea
-                      value={el.pincodes}
-                      onChange={(e) => {
-                        updateDeliveryZone(e.target.value, el.index, 'pincodes');
-                      }}
-                      className="form-control mb-3"
-                      rows={3}
-                      placeholder="Pincodes sperated by comma with no spaces"
-                    />
-                  )}
+                  
 
                   <Box
                     className="mb-3"
@@ -369,6 +367,20 @@ const DeliveryZones = ({ open, handleClose }) => {
             </Card>
           </Grid>
         </Grid>
+        <DialogActions>
+        <div className="d-flex flex-row align-items-center">
+            <LoadingButton onClick={onSubmit} loading={isUpadtingSelfDeliveryZone} variant="contained" className="me-3">
+              Save
+            </LoadingButton>
+            <Button
+              onClick={() => {
+                handleClose();
+              }}
+            >
+              Close
+            </Button>
+          </div>
+        </DialogActions>
       </Dialog>
     </>
   );
