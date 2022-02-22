@@ -14,8 +14,8 @@ const RechargeWallet = ({ open, handleClose }) => {
   const { store } = useSelector((state) => state.store);
   const { user } = useSelector((state) => state.user);
 
-  // const BaseURL = 'https://api.app.qwikshop.online/v1/';
-  const BaseURL = 'http://localhost:8000/v1/'
+  const BaseURL = 'https://api.app.qwikshop.online/v1/';
+  // const BaseURL = 'http://localhost:8000/v1/'
 
   const dispatch = useDispatch();
 

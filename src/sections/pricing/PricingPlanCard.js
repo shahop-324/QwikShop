@@ -45,8 +45,8 @@ export default function PricingPlanCard({ card, index, isHome }) {
     dispatch(createSubscription(plan_id, displayRazorpay));
   };
 
-  // const BaseURL = 'https://api.app.qwikshop.online/v1/';
-  const BaseURL = 'http://localhost:8000/v1/';
+  const BaseURL = 'https://api.app.qwikshop.online/v1/';
+  // const BaseURL = 'http://localhost:8000/v1/';
 
   const displayRazorpay = async () => {
     const res = await loadRazorpay();
