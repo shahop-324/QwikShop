@@ -219,7 +219,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
     if (order.status === 'Pending') {
       setActiveStep(0);
     }
-  }, []);
+  }, [orders]);
 
   const appliedDiscount = discounts.find((el) => el._id === order.couponId);
 
@@ -270,7 +270,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
 
   return (
     <div ref={ref}>
-      <Box sx={{ width: {xs: '480px', md: '600px', lg: '1200px'}, p: 3 }}>
+      <Box sx={{ width: { xs: '480px', md: '600px', lg: '1200px' }, p: 3 }}>
         <Stack sx={{ mb: 3 }} direction={'row'} alignItems="center" justifyContent={'space-between'}>
           <DialogTitle sx={{ mb: 2 }}>{'Order Receipt'}</DialogTitle>
 
@@ -278,9 +278,9 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             switch (order.status) {
               case 'Pending':
                 return (
-                  <Stack spacing={2} sx={{flexDirection: {sx: 'column', md: 'row'}, alignItems: 'center'}} >
-                    {' '}
+                  <Stack spacing={2} sx={{ flexDirection: { sx: 'column', md: 'row' }, alignItems: 'center' }}>
                     <Button
+                      sx={{ mr: 3, mt: 2 }}
                       onClick={() => {
                         dispatch(acceptOrder(id));
                       }}
@@ -354,7 +354,8 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
         </Card>
 
         <Card sx={{ p: 3, mb: 3 }}>
-          {activeStep ? (
+          {console.log(activeStep, activeStep * 1 !== 0)}
+          {activeStep !== undefined ? (
             <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
               {steps.map((label) => (
                 <Step key={label}>
@@ -363,7 +364,9 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
               ))}
             </Stepper>
           ) : (
-            <Typography color="error">This Order has been cancelled</Typography>
+            <Typography color="error" fontWeight={600}>
+              This Order has been cancelled
+            </Typography>
           )}
         </Card>
 
@@ -426,44 +429,52 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
           })}
         </Card>
         {/* // TODO Similarly render list of given products */}
-        <Typography variant="subtitle1" sx={{ mb: 2 }}>
-          Given Products
-        </Typography>
 
-        <Card sx={{ p: 3, mb: 3 }}>
-          {givenProducts.map((el) => (
-            <div key={el._id}>
-              <Box
-                className="mb-2"
-                sx={{
-                  display: 'grid',
-                  columnGap: 2,
-                  rowGap: 3,
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                }}
-              >
-                <Stack direction={'row'} alignItems="center" spacing={2}>
-                  <Avatar
-                    variant="rounded"
-                    src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
-                    sx={{ width: 70, height: 70 }}
-                  />
-                  <Stack spacing={1}>
-                    <Typography variant="subtitle2">{el.product.productName}</Typography>
-                    <Typography variant="caption">
-                      {' '}
-                      Rs. {el.price} * {el.quantity}
-                    </Typography>
-                  </Stack>
-                </Stack>
-                <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
-                  <Typography variant="body2">{'------------'}</Typography>
-                </Stack>
-              </Box>
-              <Divider sx={{ my: 1 }} />
-            </div>
-          ))}
-        </Card>
+        {givenProducts !== undefined && givenProducts.length > 0 && (
+          <>
+            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+              Given Products
+            </Typography>
+
+            <Card sx={{ p: 3, mb: 3 }}>
+              {givenProducts !== undefined &&
+                givenProducts.length > 0 &&
+                givenProducts.map((el) => (
+                  <div key={el._id}>
+                    <Box
+                      className="mb-2"
+                      sx={{
+                        display: 'grid',
+                        columnGap: 2,
+                        rowGap: 3,
+                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                      }}
+                    >
+                      <Stack direction={'row'} alignItems="center" spacing={2}>
+                        <Avatar
+                          variant="rounded"
+                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
+                          sx={{ width: 70, height: 70 }}
+                        />
+                        <Stack spacing={1}>
+                          <Typography variant="subtitle2">{el.product.productName}</Typography>
+                          <Typography variant="caption">
+                            {' '}
+                            Rs. {el.price} * {el.quantity}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                      <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
+                        <Typography variant="body2">{'------------'}</Typography>
+                      </Stack>
+                    </Box>
+                    <Divider sx={{ my: 1 }} />
+                  </div>
+                ))}
+            </Card>
+          </>
+        )}
+
         <Box
           className="mb-2"
           sx={{
@@ -530,56 +541,58 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
               </div>
             ))}
 
-            <Divider sx={{ my: 2 }} />
+            <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
 
             <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">{'Total'}</Typography>
               <Typography variant="subtitle2">Rs.{order.charges.total}</Typography>
             </Stack>
 
-            <Divider sx={{ my: 2 }} />
+            <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
 
             <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
               <Typography>Mode of payment</Typography>
 
-              <Chip color={'primary'} label={order.paymentMode} />
+              <Chip sx={{ fontWeight: 600 }} color={'primary'} label={order.paymentMode.toUpperCase()} />
             </Stack>
           </Card>
         </Box>
 
-        <Card sx={{ p: 3, mb: 3 }}>
-          <Box
-            sx={{
-              display: 'grid',
-              columnGap: 2,
-              rowGap: 3,
-              justifyItems: 'center',
-              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
-            }}
-          >
-            <Typography variant="caption">
-              <span style={{ marginRight: '10px' }}>Amount to confirm</span>
-              <Typography sx={{ color: '#3116AC' }} variant="subtitle2">
-                {' '}
-                Rs.{order.amountToConfirm + order.paidAmount}{' '}
+        {order.paymentMode === 'cod' && (
+          <Card sx={{ p: 3, mb: 3 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                columnGap: 2,
+                rowGap: 3,
+                justifyItems: 'center',
+                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
+              }}
+            >
+              <Typography variant="caption">
+                <span style={{ marginRight: '10px' }}>Order Total</span>
+                <Typography sx={{ color: '#3116AC' }} variant="subtitle2">
+                  {' '}
+                  Rs.{order.charges.total}{' '}
+                </Typography>
               </Typography>
-            </Typography>
-            <Typography variant="caption">
-              <span style={{ marginRight: '10px' }}>Amount Paid</span>
-              <Typography sx={{ color: '#47A31C' }} variant="subtitle2">
-                {' '}
-                Rs.{order.paidAmount}{' '}
+              <Typography variant="caption">
+                <span style={{ marginRight: '10px' }}>Coins used</span>
+                <Typography sx={{ color: '#47A31C' }} variant="subtitle2">
+                  {' '}
+                  Rs.{order.coinsUsed}{' '}
+                </Typography>
               </Typography>
-            </Typography>
-            <Typography variant="caption">
-              <span style={{ marginRight: '10px' }}>Remaining amount</span>{' '}
-              <Typography color="error" variant="subtitle2">
-                {' '}
-                Rs.{order.amountToConfirm - order.paidAmount}{' '}
+              <Typography variant="caption">
+                <span style={{ marginRight: '10px' }}>Remaining amount</span>{' '}
+                <Typography color="error" variant="subtitle2">
+                  {' '}
+                  Rs.{order.charges.total - order.coinsUsed}{' '}
+                </Typography>
               </Typography>
-            </Typography>
-          </Box>
-        </Card>
+            </Box>
+          </Card>
+        )}
 
         <Box
           className="mb-2"

@@ -40,6 +40,71 @@ export default function OrderDetails() {
     setId(id);
     setOpenReceipt(true);
   };
+
+  let statusColor = 'info';
+  let deliveryStatusColor = 'info';
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Pending':
+        statusColor = 'warning'
+        break;
+      case 'Cancelled':
+        statusColor = 'error'
+        break;
+      case 'Accepted':
+        statusColor = 'success'
+        break;
+      case 'Rejected':
+        statusColor = 'error'
+        break;
+      case 'Returned':
+        statusColor = 'error'
+        break;
+      case 'Replaced':
+        statusColor = 'info'
+        break;
+      case 'Requested Return':
+        statusColor = 'warning'
+        break;
+      case 'Requested Replacement':
+        statusColor = 'warning'
+        break;
+    
+      default:
+        break;
+    }
+
+    return statusColor;
+  }
+
+  const getDeliveryStatusColor = (deliveryStatus) => {
+    switch (deliveryStatus) {
+      case 'Preparing for shipment':
+        deliveryStatusColor = 'info'
+        break;
+      case 'Shipped':
+        deliveryStatusColor = 'info'
+        break;
+      case 'In Transit':
+        deliveryStatusColor = 'info'
+        break;
+      case 'Out for delivery':
+        deliveryStatusColor = 'warning'
+        break;
+      case 'Delivered':
+        deliveryStatusColor = 'success'
+        break;
+      case 'Cancelled':
+        deliveryStatusColor = 'error'
+        break;
+    
+      default:
+        break;
+    }
+
+    return deliveryStatusColor;
+  }
   
   return (
     <>
@@ -72,13 +137,22 @@ export default function OrderDetails() {
                       </TableCell>
 
                       <TableCell>{row?.customer?.name}</TableCell>
-                      <TableCell>{row?.status}</TableCell>
+                      <TableCell>
+                      <Label
+                          variant={'ghost'}
+                          color={
+                            getStatusColor(row.status)
+                          }
+                        >
+                        {row?.status}
+                        </Label>
+                        </TableCell>
 
                       <TableCell>
                         <Label
                           variant={'ghost'}
                           color={
-                            (row.status === 'paid' && 'success') || (row.status === 'pending' && 'warning') || 'error'
+                            getDeliveryStatusColor(row.shipment.status)
                           }
                         >
                           {sentenceCase(row?.orderStatus)}
