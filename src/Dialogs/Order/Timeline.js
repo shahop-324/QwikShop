@@ -41,7 +41,7 @@ const OrderTimeline = ({ shipmentId, orderId, scans, open, handleClose }) => {
           <Box>
             <Card sx={{ p: 3 }}>
               <Stack spacing={4} direction="row" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">Order ID</Typography>
+                <Typography  variant="body2">Order ID</Typography>
                 <Typography variant="subtitle2">{orderDoc?.ref}</Typography>
               </Stack>
             </Card>

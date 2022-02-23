@@ -161,7 +161,7 @@ export default function OrderDetails() {
 
                       <TableCell>
                         <Label variant={'ghost'} color={getDeliveryStatusColor(row.shipment.status)}>
-                          {sentenceCase(row?.orderStatus)}
+                          {/* {sentenceCase(row?.orderStatus)} */}
                         </Label>
                       </TableCell>
 

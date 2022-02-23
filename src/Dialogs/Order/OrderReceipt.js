@@ -190,7 +190,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
   const shipment = shipments.find((el) => el.orderRef === order.ref);
 
   useEffect(() => {
-    switch (shipment.status) {
+    switch (order?.status) {
       case 'Waiting For Acceptance':
         setActiveStep(0);
         break;
@@ -355,21 +355,20 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
               ))}
             </Stepper>
           ) : (
-            <Card sx={{p: 3}}>
-              <Stack spacing={1} direction={"row"} alignItems="center">
-              <Typography>
-                Current Status is: {" "} 
-              </Typography>
-              <Typography> <strong>{shipment.status}</strong></Typography>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={1} direction={'row'} alignItems="center">
+                <Typography>Current Status is: </Typography>
+                <Typography>
+                  {' '}
+                  <strong>{shipment.status}</strong>
+                </Typography>
               </Stack>
-             
             </Card>
           )}
-          
         </Card>
 
         <Typography variant="subtitle1" sx={{ mb: 2 }}>
-          Bought Products
+          Ordered Products
         </Typography>
         <Card sx={{ p: 3, mb: 3 }}>
           {orderedProducts.map((el) => {
@@ -404,8 +403,8 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                       <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'space-between'}>
                         <Typography variant="subtitle2">Color</Typography>
                         <Stack spacing={1} direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                          <Card sx={{ backgroundColor: el.color.color, p: 1, width: '10px', height: '10px' }} />
-                          <Typography variant="caption">({el.color.name})</Typography>
+                          <Card sx={{ backgroundColor: el?.color?.color, p: 1, width: '10px', height: '10px' }} />
+                          <Typography variant="caption">({el?.color?.name})</Typography>
                         </Stack>
                       </Stack>
                       <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
@@ -431,7 +430,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
         {givenProducts !== undefined && givenProducts.length > 0 && (
           <>
             <Typography variant="subtitle1" sx={{ mb: 2 }}>
-              Given Products
+              Given Products (Via OFFER)
             </Typography>
 
             <Card sx={{ p: 3, mb: 3 }}>
