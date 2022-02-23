@@ -17,8 +17,8 @@ export default function ResetPasswordForm() {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      new_pass: '',
+      pass_confirm: '',
     },
     validateOnChange: true,
     validateOnBlur: true,

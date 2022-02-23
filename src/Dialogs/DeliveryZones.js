@@ -115,6 +115,7 @@ const DeliveryZones = ({ open, handleClose }) => {
   const { store, isUpadtingSelfDeliveryZone } = useSelector((state) => state.store);
   const [storePincode, setStorePincode] = useState(store.pincode);
   const [pricePer100gm, setPricePer100gm] = useState(store.pricePer100gm)
+  const [pricePer5km, setPricePer5km] = useState(store.pricePer5km);
   const [value, setValue] = React.useState([0, 300]);
 
   const handleChange = (event, newValue, activeThumb, index) => {
@@ -175,6 +176,7 @@ const DeliveryZones = ({ open, handleClose }) => {
     const formValues = {
       storePincode,
       pricePer100gm,
+      pricePer5km,
       deliveryZones,
     };
 
@@ -199,7 +201,6 @@ const DeliveryZones = ({ open, handleClose }) => {
             </Button>
           </div>
         </div>
-
         <Grid className="px-4 pt-3" container spacing={3}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }} className="mb-4">
@@ -259,112 +260,36 @@ const DeliveryZones = ({ open, handleClose }) => {
 
             </Card>
             <Card sx={{ p: 3 }} className="mb-4">
-              <Typography variant="h6" className="mb-4">
-                Delivery zones
+
+            <Typography className="mb-3">
+               Delivery Price per 5km
               </Typography>
-
-              {deliveryZones.map((el, index) => (
-                <div key={el.index}>
-                 
-
-                 
-                    <Box sx={{ width: '100%', px: 2 }} className="mb-3">
-                      <Slider
-                        min={0}
-                        max={2000}
-                        getAriaLabel={() => 'Delivery Distance Range'}
-                        value={el.distance.length > 0 ? el.distance : value}
-                        onChange={(event, value, activeThumb) => {
-                          handleChange(event, value, activeThumb, el.index);
-                        }}
-                        valueLabelDisplay="auto"
-                        getAriaValueText={valuetext}
-                        marks={marks}
-                      />
-                    </Box>
-             
-
-                  
-
-                  <Box
-                    className="mb-3"
-                    sx={{
-                      display: 'grid',
-                      columnGap: 2,
-                      rowGap: 3,
-                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                    }}
-                  >
-                    <TextField
-                      name="deliveryCharge"
-                      label="Delivery Charge"
-                      fullWidth
-                      value={el.deliveryCharge}
-                      onChange={(e) => {
-                        updateDeliveryZone(e.target.value, el.index, 'deliveryCharge');
-                      }}
-                    />
-                  </Box>
-                  <FormGroup className="mb-3">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={el.differentChargeForOnlinePaidOrders}
-                          onChange={(e, value) => {
-                            updateDeliveryZone(value, el.index, 'differentChargeForOnlinePaidOrders');
-                          }}
-                          defaultChecked
-                        />
-                      }
-                      label="Offer differenct charge for online paid orders."
-                    />
-                  </FormGroup>
-                  {el.differentChargeForOnlinePaidOrders && (
-                    <Box
-                      className="mb-3"
-                      sx={{
-                        display: 'grid',
-                        columnGap: 2,
-                        rowGap: 3,
-                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                      }}
-                    >
-                      <TextField
-                        name="deliveryChargeForOnlinePaidOrders"
-                        label="Delivery Charge for online paid orders"
-                        fullWidth
-                        value={el.chargeForOnlinePaidOrders}
-                        onChange={(e) => {
-                          updateDeliveryZone(e.target.value, el.index, 'chargeForOnlinePaidOrders');
-                        }}
-                      />
-                    </Box>
-                  )}
-
-                  <div className="d-flex flex-row align-items-center justify-content-end mt-3">
-                    <Button
-                      onClick={() => {
-                        deleteDeliveryZone(el.index);
-                      }}
-                      color="error"
-                    >
-                      Remove zone
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              <div className="d-flex flex-row align-items-center justify-content-center">
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    addDeliveryZone();
+              <Box
+                sx={{
+                  display: 'grid',
+                  columnGap: 2,
+                  rowGap: 3,
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                }}
+              >
+                <TextField
+                  name="pricePer100gm"
+                  label="Price per 5km"
+                  fullWidth
+                  value={pricePer5km}
+                  onChange={(e) => {
+                    setPricePer5km(e.target.value);
                   }}
-                  color="success"
-                >
-                  Add delivery zone
-                </Button>
-              </div>
+                  InputProps={{
+                    startAdornment: <InputAdornment>
+                    <CurrencyRupeeRoundedIcon />
+                    </InputAdornment>
+                  }}
+                />
+              </Box>
+
             </Card>
+           
           </Grid>
         </Grid>
         <DialogActions>
