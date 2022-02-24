@@ -52,7 +52,10 @@ export default function AccountGeneral() {
       phone: Yup.string().required('Phone is required'),
     }),
     onSubmit: (values) => {
-      dispatch(updateStoreGeneralInfo(values, values.storeURL, file));
+
+      const formValues = {...values, category, country}
+
+      dispatch(updateStoreGeneralInfo(formValues, values.storeURL, file));
     },
   });
 
@@ -139,7 +142,7 @@ export default function AccountGeneral() {
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 fullWidth
-                label="Pincode"
+                label="Store Name"
                 variant="outlined"
                 name="storeName"
                 error={!!formik.touched.storeName && !!formik.errors.storeName}
@@ -387,7 +390,7 @@ const categoryOptions = [
   },
   {
     label: 'Paan shop',
-    image: 'http://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
+    image: 'https://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
   },
   {
     label: 'Gym & Sports equipment',

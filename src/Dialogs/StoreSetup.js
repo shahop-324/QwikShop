@@ -574,7 +574,7 @@ const categoryOptions = [
   },
   {
     label: 'Paan shop',
-    image: 'http://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
+    image: 'https://www.ugaoo.com/knowledge-center/wp-content/uploads/2017/10/shutterstock_613072169.jpg',
   },
   {
     label: 'Gym & Sports equipment',
