@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import {
   Toolbar,

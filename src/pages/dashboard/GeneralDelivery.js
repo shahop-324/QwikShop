@@ -5,7 +5,6 @@ import Tab from '@mui/material/Tab';
 // @mui
 import { Grid, Container, Typography, Box, Card, TextField, Autocomplete } from '@mui/material';
 // _mock_
-import PhoneInput from 'react-phone-number-input';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -14,16 +13,17 @@ import FormLabel from '@mui/material/FormLabel';
 import { LoadingButton } from '@mui/lab';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import { DeliveryOverview, DeliveryFeatured } from '../../sections/@dashboard/general/delivery/index';
 // sections
-import 'react-phone-number-input/style.css';
-import CustomPhoneNumber from '../../forms/PhoneNumber';
 import { addPickupPoint, fetchPickupPoints } from '../../actions';
 import GeneralPickupPoints from './GeneralPickupPoints';
 import GeneralShipments from './GeneralShipments';
+
 // ----------------------------------------------------------------------
 
 function TabPanel(props) {
@@ -76,36 +76,62 @@ export default function GeneralAnalytics() {
 
   const { user } = useSelector((state) => state.user);
 
+  const formik = useFormik({
+    initialValues: {
+      contactPersonName: '',
+      contactEmail: '',
+      pickupPointName: '',
+      state: '',
+      city: '',
+      address: '',
+      pincode: '',
+      landmark: '',
+      phone: '',
+    },
+    validateOnChange: true,
+    validateOnBlur: true,
+    validationSchema: Yup.object().shape({
+      pickupPointName: Yup.string().required('Pickup point name is required'),
+      state: Yup.string().required('State / Province is required'),
+      city: Yup.string().required('City is required'),
+      address: Yup.string().required('Address Line 1 is required'),
+      pincode: Yup.string()
+        .matches(/^[0-9]+$/, 'Must be only digits')
+        .min(6, 'Must be exactly 6 digits')
+        .max(6, 'Must be exactly 6 digits')
+        .required('Pincode is required'),
+      landmark: Yup.string().required('Landmark is required'),
+      phone: Yup.string()
+        .matches(/^[0-9]+$/, 'Must be only digits')
+        .min(10, 'Must be exactly 10 digits')
+        .max(10, 'Must be exactly 10 digits')
+        .required('Contact number is required'),
+      contactPersonName: Yup.string().required('Contact Person name is required'),
+      contactEmail: Yup.string().email('Must be a valid email address').required('Contact Email is required'),
+    }),
+    onSubmit: (values) => {
+      const formValues = {
+        addressType,
+        pickupPointName: values.pickupPointName,
+        country,
+        state: values.state,
+        city: values.city,
+        address: values.address,
+        pincode: values.pincode,
+        landmark: values.landmark,
+        phone: values.phone,
+        contactPersonName: values.contactPersonName,
+        contactEmail: values.contactEmail,
+      };
+
+      dispatch(addPickupPoint(formValues, () => {}));
+    },
+  });
+
   const [addressType, setAddressType] = useState('shop');
-  const [contactPersonName, setContactPersonName] = useState();
-  const [contactEmail, setContactEmail] = useState();
-  const [pickupPointName, setPickupPointName] = useState();
   const [country, setCountry] = useState();
-  const [state, setState] = useState();
-  const [city, setCity] = useState();
-  const [address, setAddress] = useState();
-  const [pincode, setPincode] = useState();
-  const [landmark, setLandmark] = useState();
-  const [phone, setPhone] = useState();
 
   const { themeStretch } = useSettings();
-
-  const onSubmit = () => {
-    const formValues = {
-      addressType,
-      pickupPointName,
-      country,
-      state,
-      city,
-      address,
-      pincode,
-      landmark,
-      phone,
-      contactPersonName,
-      contactEmail,
-    };
-    dispatch(addPickupPoint(formValues));
-  };
 
   return (
     <Page title="Delivery">
@@ -127,189 +153,216 @@ export default function GeneralAnalytics() {
               <div className="mt-5">
                 <Grid className="px-4 pt-3" container spacing={3}>
                   <Grid item xs={12} md={12}>
-                    <Card sx={{ p: 3 }}>
-                      <FormControl component="fieldset" className="mb-3">
-                        <FormLabel component="legend">Address type</FormLabel>
-                        <RadioGroup
-                          value={addressType}
-                          defaultValue={'shop'}
-                          row
-                          aria-label="gender"
-                          name="row-radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            value="office"
-                            control={
-                              <Radio
-                                onClick={() => {
-                                  setAddressType('office');
-                                }}
-                              />
-                            }
-                            label="Office"
-                          />
-                          <FormControlLabel
-                            value="shop"
-                            control={
-                              <Radio
-                                onClick={() => {
-                                  setAddressType('shop');
-                                }}
-                              />
-                            }
-                            label="Shop"
-                          />
-                          <FormControlLabel
-                            value="residence"
-                            control={
-                              <Radio
-                                onClick={() => {
-                                  setAddressType('residence');
-                                }}
-                              />
-                            }
-                            label="Residence"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                      <Box
-                        sx={{
-                          display: 'grid',
-                          columnGap: 2,
-                          rowGap: 3,
-                          gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                        }}
-                      >
-                        <TextField
-                          name="name"
-                          label="Pickup Point Name"
-                          fullWidth
-                          value={pickupPointName}
-                          onChange={(e) => {
-                            setPickupPointName(e.target.value);
-                          }}
-                        />
-
-                        <Autocomplete
-                          value={country}
-                          onChange={(e, value) => {
-                            setCountry(value);
-                          }}
-                          id=""
-                          fullWidth
-                          options={countries}
-                          autoHighlight
-                          getOptionLabel={(option) => option.label}
-                          renderOption={(props, option) => (
-                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                              <img
-                                loading="lazy"
-                                width="20"
-                                src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                                srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                                alt=""
-                              />
-                              {option.label} ({option.code}) +{option.phone}
-                            </Box>
-                          )}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Choose a country"
-                              inputProps={{
-                                ...params.inputProps,
-                                autoComplete: 'new-password', // disable autocomplete and autofill
-                              }}
+                    <form onSubmit={formik.handleSubmit}>
+                      <Card sx={{ p: 3 }}>
+                        <FormControl component="fieldset" className="mb-3">
+                          <FormLabel component="legend">Address type</FormLabel>
+                          <RadioGroup
+                            value={addressType}
+                            defaultValue={'shop'}
+                            row
+                            aria-label="gender"
+                            name="row-radio-buttons-group"
+                          >
+                            <FormControlLabel
+                              value="office"
+                              control={
+                                <Radio
+                                  onClick={() => {
+                                    setAddressType('office');
+                                  }}
+                                />
+                              }
+                              label="Office"
                             />
-                          )}
-                        />
-
-                        <TextField
-                          name="state"
-                          label="State/Region"
-                          fullWidth
-                          value={state}
-                          onChange={(e) => {
-                            setState(e.target.value);
+                            <FormControlLabel
+                              value="shop"
+                              control={
+                                <Radio
+                                  onClick={() => {
+                                    setAddressType('shop');
+                                  }}
+                                />
+                              }
+                              label="Shop"
+                            />
+                            <FormControlLabel
+                              value="residence"
+                              control={
+                                <Radio
+                                  onClick={() => {
+                                    setAddressType('residence');
+                                  }}
+                                />
+                              }
+                              label="Residence"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            columnGap: 2,
+                            rowGap: 3,
+                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                           }}
-                        />
-                        <TextField
-                          name="city"
-                          label="City"
-                          fullWidth
-                          value={city}
-                          onChange={(e) => {
-                            setCity(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          name="address"
-                          label="Address"
-                          fullWidth
-                          value={address}
-                          onChange={(e) => {
-                            setAddress(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          name="pincode"
-                          label="Pincode"
-                          fullWidth
-                          value={pincode}
-                          onChange={(e) => {
-                            setPincode(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          name="landmark"
-                          label="Landmark"
-                          fullWidth
-                          value={landmark}
-                          onChange={(e) => {
-                            setLandmark(e.target.value);
-                          }}
-                        />
-                        <PhoneInput
-                          name="phoneNumber"
-                          placeholder="Enter phone number"
-                          value={phone}
-                          onChange={setPhone}
-                          inputComponent={CustomPhoneNumber}
-                          defaultCountry="IN"
-                        />
-                        <TextField
-                          name="contactPersonName"
-                          label="Contact Person Name"
-                          fullWidth
-                          value={contactPersonName}
-                          onChange={(e) => {
-                            setContactPersonName(e.target.value);
-                          }}
-                        />
-                        <TextField
-                          type="email"
-                          name="contactEmail"
-                          label="Contact Email"
-                          fullWidth
-                          value={contactEmail}
-                          onChange={(e) => {
-                            setContactEmail(e.target.value);
-                          }}
-                        />
-                      </Box>
-                      <div className="d-flex flex-row align-items-center justify-content-end mt-4">
-                        <LoadingButton
-                          onClick={() => {
-                            onSubmit();
-                          }}
-                          type="submit"
-                          variant="contained"
-                          loading={false}
                         >
-                          Add pickup point
-                        </LoadingButton>
-                      </div>
-                    </Card>
+                          <TextField
+                            value={formik.values.pickupPointName}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="Pickup Point Name"
+                            variant="outlined"
+                            name="pickupPointName"
+                            error={!!formik.touched.pickupPointName && !!formik.errors.pickupPointName}
+                            helperText={formik.touched.pickupPointName && formik.errors.pickupPointName}
+                          />
+
+                          <Autocomplete
+                            required
+                            value={country}
+                            onChange={(e, value) => {
+                              setCountry(value);
+                            }}
+                            id=""
+                            fullWidth
+                            options={countries}
+                            autoHighlight
+                            getOptionLabel={(option) => option.label}
+                            renderOption={(props, option) => (
+                              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <img
+                                  loading="lazy"
+                                  width="20"
+                                  src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                  srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                  alt=""
+                                />
+                                {option.label} ({option.code}) +{option.phone}
+                              </Box>
+                            )}
+                            renderInput={(params) => (
+                              <TextField
+                                required
+                                {...params}
+                                label="Choose a country"
+                                inputProps={{
+                                  ...params.inputProps,
+                                  autoComplete: '', // disable autocomplete and autofill
+                                }}
+                              />
+                            )}
+                          />
+
+                          <TextField
+                            value={formik.values.state}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="State"
+                            variant="outlined"
+                            name="state"
+                            error={!!formik.touched.state && !!formik.errors.state}
+                            helperText={formik.touched.state && formik.errors.state}
+                          />
+
+                          <TextField
+                            value={formik.values.city}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="City"
+                            variant="outlined"
+                            name="city"
+                            error={!!formik.touched.city && !!formik.errors.city}
+                            helperText={formik.touched.city && formik.errors.city}
+                          />
+
+                          <TextField
+                            value={formik.values.address}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="Address"
+                            variant="outlined"
+                            name="address"
+                            error={!!formik.touched.address && !!formik.errors.address}
+                            helperText={formik.touched.address && formik.errors.address}
+                          />
+
+                          <TextField
+                            value={formik.values.pincode}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="Pincode"
+                            variant="outlined"
+                            name="pincode"
+                            error={!!formik.touched.pincode && !!formik.errors.pincode}
+                            helperText={formik.touched.pincode && formik.errors.pincode}
+                          />
+
+                          <TextField
+                            value={formik.values.landmark}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="Landmark"
+                            variant="outlined"
+                            name="landmark"
+                            error={!!formik.touched.landmark && !!formik.errors.landmark}
+                            helperText={formik.touched.landmark && formik.errors.landmark}
+                          />
+
+                          <TextField
+                            value={formik.values.phone}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="Phone"
+                            variant="outlined"
+                            name="phone"
+                            error={!!formik.touched.phone && !!formik.errors.phone}
+                            helperText={formik.touched.phone && formik.errors.phone}
+                          />
+
+                          <TextField
+                            value={formik.values.contactPersonName}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="Contact Person Name"
+                            variant="outlined"
+                            name="contactPersonName"
+                            error={!!formik.touched.contactPersonName && !!formik.errors.contactPersonName}
+                            helperText={formik.touched.contactPersonName && formik.errors.contactPersonName}
+                          />
+
+                          <TextField
+                            value={formik.values.contactEmail}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            fullWidth
+                            label="Contact Email"
+                            variant="outlined"
+                            name="contactEmail"
+                            error={!!formik.touched.contactEmail && !!formik.errors.contactEmail}
+                            helperText={formik.touched.contactEmail && formik.errors.contactEmail}
+                          />
+                        </Box>
+                        <div className="d-flex flex-row align-items-center justify-content-end mt-4">
+                          <LoadingButton
+                            disabled={!(formik.isValid && formik.dirty)}
+                            type="submit"
+                            variant="contained"
+                            loading={false}
+                          >
+                            Add pickup point
+                          </LoadingButton>
+                        </div>
+                      </Card>
+                    </form>
                   </Grid>
                 </Grid>
               </div>
@@ -326,10 +379,10 @@ export default function GeneralAnalytics() {
                       </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
-                     <GeneralShipments />
+                      <GeneralShipments />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                     <GeneralPickupPoints />
+                      <GeneralPickupPoints />
                     </TabPanel>
                   </Box>
                 </Grid>
