@@ -46,7 +46,7 @@ import { fetchPickupPoints, updatePickupPointStatus } from '../../actions';
 import EditPickupPoint from '../../Dialogs/PickupPoint/EditPickupPoint';
 import DeletePickupPoint from '../../Dialogs/PickupPoint/DeletePickupPoint';
 import BulkDeletePickupPoint from '../../Dialogs/PickupPoint/BulkDeletePickupPoint';
-
+import NoPickupPoint from '../../assets/lady-delivering-post.png';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -300,6 +300,16 @@ export default function GeneralPickupPoints() {
           handleExportPickupPoints={handleExportPickupPoints}
         />
 
+{!(typeof pickupPoints !== 'undefined' && pickupPoints.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoPickupPoint} alt="no shipment to process" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  There are no Pickup Points to pick your orders
+                </Typography>
+              </Stack>
+            ) : (
         <Scrollbar>
           <TableContainer sx={{ minWidth: 900 }}>
             <Table>
@@ -387,6 +397,7 @@ export default function GeneralPickupPoints() {
           </TableContainer>
         </Scrollbar>
 
+            )}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"

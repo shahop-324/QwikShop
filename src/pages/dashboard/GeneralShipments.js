@@ -38,7 +38,7 @@ import UpdateShipment from '../../Dialogs/Delivery/UpdateShipmentStatus';
 import DeliveryReceipt from '../../Dialogs/Delivery/DeliveryReceipt';
 import Print from '../../Dialogs/Delivery/Print';
 import OrderTimeline from '../../Dialogs/Order/Timeline';
-
+import NoShipment from '../../assets/male-postman.png';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -203,6 +203,17 @@ export default function GeneralShipments() {
           handleExportShipments={handleExportShipments}
         />
 
+{!(typeof shipments !== 'undefined' && shipments.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoShipment} alt="no shipment to process" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  There are no shipments to process, Market your store and earn more
+                </Typography>
+              </Stack>
+            ) : (
+
         <Scrollbar>
           <TableContainer sx={{ minWidth: 900 }}>
             <Table>
@@ -311,6 +322,8 @@ export default function GeneralShipments() {
             </Table>
           </TableContainer>
         </Scrollbar>
+
+            )}
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}

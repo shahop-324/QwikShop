@@ -2,16 +2,27 @@
 import React, { useEffect } from 'react';
 // @mui
 import Stack from '@mui/material/Stack';
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Grid, Typography, Card, IconButton } from '@mui/material';
 
 // hooks
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  FacebookShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TelegramIcon,
+  TwitterIcon,
+  WhatsappIcon,
+} from 'react-share';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 // sections
 import { AbondonedCartDetails } from '../../sections/@dashboard/general/booking';
 import { fetchAbondonedCarts } from '../../actions';
+import NoAbondonedCart from '../../assets/empty-cart.png';
 
 export default function GeneralOrders() {
   const dispatch = useDispatch();
@@ -20,7 +31,14 @@ export default function GeneralOrders() {
     dispatch(fetchAbondonedCarts());
   }, []);
 
+  const { abondonedCarts } = useSelector((state) => state.order);
+
   const { themeStretch } = useSettings();
+
+  const { store } = useSelector((state) => state.store);
+
+  const storeName = store.name;
+  const link = `qwikshop.online/${store.subName}`;
 
   return (
     <Page title="Orders List">
@@ -33,7 +51,18 @@ export default function GeneralOrders() {
           </Grid>
 
           <Grid item xs={12}>
-            <AbondonedCartDetails />
+            {!(typeof abondonedCarts !== 'undefined' && abondonedCarts.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoAbondonedCart} alt="no abondoned cart" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  There are no Abondoned carts in your store
+                </Typography>
+              </Stack>
+            ) : (
+              <AbondonedCartDetails />
+            )}
           </Grid>
         </Grid>
       </Container>

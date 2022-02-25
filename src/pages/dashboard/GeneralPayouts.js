@@ -27,6 +27,7 @@ import SearchNotFound from '../../components/SearchNotFound';
 // sections
 import { TransactionListHead, TransactionListToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchPayouts } from '../../actions';
+import NoPayout from '../../assets/suitcase-with-cash.png';
 
 // ----------------------------------------------------------------------
 
@@ -142,6 +143,17 @@ export default function GeneralPayout() {
           handleExportTransactions={handleExportTransactions}
         />
 
+{!(typeof payouts !== 'undefined' && payouts.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoPayout} alt="no payout" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  There is no payout history
+                </Typography>
+              </Stack>
+            ) : (
+
         <Scrollbar>
           <TableContainer sx={{ minWidth: 900 }}>
             <Table>
@@ -205,6 +217,8 @@ export default function GeneralPayout() {
             </Table>
           </TableContainer>
         </Scrollbar>
+
+            )}
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}

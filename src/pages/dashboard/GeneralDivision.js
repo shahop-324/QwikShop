@@ -42,7 +42,7 @@ import EditDivision from '../../Dialogs/Division/EditDivision';
 import AddDivision from '../../Dialogs/Division/AddDivision';
 import BulkDeleteDivision from '../../Dialogs/Division/BulkDeleteDivisions';
 import DivisionListToolbar from '../../sections/@dashboard/e-commerce/product-list/DivisionListToolbar';
-
+import NoDivision from '../../assets/creative-bulb.png';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -310,6 +310,17 @@ export default function GeneralDivision() {
               handleExportDivisions={handleExportDivisions}
             />
 
+{!(typeof divisions !== 'undefined' && divisions.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoDivision} alt="no products in store" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  You haven't added any Division in your store
+                </Typography>
+              </Stack>
+            ) : (
+
             <Scrollbar>
               <TableContainer sx={{ minWidth: 900 }}>
                 <Table>
@@ -455,6 +466,7 @@ export default function GeneralDivision() {
               </TableContainer>
             </Scrollbar>
 
+            )}
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"

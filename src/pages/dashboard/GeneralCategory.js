@@ -46,7 +46,7 @@ import ShareCategory from '../../Dialogs/Category/ShareCategory';
 import AlterCategoryStock from '../../Dialogs/Category/AlterCategoryStock';
 import BulkUploadCategory from '../../Dialogs/Category/BulkUploadCategory';
 import BulkDeleteCategory from '../../Dialogs/Category/BulkDeleteCategories';
-
+import NoCategories from '../../assets/tri-discs.png';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -322,6 +322,17 @@ export default function GeneralCategory() {
               handleExportCategories={handleExportCategories}
             />
 
+{!(typeof categories !== 'undefined' && categories.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoCategories} alt="no products in store" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  You haven't added any categories in your store, It helps your customer find products easily
+                </Typography>
+              </Stack>
+            ) : (
+
             <Scrollbar>
               <TableContainer sx={{ minWidth: 900 }}>
                 <Table>
@@ -453,6 +464,8 @@ export default function GeneralCategory() {
                 </Table>
               </TableContainer>
             </Scrollbar>
+
+            )}
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}

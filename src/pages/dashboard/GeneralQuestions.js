@@ -10,6 +10,7 @@ import {
   Chip,
   MenuItem,
   IconButton,
+  Card
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import InputBase from '@mui/material/InputBase';
@@ -28,7 +29,7 @@ import RemoveRedEyeRounded from '@mui/icons-material/RemoveRedEyeRounded';
 import AutoFixNormalRoundedIcon from '@mui/icons-material/AutoFixNormalRounded';
 import { fDateTime } from '../../utils/formatTime';
 import { fetchQuestions, updateQuestion } from '../../actions';
-
+import NoQuestion from '../../assets/chatting.png';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -83,6 +84,20 @@ const GeneralQuestions = () => {
         </Stack>
       </Stack>
 
+      {!(typeof questions !== 'undefined' && questions.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoQuestion} alt="no questions" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  No one has asked any questions on your products
+                </Typography>
+              </Stack>
+            ) : (
+
+
+
+
       <Stack direction="row" sx={{ px: 4 }}>
         <Box
           sx={{
@@ -105,6 +120,7 @@ const GeneralQuestions = () => {
           ))}
         </Box>
       </Stack>
+            )}
       {openDelete && <DeleteQuestion open={openDelete} handleClose={handleCloseDelete} id={id} />}
     </>
   );

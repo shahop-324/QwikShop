@@ -400,14 +400,19 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                   </Stack>
                   <Stack direction={'row'} alignItems="center" justifyContent={'center'}>
                     <Typography variant="body2">
-                      <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                        <Typography variant="subtitle2">Color</Typography>
-                        <Stack spacing={1} direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                          <Card sx={{ backgroundColor: el?.color?.color, p: 1, width: '10px', height: '10px' }} />
-                          <Typography variant="caption">({el?.color?.name})</Typography>
-                        </Stack>
-                      </Stack>
-                      <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+                      {el?.color && (
+                        <>
+                          <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'space-between'}>
+                            <Typography variant="subtitle2">Color</Typography>
+                            <Stack spacing={1} direction={'row'} alignItems="center" justifyContent={'space-between'}>
+                              <Card sx={{ backgroundColor: el?.color?.color, p: 1, width: '10px', height: '10px' }} />
+                              <Typography variant="caption">({el?.color?.name})</Typography>
+                            </Stack>
+                          </Stack>
+                          <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+                        </>
+                      )}
+
                       {el.variants.map((vr) => (
                         <>
                           <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
@@ -486,25 +491,44 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
               Shipping Address
             </Typography>
 
-            <Typography variant="caption">Name</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_name}</Typography>
+            <div>
+              <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
+                <Typography variant="caption">Name</Typography>
+                <Typography variant="subtitle2">{order?.shippingAddress?.shipping_name || '----'}</Typography>
+              </Stack>
+            </div>
 
             <Divider sx={{ my: 1 }} />
-            <Typography variant="caption">Address</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_address1}</Typography>
+            <div>
+              <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
+                <Typography variant="caption">Address</Typography>
+                <Typography variant="subtitle2">{order?.shippingAddress?.shipping_address1 || '----'}</Typography>
+              </Stack>
+            </div>
 
             <Divider sx={{ my: 1 }} />
+            <div>
+              <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
             <Typography variant="caption">Pincode</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_zip}</Typography>
+            <Typography variant="subtitle2">{order?.shippingAddress?.shipping_zip || '----'}</Typography>
+            </Stack>
+            </div>
 
             <Divider sx={{ my: 1 }} />
+            <div>
+              <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
             <Typography variant="caption">Contact Number</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_contact}</Typography>
-
+            <Typography variant="subtitle2">{order?.shippingAddress?.shipping_contact || '----'}</Typography>
+</Stack>
+</div>
             <Divider sx={{ my: 1 }} />
 
+            <div>
+              <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
             <Typography variant="caption">Landmark</Typography>
-            <Typography variant="subtitle2">{order.shippingAddress.shipping_landmark}</Typography>
+            <Typography variant="subtitle2">{order?.shippingAddress?.shipping_landmark || '----'}</Typography>
+            </Stack>
+            </div>
           </Card>
 
           <Card sx={{ p: 3 }}>
@@ -513,27 +537,27 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="caption">Subtotal</Typography>
-                <Typography variant="subtitle2">Rs.{order.charges.items_total}</Typography>
+                <Typography variant="subtitle2">Rs.{order?.charges?.items_total || '----'}</Typography>
               </Stack>
             </div>
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="caption">Shipping Fees</Typography>
-                <Typography variant="subtitle2">Rs.{order.charges.shipping_charge}</Typography>
+                <Typography variant="subtitle2">Rs.{order?.charges?.shipping_charge || '----'}</Typography>
               </Stack>
             </div>
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="caption">Discount</Typography>
-                <Typography variant="subtitle2">- Rs.{order.charges.discount}</Typography>
+                <Typography variant="subtitle2">- Rs.{order?.charges?.discount || '----'}</Typography>
               </Stack>
             </div>
 
-            {order.charges.extra_charges.map((el) => (
-              <div key={el.name}>
+            { order?.charges !== undefined && order?.charges?.extra_charges !== undefined && order?.charges?.extra_charges?.length > 0 && order?.charges?.extra_charges.map((el) => (
+              <div key={el?.name}>
                 <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
-                  <Typography variant="caption">{el.name}</Typography>
-                  <Typography variant="subtitle2">Rs.{el.amount}</Typography>
+                  <Typography variant="caption">{el?.name}</Typography>
+                  <Typography variant="subtitle2">Rs.{el?.amount || '----'}</Typography>
                 </Stack>
               </div>
             ))}
@@ -542,7 +566,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
 
             <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">{'Total'}</Typography>
-              <Typography variant="subtitle2">Rs.{order.charges.total}</Typography>
+              <Typography variant="subtitle2">Rs.{order?.charges?.total || '---'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
@@ -550,7 +574,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
               <Typography>Mode of payment</Typography>
 
-              <Chip sx={{ fontWeight: 600 }} color={'primary'} label={order.paymentMode.toUpperCase()} />
+              <Chip sx={{ fontWeight: 600 }} color={'primary'} label={order?.paymentMode ? order?.paymentMode?.toUpperCase() : '-----'} />
             </Stack>
           </Card>
         </Box>
@@ -570,21 +594,21 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                 <span style={{ marginRight: '10px' }}>Order Total</span>
                 <Typography sx={{ color: '#3116AC' }} variant="subtitle2">
                   {' '}
-                  Rs.{order.charges.total}{' '}
+                  Rs.{order?.charges?.total}{' '}
                 </Typography>
               </Typography>
               <Typography variant="caption">
                 <span style={{ marginRight: '10px' }}>Coins used</span>
                 <Typography sx={{ color: '#47A31C' }} variant="subtitle2">
                   {' '}
-                  Rs.{order.coinsUsed}{' '}
+                  Rs.{order?.coinsUsed}{' '}
                 </Typography>
               </Typography>
               <Typography variant="caption">
                 <span style={{ marginRight: '10px' }}>Remaining amount</span>{' '}
                 <Typography color="error" variant="subtitle2">
                   {' '}
-                  Rs.{order.charges.total - order.coinsUsed}{' '}
+                  Rs.{order?.charges?.total - order?.coinsUsed}{' '}
                 </Typography>
               </Typography>
             </Box>
@@ -609,12 +633,12 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" spacing={2}>
               <Stack alignItems="center" spacing={2}>
                 <Typography variant="subtitle2">Used</Typography>
-                <Typography>{order.coinsUsed}</Typography>
+                <Typography>{order?.coinsUsed}</Typography>
               </Stack>
               <Divider orientation="vertical" />
               <Stack alignItems="center" spacing={2}>
                 <Typography variant="subtitle2">Earned</Typography>
-                <Typography>{order.coinsEarned}</Typography>
+                <Typography>{order?.coinsEarned}</Typography>
               </Stack>
             </Stack>
           </Card>
@@ -670,7 +694,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
           <Card sx={{ p: 3 }}>
             <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
               <Typography variant="caption">Customer Note</Typography>
-              <Typography variant="caption">{order.note || '----'}</Typography>
+              <Typography variant="caption">{order?.note || '----'}</Typography>
             </Stack>
             <Divider sx={{ my: 2 }} />
             <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
@@ -691,7 +715,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             </Stack>
           </Card>
 
-          <Card sx={{ p: 3 }}>
+{finalArr !== undefined && finalArr.length > 0 && <Card sx={{ p: 3 }}>
             <Typography sx={{ mb: 2 }} variant="subtitle2">
               Checkout Details
             </Typography>
@@ -707,7 +731,8 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                 <Divider sx={{ my: 1 }} />
               </div>
             ))}
-          </Card>
+          </Card>}
+          
 
           <Card sx={{ p: 3 }}>
             <Typography sx={{ mb: 2 }} variant="subtitle1">
@@ -716,32 +741,32 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
 
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Name</Typography>
-              <Typography variant="subtitle2">{order.billingAddress.shipping_name}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.shipping_name || '----'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Address</Typography>
-              <Typography variant="subtitle2">{order.billingAddress.shipping_address1}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.shipping_address1 || '----'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Pincode</Typography>
-              <Typography variant="subtitle2">{order.billingAddress.shipping_zip}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.shipping_zip || '----'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Contact Number</Typography>
-              <Typography variant="subtitle2">{order.billingAddress.shipping_contact}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.shipping_contact || '----'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
 
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Landmark</Typography>
-              <Typography variant="subtitle2">{order.shippingAddress.shipping_landmark}</Typography>
+              <Typography variant="subtitle2">{order?.shippingAddress?.shipping_landmark || '----'}</Typography>
             </Stack>
           </Card>
         </Box>
@@ -763,7 +788,10 @@ const OrderReceipt = ({ open, handleClose, id }) => {
   const { orders } = useSelector((state) => state.order);
   const { reviews } = useSelector((state) => state.review);
 
-  const order = orders.find((el) => el._id === id);
+  const order = orders.find((el) => {
+    console.log(id, el._id);
+    return el._id === id;
+  });
 
   const customerReviews = reviews.filter((el) => el.customer._id === order.customer._id);
 
@@ -809,7 +837,7 @@ const OrderReceipt = ({ open, handleClose, id }) => {
                 onClick={() => {
                   dispatch(askForReview(id));
                 }}
-                disabled={order.orderStatus === 'cancelled'}
+                disabled={order.status === 'Cancelled'}
                 variant="outlined"
                 startIcon={<MessageIcon />}
                 color="success"

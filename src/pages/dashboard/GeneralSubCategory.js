@@ -46,7 +46,7 @@ import EditSubCategory from '../../Dialogs/SubCategory/EditSubCategory';
 import AddSubCategory from '../../Dialogs/AddSubCategory';
 import BulkDeleteSubCategory from '../../Dialogs/SubCategory/BulkDeleteSubCategories';
 import SubCategoryListToolbar from '../../sections/@dashboard/e-commerce/product-list/SubCategoryListToolbar';
-
+import NoSubCategories from '../../assets/tri-half-egg.png';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -311,6 +311,17 @@ export default function GeneralSubCategory() {
               handleExportSubCategories={handleExportSubCategories}
             />
 
+{!(typeof subCategories !== 'undefined' && subCategories.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoSubCategories} alt="no products in store" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  You haven't added any Sub categories in your store, It helps your customer find exact product they want
+                </Typography>
+              </Stack>
+            ) : (
+
             <Scrollbar>
               <TableContainer sx={{ minWidth: 900 }}>
                 <Table>
@@ -457,6 +468,7 @@ export default function GeneralSubCategory() {
                 </Table>
               </TableContainer>
             </Scrollbar>
+            )}
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}

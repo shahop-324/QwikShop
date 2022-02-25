@@ -356,7 +356,10 @@ export const login = (email, password) => async (dispatch, _getState) => {
 export const logout = () => async (dispatch, _getState) => {
   dispatch(authActions.SignOut());
   // dispatch(showSnackbar('success', 'Logged out successfully!'));
-  window.location.href = `/auth/login`;
+  setTimeout(() => {
+    window.location.href = `/auth/login`;
+  }, 1000);
+  
 };
 
 export const resendEmailOTP = (email) => async (dispatch, _getState) => {

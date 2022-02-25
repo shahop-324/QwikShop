@@ -134,7 +134,7 @@ export default function OrderDetails() {
                   <TableCell sx={{ minWidth: 200 }}>Order Id</TableCell>
                   <TableCell sx={{ minWidth: 160 }}>Customer</TableCell>
                   <TableCell sx={{ minWidth: 160 }}>Status</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Delivery Status</TableCell>
+                  
                   <TableCell sx={{ minWidth: 100 }}>Total</TableCell>
                   <TableCell sx={{ minWidth: 100 }}>Timestamp</TableCell>
                   <TableCell sx={{ minWidth: 100 }}>Receipt</TableCell>
@@ -159,11 +159,7 @@ export default function OrderDetails() {
                         </Label>
                       </TableCell>
 
-                      <TableCell>
-                        <Label variant={'ghost'} color={getDeliveryStatusColor(row.shipment.status)}>
-                          {/* {sentenceCase(row?.orderStatus)} */}
-                        </Label>
-                      </TableCell>
+                     
 
                       <TableCell sx={{ textTransform: 'capitalize' }}>Rs.{row?.charges?.total}</TableCell>
 

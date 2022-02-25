@@ -43,6 +43,7 @@ import EditProduct from '../../Dialogs/Product/EditProduct';
 import DeleteProduct from '../../Dialogs/Product/DeleteProduct';
 import BulkDeleteProducts from '../../Dialogs/Product/BulkDeleteProducts';
 import AlterProductStock from '../../Dialogs/Product/AlterProductStock';
+import NoProducts from '../../assets/no-results.png';
 
 // ----------------------------------------------------------------------
 
@@ -344,6 +345,17 @@ export default function EcommerceProductList() {
               handleExportProducts={handleExportProducts}
             />
 
+{!(typeof products !== 'undefined' && products.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoProducts} alt="no products in store" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  You haven't added any products to your store, Hurry up, set it up and Earn
+                </Typography>
+              </Stack>
+            ) : (
+
             <Scrollbar>
               <TableContainer sx={{ minWidth: 800 }}>
                 <Table>
@@ -356,6 +368,8 @@ export default function EcommerceProductList() {
                     onRequestSort={handleRequestSort}
                     onSelectAllClick={handleSelectAllClick}
                   />
+
+
 
                   <DragDropContext onDragEnd={handleDragEnd}>
                     <Droppable droppableId="list">
@@ -461,6 +475,7 @@ export default function EcommerceProductList() {
                       )}
                     </Droppable>
                   </DragDropContext>
+           
 
                   {isNotFound && (
                     <TableBody>
@@ -476,6 +491,7 @@ export default function EcommerceProductList() {
                 </Table>
               </TableContainer>
             </Scrollbar>
+             )}
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}

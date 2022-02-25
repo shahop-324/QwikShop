@@ -28,6 +28,7 @@ import SearchNotFound from '../../components/SearchNotFound';
 // sections
 import { TransactionListHead, TransactionListToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchTransactions } from '../../actions';
+import NoTransaction from '../../assets/payment-successful.png'
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   '& .MuiToggleButtonGroup-grouped': {
@@ -161,6 +162,19 @@ export default function GeneralTransaction() {
           handleExportTransactions={handleExportTransactions}
         />
 
+{!(typeof transactions !== 'undefined' && transactions.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoTransaction} alt="no transactions" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  There are no transactions at your store
+                </Typography>
+              </Stack>
+            ) : (
+
+
+
         <Scrollbar>
           <TableContainer sx={{ minWidth: 900 }}>
             <Table>
@@ -225,6 +239,7 @@ export default function GeneralTransaction() {
             </Table>
           </TableContainer>
         </Scrollbar>
+            )}
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}

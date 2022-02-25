@@ -38,7 +38,7 @@ export default function AccountGeneral() {
     },
     validateOnChange: true,
     validateOnBlur: true,
-    validateOnMount: true,
+    // validateOnMount: true,
     validationSchema: Yup.object().shape({
       storeName: Yup.string().required('Store Name is required'),
       state: Yup.string().required('State is required'),
@@ -52,8 +52,7 @@ export default function AccountGeneral() {
       phone: Yup.string().required('Phone is required'),
     }),
     onSubmit: (values) => {
-
-      const formValues = {...values, category, country}
+      const formValues = { ...values, category, country };
 
       dispatch(updateStoreGeneralInfo(formValues, values.storeURL, file));
     },
@@ -108,6 +107,18 @@ export default function AccountGeneral() {
                 </Typography>
               }
             />
+            <Stack sx={{ mt: 4 }} direction="row" alignItems={'center'} justifyContent="center">
+              <Button
+                onClick={() => {
+                  dispatch(updateStoreGeneralInfo({}, store.subName, file));
+                }}
+                type="button"
+                variant="contained"
+                color="primary"
+              >
+                Update Logo
+              </Button>
+            </Stack>
           </Card>
           <Card sx={{ py: 10, px: 3 }}>
             <Typography className="mb-3">
@@ -124,6 +135,18 @@ export default function AccountGeneral() {
               error={!!formik.touched.storeURL && !!formik.errors.storeURL}
               helperText={formik.touched.storeURL && formik.errors.storeURL}
             />
+            <Stack sx={{ mt: 4 }} direction="row" alignItems={'center'} justifyContent="end">
+              <Button
+                type="button"
+                onClick={() => {
+                  dispatch(updateStoreGeneralInfo({}, formik.values.storeURL, null));
+                }}
+                variant="contained"
+                color="primary"
+              >
+                Update URL
+              </Button>
+            </Stack>
           </Card>
         </Grid>
 
@@ -300,12 +323,7 @@ export default function AccountGeneral() {
           </Card>
 
           <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-            <Button
-              disabled={!formik.isValid}
-              type="submit"
-              variant="contained"
-              loading={isSubmittingStoreSetup}
-            >
+            <Button disabled={!formik.isValid} type="submit" variant="contained" loading={isSubmittingStoreSetup}>
               Save Changes
             </Button>
           </Stack>

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 // import { MarketingWelcome } from './../../sections/@dashboard/general/marketing/index';
 // @mui
-import { Grid, Container } from '@mui/material';
+import { Grid, Container, Card, Stack, Typography } from '@mui/material';
 // Icons
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 // hooks
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
+import { useSelector } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -25,11 +26,12 @@ import CreateEmailCampaign from '../../Dialogs/CreateEmailCampaign';
 import CreateGoogleAdsCampaign from '../../Dialogs/CreateGoogleAdsCampaign';
 import CreateFacebookAdsCampaign from '../../Dialogs/CreateFacebookAdsCampaign';
 import DesignEmailCampaign from '../../Dialogs/Marketing/DesignEmailCampaign';
-
+import NoMarketing from '../../assets/social-media-marketing-in-mobile-online.png';
 // ----------------------------------------------------------------------
 
 export default function GeneralBooking() {
   const { themeStretch } = useSettings();
+  const { campaigns } = useSelector((state) => state.marketing);
 
   const [openCreateSMSCampaign, setOpenCreateSMSCampaign] = useState(false);
   const [openCreateEmailCampaign, setOpenCreateEmailCampaign] = useState(false);
@@ -119,7 +121,20 @@ export default function GeneralBooking() {
            
           </Grid>
 
-          <MarketingCampaignDetails />
+          {!(typeof campaigns !== 'undefined' && campaigns.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoMarketing} alt="no reviews" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  Please create marketing campaigns very frequently and it will help you grow your business
+                </Typography>
+              </Stack>
+            ) : (
+<MarketingCampaignDetails />
+            )}
+
+          
         </Container>
       </Page>
 

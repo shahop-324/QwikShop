@@ -4,10 +4,10 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
-
 // @mui
 import {
   Grid,
+  Card,
   Container,
   Stack,
   Button,
@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
+import NoCustomer from '../../assets/business-person-enjoying-break-time.png';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -254,7 +255,18 @@ export default function GeneralCustomer() {
             </Grid>
 
             <Grid item xs={12}>
+            {!(typeof customers !== 'undefined' && customers.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoCustomer} alt="no customer" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  Oh no, you haven't got any customers, please market your store and earn more
+                </Typography>
+              </Stack>
+            ) : (
               <BookingDetails customers={customers} />
+            )}
             </Grid>
           </Grid>
         </Container>

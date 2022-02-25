@@ -43,6 +43,7 @@ import { fetchReviews, updateReview } from '../../actions';
 import Iconify from '../../components/Iconify';
 import { fDateTime } from '../../utils/formatTime';
 import MenuPopover from '../../components/MenuPopover';
+import NoReview from '../../assets/segmented-bar-graph.png'
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -81,21 +82,35 @@ const GeneralReviews = () => {
         </Stack>
       </Stack>
 
-      <Stack direction="row" sx={{ px: 4 }}>
-        <Box
-          sx={{
-            display: 'grid',
-            columnGap: 2,
-            rowGap: 3,
-            width: '100%',
-            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-          }}
-        >
-          {reviews.map((item) => (
-            <ReviewItem key={item._id} item={item} />
-          ))}
-        </Box>
-      </Stack>
+      {!(typeof reviews !== 'undefined' && reviews.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoReview} alt="no reviews" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  Your store hasn't got any reviews, sell products and ask for reviews
+                </Typography>
+              </Stack>
+            ) : (
+              <Stack direction="row" sx={{ px: 4 }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  columnGap: 2,
+                  rowGap: 3,
+                  width: '100%',
+                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                }}
+              >
+                {reviews.map((item) => (
+                  <ReviewItem key={item._id} item={item} />
+                ))}
+              </Box>
+            </Stack>
+
+            )}
+
+     
     </>
   );
 };

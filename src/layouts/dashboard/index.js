@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 // hooks
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 import useResponsive from '../../hooks/useResponsive';
 import useCollapseDrawer from '../../hooks/useCollapseDrawer';
@@ -15,7 +15,7 @@ import DashboardHeader from './header';
 import NavbarVertical from './navbar/NavbarVertical';
 import NavbarHorizontal from './navbar/NavbarHorizontal';
 
-import {fetchUserDetails, fetchStoreDetails, fetchSubnames} from '../../actions';
+import { fetchUserDetails, fetchStoreDetails, fetchSubnames } from '../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -43,14 +43,26 @@ const MainStyle = styled('main', {
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
+  const { isSignedIn, token } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
-useEffect(() => {
-  dispatch(fetchSubnames());
-  dispatch(fetchUserDetails());
-  dispatch(fetchStoreDetails());
-}, []);
+  useEffect(() => {
+
+    setTimeout(() => {
+      if (!isSignedIn && !token) {
+        window.location.href = '/auth/login';
+      }
+    }, 2000);
+
+   
+  }, [isSignedIn, token]);
+
+  useEffect(() => {
+    dispatch(fetchSubnames());
+    dispatch(fetchUserDetails());
+    dispatch(fetchStoreDetails());
+  }, []);
 
   const { collapseClick, isCollapse } = useCollapseDrawer();
 

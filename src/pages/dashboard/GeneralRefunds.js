@@ -30,7 +30,7 @@ import {
   TransactionListToolbar,
 } from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchRefunds } from '../../actions';
-
+import NoRefunds from '../../assets/coin.png';
 
 // ----------------------------------------------------------------------
 
@@ -153,6 +153,16 @@ export default function GeneralTransaction() {
         />
 
        
+{!(typeof refunds !== 'undefined' && refunds.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoRefunds} alt="no refunds" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  There are no refunds history for your store
+                </Typography>
+              </Stack>
+            ) : (
 
         <Scrollbar>
           <TableContainer sx={{ minWidth: 900 }}>
@@ -212,6 +222,8 @@ export default function GeneralTransaction() {
             </Table>
           </TableContainer>
         </Scrollbar>
+
+            )}
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}

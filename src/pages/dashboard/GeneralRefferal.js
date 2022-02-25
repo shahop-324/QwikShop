@@ -38,7 +38,7 @@ import EditReferrer from '../../Dialogs/Referral/EditReferrer';
 import DeleteReferrer from '../../Dialogs/Referral/DeleteReferrer';
 import BulkDeleteReferrers from '../../Dialogs/Referral/BulkDeleteReferrers';
 import ReferralDetails from '../../Dialogs/Referral/ReferralDetails';
-
+import NoReferral from '../../assets/business-person-working-on-customer-based-marketing.png'
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -239,6 +239,17 @@ export default function GeneralReferral() {
               handleExportReferrers={handleExportReferrers}
             />
 
+{!(typeof referrals !== 'undefined' && referrals.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoReferral} alt="no referrals" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                 Please add people as referrer and give them commission and your business will grow several times
+                </Typography>
+              </Stack>
+            ) : (
+
             <Scrollbar>
               <TableContainer sx={{ minWidth: 900 }}>
                 <Table>
@@ -352,6 +363,8 @@ export default function GeneralReferral() {
                 </Table>
               </TableContainer>
             </Scrollbar>
+
+            )}
 
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}

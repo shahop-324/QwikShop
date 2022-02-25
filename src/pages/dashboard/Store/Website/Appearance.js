@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import SettingsIcon from '@mui/icons-material/Settings';
+import LockIcon from '@mui/icons-material/Lock';
 import { updateStoreTheme } from '../../../../actions';
 import CustomiseSuperstore from '../../../../Dialogs/StoreTheme/CustomiseSuperstore';
 
@@ -38,7 +39,7 @@ const StoreAppearance = () => {
         Theme
       </Typography>
 
-      <Button
+      {/* <Button
         onClick={() => {
           handleOpen();
         }}
@@ -46,7 +47,7 @@ const StoreAppearance = () => {
         startIcon={<SettingsIcon />}
       >
         Customise
-      </Button>
+      </Button> */}
       </Stack>
 
       
@@ -75,10 +76,10 @@ const StoreAppearance = () => {
                       {el.label}
                     </Typography>
                     <Stack direction={'row'} alignItems={'center'} spacing={2}>
-                      <Button size={'small'} variant="outlined">
+                      {/* <Button size={'small'} variant="outlined">
                         Preview
-                      </Button>
-                      {store.theme === el.label ? (
+                      </Button> */}
+                      {/* {store.theme === el.label ? (
                         <Chip label="Applied" color="primary" variant="conatined" />
                         
                       ) : (
@@ -91,7 +92,10 @@ const StoreAppearance = () => {
                         >
                           Apply
                         </Button>
-                      )}
+                      )} */}
+
+<Chip color="primary" variant="outlined" icon={<LockIcon />} label="Coming in 1 week" />
+
                     </Stack>
                   </div>
                 </CardContent>

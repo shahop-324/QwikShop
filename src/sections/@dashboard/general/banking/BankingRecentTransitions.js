@@ -47,7 +47,7 @@ import Scrollbar from '../../../../components/Scrollbar';
 import MenuPopover from '../../../../components/MenuPopover';
 
 import NoOrder from '../../../../assets/shopping-basket.png';
-import { fetchProducts, fetchRecentOrder } from '../../../../actions';
+import { fetchProducts, fetchRecentOrder, fetchOrders } from '../../../../actions';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +62,7 @@ export default function BankingRecentTransitions({ link, storeName }) {
   useEffect(() => {
     dispatch(fetchRecentOrder());
     dispatch(fetchProducts());
+    dispatch(fetchOrders());
   }, []);
 
   const [id, setId] = useState('');
