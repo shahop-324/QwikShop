@@ -97,9 +97,9 @@ export default function TransactionListToolbar({ numSelected, filterName, onFilt
       )}
 
       <div className="d-flex flex-row align-items-center justify-content-end">
-        <Button variant="contained" onClick={() => {handleExportTransactions();}} startIcon={<FileDownloadRoundedIcon />}>
+        {/* <Button variant="contained" onClick={() => {handleExportTransactions();}} startIcon={<FileDownloadRoundedIcon />}>
           Export
-        </Button>
+        </Button> */}
       </div>
     </RootStyle>
   );

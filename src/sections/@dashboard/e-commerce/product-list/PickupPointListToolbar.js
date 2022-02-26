@@ -83,7 +83,7 @@ PickupPointListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
-const options = ['Add Pickup Point', 'Export to excel'];
+const options = ['Add Pickup Point'];
 
 export default function PickupPointListToolbar({
   numSelected,

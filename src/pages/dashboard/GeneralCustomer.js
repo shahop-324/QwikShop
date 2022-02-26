@@ -76,7 +76,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const options = ['Add Customer', 'Export to excel'];
+const options = ['Add Customer'];
 
 export default function GeneralCustomer() {
   const [openAddCustomer, setOpenAddCustomer] = useState(false);

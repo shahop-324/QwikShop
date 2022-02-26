@@ -84,7 +84,7 @@ ProductListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
-const options = ['Add Product', 'Export to excel'];
+const options = ['Add Product'];
 
 export default function ProductListToolbar({
   numSelected,

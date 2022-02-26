@@ -97,9 +97,9 @@ export default function ShipmentListToolbar({ numSelected, filterName, onFilterN
       )}
 
       <div className="d-flex flex-row align-items-center justify-content-end">
-        <Button variant="contained" onClick={() => {handleExportShipments();}} startIcon={<FileDownloadRoundedIcon />}>
+        {/* <Button variant="contained" onClick={() => {handleExportShipments();}} startIcon={<FileDownloadRoundedIcon />}>
           Export
-        </Button>
+        </Button> */}
       </div>
     </RootStyle>
   );
