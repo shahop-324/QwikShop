@@ -26,7 +26,7 @@ const ShareDivision = ({ open, handleClose, id }) => {
 
   const { store } = useSelector((state) => state.store);
 
-  const link = `qwikshop.online/${store.subName}/divisions/${slugify(name)}`;
+  const link = `qwikshop.online/${store.subName}/product/search/category/division?div=${name}`;
 
   return (
     <>

@@ -2,8 +2,11 @@ import React from 'react';
 import { Grid, Card, Stack, Typography, Box, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Chip from '@mui/material/Chip';
+import {useSelector, useDispatch} from 'react-redux';
 
 const AccountDomain = () => {
+
+  const {store} = useSelector((state) => state.store);
 
   const columns = [
     {
@@ -40,7 +43,7 @@ const AccountDomain = () => {
   const rows = [
     {
       id: '82882-hjuiw8292-beu7282',
-      domainName: 'https://qwikshop.online/uncle-store',
+      domainName: `https://qwikshop.online/${store.subName}`,
       status: 'LIVE',
       dateCreated: '21-01-2022',
       provider: 'QwikShop',

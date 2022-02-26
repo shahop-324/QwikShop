@@ -26,7 +26,7 @@ const ShareSubCategory = ({ open, handleClose, id }) => {
 
   const { store } = useSelector((state) => state.store);
 
-  const link = `qwikshop.online/${store.subName}/categories/${slugify(name)}`;
+  const link = `qwikshop.online/${store.subName}/product/search/category/${name}`;
 
   return (
     <>

@@ -240,7 +240,7 @@ function QuestionItem({ item, onDelete }) {
         Product
       </Typography>
 
-      <Link style={{ textDecoration: 'none' }} to={`${`//qwikshop.online/${store.subName}/${product._id}`}`}>
+      <Link style={{ textDecoration: 'none' }} to={`${`//qwikshop.online/${store.subName}/product/${product._id}`}`}>
         <Chip
           onClick={() => {}}
           sx={{ width: 'max-content' }}

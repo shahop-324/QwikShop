@@ -236,7 +236,7 @@ function ReviewItem({ item }) {
           tags.map((tag) => <Chip size="small" key={tag} label={tag} sx={{ mr: 1, mb: 1, color: 'text.secondary' }} />)}
       </Stack>
 
-      <Link style={{ textDecoration: 'none' }} to={`${`//qwikshop.online/${store.subName}/${product._id}`}`}>
+      <Link style={{ textDecoration: 'none' }} to={`${`//qwikshop.online/${store.subName}/product/${product._id}`}`}>
         <Typography color={'primary'} variant="subtitle2">
           {product.productName}
         </Typography>
