@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
@@ -21,7 +22,6 @@ import {
 // redux
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import dateFormat from 'dateformat';
 import { useDispatch, useSelector } from '../../redux/store';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -264,7 +264,7 @@ export default function GeneralDivision() {
     divisions.map((subCategory) => {
       const array = Object.entries(subCategory);
 
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
+      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
 
       const asObject = Object.fromEntries(filtered);
 
@@ -339,7 +339,7 @@ export default function GeneralDivision() {
                       {(provided) => (
                         <TableBody {...provided.droppableProps} ref={provided.innerRef}>
                           {divisions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                            const { _id, name, image, products, outOfStock, hidden, totalSales, updatedAt, subCategory } = row;
+                            const { _id, name, image, products, outOfStock, subCategory } = row;
 
                             const isItemSelected = selected.indexOf(_id) !== -1;
 
@@ -392,7 +392,7 @@ export default function GeneralDivision() {
                                           <IOSSwitch
                                             sx={{ m: 1 }}
                                             checked={!outOfStock}
-                                            onClick={(e) => {
+                                            onClick={() => {
                                               if (!outOfStock) {
                                                 handleOpenStock(_id);
                                               } else {

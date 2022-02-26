@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useRef } from 'react';
 
 import { useSelector } from 'react-redux';
 import {
@@ -22,9 +23,9 @@ import Barcode from 'react-barcode';
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const ComponentToPrint = React.forwardRef(({ id }, ref) => {
-  const { orders } = useSelector((state) => state.order);
+  
   const { products } = useSelector((state) => state.product);
-  const { discounts } = useSelector((state) => state.discount);
+ 
   const { store } = useSelector((state) => state.store);
   const { shipments } = useSelector((state) => state.shipment);
 
@@ -49,9 +50,7 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
     });
   }
 
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+ 
 
   const finalArr = store.formFields.map((el) => ({
     name: el.fieldName,

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { alpha, useTheme, styled } from '@mui/material/styles';
@@ -88,8 +89,7 @@ const options = ['Add Product'];
 
 export default function ProductListToolbar({
   numSelected,
-  filterName,
-  onFilterName,
+  
   onDeleteProducts,
   openAddProduct,
   setTerm,

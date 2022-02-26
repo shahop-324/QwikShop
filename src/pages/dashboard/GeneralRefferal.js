@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 // @mui
@@ -193,7 +194,7 @@ export default function GeneralReferral() {
     referrals.map((referral) => {
       const array = Object.entries(referral);
 
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
+      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
 
       const asObject = Object.fromEntries(filtered);
 
@@ -264,8 +265,8 @@ export default function GeneralReferral() {
                   />
 
                   <TableBody>
-                    {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                      const { _id, name, phone, email, commission } = row;
+                    {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                      const { _id, name, phone, commission } = row;
 
                       const myPurchases = purchases.filter((el) => el.ref === _id);
 

@@ -8,14 +8,10 @@ import {
   Card,
   TextField,
   Autocomplete,
-  InputAdornment,
-  Stack,
   Typography,
   Tabs,
   Tab,
 } from '@mui/material';
-
-import { styled } from '@mui/material/styles';
 
 import Switch from '@mui/material/Switch';
 
@@ -28,7 +24,6 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
 import { LoadingButton } from '@mui/lab';
-import PercentRoundedIcon from '@mui/icons-material/PercentRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 // components
@@ -74,47 +69,6 @@ function a11yProps(index) {
   };
 }
 
-const AntSwitch = styled(Switch)(({ theme }) => ({
-  width: 28,
-  height: 16,
-  padding: 0,
-  display: 'flex',
-  '&:active': {
-    '& .MuiSwitch-thumb': {
-      width: 15,
-    },
-    '& .MuiSwitch-switchBase.Mui-checked': {
-      transform: 'translateX(9px)',
-    },
-  },
-  '& .MuiSwitch-switchBase': {
-    padding: 2,
-    '&.Mui-checked': {
-      transform: 'translateX(12px)',
-      color: '#fff',
-      '& + .MuiSwitch-track': {
-        opacity: 1,
-        backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
-      },
-    },
-  },
-  '& .MuiSwitch-thumb': {
-    boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    transition: theme.transitions.create(['width'], {
-      duration: 200,
-    }),
-  },
-  '& .MuiSwitch-track': {
-    borderRadius: 16 / 2,
-    opacity: 1,
-    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
-    boxSizing: 'border-box',
-  },
-}));
-
 export default function GeneralPayment() {
   const dispatch = useDispatch();
   const { themeStretch } = useSettings();
@@ -129,8 +83,8 @@ export default function GeneralPayment() {
   const [IFSCCode, setIFSCCode] = useState(store.IFSCCode);
 
   const [enableCOD, setEnableCOD] = useState(store.enableCOD);
-  const [enablePartialCOD, setEnabledPartialCOD] = useState(store.enablePartialCOD);
-  const [partialCODPercentage, setPartialCODPercentage] = useState(store.partialCODPercentage);
+  const [enablePartialCOD, ] = useState(store.enablePartialCOD);
+  const [partialCODPercentage, ] = useState(store.partialCODPercentage);
 
   const [value, setValue] = React.useState(0);
 

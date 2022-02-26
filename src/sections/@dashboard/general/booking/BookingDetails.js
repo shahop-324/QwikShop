@@ -1,19 +1,16 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react';
-import { format } from 'date-fns';
-import { sentenceCase } from 'change-case';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SmsIcon from '@mui/icons-material/Sms';
-// @mui
-import { useTheme } from '@mui/material/styles';
+
 import {
   Box,
   Card,
   Stack,
   Table,
   Divider,
-  MenuItem,
   TableRow,
   TableBody,
   TableCell,
@@ -25,9 +22,7 @@ import {
 } from '@mui/material';
 //
 import Label from '../../../../components/Label';
-import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
-import MenuPopover from '../../../../components/MenuPopover';
 import EditCustomer from '../../../../Dialogs/Customer/EditCustomer';
 import DeleteCustomer from '../../../../Dialogs/Customer/DeleteCustomer';
 import SMSCustomer from '../../../../Dialogs/Customer/SMSCustomer';
@@ -36,10 +31,6 @@ import PreviewCustomer from '../../../../Dialogs/Customer/PreviewCustomer';
 // ----------------------------------------------------------------------
 
 export default function BookingDetails({ customers }) {
-  const theme = useTheme();
-
-  const isLight = theme.palette.mode === 'light';
-
   const [id, setId] = useState('');
 
   const [openEdit, setOpenEdit] = useState(false);
@@ -178,64 +169,3 @@ export default function BookingDetails({ customers }) {
 
 // ----------------------------------------------------------------------
 
-function MoreMenuButton() {
-  const [open, setOpen] = useState(null);
-
-  const handleOpen = (event) => {
-    setOpen(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setOpen(null);
-  };
-
-  const ICON = {
-    mr: 2,
-    width: 20,
-    height: 20,
-  };
-
-  return (
-    <>
-      <IconButton size="large" onClick={handleOpen}>
-        <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} />
-      </IconButton>
-
-      <MenuPopover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        arrow="right-top"
-        sx={{
-          mt: -0.5,
-          width: 160,
-          '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
-        }}
-      >
-        <MenuItem>
-          <Iconify icon={'eva:download-fill'} sx={{ ...ICON }} />
-          Download
-        </MenuItem>
-
-        <MenuItem>
-          <Iconify icon={'eva:printer-fill'} sx={{ ...ICON }} />
-          Print
-        </MenuItem>
-
-        <MenuItem>
-          <Iconify icon={'eva:share-fill'} sx={{ ...ICON }} />
-          Share
-        </MenuItem>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          Delete
-        </MenuItem>
-      </MenuPopover>
-    </>
-  );
-}

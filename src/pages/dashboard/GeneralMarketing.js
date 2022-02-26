@@ -13,9 +13,7 @@ import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 // sections
-import { BookingWidgetSummary, MarketingCampaignDetails } from '../../sections/@dashboard/general/booking';
-// assets
-import { BookingIllustration, CheckInIllustration, CheckOutIllustration } from '../../assets';
+import { MarketingCampaignDetails } from '../../sections/@dashboard/general/booking';
 
 // sections
 import { AnalyticsWidgetSummary } from '../../sections/@dashboard/general/analytics';
@@ -25,7 +23,6 @@ import CreateSMSCampaign from '../../Dialogs/CreateSMSCampaign';
 import CreateEmailCampaign from '../../Dialogs/CreateEmailCampaign';
 import CreateGoogleAdsCampaign from '../../Dialogs/CreateGoogleAdsCampaign';
 import CreateFacebookAdsCampaign from '../../Dialogs/CreateFacebookAdsCampaign';
-import DesignEmailCampaign from '../../Dialogs/Marketing/DesignEmailCampaign';
 import NoMarketing from '../../assets/social-media-marketing-in-mobile-online.png';
 // ----------------------------------------------------------------------
 

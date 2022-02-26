@@ -1,15 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
-import { Stack, Typography, Grid, Card, Box, InputBase, Button, IconButton } from '@mui/material';
+import { Stack, Box, InputBase, Button, IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Chip from '@mui/material/Chip';
 
 import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import dateFormat, { masks } from 'dateformat';
+import dateFormat from 'dateformat';
 import SelectPageBuilder from './Dialog/SelectPageBuilder';
 import { getStorePages } from '../../../actions';
 import QuillPageBuilder from './Dialog/QuillPageBuilder';

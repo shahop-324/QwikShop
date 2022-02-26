@@ -1,7 +1,5 @@
 // @mui
 import { Stack, Button, Typography } from '@mui/material';
-// routes
-import { PATH_DOCS } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 

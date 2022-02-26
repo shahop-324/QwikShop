@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable consistent-return */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { styled, alpha } from '@mui/material/styles';
@@ -23,14 +25,11 @@ import {
   Card,
   Grid,
   Dialog,
-  DialogTitle,
-  DialogActions,
   TextField,
   Autocomplete,
   Button,
   Divider,
   Typography,
-  Checkbox,
   ButtonGroup,
 } from '@mui/material';
 
@@ -242,13 +241,7 @@ const CreateGoogleAdsCampaign = ({ open, handleClose }) => {
   const [description, setDescription] = useState(
     'Ex. A Google Ads description is usually 90 characters and describes your business'
   );
-  const [keywords, setKeywords] = useState([]);
 
-  const [locations, setLocations] = useState([]);
-
-  const [dailyBudget, setDailyBudget] = useState(500);
-
-  const [adDuration, setAdDuration] = useState(12);
 
   const [minRange, setMinRange] = useState(1);
   const [maxRange, setMaxRange] = useState(50);

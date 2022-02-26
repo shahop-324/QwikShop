@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable prefer-destructuring */
 import { Typography, Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteProduct, deleteCheckoutField } from '../../actions';
+import { deleteProduct } from '../../actions';
 
 const DeleteCheckoutField = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();

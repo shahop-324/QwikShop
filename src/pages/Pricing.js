@@ -1,6 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Switch, Container, Typography, Stack } from '@mui/material';
+import { Box, Grid, Container, Typography, } from '@mui/material';
 
 // components
 import Page from '../components/Page';

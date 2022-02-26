@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 //
-import { dispatch } from '../store';
 
 // ----------------------------------------------------------------------
 
@@ -129,19 +128,3 @@ export function getConversations() {
 }
 
 // ----------------------------------------------------------------------
-
-export function getConversation(conversationKey) {
-  
-}
-
-// ----------------------------------------------------------------------
-
-export function markConversationAsRead(conversationId) {
- 
-}
-
-// ----------------------------------------------------------------------
-
-export function getParticipants(conversationKey) {
-  
-}

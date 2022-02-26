@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // React select
 import { useState, useEffect } from 'react';
 // @mui
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
 import { styled, alpha } from '@mui/material/styles';

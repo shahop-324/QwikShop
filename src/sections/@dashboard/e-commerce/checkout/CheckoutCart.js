@@ -11,8 +11,6 @@ import {
   increaseQuantity,
   decreaseQuantity,
 } from '../../../../redux/slices/product';
-// routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
 // components
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';

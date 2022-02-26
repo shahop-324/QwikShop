@@ -17,7 +17,7 @@ export default function VerifyCodeForm() {
 
   const { isSubmittingVerify } = useSelector((state) => state.auth);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [otp, setOtp] = useState();
 

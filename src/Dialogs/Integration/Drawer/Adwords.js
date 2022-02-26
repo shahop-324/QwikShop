@@ -1,14 +1,14 @@
+/* eslint-disable react/prop-types */
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import { IconButton, Drawer, Stack, Grid, Box, Card, Typography, TextField, Button } from '@mui/material';
+import { IconButton, Drawer, Stack, Box, Typography, TextField, Button } from '@mui/material';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Link } from 'react-router-dom';
-import { updateAdwords, updateStore } from '../../../actions';
+import { updateAdwords } from '../../../actions';
 
 const Adwords = ({ open, handleClose }) => {
   const dispatch = useDispatch();
-  const { store } = useSelector((state) => state.store);
 
   const [verificationCode, setVerificationCode] = useState();
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
@@ -275,7 +276,7 @@ export default function GeneralCategory() {
     categories.map((category) => {
       const array = Object.entries(category);
 
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
+      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
 
       const asObject = Object.fromEntries(filtered);
 
@@ -351,7 +352,7 @@ export default function GeneralCategory() {
                       {(provided) => (
                         <TableBody {...provided.droppableProps} ref={provided.innerRef}>
                           {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                            const { _id, name, image, products, outOfStock, updatedAt, hidden, totalSales } = row;
+                            const { _id, name, image, products, outOfStock, updatedAt, } = row;
 
                             const isItemSelected = selected.indexOf(_id) !== -1;
 
@@ -391,7 +392,7 @@ export default function GeneralCategory() {
                                           <IOSSwitch
                                             sx={{ m: 1 }}
                                             checked={!outOfStock}
-                                            onClick={(e) => {
+                                            onClick={() => {
                                               if (!outOfStock) {
                                                 handleOpenStock(_id);
                                               } else {

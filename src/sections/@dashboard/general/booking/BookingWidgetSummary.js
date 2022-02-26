@@ -1,7 +1,8 @@
+/* eslint-disable react/no-unused-prop-types */
 import PropTypes from 'prop-types';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Typography, Box } from '@mui/material';
+import { Card, Typography } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../../../utils/formatNumber';
 
@@ -22,7 +23,7 @@ BookingWidgetSummary.propTypes = {
   total: PropTypes.number,
 };
 
-export default function BookingWidgetSummary({ title, total, icon }) {
+export default function BookingWidgetSummary({ title, total }) {
   return (
     <RootStyle>
       <div>

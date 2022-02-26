@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-import React, { useState } from 'react';
+import React from 'react';
 import '../../index.css';
 
 // @mui
@@ -536,24 +536,15 @@ const Grocery = ({ open, handleClose }) => {
 
 
 
-  const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+
+  
 
   TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
   };
-
-  function a11yProps(index) {
-    return {
-      id: `vertical-tab-${index}`,
-      'aria-controls': `vertical-tabpanel-${index}`,
-    };
-  }
 
   return (
     <div>

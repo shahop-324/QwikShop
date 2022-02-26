@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Link, Typography, Autocomplete, InputAdornment, Popper } from '@mui/material';
-// hooks
-import useIsMountedRef from '../../../../hooks/useIsMountedRef';
+
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // components
@@ -27,13 +26,13 @@ const PopperStyle = styled((props) => <Popper placement="bottom-start" {...props
 export default function ShopProductSearch() {
   const navigate = useNavigate();
 
-  const isMountedRef = useIsMountedRef();
+  
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery] = useState('');
 
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults] = useState([]);
 
-  const handleChangeSearch = async (value) => {
+  const handleChangeSearch = async () => {
     
   };
 

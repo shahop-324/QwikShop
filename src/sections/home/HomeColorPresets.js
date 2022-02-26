@@ -1,20 +1,11 @@
-import { capitalCase } from 'change-case';
-import { m } from 'framer-motion';
 // @mui
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
   Box,
-  Stack,
-  Radio,
-  Tooltip,
   Container,
   Typography,
-  RadioGroup,
-  CardActionArea,
-  FormControlLabel,
 } from '@mui/material';
 // hooks
-import useSettings from '../../hooks/useSettings';
 // components
 import Image from '../../components/Image';
 import { MotionInView, varFade } from '../../components/animate';
@@ -29,7 +20,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomeColorPresets() {
-  const { themeColorPresets, onChangeColor, colorOption } = useSettings();
+
 
   return (
     <RootStyle>

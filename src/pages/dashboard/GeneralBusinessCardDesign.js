@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
@@ -8,11 +8,6 @@ import {
   Box,
   Card,
   Grid,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  TextField,
-  Autocomplete,
   Button,
   IconButton,
   Typography,
@@ -31,9 +26,7 @@ const CardPreview = styled.div`
   border-radius: 20px;
 `;
 
-const GeneralBusinessCardDesign = () => {
-  const [state, setState] = useState();
-  return (
+const GeneralBusinessCardDesign = () => (
     <>
       <div>
         <Grid className="px-4" container spacing={3}>
@@ -81,6 +74,5 @@ const GeneralBusinessCardDesign = () => {
       </div>
     </>
   );
-};
 
 export default GeneralBusinessCardDesign;

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import PropTypes from 'prop-types';
 // @mui
 import { Box, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
@@ -29,11 +30,11 @@ TransactionListHead.propTypes = {
 export default function TransactionListHead({
   order,
   orderBy,
-  rowCount,
+ 
   headLabel,
-  numSelected,
+  
   onRequestSort,
-  onSelectAllClick,
+  
 }) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);

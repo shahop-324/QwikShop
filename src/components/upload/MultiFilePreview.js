@@ -4,12 +4,11 @@ import isString from 'lodash/isString';
 import { m, AnimatePresence } from 'framer-motion';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { List, Stack, Button, IconButton, ListItemText, ListItem, Typography } from '@mui/material';
+import { List, IconButton, ListItemText, ListItem, } from '@mui/material';
 // utils
 import { fData } from '../../utils/formatNumber';
 //
 import Image from '../Image';
-import Video from '../Video';
 import Iconify from '../Iconify';
 import { varFade } from '../animate';
 
@@ -38,7 +37,7 @@ MultiFilePreview.propTypes = {
   onRemoveAll: PropTypes.func,
 };
 
-export default function MultiFilePreview({ showPreview = false, files, onRemove, onRemoveAll }) {
+export default function MultiFilePreview({ showPreview = false, files, onRemove }) {
   const hasFile = files.length > 0;
 
   return (

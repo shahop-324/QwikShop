@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/media-has-caption */
 import PropTypes from 'prop-types';
 // import { LazyLoadImage } from 'react-lazy-load-image-component';

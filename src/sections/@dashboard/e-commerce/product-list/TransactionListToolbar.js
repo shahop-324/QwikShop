@@ -1,8 +1,9 @@
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
-import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
 
 import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Toolbar, Typography, Button } from '@mui/material';
+import { Toolbar, Typography } from '@mui/material';
 // ----------------------------------------------------------------------
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
@@ -66,7 +67,7 @@ TransactionListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-export default function TransactionListToolbar({ numSelected, filterName, onFilterName, setTerm, handleExportTransactions }) {
+export default function TransactionListToolbar({ numSelected, setTerm }) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 

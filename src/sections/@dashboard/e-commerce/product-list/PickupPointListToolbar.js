@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { alpha, useTheme, styled } from '@mui/material/styles';
@@ -87,10 +88,9 @@ const options = ['Add Pickup Point'];
 
 export default function PickupPointListToolbar({
   numSelected,
-  filterName,
-  onFilterName,
+  
   onDeletePickupPoints,
-  openBulkImport,
+  
   openAddPickupPoint,
   setTerm,
   handleExportPickupPoints,

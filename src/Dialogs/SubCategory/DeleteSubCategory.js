@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable prefer-destructuring */
 import { Typography, Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -13,11 +14,11 @@ const DeleteSubCategory = ({ open, handleClose, id }) => {
   const category = subCategories.find((el) => el._id === id);
 
   let name;
-  let image;
+  
 
   if(category) {
     name = category.name;
-    image = category.image;
+
   }
    
   const onSubmit = () => {

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useRef } from 'react';
 import EmailEditor from 'react-email-editor';
 import { Dialog, AppBar, Toolbar, Typography, Slide, TextField, Stack } from '@mui/material';

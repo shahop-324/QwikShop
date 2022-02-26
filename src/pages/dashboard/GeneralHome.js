@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 // @mui
-import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Stack } from '@mui/material';
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
@@ -70,7 +70,7 @@ export default function GeneralApp() {
 
   const { user } = useSelector((state) => state.user);
 
-  const theme = useTheme();
+
   const { themeStretch } = useSettings();
 
   return (

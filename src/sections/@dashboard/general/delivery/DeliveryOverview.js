@@ -1,12 +1,7 @@
-import PropTypes from 'prop-types';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-
 import LocalShippingRounded from '@mui/icons-material/LocalShippingRounded';
 import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
 
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import Divider from '@mui/material/Divider';
 
 // @mui
 import { styled } from '@mui/material/styles';

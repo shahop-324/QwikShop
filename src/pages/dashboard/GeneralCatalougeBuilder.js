@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from 'react';
 
-import { IconButton, Stack, Typography, Card, CardActionArea, Box, Chip } from '@mui/material';
+import {  Typography, Card, CardActionArea, Box, Chip } from '@mui/material';
 
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grocery from '../../Dialogs/CatalougeBuilder/Grocery';
 
 const GeneralCatalougeBuilder = () => {
-  const [state, setState] = useState('');
+  
 
   const [openGrocery, setOpenGrocery] = useState(false);
 

@@ -1,7 +1,7 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, DialogTitle, IconButton, Stack, Button, DialogActions, Tooltip } from '@mui/material';
-import slugify from 'slugify';
 
 import {
   FacebookShareButton,

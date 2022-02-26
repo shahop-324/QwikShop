@@ -1,11 +1,8 @@
 /* eslint-disable react/jsx-key */
-import React, { useState } from 'react';
+import React from 'react';
 import { Stack, Typography, Card, CardActionArea, CardMedia, CardContent, Box } from '@mui/material';
 
-const GeneralAcademy = () => {
-  const [state, setState] = useState();
-
-  return (
+const GeneralAcademy = () => (
     <>
       <Stack direction="row" sx={{ px: 4, mb: 4 }}>
         {' '}
@@ -42,7 +39,6 @@ const GeneralAcademy = () => {
       </Stack>
     </>
   );
-};
 
 export default GeneralAcademy;
 

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 import {
   Box,
   Card,

@@ -65,15 +65,3 @@ export default slice.reducer;
 export function getLabels() {
   
 }
-
-// ----------------------------------------------------------------------
-
-export function getMails(params) {
- 
-}
-
-// ----------------------------------------------------------------------
-
-export function getMail(mailId) {
- 
-}

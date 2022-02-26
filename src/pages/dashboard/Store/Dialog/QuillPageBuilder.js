@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, Button, Stack, Grid, Card, Typography, TextField } from '@mui/material';
+import { Dialog, DialogTitle, Stack, Grid, Card, Typography, TextField } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import Editor from '../../../../components/editor';

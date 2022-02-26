@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
@@ -25,7 +27,6 @@ import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector
 import FilterFramesRoundedIcon from '@mui/icons-material/FilterFramesRounded';
 import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
 import AddRoadRoundedIcon from '@mui/icons-material/AddRoadRounded';
-import MopedRoundedIcon from '@mui/icons-material/MopedRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
 import { updateShipment } from '../../actions';

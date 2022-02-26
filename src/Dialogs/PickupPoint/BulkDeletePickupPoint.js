@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable prefer-destructuring */
-import { Typography, Button, Dialog, DialogActions, DialogTitle, Avatar, Stack } from '@mui/material';
+import { Typography, Button, Dialog, DialogActions, DialogTitle, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';

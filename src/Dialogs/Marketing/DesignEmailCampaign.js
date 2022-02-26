@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useRef } from 'react';
 import EmailEditor from 'react-email-editor';
-import { Dialog, AppBar, Toolbar, Typography, Slide, TextField, Stack } from '@mui/material';
+import { Dialog, AppBar, Toolbar, Typography, Slide, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
 import template from '../../design.json';
@@ -28,7 +29,7 @@ const DesignEmailCampaign = ({ open, handleClose, id }) => {
 
   const emailEditorRef = useRef(null);
 
-  const [campaignName, setCampaignName] = useState(campaign?.name);
+  const [campaignName] = useState(campaign?.name);
 
   const onLoad = () => {
     // editor instance is created

@@ -8,7 +8,6 @@ import {
   HomeHero,
   HomeMinimal,
   HomeDarkMode,
-  HomeLookingFor,
   HomeColorPresets,
   HomePricingPlans,
   HomeAdvertisement,

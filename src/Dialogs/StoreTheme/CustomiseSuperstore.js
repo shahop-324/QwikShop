@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 /* eslint-disable consistent-return */
 /* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from 'react';

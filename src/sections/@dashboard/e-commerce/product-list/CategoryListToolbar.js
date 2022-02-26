@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
@@ -88,10 +89,9 @@ const options = ['Add Category'];
 
 export default function CategoryListToolbar({
   numSelected,
-  filterName,
-  onFilterName,
+  
   onDeleteCategories,
-  openBulkImport,
+  
   openAddCategory,
   setTerm,
   handleExportCategories,

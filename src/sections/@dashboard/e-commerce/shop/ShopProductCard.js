@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import MUIStyled from 'styled-components';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
-import { paramCase } from 'change-case';
-import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 // @mui
-import { Box, Card, Link, Typography, Stack, TableCell, IconButton, Button, Tooltip } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { Box, Card, Typography, Stack, IconButton, Button, Tooltip } from '@mui/material';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -42,10 +38,6 @@ export default function ShopProductCard({ product }) {
   const { name, cover, price, colors, status, priceSale } = product;
 
   // const linkTo = `${PATH_DASHBOARD.integration.root}/product/${paramCase(name)}`;
-
-  const onIncreaseQuantity = () => {};
-
-  const onDecreaseQuantity = () => {};
 
   const [showFav, setShowFav] = useState(false);
 

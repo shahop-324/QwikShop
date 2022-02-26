@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
@@ -82,7 +83,7 @@ const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVis
 );
 
 const AddCheckoutField = ({ open, handleClose }) => {
-  const { store, isCreatingCheckoutField } = useSelector((state) => state.store);
+  const { isCreatingCheckoutField } = useSelector((state) => state.store);
   const dispatch = useDispatch();
   const [openOptions, setOpenOptions] = useState(false);
 

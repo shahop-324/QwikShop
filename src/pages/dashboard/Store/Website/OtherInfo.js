@@ -15,62 +15,13 @@ import {
   FormControlLabel,
   FormControl,
   FormLabel,
-  Switch,
-  Slider,
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CurrencyRupeeRoundedIcon from '@mui/icons-material/CurrencyRupeeRounded';
 
-import { styled } from '@mui/material/styles';
-
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateStoreOtherInfo } from '../../../../actions';
-
-function valuetext(value) {
-  return value;
-}
-
-const AntSwitch = styled(Switch)(({ theme }) => ({
-  width: 28,
-  height: 16,
-  padding: 0,
-  display: 'flex',
-  '&:active': {
-    '& .MuiSwitch-thumb': {
-      width: 15,
-    },
-    '& .MuiSwitch-switchBase.Mui-checked': {
-      transform: 'translateX(9px)',
-    },
-  },
-  '& .MuiSwitch-switchBase': {
-    padding: 2,
-    '&.Mui-checked': {
-      transform: 'translateX(12px)',
-      color: '#fff',
-      '& + .MuiSwitch-track': {
-        opacity: 1,
-        backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
-      },
-    },
-  },
-  '& .MuiSwitch-thumb': {
-    boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    transition: theme.transitions.create(['width'], {
-      duration: 200,
-    }),
-  },
-  '& .MuiSwitch-track': {
-    borderRadius: 16 / 2,
-    opacity: 1,
-    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
-    boxSizing: 'border-box',
-  },
-}));
 
 const StoreOtherInfo = () => {
   const dispatch = useDispatch();
@@ -82,14 +33,14 @@ const StoreOtherInfo = () => {
   const [shipmentTime, setShipmentTime] = useState(store.orderIsShippedIn);
   const [returnAccepted, setReturnAccepted] = useState(store.returnAccepted);
   const [replacementAccepted, setReplacementAccepted] = useState(store.replacementAccepted);
-  const [deliveryHappensWithin, setDeliveryHappensWithin] = useState(store.deliveryHappensWithin);
-  const [state, setState] = useState(store.deliveryState);
-  const [city, setCity] = useState(store.deliveryCity);
+  const [deliveryHappensWithin] = useState(store.deliveryHappensWithin);
+  const [state] = useState(store.deliveryState);
+  const [city] = useState(store.deliveryCity);
   const [replacementPeriod, setReplacementPeriod] = useState(store.replacementPeriod);
   const [returnPeriod, setReturnPeriod] = useState(store.returnPeriod);
-  const [minRange, setMinRange] = useState(store.minDeliveryDistance);
-  const [maxRange, setMaxRange] = useState(store.maxDeliveryDistance);
-  const [showShopInDeliveryZoneOnly, setShowShopInDeliveryZoneOnly] = useState(store.showShopInsideDeliveryZoneOnly);
+  const [minRange] = useState(store.minDeliveryDistance);
+  const [maxRange] = useState(store.maxDeliveryDistance);
+  const [showShopInDeliveryZoneOnly] = useState(store.showShopInsideDeliveryZoneOnly);
 
   const onSubmit = () => {
     const formValues = {

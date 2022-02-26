@@ -58,7 +58,6 @@ export default function AccountNotifications() {
 
   const {
     handleSubmit,
-    formState: { isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {

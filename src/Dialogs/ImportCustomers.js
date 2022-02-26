@@ -1,32 +1,22 @@
-import React, { useCallback, useState } from 'react';
+/* eslint-disable react/prop-types */
+import React from 'react';
 import {
-  Box,
   Card,
   Grid,
   Dialog,
-  DialogTitle,
-  DialogActions,
-  TextField,
-  Autocomplete,
   Button,
-  Chip,
-  Stack,
   Typography,
 } from '@mui/material';
 
 import * as Yup from 'yup';
-import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // @mui
-import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 // routes
-import { PATH_DASHBOARD } from '../routes/paths';
 // components
-import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../components/hook-form';
+import {  FormProvider,  RHFUploadSingleFile } from '../components/hook-form';
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -35,9 +25,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 }));
 
 const ImportCustomers = ({ open, handleClose }) => {
-  const navigate = useNavigate();
-
-  const { enqueueSnackbar } = useSnackbar();
+ 
 
   const NewBlogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
@@ -65,20 +53,19 @@ const ImportCustomers = ({ open, handleClose }) => {
   });
 
   const {
-    reset,
-    watch,
-    control,
-    setValue,
+   
+  
+   
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    
   } = methods;
 
-  const values = watch();
+  
 
   const onSubmit = async () => {};
 
-  const handleDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
+  const handleDrop = () => {
+    
   };
   return (
     <>

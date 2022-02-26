@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import sum from 'lodash/sum';
 import uniqBy from 'lodash/uniqBy';
 //
-import { dispatch } from '../store';
 
 // ----------------------------------------------------------------------
 
@@ -213,7 +212,3 @@ export function getProducts() {
 }
 
 // ----------------------------------------------------------------------
-
-export function getProduct(name) {
-
-}

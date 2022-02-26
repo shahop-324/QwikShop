@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable consistent-return */
 /* eslint-disable prefer-object-spread */
 import React, { useState, useCallback } from 'react';
 
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import {
   Dialog,
@@ -34,17 +36,10 @@ import SwipeableViews from 'react-swipeable-views';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import ReplyRoundedIcon from '@mui/icons-material/ReplyRounded';
-
-import MobileStepper from '@mui/material/MobileStepper';
-import Paper from '@mui/material/Paper';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { autoPlay } from 'react-swipeable-views-utils';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FacebookRounded from '@mui/icons-material/FacebookRounded';
-import Instagram from '@mui/icons-material/Instagram';
-import { UploadMultiFile } from '../components/upload';
 
 import { RHFUploadMultiFile, FormProvider } from '../components/hook-form';
 
@@ -209,7 +204,7 @@ function valuetext(value) {
 }
 
 const CreateFacebookAdsCampaign = ({ open, handleClose }) => {
-  const [state, setState] = useState();
+ 
 
   const [minRange, setMinRange] = useState(1);
   const [maxRange, setMaxRange] = useState(50);

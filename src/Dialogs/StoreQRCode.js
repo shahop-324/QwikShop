@@ -6,19 +6,15 @@ import styled from 'styled-components';
 
 import {
   Typography,
-  Box,
+  
   Card,
   Grid,
   Dialog,
-  DialogTitle,
-  TextField,
-  Autocomplete,
+  
   Button,
-  Divider,
-  Stack,
+ 
 } from '@mui/material';
 
-import { LoadingButton } from '@mui/lab';
 import { useSelector } from 'react-redux';
 import QwikShopLogo from '../assets/QwikShop_logo.png';
 

@@ -1,21 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
   Typography,
-  Tabs,
-  Tab,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Slide,
-  Grid,
   Card,
   Stack,
-  TextField,
 } from '@mui/material';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -49,14 +46,6 @@ TabPanel.propTypes = {
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const QwikWallet = ({ open, handleClose }) => {

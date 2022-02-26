@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
@@ -88,10 +89,9 @@ const options = ['Add Sub Category'];
 
 export default function SubCategoryListToolbar({
   numSelected,
-  filterName,
-  onFilterName,
+  
   onDeleteSubCategories,
-  openBulkImport,
+  
   openAddSubCategory,
   setTerm,
   handleExportSubCategories,

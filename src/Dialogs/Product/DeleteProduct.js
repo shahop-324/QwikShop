@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable prefer-destructuring */
 import { Typography, Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -13,11 +14,11 @@ const DeleteProduct = ({ open, handleClose, id }) => {
   const product = products.find((el) => el._id === id);
 
   let name;
-  let image;
+
 
   if(product) {
     name = product.productName;
-    image = product.images[0];
+   
   }
    
   const onSubmit = () => {

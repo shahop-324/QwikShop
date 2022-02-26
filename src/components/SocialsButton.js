@@ -14,7 +14,7 @@ SocialsButton.propTypes = {
   sx: PropTypes.object,
 };
 
-export default function SocialsButton({ initialColor = false, simple = true, links = {}, sx, ...other }) {
+export default function SocialsButton({ initialColor = false, simple = true, sx, ...other }) {
   const SOCIALS = [
     {
       name: 'FaceBook',

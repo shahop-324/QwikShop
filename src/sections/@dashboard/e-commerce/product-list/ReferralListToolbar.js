@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import React, { useRef, useState } from 'react';
 import { alpha, useTheme, styled } from '@mui/material/styles';

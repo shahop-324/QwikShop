@@ -1,28 +1,18 @@
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
-import ReactApexChart from 'react-apexcharts';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Card, Typography, Stack } from '@mui/material';
+import { Box, Card, Typography } from '@mui/material';
 // utils
-import { fNumber, fPercent } from '../../../../utils/formatNumber';
+import { fNumber } from '../../../../utils/formatNumber';
 // components
-import Iconify from '../../../../components/Iconify';
 import { BaseOptionChart } from '../../../../components/chart';
 
 // ----------------------------------------------------------------------
 
-const IconWrapperStyle = styled('div')(({ theme }) => ({
-  width: 24,
-  height: 24,
-  display: 'flex',
-  borderRadius: '50%',
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginRight: theme.spacing(1),
-  color: theme.palette.success.main,
-  backgroundColor: alpha(theme.palette.success.main, 0.16),
-}));
 
 // ----------------------------------------------------------------------
 
@@ -34,22 +24,8 @@ EcommerceWidgetSummary.propTypes = {
   total: PropTypes.number,
 };
 
-export default function EcommerceWidgetSummary({ title, percent, total, chartColor, chartData, widget }) {
-  const chartOptions = merge(BaseOptionChart(), {
-    colors: [chartColor],
-    chart: { animations: { enabled: true }, sparkline: { enabled: true } },
-    stroke: { width: 2 },
-    tooltip: {
-      x: { show: false },
-      y: {
-        formatter: (seriesName) => fNumber(seriesName),
-        title: {
-          formatter: () => '',
-        },
-      },
-      marker: { show: false },
-    },
-  });
+export default function EcommerceWidgetSummary({ title, total, chartColor, chartData, widget }) {
+
 
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>

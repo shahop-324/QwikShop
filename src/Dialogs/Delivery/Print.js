@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import React, { useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import {

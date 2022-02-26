@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import {
   Stack,
@@ -13,16 +16,12 @@ import {
   Card
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
-import { styled, alpha } from '@mui/material/styles';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { paramCase } from 'change-case';
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import PinchRoundedIcon from '@mui/icons-material/PinchRounded';
 import RemoveRedEyeRounded from '@mui/icons-material/RemoveRedEyeRounded';
@@ -31,7 +30,6 @@ import { fDateTime } from '../../utils/formatTime';
 import { fetchQuestions, updateQuestion } from '../../actions';
 import NoQuestion from '../../assets/chatting.png';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Iconify from '../../components/Iconify';
 import MenuPopover from '../../components/MenuPopover';
@@ -137,15 +135,10 @@ function QuestionItem({ item, onDelete }) {
     _id,
     foundHelpful,
     foundNotHelpful,
-    avatar,
-    name,
     customer,
     product,
     question,
-    description,
-    rating,
     createdAt,
-    tags,
     pinned,
     featured,
     hidden,

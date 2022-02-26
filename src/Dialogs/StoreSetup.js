@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/order */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
-import validator from 'validator';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
@@ -46,10 +46,6 @@ import VideoLabelIcon from '@mui/icons-material/VideoLabel';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import StoreMallDirectoryRoundedIcon from '@mui/icons-material/StoreMallDirectoryRounded';
 import Confetti from 'react-confetti';
-import { UploadAvatar } from '../components/upload';
-import { fData } from '../utils/formatNumber';
-import CustomPhoneNumber from '../forms/PhoneNumber';
-import { FormProvider } from '../components/hook-form';
 
 const Container = MUIStyled.div`
   height: 500px;

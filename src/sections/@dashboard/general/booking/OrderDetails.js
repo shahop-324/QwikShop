@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 import {
   Box,
   Card,
@@ -58,7 +57,7 @@ export default function OrderDetails() {
   };
 
   let statusColor = 'info';
-  let deliveryStatusColor = 'info';
+
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -92,34 +91,6 @@ export default function OrderDetails() {
     }
 
     return statusColor;
-  };
-
-  const getDeliveryStatusColor = (deliveryStatus) => {
-    switch (deliveryStatus) {
-      case 'Preparing for shipment':
-        deliveryStatusColor = 'info';
-        break;
-      case 'Shipped':
-        deliveryStatusColor = 'info';
-        break;
-      case 'In Transit':
-        deliveryStatusColor = 'info';
-        break;
-      case 'Out for delivery':
-        deliveryStatusColor = 'warning';
-        break;
-      case 'Delivered':
-        deliveryStatusColor = 'success';
-        break;
-      case 'Cancelled':
-        deliveryStatusColor = 'error';
-        break;
-
-      default:
-        break;
-    }
-
-    return deliveryStatusColor;
   };
 
   return (

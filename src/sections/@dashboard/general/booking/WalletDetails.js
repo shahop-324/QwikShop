@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Box,
   Card,
@@ -11,23 +10,17 @@ import {
   TableHead,
   CardHeader,
   Typography,
-  Button,
-  Chip,
   TableContainer,
 } from '@mui/material';
 //
 import { useSelector } from 'react-redux';
 import dateFormat from 'dateformat';
 import Scrollbar from '../../../../components/Scrollbar';
-import AddStaffMember from '../../../../Dialogs/AddStaffMember';
-import UpdateStaffMember from '../../../../Dialogs/Staff/updateStaff';
-import RemoveStaff from '../../../../Dialogs/Staff/removeStaff';
-import { ProductMoreMenu } from '../../e-commerce/product-list';
 
 // ----------------------------------------------------------------------
 
 export default function Walletetails() {
-  const { store } = useSelector((state) => state.store);
+
   const {transactions} = useSelector((state) => state.wallet);
 
   return (

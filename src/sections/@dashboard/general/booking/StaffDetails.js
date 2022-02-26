@@ -3,48 +3,24 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import {
   Box,
-  Card,
   Stack,
-  Table,
-  Divider,
-  TableRow,
-  TableBody,
-  TableCell,
-  TableHead,
-  CardHeader,
   Typography,
-  Button,
-  Chip,
-  TableContainer,
   Container,
-  InputAdornment
 } from '@mui/material';
 //
-import { useSelector } from 'react-redux';
-import Scrollbar from '../../../../components/Scrollbar';
 import AddStaffMember from '../../../../Dialogs/AddStaffMember';
 import UpdateStaffMember from '../../../../Dialogs/Staff/updateStaff';
 import RemoveStaff from '../../../../Dialogs/Staff/removeStaff';
-import { ProductMoreMenu } from '../../e-commerce/product-list';
 
 // hooks
 import useCountdown from '../../../../hooks/useCountdown';
 // components
-import Page from '../../../../components/Page';
-import InputStyle from '../../../../components/InputStyle';
 import SocialsButton from '../../../../components/SocialsButton';
 // assets
 import { ComingSoonIllustration } from '../../../../assets';
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  paddingTop: theme.spacing(15),
-  paddingBottom: theme.spacing(10),
-}));
 
 const CountdownStyle = styled('div')({
   display: 'flex',
@@ -65,15 +41,7 @@ const SeparatorStyle = styled(Typography)(({ theme }) => ({
 export default function StaffDetails() {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
-  const [id, setId] = useState('');
-
-  const handleOpenUpdate = () => {
-    setOpenUpdate(true);
-  };
-
-  const handleOpenRemove = () => {
-    setOpenRemove(true);
-  };
+  const [id] = useState('');
 
   const handleCloseUpdate = () => {
     setOpenUpdate(false);
@@ -83,19 +51,15 @@ export default function StaffDetails() {
     setOpenRemove(false);
   };
 
-  const { store } = useSelector((state) => state.store);
-
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const countdown = useCountdown(new Date('02/25/2022 21:30'));
+  const countdown = useCountdown(new Date('03/06/2022 21:30'));
 
   return (
     <>

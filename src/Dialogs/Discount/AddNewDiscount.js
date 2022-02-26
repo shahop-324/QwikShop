@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import '../../index.css';
 import { useFormik } from 'formik';

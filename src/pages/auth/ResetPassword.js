@@ -29,7 +29,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 export default function ResetPassword() {
   const [sent, setSent] = useState(true);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setSent(false);

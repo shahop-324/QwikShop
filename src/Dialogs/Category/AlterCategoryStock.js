@@ -1,9 +1,9 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable prefer-destructuring */
 import '../../index.css';
 import { Typography, Button, Dialog, DialogActions, DialogTitle, Card, Stack, Box } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import BlockRoundedIcon from '@mui/icons-material/BlockRounded';
 import { updateCategoryStock } from '../../actions';

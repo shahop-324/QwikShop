@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 // ----------------------------------------------------------------------
@@ -156,7 +157,7 @@ export default function GeneralCustomer() {
       const array = Object.entries(category);
 
       const filtered = array.filter(
-        ([key, value]) => key === 'name' || key === 'pincode' || key === 'phone' || key === 'email' || key === 'city'
+        ([key]) => key === 'name' || key === 'pincode' || key === 'phone' || key === 'email' || key === 'city'
       );
 
       const asObject = Object.fromEntries(filtered);

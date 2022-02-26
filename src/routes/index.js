@@ -6,7 +6,6 @@ import DashboardLayout from '../layouts/dashboard';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
-import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
 import { PATH_AFTER_LOGIN } from '../config';
@@ -168,9 +167,6 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 // Dashboard
 const GeneralHome = Loadable(lazy(() => import('../pages/dashboard/GeneralHome')));
 
-const GeneralBusinessCard = Loadable(lazy(() => import('../pages/dashboard/GeneralBusinessCardDesign')));
-const GeneralStoreBanner = Loadable(lazy(() => import('../pages/dashboard/GeneralStoreBannerDesign')));
-const GeneralWhatsAppStory = Loadable(lazy(() => import('../pages/dashboard/GeneralWhatsAppStoryDesign')));
 
 const GeneralOrders = Loadable(lazy(() => import('../pages/dashboard/GeneralOrders')));
 const GeneralDelivery = Loadable(lazy(() => import('../pages/dashboard/GeneralDelivery')));
@@ -178,7 +174,6 @@ const GeneralCustomer = Loadable(lazy(() => import('../pages/dashboard/GeneralCu
 const GeneralMarketing = Loadable(lazy(() => import('../pages/dashboard/GeneralMarketing')));
 const GeneralPayment = Loadable(lazy(() => import('../pages/dashboard/GeneralPayment')));
 const GeneralDiscount = Loadable(lazy(() => import('../pages/dashboard/GeneralDiscount')));
-const GeneralDining = Loadable(lazy(() => import('../pages/dashboard/GeneralDining')));
 const GeneralReferral = Loadable(lazy(() => import('../pages/dashboard/GeneralRefferal')));
 const GeneralQuestion = Loadable(lazy(() => import('../pages/dashboard/GeneralQuestions')));
 const GeneralManage = Loadable(lazy(() => import('../pages/dashboard/GeneralManage')));

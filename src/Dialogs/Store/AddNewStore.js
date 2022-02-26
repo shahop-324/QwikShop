@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-duplicates */
 /* eslint-disable camelcase */
 /* eslint-disable import/order */
@@ -39,9 +40,6 @@ import VideoLabelIcon from '@mui/icons-material/VideoLabel';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import StoreMallDirectoryRoundedIcon from '@mui/icons-material/StoreMallDirectoryRounded';
 import Confetti from 'react-confetti';
-import { UploadAvatar } from '../../components/upload';
-import { fData } from '../../utils/formatNumber';
-import CustomPhoneNumber from '../../forms/PhoneNumber';
 import CancelRounded from '@mui/icons-material/CancelRounded';
 
 const Container = MUIStyled.div`
@@ -174,7 +172,7 @@ const steps = ['Provide store info', 'Store created'];
 const AddNewStore = ({ open, handleClose }) => {
   const dispatch = useDispatch();
 
-  const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
+  const { isSubmittingStoreSetup } = useSelector((state) => state.store);
 
   useEffect(() => {
     dispatch(resetIsSubmittingStoreSetup());

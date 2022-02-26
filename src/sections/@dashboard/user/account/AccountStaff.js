@@ -2,20 +2,14 @@
 import React, { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Grid, Card, Box, Button, Stack, Container, Typography, InputAdornment } from '@mui/material';
-
-import { DataGrid } from '@mui/x-data-grid';
-import Chip from '@mui/material/Chip';
-import { useSelector } from 'react-redux';
+import { Box, Button, Stack, Container, Typography, InputAdornment } from '@mui/material';
 import AddStaffMember from '../../../../Dialogs/AddStaffMember';
-import { ProductMoreMenu } from '../../e-commerce/product-list';
 import UpdateStaffMember from '../../../../Dialogs/Staff/updateStaff';
 import RemoveStaff from '../../../../Dialogs/Staff/removeStaff';
 
 // hooks
 import useCountdown from '../../../../hooks/useCountdown';
 // components
-import Page from '../../../../components/Page';
 import InputStyle from '../../../../components/InputStyle';
 import SocialsButton from '../../../../components/SocialsButton';
 // assets
@@ -23,13 +17,6 @@ import { ComingSoonIllustration } from '../../../../assets';
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  paddingTop: theme.spacing(15),
-  paddingBottom: theme.spacing(10),
-}));
 
 const CountdownStyle = styled('div')({
   display: 'flex',
@@ -48,15 +35,8 @@ const SeparatorStyle = styled(Typography)(({ theme }) => ({
 const AccountStaff = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
-  const [id, setId] = useState('');
+  const [id] = useState('');
 
-  const handleOpenUpdate = () => {
-    setOpenUpdate(true);
-  };
-
-  const handleOpenRemove = () => {
-    setOpenRemove(true);
-  };
 
   const handleCloseUpdate = () => {
     setOpenUpdate(false);
@@ -66,97 +46,16 @@ const AccountStaff = () => {
     setOpenRemove(false);
   };
 
-  const { store } = useSelector((state) => state.store);
 
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  function getStaffId(params) {
-    return params.row.id;
-  }
-
-  const columns = [
-    {
-      field: 'id',
-      hide: true,
-    },
-    {
-      field: 'name',
-      headerName: 'Name',
-      width: 150,
-      editable: false,
-    },
-    {
-      field: 'mobile',
-      headerName: 'Mobile Number',
-      width: 200,
-      editable: false,
-      renderCell: (params) => <Typography variant="subtitle1">{params.value}</Typography>,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      width: 250,
-      editable: false,
-    },
-    {
-      field: 'permissions',
-      headerName: 'Permissions',
-      width: 350,
-      editable: false,
-      renderCell: (params) => (
-        <Box
-          sx={{
-            display: 'grid',
-            columnGap: 2,
-            rowGap: 3,
-            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
-          }}
-        >
-          {params.value?.map((el) => (
-            <Chip label={el?.label || el} color="primary" variant="outlined" />
-          ))}
-        </Box>
-      ),
-    },
-
-    {
-      field: 'action',
-      headerName: 'Action',
-      width: 100,
-      editable: false,
-      valueGetter: getStaffId,
-      renderCell: (params) => (
-        <ProductMoreMenu
-          onDelete={() => {
-            console.log(params.value);
-            setId(params.value);
-            handleOpenRemove();
-          }}
-          onEdit={() => {
-            setId(params.value);
-            handleOpenUpdate();
-          }}
-          productName=""
-        />
-      ),
-    },
-  ];
-
-  const rows = store.team.map((el) => ({
-    id: el.email,
-    name: el.name,
-    mobile: el.phone,
-    permissions: el.permissions,
-    email: el.email,
-  }));
+  
 
   const countdown = useCountdown(new Date('07/07/2022 21:30'));
 

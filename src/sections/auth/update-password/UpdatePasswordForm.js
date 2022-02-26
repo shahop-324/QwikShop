@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import * as Yup from 'yup';
 // @mui
@@ -37,7 +38,7 @@ export default function ResetPasswordForm() {
     },
   });
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const dispatch = useDispatch();
 

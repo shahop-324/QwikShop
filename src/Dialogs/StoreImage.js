@@ -52,9 +52,9 @@ const StoreImage = ({ open, handleClose, handleOpenStoreCreated }) => {
     resolver: yupResolver(NewUserSchema),
   });
 
-  const { setValue, handleSubmit } = methods;
+  const { handleSubmit } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     const formValues = {
       image,
     };

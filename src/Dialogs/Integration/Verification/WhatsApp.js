@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -8,9 +9,7 @@ import {
   DialogContentText,
   Button,
   TextField,
-  Stack,
-  Grid,
-  Card,
+ 
   Slide,
   Box,
 } from '@mui/material';

@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 // @mui
-import { styled } from '@mui/material/styles';
 import {
   Box,
   Card,
@@ -11,13 +11,12 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  IconButton,
+  
   Stack,
   Chip,
-  ToggleButtonGroup,
+  
 } from '@mui/material';
 // redux
-import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
 import dateFormat from 'dateformat';
 import { useDispatch, useSelector } from '../../redux/store';
 // hooks
@@ -108,7 +107,7 @@ export default function GeneralTransaction() {
     refunds.map((transaction) => {
       const array = Object.entries(transaction);
 
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
+      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
 
       const asObject = Object.fromEntries(filtered);
 
@@ -178,8 +177,8 @@ export default function GeneralTransaction() {
               />
 
               <TableBody>
-                {refunds.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                  const { _id, name, image, products, outOfStock, hidden, totalSales } = row;
+                {refunds.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  const { _id } = row;
 
                   const isItemSelected = selected.indexOf(_id) !== -1;
 

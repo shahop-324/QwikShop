@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { Box, Typography, IconButton, Stack, Link, Button } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { RHFSelect, FormProvider } from '../../components/hook-form';
 import { ColorSinglePicker } from '../../components/color-utils';

@@ -33,7 +33,7 @@ PricingPlanCard.propTypes = {
   card: PropTypes.object,
 };
 
-export default function PricingPlanCard({ card, index, isHome }) {
+export default function PricingPlanCard({ card, index }) {
   const { cycle, subscription, img, icon, price, caption, lists, labelAction, plan_id } = card;
   const dispatch = useDispatch();
 

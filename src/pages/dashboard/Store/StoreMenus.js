@@ -1,20 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable consistent-return */
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Grid,
   Stack,
   Card,
   Typography,
   TextField,
   Autocomplete,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
   Button,
-  FormLabel,
-  Chip,
-  Divider,
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -127,8 +121,8 @@ const StoreMenus = () => {
   const [page, setPage] = useState();
   const [itemName, setItemName] = useState();
 
-  const [level, setLevel] = useState("One");
-  const [parent, setParent] = useState();
+  const [level] = useState("One");
+  const [parent] = useState();
 
   const { products } = useSelector((state) => state.product);
   const { categories } = useSelector((state) => state.category);
@@ -170,19 +164,7 @@ const StoreMenus = () => {
     dispatch(createMenuItem({ level, parent, menuType, itemName, product, category, subCategory, division, page }));
   };
 
-  const levelOneParentOptions = menus
-    .filter((el) => el.level === 'One')
-    .map((el) => ({
-      label: el.itemName,
-      value: el._id,
-    }));
-
-  const levelTwoParentOptions = menus
-    .filter((el) => el.level === 'Two')
-    .map((el) => ({
-      label: el.itemName,
-      value: el._id,
-    }));
+ 
 
   const tree = menus
     .filter((el) => el.level === 'One')

@@ -1,12 +1,10 @@
+/* eslint-disable react/prop-types */
 import CancelRounded from '@mui/icons-material/CancelRounded';
-import dateFormat, { masks } from 'dateformat';
-import { Typography, Drawer, IconButton, Stack, Box, Card, Divider, Button, Chip } from '@mui/material';
+import { Typography, Drawer, IconButton, Stack, Box, Card, Divider, Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import Coin from '../../assets/coin.png';
-import Label from '../../components/Label';
 import AddCoins from './AddCoins';
 
 const PreviewCustomer = ({ open, handleClose, id }) => {

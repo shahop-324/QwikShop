@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
@@ -9,7 +8,6 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import StoreMallDirectoryRoundedIcon from '@mui/icons-material/StoreMallDirectoryRounded';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
-import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';

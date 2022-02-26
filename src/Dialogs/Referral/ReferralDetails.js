@@ -1,23 +1,23 @@
+/* eslint-disable react/prop-types */
 import {
   Box,
   Card,
   Table,
   TableRow,
-  Checkbox,
   TableBody,
   TableCell,
   Container,
   Typography,
   TableContainer,
   TablePagination,
-  IconButton,
+
   Stack,
-  Tooltip,
+  
   Button,
   Dialog,
   DialogTitle,
 } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Chip from '@mui/material/Chip';
 import dateFormat from 'dateformat';
 import { useSelector, useDispatch } from 'react-redux';
@@ -45,21 +45,12 @@ const ReferralDetails = ({ open, handleClose, id }) => {
 
   const myPurchases = purchases.filter((el) => el.ref === id);
 
-  const earnings = [
-    {
-      _id: '826uhs=-202oi2hgwgy72892',
-      orderRef: '#AS2761',
-      timestamp: Date.now(),
-      orderAmount: 2355,
-      amount: 245,
-      status: 'Not paid',
-    },
-  ];
+ 
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
-  const [filterName, setFilterName] = useState('');
+  
+  const [filterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState('createdAt');
 
@@ -69,38 +60,15 @@ const ReferralDetails = ({ open, handleClose, id }) => {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (checked) => {
-    if (checked) {
-      const selected = myPurchases.map((n) => n._id);
-      setSelected(selected);
-    } else {
-      setSelected([]);
-    }
-  };
 
-  const handleClick = (id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
+
+
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleFilterByName = (filterName) => {
-    setFilterName(filterName);
-  };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - myPurchases.length) : 0;
 
@@ -133,12 +101,12 @@ const ReferralDetails = ({ open, handleClose, id }) => {
                   />
 
                   <TableBody>
-                    {myPurchases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                    {myPurchases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                       const {
                         _id,
                         order,
                         paid,
-                        customer,
+                        
                         commissionPercent,
                         commissionAmount,
                         timestamp,

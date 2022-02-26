@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { Card, Grid, TextField, Dialog, DialogTitle, Button, Stack, Autocomplete, Box } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';

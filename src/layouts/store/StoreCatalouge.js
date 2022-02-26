@@ -1,15 +1,12 @@
 /* eslint-disable react/jsx-key */
-import React, { useState } from 'react';
+import React from 'react';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { IconButton, Stack, Typography, Card, CardActionArea, Box, Chip } from '@mui/material';
 
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 
-const StoreCatalouge = () => {
-  const [state, setState] = useState('');
-
-  return (
+const StoreCatalouge = () => (
     <div className="container">
       <Stack direction="row" spacing={4} alignItems={'center'} className="my-4">
         <IconButton>
@@ -49,7 +46,6 @@ const StoreCatalouge = () => {
       </Box>
     </div>
   );
-};
 
 export default StoreCatalouge;
 

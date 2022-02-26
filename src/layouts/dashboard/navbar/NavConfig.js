@@ -9,8 +9,6 @@ import ExtensionRoundedIcon from '@mui/icons-material/ExtensionRounded';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
-import DinnerDiningRoundedIcon from '@mui/icons-material/DinnerDiningRounded';
-import ColorLensIcon from '@mui/icons-material/ColorLens';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+import React from 'react';
 import {
   Dialog,
   DialogActions,
@@ -16,7 +17,6 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {useSelector} from 'react-redux'
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -55,7 +55,6 @@ function a11yProps(index) {
 
 const GoogleAnalyticsInfo = ({ open, handleClose }) => {
 
-  const {store} = useSelector((state) => state.store);
 
   const [value, setValue] = React.useState(0);
 

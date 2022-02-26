@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable consistent-return */
 import React, { useState } from 'react';
 import {
   Grid,
@@ -6,13 +8,6 @@ import {
   Typography,
   Box,
   Button,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  FormLabel,
-  Switch,
-  MenuIte,
   IconButton,
   MenuItem,
   Divider,
@@ -20,7 +15,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import EventRoundedIcon from '@mui/icons-material/EventRounded';
@@ -29,63 +24,13 @@ import TextFormatRoundedIcon from '@mui/icons-material/TextFormatRounded';
 import PhotoRoundedIcon from '@mui/icons-material/PhotoRounded';
 import ArrowDropDownCircleRoundedIcon from '@mui/icons-material/ArrowDropDownCircleRounded';
 
-import { styled } from '@mui/material/styles';
 import EditRounded from '@mui/icons-material/EditRounded';
-import { toggleGuestCheckout } from '../../../../actions';
 
 import Iconify from '../../../../components/Iconify';
 import MenuPopover from '../../../../components/MenuPopover';
 import AddCheckoutField from '../../../../Dialogs/AddCheckoutField';
 import EditCheckoutField from '../../../../Dialogs/CheckoutField.js/EditCheckoutField';
 import DeleteCheckoutField from '../../../../Dialogs/CheckoutField.js/DeleteCheckoutField';
-
-const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
-  ({ theme }) => ({
-    width: 42,
-    height: 26,
-    padding: 0,
-    '& .MuiSwitch-switchBase': {
-      padding: 0,
-      margin: 2,
-      transitionDuration: '300ms',
-      '&.Mui-checked': {
-        transform: 'translateX(16px)',
-        color: '#fff',
-        '& + .MuiSwitch-track': {
-          backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
-          opacity: 1,
-          border: 0,
-        },
-        '&.Mui-disabled + .MuiSwitch-track': {
-          opacity: 0.5,
-        },
-      },
-      '&.Mui-focusVisible .MuiSwitch-thumb': {
-        color: '#33cf4d',
-        border: '6px solid #fff',
-      },
-      '&.Mui-disabled .MuiSwitch-thumb': {
-        color: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
-      },
-      '&.Mui-disabled + .MuiSwitch-track': {
-        opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
-      },
-    },
-    '& .MuiSwitch-thumb': {
-      boxSizing: 'border-box',
-      width: 22,
-      height: 22,
-    },
-    '& .MuiSwitch-track': {
-      borderRadius: 26 / 2,
-      backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
-      opacity: 1,
-      transition: theme.transitions.create(['background-color'], {
-        duration: 500,
-      }),
-    },
-  })
-);
 
 const AccountCheckout = () => {
   const [openEdit, setOpenEdit] = useState(false);
@@ -107,7 +52,6 @@ const AccountCheckout = () => {
   const handleCloseDelete = () => {
     setOpenDelete(false);
   };
-  const dispatch = useDispatch();
   const { store } = useSelector((state) => state.store);
 
   console.log(store.formFields);
@@ -128,26 +72,7 @@ const AccountCheckout = () => {
     <>
       <Grid className="px-4 pt-3" container spacing={3}>
         <Grid item xs={12} md={12}>
-          {/* <Card sx={{ p: 3, position: 'relative' }}>
-            <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-              <Stack direction={'column'} spacing={1}>
-                <Typography variant="subtitle1">Guest Checkout</Typography>
-                <Typography variant="caption">
-                  Customers will be able to place orders without verifying their mobile number.
-                </Typography>
-              </Stack>
-              <FormControlLabel
-                control={
-                  <IOSSwitch
-                    checked={store.guestCheckout}
-                    onChange={(e, value) => dispatch(toggleGuestCheckout(value))}
-                    sx={{ m: 1 }}
-                  />
-                }
-                label={store.guestCheckout ? 'Enabled' : 'Disabled'}
-              />
-            </Stack>
-          </Card> */}
+         {/*  */}
         </Grid>
       </Grid>
       <Stack direction="column" spacing={2}>

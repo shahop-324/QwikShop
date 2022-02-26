@@ -1,31 +1,16 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from 'react';
-import Popover from '@mui/material/Popover';
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Avatar, Box, Link, Typography, Button, Stack } from '@mui/material';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 // routes
-import { blue } from '@mui/material/colors';
-import StorefrontIcon from '@mui/icons-material/Storefront';
 // components
 
-import Divider from '@mui/material/Divider';
-import Paper from '@mui/material/Paper';
-import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ContentCut from '@mui/icons-material/ContentCut';
-import ContentCopy from '@mui/icons-material/ContentCopy';
-import ContentPaste from '@mui/icons-material/ContentPaste';
-import Cloud from '@mui/icons-material/Cloud';
 import { useSelector, useDispatch } from 'react-redux';
 import MenuPopover from '../../../components/MenuPopover';
-import MyAvatar from '../../../components/MyAvatar';
-import { PATH_DASHBOARD } from '../../../routes/paths';
 import AddNewStore from '../../../Dialogs/Store/AddNewStore';
 import {switchStore} from '../../../actions';
 

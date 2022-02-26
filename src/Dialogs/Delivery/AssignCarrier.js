@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
 import {
   Dialog,
   Card,
-  Box,
-  Grid,
   Stack,
   Typography,
   Button,
-  IconButton,
   DialogContent,
   DialogActions,
   DialogTitle,
@@ -16,13 +14,11 @@ import {
   RadioGroup,
   FormControl,
   FormControlLabel,
-  FormLabel,
-  Chip,
   Autocomplete,
   TextField,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { assignSelfShipping, showSnackbar, updateShipment } from '../../actions';
+import { showSnackbar, updateShipment } from '../../actions';
 import ConfirmCarrier from './ConfirmCarrier';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -33,9 +29,6 @@ const AssignCarrier = ({ open, handleClose, id }) => {
   const [carrier, setCarrier] = useState('shiprocket');
 
   const { pickupPoints } = useSelector((state) => state.delivery);
-  const { shipments } = useSelector((state) => state.shipment);
-
-  const shipment = shipments.find((el) => el._id === id);
 
   const [openConfirmation, setOpenConfirmation] = useState(false);
 

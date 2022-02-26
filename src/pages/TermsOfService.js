@@ -1,12 +1,10 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Switch, Container, Typography, Stack } from '@mui/material';
-// _mock_
-import { _pricingPlans } from '../_mock';
+import {  Grid,  Container, Typography } from '@mui/material';
+
 // components
 import Page from '../components/Page';
-// sections
-import { PricingPlanCard } from '../sections/pricing';
+
 
 // ----------------------------------------------------------------------
 

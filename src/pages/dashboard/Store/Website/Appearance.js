@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { Stack, Button, Typography, Card, Box, CardActionArea, IconButton, Chip } from '@mui/material';
+import { Stack, Button, Typography, Card, Box, CardActionArea, Chip } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import SettingsIcon from '@mui/icons-material/Settings';
 import LockIcon from '@mui/icons-material/Lock';
-import { updateStoreTheme } from '../../../../actions';
 import CustomiseSuperstore from '../../../../Dialogs/StoreTheme/CustomiseSuperstore';
 
 const StoreAppearance = () => {
   const { store } = useSelector((state) => state.store);
-  const dispatch = useDispatch();
+  
 
   const [superstore, setSuperstore] = useState(false);
 
@@ -20,9 +18,7 @@ const StoreAppearance = () => {
     setSuperstore(false);
   };
 
-  const handleOpen = () => {
-    setSuperstore(true);
-  };
+
 
   return (
     <div>

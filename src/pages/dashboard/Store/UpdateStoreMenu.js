@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable consistent-return */
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
 import {
   Box,
-  Grid,
+  
   Stack,
-  Card,
-  Typography,
+ 
   TextField,
   Autocomplete,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
+ 
   Button,
-  FormLabel,
-  Chip,
+  
   Divider,
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,8 +18,7 @@ import { updateMenuItem, deleteMenuItem } from '../../../actions';
 
 const UpdateStoreMenu = ({
   _id,
-  levelA,
-  parentA,
+  
   menuTypeA,
   itemNameA,
   productA,
@@ -42,14 +38,13 @@ const UpdateStoreMenu = ({
   const [itemName, setItemName] = useState(itemNameA);
 
   
-  const [parent, setParent] = useState();
+  const [parent] = useState();
 
   const { products } = useSelector((state) => state.product);
   const { categories } = useSelector((state) => state.category);
   const { subCategories } = useSelector((state) => state.subCategory);
   const { divisions } = useSelector((state) => state.division);
   const { pages } = useSelector((state) => state.page);
-  const { menus } = useSelector((state) => state.menu);
 
   const productOptions = products.map((el) => ({
     label: el.productName,
@@ -79,20 +74,6 @@ const UpdateStoreMenu = ({
     label: el.name,
     value: el._id,
   }));
-
-  const levelOneParentOptions = menus
-    .filter((el) => el.level === 'One')
-    .map((el) => ({
-      label: el.itemName,
-      value: el._id,
-    }));
-
-  const levelTwoParentOptions = menus
-    .filter((el) => el.level === 'Two')
-    .map((el) => ({
-      label: el.itemName,
-      value: el._id,
-    }));
 
   const onUpdate = () => {
     dispatch(

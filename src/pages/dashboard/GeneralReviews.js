@@ -1,16 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable react/jsx-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useCallback } from 'react';
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import {
   Typography,
   Stack,
   Box,
   Card,
-  Grid,
+  
   Avatar,
   Button,
   Rating,
@@ -24,7 +25,6 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import ImageViewer from 'react-simple-image-viewer';
 import { Link } from 'react-router-dom';
 
 import NotInterestedRoundedIcon from '@mui/icons-material/NotInterestedRounded';
@@ -164,11 +164,6 @@ function ReviewItem({ item }) {
     setIsViewerOpen(true);
   }, []);
 
-  const closeImageViewer = () => {
-    setCurrentImage(0);
-    setIsViewerOpen(false);
-  };
-
   const onAddToFeatured = () => {
     dispatch(updateReview({ featured: true }, _id, () => {}));
   };
@@ -188,11 +183,6 @@ function ReviewItem({ item }) {
     dispatch(updateReview({ hidden: false }, _id, () => {}));
   };
 
-  const ICON = {
-    mr: 2,
-    width: 20,
-    height: 20,
-  };
 
   return (
     <Stack spacing={2} sx={{ minHeight: 402, width: '100%', position: 'relative', p: 3 }}>

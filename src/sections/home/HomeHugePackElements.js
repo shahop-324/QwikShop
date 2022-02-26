@@ -3,7 +3,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, Grid, Button, Container, Typography } from '@mui/material';
 // routes
-import { PATH_PAGE } from '../../routes/paths';
 // components
 import Image from '../../components/Image';
 import { MotionInView, varFade } from '../../components/animate';

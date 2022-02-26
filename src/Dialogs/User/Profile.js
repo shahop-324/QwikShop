@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -107,6 +108,7 @@ const Profile = ({ open, handleClose }) => {
   useEffect(() => {
     dispatch(resetIsUpdatingUser());
     dispatch(resetIsUpdatingPassword());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -132,7 +134,7 @@ const Profile = ({ open, handleClose }) => {
             <TabPanel value={value} index={0}>
               {/* Profile Form => Name, Email, Phone, Image */}
               <Formik initialValues={initialValues} validationSchema={user_profile_schema} onSubmit={handleFormSubmit}>
-                {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
+                {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
                   <form onSubmit={handleSubmit}>
                     <Grid className="pt-3" container spacing={3}>
                       <Grid item xs={12} md={12}>

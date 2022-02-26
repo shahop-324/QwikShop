@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import {
@@ -5,14 +7,11 @@ import {
   Typography,
   Stack,
   Switch,
-  FormControl,
   Divider,
-  IconButton,
-  Grid,
   FormControlLabel,
   Chip,
 } from '@mui/material';
-import dateFormat, { masks } from 'dateformat';
+import dateFormat from 'dateformat';
 import { useDispatch } from 'react-redux';
 import { updateDiscount } from '../actions';
 import { ProductMoreMenu } from '../sections/@dashboard/e-commerce/product-list';

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import React from 'react';
 import styled from 'styled-components';
 
 import { useTimer } from 'react-timer-hook';
 
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-import { Box, Typography, IconButton, Stack, Link, Button, Divider } from '@mui/material';
+import { Box, Typography, IconButton, Stack, Button, Divider } from '@mui/material';
 
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
@@ -12,14 +13,14 @@ const Card = styled.div`
   border: 1px solid #54d62c5e;
   border-radius: 10px;
   padding: 12px;
-  minheight: 150px;
+  min-height: 150px;
 `;
 
 const time = new Date();
 time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
 
 const FirstTimeOfferCard = ({ expiryTimestamp }) => {
-  const { seconds, minutes, hours, days, isRunning, start, pause, resume, restart } = useTimer({
+  const { seconds, minutes, hours, days,} = useTimer({
     expiryTimestamp,
     onExpire: () => console.warn('onExpire called'),
   });
@@ -56,10 +57,7 @@ const FirstTimeOfferCard = ({ expiryTimestamp }) => {
   );
 };
 
-const StoreOffers = () => {
-  const [state, setState] = useState();
-
-  return (
+const StoreOffers = () => (
     <div className="container mt-5">
       <div className="mb-4 d-flex flex-row align-items-center">
         <IconButton>
@@ -88,7 +86,6 @@ const StoreOffers = () => {
       </Box>
     </div>
   );
-};
 
 export default StoreOffers;
 

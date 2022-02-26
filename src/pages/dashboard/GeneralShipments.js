@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 // @mui
-import { styled } from '@mui/material/styles';
 import {
   Box,
   Card,
@@ -13,9 +13,6 @@ import {
   TablePagination,
   IconButton,
   Stack,
-  ToggleButtonGroup,
-  ToggleButton,
-  Paper,
   Button,
 } from '@mui/material';
 import TimelineIcon from '@mui/icons-material/Timeline';
@@ -32,10 +29,8 @@ import SearchNotFound from '../../components/SearchNotFound';
 // sections
 import { ShipmentListHead, ShipmentListToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchShipments } from '../../actions';
-import EditShipment from '../../Dialogs/Shipment/EditShipment';
 import AssignCarrier from '../../Dialogs/Delivery/AssignCarrier';
 import UpdateShipment from '../../Dialogs/Delivery/UpdateShipmentStatus';
-import DeliveryReceipt from '../../Dialogs/Delivery/DeliveryReceipt';
 import Print from '../../Dialogs/Delivery/Print';
 import OrderTimeline from '../../Dialogs/Order/Timeline';
 import NoShipment from '../../assets/male-postman.png';
@@ -72,7 +67,6 @@ export default function GeneralShipments() {
   const [openPrint, setOpenPrint] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openAssign, setOpenAssign] = useState(false);
-  const [openReceipt, setOpenReceipt] = useState(false);
 
   const [shipmentId, setShipmentId] = useState();
   const [scans, setScans] = useState();
@@ -161,7 +155,7 @@ export default function GeneralShipments() {
     shipments.map((shipment) => {
       const array = Object.entries(shipment);
 
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
+      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
 
       const asObject = Object.fromEntries(filtered);
 
@@ -228,7 +222,7 @@ export default function GeneralShipments() {
               />
 
               <TableBody>
-                {shipments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                {shipments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                   const {
                     _id,
                     orderRef,

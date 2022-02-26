@@ -1,21 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // React select
 import React, { useEffect } from 'react';
 // @mui
 import Stack from '@mui/material/Stack';
-import { Container, Grid, Typography, Card, IconButton } from '@mui/material';
+import { Container, Grid, Typography, Card } from '@mui/material';
 
 // hooks
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  FacebookShareButton,
-  TelegramShareButton,
-  TwitterShareButton,
-  WhatsappShareButton,
-  FacebookIcon,
-  TelegramIcon,
-  TwitterIcon,
-  WhatsappIcon,
-} from 'react-share';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -34,11 +25,6 @@ export default function GeneralOrders() {
   const { abondonedCarts } = useSelector((state) => state.order);
 
   const { themeStretch } = useSettings();
-
-  const { store } = useSelector((state) => state.store);
-
-  const storeName = store.name;
-  const link = `qwikshop.online/${store.subName}`;
 
   return (
     <Page title="Orders List">

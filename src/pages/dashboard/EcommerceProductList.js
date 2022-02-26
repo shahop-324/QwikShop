@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
@@ -144,9 +146,7 @@ export default function EcommerceProductList() {
     setOpenBulkImport(true);
   };
 
-  const handleCloseBulkImport = () => {
-    setOpenBulkImport(false);
-  };
+
 
   const handleCloseAddProduct = () => {
     setOpenAddproduct(false);
@@ -240,16 +240,6 @@ export default function EcommerceProductList() {
 
   const handleFilterByName = (filterName) => {
     setFilterName(filterName);
-  };
-
-  const handleDeleteProduct = (productId) => {
-    const deleteProduct = products.filter((product) => product.id !== productId);
-    setSelected([]);
-  };
-
-  const handleDeleteProducts = (selected) => {
-    const deleteProducts = products.filter((product) => !selected.includes(product.name));
-    setSelected([]);
   };
 
   const handleOpenDelete = (id) => {

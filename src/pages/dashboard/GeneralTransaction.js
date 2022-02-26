@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 // @mui
-import { styled } from '@mui/material/styles';
 import {
   Box,
   Card,
@@ -11,14 +12,11 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  IconButton,
+  
   Stack,
-  ToggleButtonGroup,
-  ToggleButton,
-  Paper,
+  
 } from '@mui/material';
 // redux
-import ModeEditOutlineRoundedIcon from '@mui/icons-material/ModeEditOutlineRounded';
 import dateFormat from 'dateformat'
 import { useDispatch, useSelector } from '../../redux/store';
 // hooks
@@ -30,21 +28,6 @@ import { TransactionListHead, TransactionListToolbar } from '../../sections/@das
 import { fetchTransactions } from '../../actions';
 import NoTransaction from '../../assets/payment-successful.png'
 
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  '& .MuiToggleButtonGroup-grouped': {
-    margin: theme.spacing(0.5),
-    border: 0,
-    '&.Mui-disabled': {
-      border: 0,
-    },
-    '&:not(:first-of-type)': {
-      borderRadius: theme.shape.borderRadius,
-    },
-    '&:first-of-type': {
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-}));
 
 // ----------------------------------------------------------------------
 

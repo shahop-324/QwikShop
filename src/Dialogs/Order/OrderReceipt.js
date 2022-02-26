@@ -1,3 +1,6 @@
+/* eslint-disable consistent-return */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-key */
 import React, { useRef, useState, useEffect } from 'react';

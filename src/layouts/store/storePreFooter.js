@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Grid, Link, Divider, Container, Typography, Stack, Card } from '@mui/material';
+import { Grid, Divider, Typography, Stack, Card } from '@mui/material';
 
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
@@ -12,10 +12,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
 }));
 
-const StorePreFooter = () => {
-  const [state, setState] = useState('');
-
-  return (
+const StorePreFooter = () => (
     <RootStyle>
       <Divider />
 
@@ -70,6 +67,5 @@ const StorePreFooter = () => {
       </Stack>
     </RootStyle>
   );
-};
 
 export default StorePreFooter;

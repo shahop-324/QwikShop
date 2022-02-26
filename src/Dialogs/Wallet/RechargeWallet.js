@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { Chip, Stack, Dialog, DialogContent, DialogTitle, Slide, Button, TextField, Card, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -62,7 +63,7 @@ const RechargeWallet = ({ open, handleClose }) => {
         description: `Wallet Recharge`,
         image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`,
         order_id: order.data.id,
-        handler(response) {
+        handler() {
           dispatch(showSnackbar('success', 'Your wallet recharge has been successfully processed!'));
           setTimeout(() => {
             window.location.reload();
@@ -87,7 +88,7 @@ const RechargeWallet = ({ open, handleClose }) => {
       const paymentObject = new window.Razorpay(options);
 
       paymentObject.open();
-      paymentObject.on('payment.failed', (response) => {
+      paymentObject.on('payment.failed', () => {
         console.log('Payment failed');
         dispatch(
           showSnackbar(

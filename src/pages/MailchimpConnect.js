@@ -1,13 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Container, Typography, Stack } from '@mui/material';
+import { Container, Typography, Stack } from '@mui/material';
 
 // components
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import MainFooter from '../layouts/main/MainFooter';
 import Page from '../components/Page';
 import { connectMailchimp } from '../actions';
 
@@ -22,7 +22,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function MailchimpConnect() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
 
   const dispatch = useDispatch();

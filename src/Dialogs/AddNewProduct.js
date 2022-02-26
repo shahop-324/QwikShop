@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable consistent-return */
@@ -1418,7 +1419,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                               </AccordionSummary>
                               <AccordionDetails>
                                 <Card sx={{ p: 3 }}>
-                                  {colorsList.map((el, index) => (
+                                  {colorsList.map((el) => (
                                     <div key={el.index} className="d-flex flex-column">
                                       <Box
                                         className="mb-3"
@@ -1512,7 +1513,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                   <Card sx={{ p: 3 }}>
-                                    {el.options.map((elm, index) => (
+                                    {el.options.map((elm) => (
                                       <div className="d-flex flex-column mb-3" key={elm.index}>
                                         <Box
                                           className="mb-2"

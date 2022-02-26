@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack, Card, Grid, Box, Button, Typography, Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import { Card, Grid, Button, Typography } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { TwitterPicker } from 'react-color';
 
@@ -13,7 +13,7 @@ const StoreAmbience = () => {
 
   const { store, isUpdatingAmbience } = useSelector((state) => state.store);
 
-  const [mode, setMode] = useState(store?.mode || 'light');
+  const [mode] = useState(store?.mode || 'light');
   const [color, setColor] = useState(store?.primaryColor || '#2065D1');
 
   return (

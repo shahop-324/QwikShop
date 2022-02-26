@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Slide, Card, Box, Stack, Divider } from '@mui/material';
+import { Dialog, Slide, Card, Box, Stack, Divider } from '@mui/material';
 import dateFormat from 'dateformat';
 
 import Timeline from '@mui/lab/Timeline';
@@ -9,17 +10,13 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
-import HotelIcon from '@mui/icons-material/Hotel';
-import RepeatIcon from '@mui/icons-material/Repeat';
 import Typography from '@mui/material/Typography';
 
 import { useSelector } from 'react-redux';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const OrderTimeline = ({ shipmentId, orderId, scans, open, handleClose }) => {
+const OrderTimeline = ({ shipmentId, orderId, open, handleClose }) => {
   console.log(shipmentId);
   const { orders } = useSelector((state) => state.order);
   const { shipments } = useSelector((state) => state.shipment);

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, Grid, Card, Typography, Box } from '@mui/material';
 import QuillPageBuilder from './QuillPageBuilder';

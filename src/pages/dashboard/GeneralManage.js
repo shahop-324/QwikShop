@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import QrCode2RoundedIcon from '@mui/icons-material/QrCode2Rounded';
 import PointOfSaleRoundedIcon from '@mui/icons-material/PointOfSaleRounded';
-import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
-import DesignServicesRoundedIcon from '@mui/icons-material/DesignServicesRounded';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 import PhoneAndroidRoundedIcon from '@mui/icons-material/PhoneAndroidRounded';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -46,10 +43,6 @@ export default function GeneralManage() {
 
   const [openFaviconSetting, setOpenFaviconSetting] = useState(false);
 
-  const handleOpenStoreTimings = () => {
-    setOpenStoreTimings(true);
-  };
-
   const handleCloseStoreTimings = () => {
     setOpenStoreTimings(false);
   };
@@ -86,16 +79,8 @@ export default function GeneralManage() {
     setOpenSEOSettings(true);
   };
 
-  const handleOpenCreateInvoice = () => {
-    setOpenCreateInvoice(true);
-  };
-
   const handleCloseCreateInvoice = () => {
     setOpenCreateInvoice(false);
-  };
-
-  const handleOpenMarketingDesignOptions = () => {
-    setOpenMarketingDesignOptions(true);
   };
 
   const handleCloseFaviconSetting = () => {

@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useSearchParams } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Button, Link, Container, Typography } from '@mui/material';
 // layouts
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { showSnackbar, resendEmailOTP, resetVerifyEmailViaOTP } from '../../actions';
 import LogoOnlyLayout from '../../layouts/LogoOnlyLayout';
 // components
@@ -33,7 +34,7 @@ export default function VerifyCode() {
 
   const { isReSendingOTP } = useSelector((state) => state.auth);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const email = searchParams.get('email');
   const ref = searchParams.get('ref');

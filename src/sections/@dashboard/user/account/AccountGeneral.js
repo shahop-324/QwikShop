@@ -1,10 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 // form
 import { useFormik } from 'formik';
 // @mui
 import { Box, Card, Grid, TextField, Autocomplete, Stack, Typography, Button } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 // utils
 import { useDispatch, useSelector } from 'react-redux';
 import { fData } from '../../../../utils/formatNumber';
@@ -57,8 +57,6 @@ export default function AccountGeneral() {
       dispatch(updateStoreGeneralInfo(formValues, values.storeURL, file));
     },
   });
-
-  const { subname } = useSelector((state) => state.app);
 
   const [country, setCountry] = useState(store.country);
   const [category, setCategory] = useState(store.category);

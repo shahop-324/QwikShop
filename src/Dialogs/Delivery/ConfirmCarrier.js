@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import LocalShippingRounded from '@mui/icons-material/LocalShippingRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { Typography, Drawer, Card, Button, IconButton, Grid, Stack, Dialog, Slide, Box, Portal } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Typography, Card, Button, Stack, Dialog, Slide, Box, Portal } from '@mui/material';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { assignShiprocket } from '../../actions';
 
