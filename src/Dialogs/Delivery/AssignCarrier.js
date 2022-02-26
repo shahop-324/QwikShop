@@ -22,7 +22,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { assignSelfShipping, updateShipment } from '../../actions';
+import { assignSelfShipping, showSnackbar, updateShipment } from '../../actions';
 import ConfirmCarrier from './ConfirmCarrier';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -30,7 +30,7 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={r
 const AssignCarrier = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
 
-  const [carrier, setCarrier] = useState('delhivery');
+  const [carrier, setCarrier] = useState('shiprocket');
 
   const { pickupPoints } = useSelector((state) => state.delivery);
   const { shipments } = useSelector((state) => state.shipment);
@@ -96,7 +96,6 @@ const AssignCarrier = ({ open, handleClose, id }) => {
                     value="shiprocket"
                     control={
                       <Radio
-                        
                         checked={carrier === 'shiprocket'}
                         onClick={() => {
                           setCarrier('shiprocket');
@@ -112,11 +111,10 @@ const AssignCarrier = ({ open, handleClose, id }) => {
                       alt="delivery"
                     />
                     <Typography variant="subtitle2">(Shiprocket)</Typography>
-                    
                   </Stack>
                 </Stack>
               </Card>
-              
+
               <Card sx={{ p: 3, width: '600px' }}>
                 <Stack direction={'row'} alignItems="center" spacing={1}>
                   <FormControlLabel
@@ -151,10 +149,14 @@ const AssignCarrier = ({ open, handleClose, id }) => {
           <Button
             variant="contained"
             onClick={() => {
-              if (carrier === 'shiprocket') {
-                handleOpenConfirmation();
+              if (pickupPoint) {
+                if (carrier === 'shiprocket') {
+                  handleOpenConfirmation();
+                } else {
+                  dispatch(updateShipment({ carrier: 'self' }, id, handleClose));
+                }
               } else {
-                dispatch(updateShipment({carrier: "self"}, id, handleClose));
+                dispatch(showSnackbar('info', 'Please select a pickup point.'));
               }
             }}
           >
@@ -168,7 +170,6 @@ const AssignCarrier = ({ open, handleClose, id }) => {
 
                 default:
                   return '';
-
               }
             })()}
           </Button>
