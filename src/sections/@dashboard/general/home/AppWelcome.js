@@ -55,7 +55,7 @@ export default function AppWelcome({ displayName, link, storeName }) {
         </Typography>
 
         <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          Here's your store link, <br /> <a href={`//${link}`}>{link}</a>
+          Here's your store link, <br /> <a target={'_blank'} rel="noreferrer" href={`//${link}`}>{link}</a>
         </Typography>
 
         <span>Share via</span>

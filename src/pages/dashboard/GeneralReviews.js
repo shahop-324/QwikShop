@@ -324,7 +324,7 @@ function ReviewItem({ item }) {
             Accept
           </Button>
           <Button
-            disabled={!accepted}
+            // disabled={!accepted}
             onClick={() => {
               dispatch(updateReview({ accepted: false }, _id, () => {}));
             }}

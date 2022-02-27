@@ -69,9 +69,9 @@ const DnDPageBuilder = ({ open, handleClose, isEdit, id }) => {
   return (
     <>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <AppBar sx={{ position: 'relative', backgroundColor: '#212121' }}>
+        <AppBar sx={{ position: 'relative', backgroundColor: '#B4B4B4' }}>
           <Toolbar>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            <Typography sx={{ ml: 2, flex: 1, color: '#212121' }} variant="h6" component="div">
               {isEdit ? 'Edit Page' : 'Create Page'}
             </Typography>
 

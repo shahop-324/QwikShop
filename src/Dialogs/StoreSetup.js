@@ -253,9 +253,9 @@ const StoreSetup = ({ open, handleClose }) => {
                         alt="welcome to QwikShop, We are glad to have you."
                       />
 
-                      <Typography variant="caption">
-                        We are glad to have you, You are not a part of fastest growing community of online Business
-                        owners.
+                      <Typography variant="body2">
+                        We are glad to have you, You are Now a part of India's fastest growing community of online Business
+                        owners...
                       </Typography>
                       <Typography variant="h6">
                         Just provide us a little bit info so we can get you started...

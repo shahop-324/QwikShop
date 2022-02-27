@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded';
+import { MobileDateTimePicker } from '@mui/lab';
 import {
   Card,
   Stack,
@@ -168,10 +169,12 @@ const UpdateShipment = ({ open, handleClose, id }) => {
 
   const [carrier, setCarrier] = useState(shipment.carrier || shipment.partner);
 
+  const [etd, setETD] = useState(shipment.etd);
+
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    switch (shipment.status) {
+    switch (shipment?.status) {
       case 'Waiting For Acceptance':
         setActiveStep(0);
         break;
@@ -184,10 +187,14 @@ const UpdateShipment = ({ open, handleClose, id }) => {
       case 'In Transit':
         setActiveStep(3);
         break;
-      case 'Delivered':
+      case 'Out For Delivery':
         setActiveStep(4);
         break;
+      case 'Delivered':
+        setActiveStep(5);
+        break;
       default:
+        setActiveStep(100);
         break;
     }
   }, [shipment]);
@@ -204,7 +211,7 @@ const UpdateShipment = ({ open, handleClose, id }) => {
         aria-describedby="alert-dialog-slide-description"
       >
         <Card sx={{ width: '700px', p: 4 }}>
-          {[-1, 3, 6, 7, 18].includes(shipment.status_id * 1) ? (
+          {activeStep * 1 !== 100 ? (
             <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
               {steps.map((label) => (
                 <Step key={label}>
@@ -273,12 +280,26 @@ const UpdateShipment = ({ open, handleClose, id }) => {
                   setCarrier(e.target.value);
                 }}
               />
+
+              {shipment.etd && (
+                <MobileDateTimePicker
+                  disabled={shipment.carrier !== 'self'}
+                  value={etd}
+                  onChange={(newValue) => {
+                    setETD(newValue);
+                  }}
+                  label="Estimated Time of delivery"
+                  inputFormat="yyyy/MM/dd hh:mm a"
+                  mask="___/__/__ __:__ _M"
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              )}
             </Typography>
             <Stack direction={'row'} alignItems="center" justifyContent={'end'}>
               <Button
                 disabled={shipment.carrier !== 'self'}
                 onClick={() => {
-                  dispatch(updateShipment({ AWB: AWBNumber, carrier }));
+                  dispatch(updateShipment({ AWB: AWBNumber, carrier, etd }));
                 }}
                 sx={{ width: 'max-content' }}
                 variant="contained"

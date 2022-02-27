@@ -206,10 +206,14 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
       case 'In Transit':
         setActiveStep(3);
         break;
-      case 'Delivered':
+      case 'Out For Delivery':
         setActiveStep(4);
         break;
+      case 'Delivered':
+        setActiveStep(5);
+        break;
       default:
+        setActiveStep(100);
         break;
     }
   }, [orders]);
@@ -341,7 +345,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             <Typography variant="subtitle2">
               {' '}
               <span style={{ marginRight: '10px' }}>Delivered On:</span>{' '}
-              {order.deliveredAt ? dateFormat(new Date(order.deliveredAt)) : '----'}
+              {order.deliveredOn ? dateFormat(new Date(order.deliveredOn)) : '----'}
             </Typography>
           </Box>
         </Card>
@@ -349,7 +353,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
         <Card sx={{ p: 3, mb: 3 }}>
           {console.log(activeStep, activeStep * 1 !== 0)}
 
-          {[-1, 3, 6, 7, 18].includes(order.status_id * 1) ? (
+          {activeStep *1  !== 100 ? (
             <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
               {steps.map((label) => (
                 <Step key={label}>

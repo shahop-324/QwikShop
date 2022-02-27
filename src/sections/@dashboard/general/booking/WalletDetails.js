@@ -51,7 +51,7 @@ export default function Walletetails() {
                       </TableCell>
 
                       <TableCell>{row?.type}</TableCell>
-                      <TableCell>{row?.amount}</TableCell>
+                      <TableCell>Rs.{row?.amount}</TableCell>
 
                       <TableCell>
                         {row?.reason}

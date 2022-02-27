@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 // import { MarketingWelcome } from './../../sections/@dashboard/general/marketing/index';
 // @mui
 import { Grid, Container, Card, Stack, Typography } from '@mui/material';
@@ -8,7 +9,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 // hooks
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -24,9 +25,11 @@ import CreateEmailCampaign from '../../Dialogs/CreateEmailCampaign';
 import CreateGoogleAdsCampaign from '../../Dialogs/CreateGoogleAdsCampaign';
 import CreateFacebookAdsCampaign from '../../Dialogs/CreateFacebookAdsCampaign';
 import NoMarketing from '../../assets/social-media-marketing-in-mobile-online.png';
+import { fetchMarketingCampaigns } from '../../actions';
 // ----------------------------------------------------------------------
 
 export default function GeneralBooking() {
+  const dispatch = useDispatch();
   const { themeStretch } = useSettings();
   const { campaigns } = useSelector((state) => state.marketing);
 
@@ -66,6 +69,10 @@ export default function GeneralBooking() {
   const handleCloseCreateFacebookAdsCampaign = () => {
     setOpenCreateFacebookAdsCampaign(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchMarketingCampaigns());
+  }, []);
 
   return (
     <div>
@@ -115,23 +122,20 @@ export default function GeneralBooking() {
                 icon={<FacebookIcon />}
               />
             </Grid>
-           
           </Grid>
 
           {!(typeof campaigns !== 'undefined' && campaigns.length > 0) ? (
-              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
-                <Card sx={{ p: 3, my: 3 }}>
-                  <img style={{ height: '150px', width: '150px' }} src={NoMarketing} alt="no reviews" />
-                </Card>
-                <Typography sx={{ mb: 3 }} variant="subtitle2">
-                  Please create marketing campaigns very frequently and it will help you grow your business
-                </Typography>
-              </Stack>
-            ) : (
-<MarketingCampaignDetails />
-            )}
-
-          
+            <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+              <Card sx={{ p: 3, my: 3 }}>
+                <img style={{ height: '150px', width: '150px' }} src={NoMarketing} alt="no reviews" />
+              </Card>
+              <Typography sx={{ mb: 3 }} variant="subtitle2">
+                Please create marketing campaigns very frequently and it will help you grow your business
+              </Typography>
+            </Stack>
+          ) : (
+            <MarketingCampaignDetails />
+          )}
         </Container>
       </Page>
 

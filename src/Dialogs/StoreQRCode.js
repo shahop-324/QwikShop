@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable react/prop-types */
 import React, { useRef } from 'react';
 import QRCode from 'react-qr-code';
@@ -24,7 +25,11 @@ const QRUpper = styled.div`
   background-color: #2065d1;
 `;
 
-const ComponentToPrint = React.forwardRef(({ store }, ref) => (
+const ComponentToPrint = React.forwardRef(({ store }, ref) => {
+  
+  
+
+  return (
   <div ref={ref}>
     <Grid container spacing={3}>
       <Grid item xs={12} md={12} className="d-flex flex-row align-items-center justify-content-center m-3">
@@ -65,7 +70,7 @@ const ComponentToPrint = React.forwardRef(({ store }, ref) => (
       </Grid>
     </Grid>
   </div>
-));
+)})
 
 const StoreQRCode = ({ open, handleClose }) => {
   const { store } = useSelector((state) => state.store);

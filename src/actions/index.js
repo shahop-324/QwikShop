@@ -267,6 +267,10 @@ export const switchStore = (storeId) => async (dispatch, getState) => {
     );
 
     dispatch(showSnackbar('success', 'Store switched successfully!'));
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -359,7 +363,6 @@ export const logout = () => async (dispatch, _getState) => {
   setTimeout(() => {
     window.location.href = `/auth/login`;
   }, 1000);
-  
 };
 
 export const resendEmailOTP = (email) => async (dispatch, _getState) => {
@@ -4724,6 +4727,44 @@ export const deleteMultipleReferrers = (ids, handleClose) => async (dispatch, ge
 
 // ************************************************* Marketing ********************************************** //
 
+export const fetchMarketingCampaigns = () => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}marketing/getAll`, {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      marketingActions.FetchCampaigns({
+        campaigns: result.data,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 export const creatEmailCampaign = (formValues, customersList, handleClose) => async (dispatch, getState) => {
   let message;
   dispatch(marketingActions.SetIsCreating({ state: true }));
@@ -5105,6 +5146,10 @@ export const addCoinsToCustomer = (formValues, handleClose) => async (dispatch, 
     dispatch(showSnackbar('success', message));
     dispatch(customerActions.SetIsAddingCoins({ state: false }));
     handleClose();
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -7585,20 +7630,19 @@ export const resetIsUpdatingCheckoutField = () => async (dispatch, getState) => 
   dispatch(storeActions.SetIsUpdatingCheckoutField({ state: false }));
 };
 
-export const resetIsGeneratingInvoice = () => async(dispatch, getState) => {
-  dispatch(shipmentActions.SetIsGeneratingInvoice({state: false}));
-}
-export const resetIsGeneratingLabel = () => async(dispatch, getState) => {
-  dispatch(shipmentActions.SetIsGeneratingLabel({state: false}));
-}
-export const resetIsGeneratingManifest = () => async(dispatch, getState) => {
-  dispatch(shipmentActions.SetIsGeneratingManifest({state: false}));
-}
+export const resetIsGeneratingInvoice = () => async (dispatch, getState) => {
+  dispatch(shipmentActions.SetIsGeneratingInvoice({ state: false }));
+};
+export const resetIsGeneratingLabel = () => async (dispatch, getState) => {
+  dispatch(shipmentActions.SetIsGeneratingLabel({ state: false }));
+};
+export const resetIsGeneratingManifest = () => async (dispatch, getState) => {
+  dispatch(shipmentActions.SetIsGeneratingManifest({ state: false }));
+};
 
 // ******************************* Print Shipment Label, Invoice & Manifest **************************************** //
 
 export const printLabel = (shipmentId) => async (dispatch, getState) => {
-
   let message;
 
   dispatch(
@@ -7657,11 +7701,9 @@ export const printLabel = (shipmentId) => async (dispatch, getState) => {
       })
     );
   }
-
 };
 
 export const printInvoice = (shipmentId) => async (dispatch, getState) => {
-
   let message;
 
   dispatch(
@@ -7720,7 +7762,6 @@ export const printInvoice = (shipmentId) => async (dispatch, getState) => {
       })
     );
   }
-
 };
 
 export const printManifest = (shipmentId) => async (dispatch, getState) => {

@@ -147,7 +147,7 @@ const StorePages = () => {
         console.log(params);
         return (
           <Stack spacing={2} direction={'row'} alignItems={'center'} justifyContent={'space-around'}>
-            <a target="_blank" rel="noreferrer" href={`//https://qwikshop.online/${store.subName}/pages/${params.row.slug}`}>
+            <a target="_blank" rel="noreferrer" href={`//qwikshop.online/${store.subName}/pages/${params.row.slug}`}>
             <IconButton color="primary">
               <RemoveRedEyeRoundedIcon />
             </IconButton>
