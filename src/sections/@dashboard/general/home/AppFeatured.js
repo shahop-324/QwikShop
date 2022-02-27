@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import Slider from 'react-slick';
 import { m } from 'framer-motion';
@@ -29,57 +30,64 @@ const QwikshopLearn = [
     id: '89292j93u',
     title: 'How to add products?',
     description:
-      'In this video you can learn how to manage product categories and add items to your shop. How to update your stock and various other things...',
+      'In this article you can learn how to manage product categories and add items to your shop. How to update your stock and various other things...',
     image:
       'https://www.elegantthemes.com/blog/wp-content/uploads/2020/12/online-shopping-products.png',
+      href: 'https://intercom.help/qwikshop/en/articles/6012492-how-to-add-products'
   },
   {
     id: '89292j93u',
     title: 'How to manage customers?',
     description:
-      'In this video you can learn how to manage customers of your shop. You can print their invoices and see their purchase history...',
+      'In this article you can learn how to manage customers of your shop. You can print their invoices and see their purchase history...',
     image:
       'https://mswebappcdn.azureedge.net/episerverprod/580561b7653c477ebd7909a6c9465a72/435513bac8ab490dbfab4ac14a61e26b.png',
+      href: 'https://intercom.help/qwikshop/en/articles/6012630-how-to-manage-customers'
   },
   {
     id: '89292j93u',
     title: 'How to accept orders?',
     description:
-      'In this video you can learn how to accept orders and prepare them for shipping...',
+      'In this article you can learn how to accept orders and prepare them for shipping...',
     image:
       'https://www.brightpearl.com/wp-content/uploads/2021/02/image1-3.png',
+      href: 'https://intercom.help/qwikshop/en/articles/6012631-how-to-accept-orders'
   },
   {
     id: '89292j93u',
     title: 'How to get payments?',
     description:
-      'In this video you can learn how to set up payments for your shop with QwikShop',
+      'In this article you can learn how to set up payments for your shop with QwikShop',
     image:
       'https://cdn.searchenginejournal.com/wp-content/uploads/2020/03/the-top-10-most-popular-online-payment-solutions-5e9978d564973-1520x800.png',
+      href: 'https://intercom.help/qwikshop/en/articles/6012632-how-to-get-payments'
   },
   {
     id: '89292j93u',
     title: 'How to create discount?',
     description:
-      'In this video you can learn how to create discount and promote your sales?',
+      'In this article you can learn how to create discount and promote your sales?',
     image:
       'https://cms-assets.tutsplus.com/cdn-cgi/image/width=630/uploads/users/23/posts/28611/image/how-to-set-discount-pricing-right.jpg',
+      href: 'https://intercom.help/qwikshop/en/articles/6012633-how-to-create-discount'
   },
   {
     id: '89292j93u',
     title: 'How to setup delivery?',
     description:
-      'In this video you can learn how to setup delivery for your products?',
+      'In this article you can learn how to setup delivery for your products?',
     image:
       'https://assets.theedgemarkets.com/DE12-thumnails-tem1360_theedgemarkets.jpg?rWaliQB6sVOlrzjcUeO0mshfTGHckWaZ',
+      href: 'https://intercom.help/qwikshop/en/articles/6012634-how-to-setup-delivery'
   },
   {
     id: '89292j93u',
     title: 'How to measure sales?',
     description:
-      'In this video you can learn how to measure your sales?',
+      'In this article you can learn how to measure your sales?',
     image:
       'https://fizfy.com/wp-content/uploads/2020/09/sales-trends.jpg',
+      href: 'https://intercom.help/qwikshop/en/articles/6012635-how-to-measure-sales'
   },
 ];
 
@@ -157,7 +165,7 @@ CarouselItem.propTypes = {
 };
 
 function CarouselItem({ item, isActive }) {
-  const { image, title, description } = item;
+  const { image, title, description, href } = item;
 
   return (
     <Box sx={{ position: 'relative' }}>
@@ -180,7 +188,7 @@ function CarouselItem({ item, isActive }) {
           </Typography>
         </m.div>
         <m.div variants={varFade().inRight}>
-          <Link component={RouterLink} to="#" color="inherit" underline="none">
+          <Link component={RouterLink} to={href} color="inherit" underline="none">
             <Typography variant="h5" gutterBottom noWrap>
               {title}
             </Typography>

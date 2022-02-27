@@ -24,14 +24,15 @@ const _pricingPlans = [
   {
     // plan_id: 'plan_IuHueHvdocQGNB',
     plan_id: 'plan_IuNPJh0qpUQ1G8',
-    cycle: 'mo',
-    subscription: 'Monthly',
+    cycle: 'forever',
+    subscription: 'Free',
     img: Monthly,
-    price: 300,
-    caption: 'Per month',
+    price: 0,
+    caption: 'Forever',
     lists: [
-      { text: '15 Stores', isAvailable: true },
-      { text: '25 Staff Member / Store', isAvailable: true },
+      { text: '4% Transaction Charge', isAvailable: true },
+      { text: '10 Stores', isAvailable: true },
+      { text: '15 Staff Member / Store', isAvailable: true },
       { text: 'Custom Domain & Email', isAvailable: true },
       { text: 'All Premium Themes', isAvailable: true },
       { text: 'Custom Marketing Messages', isAvailable: true },
@@ -53,20 +54,21 @@ const _pricingPlans = [
       { text: 'All Integrations', isAvailable: true },
       { text: 'Chat, Email & Call Support', isAvailable: true },
       
-      { text: '3% Transaction Charge', isAvailable: true },
+      
     ],
-    labelAction: 'Choose Monthly',
+    labelAction: 'Choose Freemium',
   },
   {
     plan_id: 'plan_IuHvbpfEipw5i6',
-    cycle: 'yr',
-    subscription: 'Yearly',
+    cycle: 'month',
+    subscription: 'Monthly',
     img: Yearly,
-    price: 2400,
+    price: 450,
     caption: 'saving Rs. 1200 a year',
     lists: [
-      { text: '15 Stores', isAvailable: true },
-      { text: '25 Staff Member / Store', isAvailable: true },
+      { text: '2% Transaction Charge', isAvailable: true },
+      { text: '10 Stores', isAvailable: true },
+      { text: '15 Staff Member / Store', isAvailable: true },
       { text: 'Custom Domain & Email', isAvailable: true },
       { text: 'All Premium Themes', isAvailable: true },
       { text: 'Custom Marketing Messages', isAvailable: true },
@@ -87,20 +89,21 @@ const _pricingPlans = [
       { text: 'Delivery', isAvailable: true },
       { text: 'All Integrations', isAvailable: true },
       { text: 'Chat, Email & Call Support', isAvailable: true },
-      { text: '1.5% Transaction Charge', isAvailable: true },
+     
     ],
-    labelAction: 'choose starter',
+    labelAction: 'choose monthly',
   },
   {
     plan_id: 'plan_IuHx2o2i0gKaUJ',
-    cycle: 'lifetime',
-    subscription: 'Lifetime',
+    cycle: 'yearly',
+    subscription: 'YEARLY',
     img: Lifetime,
-    price: 15000,
-    caption: 'Valid for 60 Years (0.68 Rs. / day)',
+    price: 4500,
+    caption: '(Save Rs. 900 / year)',
     lists: [
-      { text: '15 Stores', isAvailable: true },
-      { text: '25 Staff Member / Store', isAvailable: true },
+      { text: '1% Transaction Charge', isAvailable: true },
+      { text: '10 Stores', isAvailable: true },
+      { text: '15 Staff Member / Store', isAvailable: true },
       { text: 'Custom Domain & Email', isAvailable: true },
       { text: 'All Premium Themes', isAvailable: true },
       { text: 'Custom Marketing Messages', isAvailable: true },
@@ -121,9 +124,9 @@ const _pricingPlans = [
       { text: 'Delivery', isAvailable: true },
       { text: 'All Integrations', isAvailable: true },
       { text: 'Chat, Email & Call Support', isAvailable: true },
-      { text: '1% Transaction Charge', isAvailable: true },
+      
     ],
-    labelAction: 'choose premium',
+    labelAction: 'choose yearly',
   },
 ];
 
@@ -157,7 +160,7 @@ export default function Pricing() {
           </Grid>
           
         </Container>
-        <MainFooter />
+       
       </RootStyle>
     </Page>
   );

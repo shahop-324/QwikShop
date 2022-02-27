@@ -25,40 +25,43 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 const _homePlans = [{
   img: Silver,
-  commons: ['3% Transaction Charge','15 Stores', '25 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
-  license: 'Monthly',
+  commons: ['4% Transaction Charge','10 Stores', '15 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
+  license: 'FREE',
   options: [
     'Store Management',
     'Customer Management',
     'Catalouge (Sub category, Division)',
     'Unlimited Products',
     'Super coins',
+    'Referrals',
     'Custom Pages & Menus'
   ],
-  price: 'Rs. 300/-'
+  price: 'Rs. 0/-'
 }, {
   img: Gold,
-  license: 'Yearly',
-  commons: ['1.5% Transaction Charge', '15 Stores', '25 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
+  license: 'MONTHLY',
+  commons: ['2% Transaction Charge', '10 Stores', '15 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
   options: [
     'Store Management',
     'Customer Management',
     'Catalouge (Sub category, Division)',
     'Unlimited Products',
     'Super coins',
+    'Referrals',
     'Custom Pages & Menus'
   ],
   price: 'Rs. 2400/-'
 }, {
   img: Unicorn,
-  license: 'Lifetime',
-  commons: ['1% Transaction Charge', '15 Stores', '25 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
+  license: 'YEARLY',
+  commons: ['1% Transaction Charge', '10 Stores', '15 Staff Member / Store', 'Custom Domain & Email', 'All Premium Themes', 'Custom Marketing Messages', 'Unlimited Discounts', 'Customer Reviews'],
   options: [
     'Store Management',
     'Customer Management',
     'Catalouge (Sub category, Division)',
     'Unlimited Products',
     'Super coins',
+    'Referrals',
     'Custom Pages & Menus'
   ],
   price: 'Rs. 15000/-'

@@ -29,41 +29,37 @@ const QwikshopLearn = [
     id: '89292j93u',
     title: 'How to do Accept payments using QwikPay?',
     description:
-      'In this video you can learn how to setup and launch SMS marketing...',
+      'In this article you can learn how to setup and launch SMS marketing...',
     image:
       'https://i.pinimg.com/600x315/be/17/ce/be17cea2bfa2962b11a537b33821f591.jpg',
-  },
-  {
-    id: '89292j93u',
-    title: 'How to do Accept Payments using Razorpay?',
-    description:
-      'In this video you can learn how to setup and launch WhatsApp Marketing...',
-    image:
-      'https://bsmedia.business-standard.com/media-handler.php?mediaPath=https://bsmedia.business-standard.com/_media/bs/img/article/2020-08/13/full/1597309837-7212.jpg&width=1200',
+      href: 'https://intercom.help/qwikshop/en/articles/6012648-how-to-accept-payments-via-upi'
   },
   {
     id: '89292j93u',
     title: 'How to Enable/ Disable Cash on delivery?',
     description:
-      'In this video you can learn how to promote your online business on QwikShop with Google Adwords...',
+      'In this article you can learn how to promote your online business on QwikShop with Google Adwords...',
     image:
       'https://miro.medium.com/max/500/1*5c8KOrF2CKKQCcY67sJDWA.jpeg',
+      href: 'https://intercom.help/qwikshop/en/articles/6012648-how-to-accept-payments-via-upi',
   },
   {
     id: '89292j93u',
     title: 'How to check funds transfers including Refund, Cancellation and successful Payouts?',
     description:
-      'In this video you can learn how to promote your online business on QwikShop with Facebook Ads...',
+      'In this article you can learn how to promote your online business on QwikShop with Facebook Ads...',
     image:
       'https://www.livemint.com/rf/Image-621x414/LiveMint/Period1/2015/08/27/Photos/mutualfundplant1.jpg',
+      href: 'https://intercom.help/qwikshop/en/articles/6012651-how-to-check-fund-transfer-payout'
   },
   {
     id: '89292j93u',
     title: 'How to Change Registered UPI or Bank Account?',
     description:
-      'In this video you can learn how to create discount and promote your sales?',
+      'In this article you can learn how to create discount and promote your sales?',
     image:
       'https://media.gcflearnfree.org/content/55e06a5c1496fdb039ceef5d_01_17_2014/ManagingCheckingAccount_Intro.png',
+      href: 'https://intercom.help/qwikshop/en/articles/6012648-how-to-accept-payments-via-upi'
   },
 ];
 

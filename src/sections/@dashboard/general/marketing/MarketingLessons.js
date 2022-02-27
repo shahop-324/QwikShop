@@ -28,42 +28,39 @@ const QwikshopLearn = [
   {
     id: '89292j93u',
     title: 'How to do SMS marketing?',
-    description:
-      'In this video you can learn how to setup and launch SMS marketing...',
-    image:
-      'https://dexatel.com/images/blog/4/cover/sms-marketing-campaign-image.jpg',
+    description: 'In this article you can learn how to setup and launch SMS marketing...',
+    image: 'https://dexatel.com/images/blog/4/cover/sms-marketing-campaign-image.jpg',
+    href: 'https://intercom.help/qwikshop/en/articles/6012641-how-to-do-sms-marketing',
   },
   {
     id: '89292j93u',
     title: 'How to do WhatsApp Marketing?',
-    description:
-      'In this video you can learn how to setup and launch WhatsApp Marketing...',
-    image:
-      'https://www.delhicourses.in/blog/wp-content/uploads/2020/02/WhatsApp-Marketing.jpg',
+    description: 'In this article you can learn how to setup and launch WhatsApp Marketing...',
+    image: 'https://www.delhicourses.in/blog/wp-content/uploads/2020/02/WhatsApp-Marketing.jpg',
+    href: 'https://intercom.help/qwikshop/en/articles/6012642-how-to-do-whatsapp-marketing',
   },
   {
     id: '89292j93u',
     title: 'How to run Google Ads?',
-    description:
-      'In this video you can learn how to promote your online business on QwikShop with Google Adwords...',
+    description: 'In this article you can learn how to promote your online business on QwikShop with Google Adwords...',
     image:
       'https://cdn.searchenginejournal.com/wp-content/uploads/2019/09/ec005aa3-f826-4ea6-9f0e-8e9152806289-760x400.jpeg',
+    href: 'https://intercom.help/qwikshop/en/articles/6012645-how-to-run-google-ads-effectively',
   },
   {
     id: '89292j93u',
     title: 'How to run Facebook Ads?',
-    description:
-      'In this video you can learn how to promote your online business on QwikShop with Facebook Ads...',
-    image:
-      'https://www.techtrainees.com/wp-content/uploads/2019/11/facebook.png',
+    description: 'In this article you can learn how to promote your online business on QwikShop with Facebook Ads...',
+    image: 'https://www.techtrainees.com/wp-content/uploads/2019/11/facebook.png',
+    href: 'https://intercom.help/qwikshop/en/articles/6012646-how-to-run-facebook-ads',
   },
   {
     id: '89292j93u',
     title: 'How to measure marketing performance?',
-    description:
-      'In this video you can learn how to create discount and promote your sales?',
+    description: 'In this article you can learn how to create discount and promote your sales?',
     image:
       'https://www.thebalancecareers.com/thmb/dNnKO3lTJ90ZNrD7HAXBUJj2O4U=/2121x1414/filters:fill(auto,1)/digital-marketing-1222811180-3968de5d1f19400a88b1e5e44cd9fae4.jpg',
+    href: 'https://intercom.help/qwikshop/en/articles/6012647-how-to-measure-marketing-results',
   },
 ];
 

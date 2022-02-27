@@ -27,44 +27,14 @@ const OverlayStyle = styled('div')(({ theme }) => ({
 const QwikshopLearn = [
   {
     id: '89292j93u',
-    title: 'How to setup store timings?',
+    title: 'How to manage my store?',
     description:
-      'In this video you can learn how to setup your store timings...',
-    image:
-      'https://img.etimg.com/thumb/width-1200,height-900,imgsize-122620,resizemode-1,msid-75214721/industry/services/retail/future-group-negotiates-rents-for-its-1700-stores.jpg',
-  },
-  {
-    id: '89292j93u',
-    title: 'How to manage charges on your store orders like GST...?',
-    description:
-      'In this video you can learn how to create GST and other extra charges for your store orders...',
-    image:
-      'https://www.alankit.com/blog/blogimage/gstblog2.jpg',
-  },
-  {
-    id: '89292j93u',
-    title: 'How to get my store QR code?',
-    description:
-      'In this video you can learn how you can get your own store QR code and share it so anyone can easily purchase products from your shop...',
+      'In this article you can learn how you can get your own store QR code and share it so anyone can easily purchase products from your shop...',
     image:
       'https://nationalseniors.com.au/generated/share-image/istock-1269502903-jpg.jpg',
+      href: 'https://intercom.help/qwikshop/en/articles/6012663-how-to-manage-my-store'
   },
-  {
-    id: '89292j93u',
-    title: 'How to generate, share and print invoice?',
-    description:
-      'In this video you can learn how to generate, print and share your invoices using QwikShop...',
-    image:
-      'http://getjobber.com/wp-content/uploads/2017/02/WhatIsAnInvoice.png',
-  },
-  {
-    id: '89292j93u',
-    title: 'How to create WhatsApp story, Store banner and Business card?',
-    description:
-      'In this video you can learn how you can create store banner, business card and whatsApp Story...',
-    image:
-      'https://worlduniversityofdesign.ac.in/assets/images/bgs/school-of-design-banner.jpg',
-  },
+  
 ];
 
 // ----------------------------------------------------------------------
