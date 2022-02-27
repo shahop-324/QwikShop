@@ -84,7 +84,7 @@ export default function PricingPlanCard({ card, index }) {
       console.log(order);
 
       const options = {
-        key: 'rzp_live_JOhvixtFUeoelr',
+        key: 'rzp_live_5hAz4ZdZOwNSkW',
         amount: order.data.amount,
         currency: 'INR',
         name: store.storeName,
