@@ -3,8 +3,6 @@ import CloseRounded from '@mui/icons-material/CloseRounded';
 import { IconButton, Drawer, Stack, Box, Typography, TextField, Button } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
-import { Link } from 'react-router-dom';
 import { updateAdwords } from '../../../actions';
 
 const Adwords = ({ open, handleClose }) => {
@@ -60,13 +58,13 @@ const Adwords = ({ open, handleClose }) => {
               >
                 Connect
               </Button>
-              <Typography sx={{ my: 3 }} variant="subtitle2">
+              {/* <Typography sx={{ my: 3 }} variant="subtitle2">
                 Need Help?
               </Typography>
               <PlayCircleRoundedIcon sx={{ mr: 1 }} />
               <Link to="/">
                 <Typography variant="caption">See How to obtain Conversion ID and Label</Typography>
-              </Link>
+              </Link> */}
             </Box>
           </Box>
         </Drawer>

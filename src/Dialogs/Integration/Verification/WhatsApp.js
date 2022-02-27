@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
+
   Typography,
-  DialogContentText,
+ 
   Button,
   TextField,
+ Drawer, 
+ Stack,
+ IconButton,
  
-  Slide,
   Box,
 } from '@mui/material';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 import { useDispatch } from 'react-redux';
 import { verifyWhatsAppNumber } from '../../../actions';
 
@@ -21,26 +21,33 @@ const WhatsAppVerification = ({ open, handleClose }) => {
 
   const [otp, setOtp] = useState();
 
-  const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
+ 
 
   return (
     <>
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{'Verify your number'}</DialogTitle>
-        <DialogContent>
+     <React.Fragment key={'right'}>
+        <Drawer anchor={'right'} open={open} onClose={handleClose}>
+          <Box sx={{ my: 3, mx: 4, width: '400px' }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="h6">WhatsApp Chat</Typography>
+
+              <IconButton
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                <CloseRounded />
+              </IconButton>
+            </Stack>
+      
+       
           <Box sx={{ width: '400px', p: 4 }}>
-            <DialogContentText id="alert-dialog-slide-description">
+           
               {/*  */}
               <Typography variant="body2" sx={{ mb: 2 }}>
                 Please Enter OTP Sent to your mobile number
               </Typography>
-            </DialogContentText>
+            
             <TextField
               name="otp"
               label="OTP"
@@ -51,8 +58,8 @@ const WhatsAppVerification = ({ open, handleClose }) => {
               }}
             />
           </Box>
-        </DialogContent>
-        <DialogActions>
+        
+      
           <Button onClick={handleClose}>Close</Button>
           <Button
             variant="contained"
@@ -64,8 +71,10 @@ const WhatsAppVerification = ({ open, handleClose }) => {
           >
             Verify
           </Button>
-        </DialogActions>
-      </Dialog>
+       
+      </Box>
+        </Drawer>
+      </React.Fragment>
     </>
   );
 };

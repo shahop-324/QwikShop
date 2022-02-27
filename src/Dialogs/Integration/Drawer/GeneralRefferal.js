@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 // @mui
@@ -18,26 +19,26 @@ import {
   Tooltip,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 // hooks
-import useSettings from '../../hooks/useSettings';
+import useSettings from '../../../hooks/useSettings';
 // components
-import Page from '../../components/Page';
-import Scrollbar from '../../components/Scrollbar';
-import SearchNotFound from '../../components/SearchNotFound';
+import Page from '../../../components/Page';
+import Scrollbar from '../../../components/Scrollbar';
+import SearchNotFound from '../../../components/SearchNotFound';
 // sections
 import {
   ProductMoreMenu,
   ReferralListHead,
   ReferralListToolbar,
-} from '../../sections/@dashboard/e-commerce/product-list';
-import AddNewReferrer from '../../Dialogs/Referral/AddNewReferrer';
-import { fetchReferrals, showSnackbar } from '../../actions';
+} from '../../../sections/@dashboard/e-commerce/product-list';
+import AddNewReferrer from "../../Referral/AddNewReferrer";
+import { fetchReferrals, showSnackbar } from '../../../actions';
 
-import EditReferrer from '../../Dialogs/Referral/EditReferrer';
-import DeleteReferrer from '../../Dialogs/Referral/DeleteReferrer';
-import BulkDeleteReferrers from '../../Dialogs/Referral/BulkDeleteReferrers';
-import ReferralDetails from '../../Dialogs/Referral/ReferralDetails';
+import EditReferrer from '../../Referral/EditReferrer';
+import DeleteReferrer from '../../Referral/DeleteReferrer';
+import BulkDeleteReferrers from '../../Referral/BulkDeleteReferrers';
+import ReferralDetails from '../../Referral/ReferralDetails';
 
 // ----------------------------------------------------------------------
 
@@ -189,7 +190,7 @@ export default function GeneralReferral() {
     referrals.map((referral) => {
       const array = Object.entries(referral);
 
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
+      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
 
       const asObject = Object.fromEntries(filtered);
 
@@ -249,8 +250,8 @@ export default function GeneralReferral() {
                   />
 
                   <TableBody>
-                    {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                      const { _id, name, phone, email, commission, totalSales, totalEarnings } = row;
+                    {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                      const { _id, name, phone,  commission, totalSales, totalEarnings } = row;
 
                       const isItemSelected = selected.indexOf(_id) !== -1;
 

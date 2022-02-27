@@ -3,8 +3,6 @@ import CloseRounded from '@mui/icons-material/CloseRounded';
 import { IconButton, Drawer, Stack, Box, Typography, TextField, Button } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
-import { Link } from 'react-router-dom';
 import { updateStore } from '../../../actions';
 
 const BaseURL = 'https://api.app.qwikshop.online/v1/';
@@ -59,13 +57,13 @@ const MailchimpConnect = ({ open, handleClose }) => {
                 </a>
               )}
 
-              <Typography sx={{ my: 3 }} variant="subtitle2">
+              {/* <Typography sx={{ my: 3 }} variant="subtitle2">
                 Need Help?
               </Typography>
               <PlayCircleRoundedIcon sx={{ mr: 1 }} />
               <Link to="/">
                 <Typography variant="caption">See How to connect Mailchimp with QwikShop</Typography>
-              </Link>
+              </Link> */}
             </Box>
           </Box>
         </Drawer>
