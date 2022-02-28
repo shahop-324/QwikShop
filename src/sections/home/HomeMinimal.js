@@ -277,7 +277,7 @@ export default function HomeMinimal() {
             </Typography>
           </MotionInView>
           <MotionInView variants={varFade().inDown}>
-            <Typography variant="h2">Easiest and Powerful way to sell online</Typography>
+            <Typography variant="h2">Features to fuel your Business</Typography>
           </MotionInView>
         </Box>
 

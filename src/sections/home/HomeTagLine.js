@@ -13,10 +13,10 @@ const HomeTagLine = () => (
         <Card sx={{ p: 4 }}>
           {/*  */}
           <Typography variant="h4" sx={{ mb: 4 }}>
-            Truly Digital, Truly Indian
+           Just follow 3 easy Steps
           </Typography>
           <Typography variant="subtitle1" color="primary">
-            Ecommerce Platform to run your Dream Online Business Seamlessly, Start Selling Online Today with QwikShop
+            QwikShop is very easy to setup and start your online business
           </Typography>
         </Card>
       </Box>

@@ -115,7 +115,7 @@ export default function MainFooter() {
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          © 2021. All rights reserved
+          © 2022. All rights reserved. BLUEMEET PRIVATE LIMITED
         </Typography>
       </Container>
     </RootStyle>

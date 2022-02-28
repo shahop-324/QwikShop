@@ -1,77 +1,84 @@
+import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { styled } from '@mui/material/styles';
-import {
-  Box,
-  Container,
-  Typography,
-} from '@mui/material';
-// hooks
+import { useTheme, styled } from '@mui/material/styles';
+import { Box, Grid, Button, Container, Typography } from '@mui/material';
+// routes
 // components
 import Image from '../../components/Image';
-import { MotionInView, varFade } from '../../components/animate';
-import SellOnline from "../../assets/sell-online.png";
+
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
-  padding: theme.spacing(15, 0),
+  padding: theme.spacing(8, 0),
 }));
+
+const ContentStyle = styled('div')(({ theme }) => ({
+  width: '100%',
+  textAlign: 'center',
+  marginBottom: theme.spacing(10),
+  [theme.breakpoints.up('md')]: {
+    textAlign: 'left',
+    marginBottom: 0,
+  },
+}));
+
+
+
+
+
 
 // ----------------------------------------------------------------------
 
-export default function HomeColorPresets() {
+export default function HomeHugePackElements() {
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
 
 
   return (
     <RootStyle>
-      <Container sx={{ position: 'relative', textAlign: 'center' }}>
-        <MotionInView variants={varFade().inUp}>
-          <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-           STEP 3
-          </Typography>
-        </MotionInView>
+      <Container>
+        <Grid container spacing={5} justifyContent="center">
+          <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center' }}>
+            <ContentStyle>
+              <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
+                STEP 3
+              </Typography>
 
-        <MotionInView variants={varFade().inUp}>
-          <Typography variant="h2" sx={{ mb: 3 }}>
-            Start Selling Online
-          </Typography>
-        </MotionInView>
+              <Typography variant="h2" sx={{ mb: 3 }}>
+                Sell & Earn <br />
+               Online
+              </Typography>
 
-        <MotionInView variants={varFade().inUp}>
-          <Typography
-            sx={{
-              color: (theme) => (theme.palette.mode === 'light' ? 'text.secondary' : 'text.primary'),
-            }}
-          >
-            Boost your business with Best in class Ecommerce store
-          </Typography>
-        </MotionInView>
+              <Typography
+                sx={{
+                  mb: 5,
+                  color: isLight ? 'text.secondary' : 'common.white',
+                }}
+              >
+                QwikShop has everything you need to create, manage and run your online business smoothly and
+                effortlessly.
+              </Typography>
 
-       
+              <Button size="large" color="primary" variant="contained" component={RouterLink} to={'/auth/register'}>
+                Start My Business Today
+              </Button>
+            </ContentStyle>
+          </Grid>
 
-        <Box sx={{ position: 'relative' }}>
-          <Image
-          style={{height: "500px"}}
-            disabledEffect
-            alt="grid"
-            src="https://minimal-assets-api.vercel.app/assets/images/home/theme-color/grid.png"
-          />
-
-          <Box sx={{ position: 'absolute', top: "50%", left: "50%", transform: 'translate(-50%, -50%)'  }}>
-            <MotionInView variants={varFade().inUp}>
-              <Image
-              
-                disabledEffect
-                alt="screen"
-                src={SellOnline}
-              />
-            </MotionInView>
-          </Box>
-
-          
-
-          
-        </Box>
+          <Grid item xs={12} md={8} dir="ltr">
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                position: 'relative',
+                justifyContent: 'center',
+              }}
+            >
+              <Image sx={{ height: '400px' }} disabledEffect alt={`screen ${0 + 1}`} src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/sell-online.png'} />
+            </Box>
+          </Grid>
+        </Grid>
       </Container>
     </RootStyle>
   );

@@ -10,7 +10,6 @@ import { PricingPlanCard } from '../sections/pricing';
 import Monthly from "../assets/Monthly.png";
 import Yearly from "../assets/Yearly.png";
 import Lifetime from "../assets/Lifetime.png";
-import MainFooter from '../layouts/main/MainFooter';
 
 // ----------------------------------------------------------------------
 

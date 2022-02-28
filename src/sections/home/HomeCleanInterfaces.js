@@ -1,10 +1,16 @@
 // @mui
+import 'react-phone-number-input/style.css';
+import {useState} from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Container, Typography, } from '@mui/material';
+import { Box, Container, Typography, Button, Stack} from '@mui/material';
+import StoreMallDirectoryRoundedIcon from '@mui/icons-material/StoreMallDirectoryRounded';
+
+import PhoneInput from 'react-phone-number-input';
+import CustomPhoneNumber from '../../forms/PhoneNumber';
 // components
 import Image from '../../components/Image';
-import { MotionInView, varFade } from '../../components/animate';
-import ThemePreview from "../../assets/theme-preview.png";
+// Phone Input
+
 // ----------------------------------------------------------------------
 
 
@@ -18,7 +24,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function HomeCleanInterfaces() {
   
-  
+  const [phone, setPhone] = useState('');
 
   return (
     <RootStyle>
@@ -27,31 +33,52 @@ export default function HomeCleanInterfaces() {
       <Box
           sx={{
             textAlign: 'center',
-            mb: { xs: 10, md: 25 },
+            mb: { xs: 10, md: 15 },
           }}
         >
-          <MotionInView variants={varFade().inUp}>
+         
             <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-              Website for your Business
+              Built for all Business types
             </Typography>
-          </MotionInView>
-          <MotionInView variants={varFade().inDown}>
-            <Typography variant="h2">Beautiful, modern and powerful  Themes for your Business</Typography>
-          </MotionInView>
+         
+         
+            <Typography variant="h3">Beautiful, modern and powerful  Themes for your Business</Typography>
+         
         </Box>
         
 
-        <Box sx={{ position: 'relative' }}>
+        <Box >
          
             
               <Image
-                disabledEffect
-                visibleByDefault
+                // disabledEffect
+                // visibleByDefault
                 alt={`clean`}
-                src={ThemePreview}
+                src={`https://qwikshop.s3.ap-south-1.amazonaws.com/theme-preview.png`}
               />
            
           
+        </Box>
+        <Box
+          sx={{
+            textAlign: 'center',
+            mt: 10,
+            
+          }}
+        >
+          <Stack direction="row" alignItems="center" justifyContent="center" spacing={4}>
+          <PhoneInput
+          width={'400px'}
+                  name="phoneNumber"
+                  placeholder="Phone number"
+                  value={phone}
+                  onChange={setPhone}
+                  inputComponent={CustomPhoneNumber}
+                  defaultCountry="IN"
+                />
+          <Button startIcon={<StoreMallDirectoryRoundedIcon />} variant='contained' size="large">Create my store</Button>
+          </Stack>
+           
         </Box>
       </Container>
     </RootStyle>

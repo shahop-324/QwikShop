@@ -75,7 +75,7 @@ export default function HomeAdvertisement() {
                 '&:hover': { bgcolor: 'grey.300' },
               }}
             >
-              Start 14 Days Free Trial
+              Start My Business Today
             </Button>
           </MotionInView>
         </Box>

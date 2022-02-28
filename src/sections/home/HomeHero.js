@@ -8,13 +8,12 @@ import { PATH_AUTH } from '../../routes/paths';
 // components
 import Iconify from '../../components/Iconify';
 import { MotionContainer, varFade } from '../../components/animate';
-import OnlineStore from "../../assets/Online-store.png";
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(m.div)(({ theme }) => ({
   position: 'relative',
-  backgroundColor: theme.palette.grey[400],
+  backgroundColor: '#212121',
   [theme.breakpoints.up('md')]: {
     top: 0,
     left: 0,
@@ -40,14 +39,6 @@ const ContentStyle = styled((props) => <Stack spacing={5} {...props} />)(({ them
   },
 }));
 
-const HeroOverlayStyle = styled(m.img)({
-  zIndex: 9,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  position: 'absolute',
-});
-
 const HeroImgStyle = styled(m.img)(({ theme }) => ({
   top: 0,
   right: 0,
@@ -69,34 +60,30 @@ export default function HomeHero() {
   return (
     <MotionContainer>
       <RootStyle>
-        <HeroOverlayStyle
-          alt="overlay"
-          src="https://minimal-assets-api.vercel.app/assets/overlay.svg"
-          variants={varFade().in}
-        />
+       
 
         <HeroImgStyle
           alt="hero"
-          src={OnlineStore}
+          src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/hero.png'}
           variants={varFade().inUp}
         />
 
         <Container>
           <ContentStyle>
             <m.div variants={varFade().inRight}>
-              <Typography variant="h1" sx={{ color: 'common.white' }}>
+              <Typography variant="h2" sx={{ color: '#FFFFFF' }}>
                 Start selling online <br />
-                for free<br /> with
-                <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>
-                  &nbsp;QwikShop
+                for free in
+                <Typography component="span" variant="h2" sx={{ color: 'primary.main' }}>
+                  &nbsp;India
                 </Typography>
               </Typography>
             </m.div>
 
             <m.div variants={varFade().inRight}>
-              <Typography sx={{ color: 'common.white' }}>
-                The starting point for your next online business, QwikShop gives you the power to run your online stores
-                seamlessly without efforts.
+              <Typography sx={{ color: '#ffffff' }}>
+                The starting point for your next online business, QwikShop allows you to run your online business
+                 without techincal knowledge.
               </Typography>
             </m.div>
 
@@ -108,7 +95,7 @@ export default function HomeHero() {
                 to={PATH_AUTH.register}
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
-                Start 14 Days Free Trial
+               Start My Business
               </Button>
             </m.div>
           </ContentStyle>
