@@ -187,14 +187,14 @@ export default function GeneralTransaction() {
                       <TableCell>
                         <Stack direction={'row'} alignItems={'center'}>
                           <Typography variant="subtitle2" noWrap>
-                           {row.customer.name}
+                           {row?.customer?.name}
                           </Typography>
                         </Stack>
                       </TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{row.order.ref}</TableCell>
-                      <TableCell style={{ minWidth: 160 }}>Rs.{row.order.charges.total}</TableCell>
-                      <TableCell align="left">{dateFormat(new Date(row.createdAt || Date.now()), 'ddd mmm dS, yy hh:mm TT')}</TableCell>
-                      <TableCell align="left">{row.resolved ? <Chip label="Proccessed" color="primary" variant="outlined" /> : <Chip label="Processing" color="info" variant="outlined" /> }</TableCell>
+                      <TableCell style={{ minWidth: 160 }}>{row?.order?.ref}</TableCell>
+                      <TableCell style={{ minWidth: 160 }}>Rs.{row?.order?.charges?.total}</TableCell>
+                      <TableCell align="left">{dateFormat(new Date(row?.createdAt || Date.now()), 'ddd mmm dS, yy hh:mm TT')}</TableCell>
+                      <TableCell align="left">{row?.resolved ? <Chip label="Proccessed" color="primary" variant="outlined" /> : <Chip label="Processing" color="info" variant="outlined" /> }</TableCell>
                       
                     </TableRow>
                   );
