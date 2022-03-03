@@ -8,13 +8,11 @@ import { useFormik } from 'formik';
 import { Box, Card, Grid, TextField, Autocomplete, Stack, Typography, Button } from '@mui/material';
 // utils
 import { useDispatch, useSelector } from 'react-redux';
-import { Map, GoogleApiWrapper } from 'google-maps-react';
 import MapGL from 'react-map-gl';
 import { fData } from '../../../../utils/formatNumber';
 
 import { UploadAvatar } from '../../../../components/upload';
 import { updateStoreGeneralInfo, resetIsSubmittingStoreSetup } from '../../../../actions';
-import { MAPBOX_API } from '../../../../config';
 import { MapControlPopup, MapControlMarker, MapControlScale, MapControlNavigation } from '../../../../components/map';
 import { _mapContact } from '../../../../_mock';
 import Iconify from '../../../../components/Iconify';
@@ -410,8 +408,8 @@ export default function AccountGeneral() {
               {mapContact.map((country) => (
                 <MapControlMarker
                   key={country.phoneNumber}
-                  latitude={country.latlng[0]}
-                  longitude={country.latlng[1]}
+                  latitude={country.latlng[0] || 26.2662023}
+                  longitude={country.latlng[1] || 78.2081602}
                   onClick={() => setTooltip(country)}
                 />
               ))}
