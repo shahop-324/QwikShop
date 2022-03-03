@@ -10,6 +10,8 @@ export const HOST_API = 'http://localhost:3080';
 // LAYOUT
 // ----------------------------------------------------------------------
 
+export const MAPBOX_API = process.env.REACT_APP_MAPBOX;
+
 export const HEADER = {
   MOBILE_HEIGHT: 64,
   MAIN_DESKTOP_HEIGHT: 88,

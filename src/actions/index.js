@@ -427,7 +427,7 @@ export const stopLoginBtnLoader = () => async (dispatch, _getState) => {
   );
 };
 
-export const createNewStore = (formValues, onNext, handleClose) => async (dispatch, getState) => {
+export const createNewStore = (formValues, lat, long, onNext, handleClose) => async (dispatch, getState) => {
   let message;
 
   dispatch(
@@ -442,6 +442,8 @@ export const createNewStore = (formValues, onNext, handleClose) => async (dispat
 
       body: JSON.stringify({
         ...formValues,
+        lat,
+        long,
       }),
 
       headers: {
@@ -515,7 +517,7 @@ export const createNewStore = (formValues, onNext, handleClose) => async (dispat
   }
 };
 
-export const setupStore = (formValues, onNext, handleClose) => async (dispatch, getState) => {
+export const setupStore = (formValues, lat, long, onNext, handleClose) => async (dispatch, getState) => {
   let message;
 
   dispatch(
@@ -530,6 +532,8 @@ export const setupStore = (formValues, onNext, handleClose) => async (dispatch, 
 
       body: JSON.stringify({
         ...formValues,
+        lat,
+        long,
       }),
 
       headers: {

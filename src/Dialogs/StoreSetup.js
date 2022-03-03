@@ -205,9 +205,45 @@ const StoreSetup = ({ open, handleClose }) => {
       pincode: Yup.string().required('Pincode is required'),
       gstin: Yup.string(),
     }),
-    onSubmit: (values) => {
+    onSubmit: async(values) => {
       console.log(values, category, country);
-      dispatch(setupStore({ ...values, category, country }, onNext, handleClose));
+
+      let lat = 26.2662023;
+      let long = 78.2081602;
+
+      try {
+        // Fetch current user details
+
+        const res = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${`${values.address} ${values.pincode} ${values.landmark} ${values.city} ${values.state}`}&key=AIzaSyC1WBMBtZMUzZs0xCzJETUzttOOvR8LsvU`,
+          {
+            method: 'GET',
+
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error('Something went wrong');
+          } else {
+            throw new Error(res.message);
+          }
+        }
+
+        console.log(result);
+
+        lat = result.data.results.geometry.location.lat;
+        long = result.data.results.geometry.location.lng;
+      } catch (error) {
+        console.log(error);
+      }
+
+      dispatch(setupStore({ ...values, lat, long, category, country }, onNext, handleClose));
     },
   });
 

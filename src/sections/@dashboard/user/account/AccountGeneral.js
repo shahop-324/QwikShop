@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useCallback, useEffect } from 'react';
+import { useTheme, styled } from '@mui/material/styles';
 import * as Yup from 'yup';
 // form
 import { useFormik } from 'formik';
@@ -7,15 +8,24 @@ import { useFormik } from 'formik';
 import { Box, Card, Grid, TextField, Autocomplete, Stack, Typography, Button } from '@mui/material';
 // utils
 import { useDispatch, useSelector } from 'react-redux';
+import { Map, GoogleApiWrapper } from 'google-maps-react';
+import MapGL from 'react-map-gl';
 import { fData } from '../../../../utils/formatNumber';
 
 import { UploadAvatar } from '../../../../components/upload';
 import { updateStoreGeneralInfo, resetIsSubmittingStoreSetup } from '../../../../actions';
+import { MAPBOX_API } from '../../../../config';
+import { MapControlPopup, MapControlMarker, MapControlScale, MapControlNavigation } from '../../../../components/map';
+import { _mapContact } from '../../../../_mock';
+import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
 
   const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
 
@@ -51,8 +61,45 @@ export default function AccountGeneral() {
       storeURL: Yup.string().required('Store URL is required'),
       phone: Yup.string().required('Phone is required'),
     }),
-    onSubmit: (values) => {
-      const formValues = { ...values, category, country };
+    onSubmit: async (values) => {
+      // https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
+
+      let lat = 26.2662023;
+      let long = 78.2081602;
+
+      try {
+        // Fetch current user details
+
+        const res = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${`${values.address} ${values.pincode} ${values.landmark} ${values.city} ${values.state}`}&key=AIzaSyC1WBMBtZMUzZs0xCzJETUzttOOvR8LsvU`,
+          {
+            method: 'GET',
+
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          if (!res.message) {
+            throw new Error('Something went wrong');
+          } else {
+            throw new Error(res.message);
+          }
+        }
+
+        console.log(result);
+
+        lat = result.data.results.geometry.location.lat;
+        long = result.data.results.geometry.location.lng;
+      } catch (error) {
+        console.log(error);
+      }
+
+      const formValues = { ...values, lat, long, category, country };
 
       dispatch(updateStoreGeneralInfo(formValues, values.storeURL, file));
     },
@@ -61,10 +108,17 @@ export default function AccountGeneral() {
   const [country, setCountry] = useState(store.country);
   const [category, setCategory] = useState(store.category);
 
+  const [tooltip, setTooltip] = useState(null);
   const [file, setFile] = useState();
   const [fileToPreview, setFileToPreview] = useState(
     store.logo && `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`
   );
+
+  const [viewport, setViewport] = useState({
+    latitude: 26.2662023,
+    longitude: 78.2081602,
+    zoom: 1,
+  });
 
   const handleDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -74,6 +128,18 @@ export default function AccountGeneral() {
       setFileToPreview(URL.createObjectURL(file));
     }
   }, []);
+
+  const mapContact = [
+    {
+      address: `${store.address}, ${store.city} ${store.state}`,
+      pincode: store.pincode,
+      landmark: store.landmark,
+      store: store.storeName,
+
+      phoneNumber: store.phone,
+      latlng: [store.lat, store.long],
+    },
+  ];
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -325,6 +391,94 @@ export default function AccountGeneral() {
               Save Changes
             </Button>
           </Stack>
+          <Card sx={{ p: 3, mt: 4, height: '500px', width: '100%' }}>
+            <MapGL
+              {...viewport}
+              onViewportChange={setViewport}
+              mapStyle={`mapbox://styles/mapbox/${isLight ? 'light' : 'dark'}-v10`}
+              mapboxApiAccessToken={
+                'pk.eyJ1IjoicXdpa3Nob3Atb3AiLCJhIjoiY2wwYXBqcjltMDExZzNrb3Zhc28zOTg3YSJ9.3vZGD11dtRlueOb_AzWyGw'
+              }
+              width="100%"
+              height="100%"
+            >
+              <MapControlScale />
+              <MapControlNavigation />
+
+              {console.log(_mapContact, 'This is map contact')}
+
+              {mapContact.map((country) => (
+                <MapControlMarker
+                  key={country.phoneNumber}
+                  latitude={country.latlng[0]}
+                  longitude={country.latlng[1]}
+                  onClick={() => setTooltip(country)}
+                />
+              ))}
+
+              {tooltip && (
+                <MapControlPopup
+                  longitude={tooltip.latlng[1]}
+                  latitude={tooltip.latlng[0]}
+                  onClose={() => setTooltip(null)}
+                  sx={{
+                    '& .mapboxgl-popup-content': { bgcolor: 'common.white' },
+                    '&.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip': { borderTopColor: '#FFF' },
+                    '&.mapboxgl-popup-anchor-top .mapboxgl-popup-tip': { borderBottomColor: '#FFF' },
+                  }}
+                >
+                  {tooltip.address && (
+                    <>
+                      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                        Address
+                      </Typography>
+                      <Typography component="p" sx={{ mb: 1 }} variant="caption">
+                        {tooltip.address}
+                      </Typography>
+                    </>
+                  )}
+
+                  {tooltip.store && (
+                    <>
+                      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                        Store Name
+                      </Typography>
+                      <Typography sx={{ mb: 1 }} component="p" variant="caption">
+                        {tooltip.store}
+                      </Typography>
+                    </>
+                  )}
+
+                  {tooltip.pincode && (
+                    <>
+                      <Typography sx={{ mb: 0.5 }} variant="subtitle2">
+                        Pincode
+                      </Typography>
+                      <Typography sx={{ mb: 1 }} component="p" variant="caption">
+                        {tooltip.pincode}
+                      </Typography>
+                    </>
+                  )}
+
+                  {tooltip.landmark && (
+                    <>
+                      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                        Landmark
+                      </Typography>
+                      <Typography sx={{ mb: 1 }} component="p" variant="caption">
+                        {tooltip.landmark}
+                      </Typography>
+                    </>
+                  )}
+
+                  <Typography component="p" variant="caption" sx={{ mt: 1, display: 'flex', alignItems: 'center' }}>
+                    <Iconify icon={'eva:phone-fill'} sx={{ mr: 0.5, width: 14, height: 14 }} />
+                    {tooltip.phoneNumber}
+                  </Typography>
+                </MapControlPopup>
+              )}
+            </MapGL>
+          </Card>
         </Grid>
       </Grid>
     </form>
