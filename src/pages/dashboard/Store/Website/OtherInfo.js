@@ -66,9 +66,11 @@ const StoreOtherInfo = () => {
   return (
     <div>
       <div style={{ width: '100%' }} className="d-flex flex-row align-items-center justify-content-end mb-2">
+      <a style={{textDecoration: "none"}} href={`https://qwikshop.online/${store.subName}`} target="_blank" rel="noreferrer">
         <Button variant="contained" startIcon={<RemoveRedEyeIcon />}>
           Preview
         </Button>
+        </a>
       </div>
 
       <Grid className="px-4 pt-3" container spacing={3}>

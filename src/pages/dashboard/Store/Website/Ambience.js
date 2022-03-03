@@ -19,9 +19,11 @@ const StoreAmbience = () => {
   return (
     <div>
       <div style={{width: "100%"}} className='d-flex flex-row align-items-center justify-content-end mb-3' >
+      <a style={{textDecoration: "none"}} href={`https://qwikshop.online/${store.subName}`} target="_blank" rel="noreferrer">
         <Button variant="contained" startIcon={<RemoveRedEyeIcon />}>
           Preview
         </Button>
+        </a>
       </div>
 
       
