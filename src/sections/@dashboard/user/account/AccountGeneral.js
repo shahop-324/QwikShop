@@ -1,6 +1,6 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useCallback, useEffect } from 'react';
-import { useTheme, styled } from '@mui/material/styles';
 import * as Yup from 'yup';
 // form
 import { useFormik } from 'formik';
@@ -8,22 +8,17 @@ import { useFormik } from 'formik';
 import { Box, Card, Grid, TextField, Autocomplete, Stack, Typography, Button } from '@mui/material';
 // utils
 import { useDispatch, useSelector } from 'react-redux';
-import MapGL from 'react-map-gl';
 import { fData } from '../../../../utils/formatNumber';
 
 import { UploadAvatar } from '../../../../components/upload';
 import { updateStoreGeneralInfo, resetIsSubmittingStoreSetup } from '../../../../actions';
-import { MapControlPopup, MapControlMarker, MapControlScale, MapControlNavigation } from '../../../../components/map';
-import { _mapContact } from '../../../../_mock';
-import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
   const dispatch = useDispatch();
 
-  const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
+
 
   const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
 
@@ -106,17 +101,12 @@ export default function AccountGeneral() {
   const [country, setCountry] = useState(store.country);
   const [category, setCategory] = useState(store.category);
 
-  const [tooltip, setTooltip] = useState(null);
+  
   const [file, setFile] = useState();
   const [fileToPreview, setFileToPreview] = useState(
     store.logo && `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`
   );
 
-  const [viewport, setViewport] = useState({
-    latitude: 26.2662023,
-    longitude: 78.2081602,
-    zoom: 1,
-  });
 
   const handleDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -126,18 +116,6 @@ export default function AccountGeneral() {
       setFileToPreview(URL.createObjectURL(file));
     }
   }, []);
-
-  const mapContact = [
-    {
-      address: `${store.address}, ${store.city} ${store.state}`,
-      pincode: store.pincode,
-      landmark: store.landmark,
-      store: store.storeName,
-
-      phoneNumber: store.phone,
-      latlng: [store.lat, store.long],
-    },
-  ];
 
   return (
     <form onSubmit={formik.handleSubmit}>

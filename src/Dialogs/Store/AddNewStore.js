@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-duplicates */
 /* eslint-disable camelcase */
