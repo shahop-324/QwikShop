@@ -12,7 +12,6 @@ import PhoneInput from 'react-phone-number-input';
 import Iconify from '../../../components/Iconify';
 import { login, resetLoginFormLoading, loginViaMobile } from '../../../actions';
 import GoogleAuth from '../../../pages/auth/GoogleAuth';
-
 import CustomPhoneNumber from '../../../forms/PhoneNumber';
 import 'react-phone-number-input/style.css';
 

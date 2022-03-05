@@ -23,6 +23,7 @@ import {
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
+import PhoneInput from 'react-phone-number-input';
 import { UploadAvatar } from '../../components/upload';
 import { fData } from '../../utils/formatNumber';
 import {
@@ -32,6 +33,9 @@ import {
   resetIsUpdatingUser,
   resetIsUpdatingPassword,
 } from '../../actions';
+
+import CustomPhoneNumber from '../../forms/PhoneNumber';
+import 'react-phone-number-input/style.css';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -78,6 +82,8 @@ const Profile = ({ open, handleClose }) => {
 
   const { user, isUpdatingUser, isUpdatingPassword } = useSelector((state) => state.user);
 
+  const [phone, setPhone] = useState(user.phone);
+
   console.log(user?.image?.startsWith('https'));
 
   const [image, setImage] = useState();
@@ -98,21 +104,19 @@ const Profile = ({ open, handleClose }) => {
 
   const handleFormSubmit = async (values) => {
     console.log(image, values);
-    dispatch(updateUserProfile(values, image));
+    dispatch(updateUserProfile({ ...values, phone }, image));
   };
 
   const user_profile_schema = Yup.object().shape({
     firstName: Yup.string().required('First name is required'),
     lastName: Yup.string().required('Last name is required'),
     email: Yup.string().required('Email is required'),
-    phone: Yup.string().required('Contact No. is required'),
   });
 
   const initialValues = {
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
-    phone: user.phone,
   };
 
   useEffect(() => {
@@ -221,6 +225,14 @@ const Profile = ({ open, handleClose }) => {
                               label="Email"
                               fullWidth
                               required
+                            />
+                            <PhoneInput
+                              name="phoneNumber"
+                              placeholder="Phone Number"
+                              value={phone}
+                              onChange={setPhone}
+                              inputComponent={CustomPhoneNumber}
+                              defaultCountry="IN"
                             />
                             <TextField
                               value={values.phone}
