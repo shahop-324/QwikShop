@@ -4,8 +4,12 @@ import * as Yup from 'yup';
 
 // @mui
 import { useFormik } from 'formik';
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
+import { Stack, TextField, IconButton, Button, InputAdornment, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+
+import PhoneInput from 'react-phone-number-input';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 
 // form
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,6 +22,10 @@ import Iconify from '../../../components/Iconify';
 // import CustomPhoneNumber from '../../../forms/PhoneNumber';
 
 import { register } from '../../../actions';
+
+import CustomPhoneNumber from '../../../forms/PhoneNumber';
+import 'react-phone-number-input/style.css';
+import RegisterViaGoogle from '../../../pages/auth/RegisterViaGoogle';
 
 const RegisterForm = () => {
   const formik = useFormik({
@@ -52,6 +60,10 @@ const RegisterForm = () => {
   const { isSubmittingRegister } = useSelector((state) => state.auth);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const [registerVia, setRegisterVia] = useState('mobile');
+
+  const [phone, setPhone] = useState();
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -93,7 +105,18 @@ const RegisterForm = () => {
           helperText={formik.touched.shopName && formik.errors.shopName}
         />
 
-        <TextField
+{registerVia === 'mobile' ? ( <Box sx={{ mb: 3 }}>
+            <PhoneInput
+              name="phoneNumber"
+              placeholder="Phone Number"
+              value={phone}
+              onChange={setPhone}
+              inputComponent={CustomPhoneNumber}
+              defaultCountry="IN"
+            />
+          </Box> ) : ( <>
+          
+            <TextField
           value={formik.values.email}
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
@@ -126,6 +149,10 @@ const RegisterForm = () => {
             ),
           }}
         />
+          
+          </>  ) }
+
+        
 
         <TextField
           value={formik.values.referralCode}
@@ -149,6 +176,32 @@ const RegisterForm = () => {
         >
           Register
         </LoadingButton>
+        <Box sx={{ my: 2 }}>
+        <RegisterViaGoogle />
+      </Box>
+        {registerVia === 'mobile' ? (
+        <Button
+          onClick={() => {
+            setRegisterVia('email');
+          }}
+          fullWidth
+          startIcon={<EmailOutlinedIcon />}
+          variant="outlined"
+        >
+          Register with email
+        </Button>
+      ) : (
+        <Button
+          onClick={() => {
+            setRegisterVia('mobile');
+          }}
+          fullWidth
+          startIcon={<LocalPhoneIcon />}
+          variant="outlined"
+        >
+          Register with mobile
+        </Button>
+      )}
       </Stack>
     </form>
   );

@@ -29,8 +29,8 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'https://api.app.qwikshop.online/v1/';
-// const BaseURL = 'http://localhost:8000/v1/';
+// const BaseURL = 'https://api.app.qwikshop.online/v1/';
+const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -566,7 +566,9 @@ export const setupStore = (formValues, lat, long, onNext, handleClose) => async 
 
     dispatch(showSnackbar('success', message));
 
-    onNext();
+    if (onNext) {
+      onNext();
+    }
 
     setTimeout(() => {
       handleClose();
@@ -1266,113 +1268,107 @@ export const createNewProduct = (formValues, images, videos, handleClose) => asy
   }
 };
 
-export const updateProduct = (
-  productId,
-  formValues,
-  images,
-  videos,
-  excludedImages,
-  excludedVideos,
-  handleClose
-) => async (dispatch, getState) => {
-  let message;
-  const imageKeys = [];
-  const videoKeys = [];
-  dispatch(productActions.SetIsUpdating({ state: true }));
-  try {
-    const newImages = images || [];
-    for (const _element of newImages) {
-      const key = `product/image/${getState().store.store._id}/${uuidv4()}.${_element.type}`;
-      imageKeys.push(key);
+export const updateProduct =
+  (productId, formValues, images, videos, excludedImages, excludedVideos, handleClose) =>
+  async (dispatch, getState) => {
+    let message;
+    const imageKeys = [];
+    const videoKeys = [];
+    dispatch(productActions.SetIsUpdating({ state: true }));
+    try {
+      const newImages = images || [];
+      for (const _element of newImages) {
+        const key = `product/image/${getState().store.store._id}/${uuidv4()}.${_element.type}`;
+        imageKeys.push(key);
 
-      s3.getSignedUrl(
-        'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
-        async (_err, presignedURL) => {
-          await fetch(presignedURL, {
-            method: 'PUT',
+        s3.getSignedUrl(
+          'putObject',
+          { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+          async (_err, presignedURL) => {
+            await fetch(presignedURL, {
+              method: 'PUT',
 
-            body: _element,
+              body: _element,
 
-            headers: {
-              'Content-Type': _element.type,
-            },
-          });
-        }
-      );
-    }
-
-    const newVideos = videos || [];
-    for (const _element of newVideos) {
-      const key = `product/video/${getState().store.store._id}/${uuidv4()}.${_element.type}`;
-      videoKeys.push(key);
-      s3.getSignedUrl(
-        'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
-        async (_err, presignedURL) => {
-          await fetch(presignedURL, {
-            method: 'PUT',
-
-            body: _element,
-
-            headers: {
-              'Content-Type': _element.type,
-            },
-          });
-        }
-      );
-    }
-
-    // Upload videos
-    // Send data back to api
-
-    const res = await fetch(`${BaseURL}product/update/${productId}`, {
-      method: 'PATCH',
-
-      body: JSON.stringify({
-        ...formValues,
-        imageKeys: imageKeys || [],
-        videoKeys: videoKeys || [],
-        excludedImages: excludedImages || [],
-        excludedVideos: excludedVideos || [],
-      }),
-
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getState().auth.token}`,
-      },
-    });
-
-    const result = await res.json();
-
-    message = result.message;
-
-    if (!res.ok) {
-      if (!res.message) {
-        throw new Error(message);
-      } else {
-        throw new Error(res.message);
+              headers: {
+                'Content-Type': _element.type,
+              },
+            });
+          }
+        );
       }
+
+      const newVideos = videos || [];
+      for (const _element of newVideos) {
+        const key = `product/video/${getState().store.store._id}/${uuidv4()}.${_element.type}`;
+        videoKeys.push(key);
+        s3.getSignedUrl(
+          'putObject',
+          { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+          async (_err, presignedURL) => {
+            await fetch(presignedURL, {
+              method: 'PUT',
+
+              body: _element,
+
+              headers: {
+                'Content-Type': _element.type,
+              },
+            });
+          }
+        );
+      }
+
+      // Upload videos
+      // Send data back to api
+
+      const res = await fetch(`${BaseURL}product/update/${productId}`, {
+        method: 'PATCH',
+
+        body: JSON.stringify({
+          ...formValues,
+          imageKeys: imageKeys || [],
+          videoKeys: videoKeys || [],
+          excludedImages: excludedImages || [],
+          excludedVideos: excludedVideos || [],
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(message);
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      dispatch(
+        productActions.UpdateProduct({
+          product: result.data,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+      dispatch(productActions.SetIsUpdating({ state: false }));
+
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      dispatch(showSnackbar('error', message));
+      dispatch(productActions.SetIsUpdating({ state: false }));
     }
-
-    console.log(result);
-
-    dispatch(
-      productActions.UpdateProduct({
-        product: result.data,
-      })
-    );
-
-    dispatch(showSnackbar('success', message));
-    dispatch(productActions.SetIsUpdating({ state: false }));
-
-    handleClose();
-  } catch (error) {
-    console.log(error);
-    dispatch(showSnackbar('error', message));
-    dispatch(productActions.SetIsUpdating({ state: false }));
-  }
-};
+  };
 
 export const fetchProducts = (term) => async (dispatch, getState) => {
   let message;
@@ -7828,3 +7824,208 @@ export const printManifest = (shipmentId) => async (dispatch, getState) => {
     );
   }
 };
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++ GOOGLE SIGN IN +++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+export const googleSignIn = (formValues) => async (dispatch, getState) => {
+  console.log(formValues, 'from google sign in');
+
+  let message;
+
+  // dispatch(
+  //   authActions.SetIsSubmittingLogin({
+  //     isSubmitting: true,
+  //   })
+  // );
+
+  try {
+    const res = await fetch(`${BaseURL}google/login`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+      })
+    );
+
+    dispatch(
+      userActions.FetchUser({
+        user: result.user,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchPermissions({
+        permissions: result.permissions,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    dispatch(
+      authActions.SetIsSubmittingLogin({
+        isSubmitting: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', 'Failed to sign in via google, please try other method'));
+    dispatch(
+      authActions.SetIsSubmittingLogin({
+        isSubmitting: false,
+      })
+    );
+  }
+};
+
+export const googleSignUp = (formValues) => async (dispatch, getState) => {
+  console.log(formValues);
+
+  let message;
+
+  dispatch(
+    authActions.SetIsSubmittingRegister({
+      isSubmitting: true,
+    })
+  );
+
+  try {
+    const res = await fetch(`${BaseURL}google/register`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+      })
+    );
+
+    dispatch(
+      userActions.FetchUser({
+        user: result.user,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchPermissions({
+        permissions: result.permissions,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    // Send user to dashboard
+
+    setTimeout(() => {
+      window.location.href = `/dashboard/home`;
+    }, 1000);
+
+    dispatch(
+      authActions.SetIsSubmittingRegister({
+        isSubmitting: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message || 'Failed to register via google, please try other method'));
+
+    dispatch(
+      authActions.SetIsSubmittingRegister({
+        isSubmitting: false,
+      })
+    );
+  }
+};
+
+// export const regsiterViaMobile = () => async(dispatch, getState) => {
+
+//   let message;
+
+//   try{
+
+//   }
+//   catch(error) {
+//     console.log(error);
+//     dispatch(showSnackbar("error", message));
+//   }
+// }
+
+// export const verifyOTPForMobileLogin = () => async(dispatch, getState) => {
+// let message;
+
+// try{
+
+// }
+// catch(error) {
+//   console.log(error);
+//   dispatch(showSnackbar("error", message));
+// }
+// }
+
+// export const verifyOTPForMobileRegisteration = () => async(dispatch, getState) => {
+//   let message;
+//   try{
+
+//   }
+//   catch(error) {
+//     console.log(error);
+//     dispatch(showSnackbar("error", message));
+//   }
+// }

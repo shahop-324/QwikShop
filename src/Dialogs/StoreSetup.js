@@ -182,7 +182,7 @@ const StoreSetup = ({ open, handleClose }) => {
 
   const formik = useFormik({
     initialValues: {
-      storeName: store.storeName,
+      storeName: store.storeName || '',
 
       state: '',
       city: '',
@@ -197,6 +197,7 @@ const StoreSetup = ({ open, handleClose }) => {
     validateOnBlur: true,
     validateOnMount: true,
     validationSchema: Yup.object().shape({
+      storeName: Yup.string().required('Store Name is required'),
       address: Yup.string().required('Address is required'),
       state: Yup.string().required('State is required'),
       city: Yup.string().required('City is required'),
@@ -206,7 +207,7 @@ const StoreSetup = ({ open, handleClose }) => {
       pincode: Yup.string().required('Pincode is required'),
       gstin: Yup.string(),
     }),
-    onSubmit: async(values) => {
+    onSubmit: async (values) => {
       console.log(values, category, country);
 
       let lat = 26.2662023;
@@ -291,8 +292,8 @@ const StoreSetup = ({ open, handleClose }) => {
                       />
 
                       <Typography variant="body2">
-                        We are glad to have you, You are Now a part of India's fastest growing community of online Business
-                        owners...
+                        We are glad to have you, You are Now a part of India's fastest growing community of online
+                        Business owners...
                       </Typography>
                       <Typography variant="h6">
                         Just provide us a little bit info so we can get you started...
@@ -329,7 +330,7 @@ const StoreSetup = ({ open, handleClose }) => {
                           }}
                         >
                           <TextField
-                            disabled
+                            disabled={ store.storeName }
                             value={formik.values.storeName}
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
@@ -338,7 +339,7 @@ const StoreSetup = ({ open, handleClose }) => {
                             variant="outlined"
                             name="storeName"
                             error={!!formik.touched.storeName && !!formik.errors.storeName}
-                            helperText={'You can change your store name later.'}
+                            helperText={formik.touched.country && formik.errors.country}
                           />
 
                           <Autocomplete
@@ -353,7 +354,7 @@ const StoreSetup = ({ open, handleClose }) => {
                             variant="outlined"
                             name="country"
                             error={!!formik.touched.country && !!formik.errors.country}
-                            helperText={formik.touched.country && formik.errors.email}
+                            helperText={formik.touched.country && formik.errors.country}
                             options={countries}
                             autoHighlight
                             getOptionLabel={(option) => option.label}

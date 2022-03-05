@@ -4,10 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 // @mui
 import { useFormik } from 'formik';
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
+import { Stack, TextField, IconButton, InputAdornment, Box, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import PhoneInput from 'react-phone-number-input';
 import Iconify from '../../../components/Iconify';
 import { login, resetLoginFormLoading } from '../../../actions';
+import GoogleAuth from '../../../pages/auth/GoogleAuth';
+
+import CustomPhoneNumber from '../../../forms/PhoneNumber';
+import 'react-phone-number-input/style.css';
+
 // ----------------------------------------------------------------------
 // import CustomPhoneNumber from '../../../forms/PhoneNumber';
 
@@ -29,6 +37,9 @@ export default function LoginForm() {
     },
   });
 
+  const [phone, setPhone] = useState('');
+  const [loginVia, setLoginVia] = useState('mobile');
+
   useEffect(() => {
     dispatch(resetLoginFormLoading());
   }, []);
@@ -41,39 +52,54 @@ export default function LoginForm() {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Stack spacing={3}>
-        <TextField
-          value={formik.values.email}
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          fullWidth
-          label="Email"
-          variant="outlined"
-          name="email"
-          error={!!formik.touched.email && !!formik.errors.email}
-          helperText={formik.touched.email && formik.errors.email}
-        />
-        <TextField
-          className="mb-4"
-          value={formik.values.password}
-          onBlur={formik.handleBlur}
-          onChange={formik.handleChange}
-          fullWidth
-          label="Password"
-          variant="outlined"
-          name="password"
-          error={!!formik.touched.password && !!formik.errors.password}
-          helperText={formik.touched.password && formik.errors.password}
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        {loginVia === 'mobile' ? (
+          <Box sx={{ mb: 3 }}>
+            <PhoneInput
+              name="phoneNumber"
+              placeholder="Phone Number"
+              value={phone}
+              onChange={setPhone}
+              inputComponent={CustomPhoneNumber}
+              defaultCountry="IN"
+            />
+          </Box>
+        ) : (
+          <>
+            <TextField
+              value={formik.values.email}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              fullWidth
+              label="Email"
+              variant="outlined"
+              name="email"
+              error={!!formik.touched.email && !!formik.errors.email}
+              helperText={formik.touched.email && formik.errors.email}
+            />
+            <TextField
+              className="mb-4"
+              value={formik.values.password}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              fullWidth
+              label="Password"
+              variant="outlined"
+              name="password"
+              error={!!formik.touched.password && !!formik.errors.password}
+              helperText={formik.touched.password && formik.errors.password}
+              type={showPassword ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton edge="end" onClick={() => setShowPassword(!showPassword)}>
+                      <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </>
+        )}
       </Stack>
 
       <LoadingButton
@@ -86,6 +112,33 @@ export default function LoginForm() {
       >
         Login
       </LoadingButton>
+
+      <Box sx={{ my: 2 }}>
+        <GoogleAuth />
+      </Box>
+      {loginVia === 'mobile' ? (
+        <Button
+          onClick={() => {
+            setLoginVia('email');
+          }}
+          fullWidth
+          startIcon={<EmailOutlinedIcon />}
+          variant="outlined"
+        >
+          Login with email
+        </Button>
+      ) : (
+        <Button
+          onClick={() => {
+            setLoginVia('mobile');
+          }}
+          fullWidth
+          startIcon={<LocalPhoneIcon />}
+          variant="outlined"
+        >
+          Login with mobile
+        </Button>
+      )}
     </form>
   );
 }
