@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/state-in-constructor */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { googleSignIn } from '../../actions';
 
