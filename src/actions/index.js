@@ -7994,38 +7994,372 @@ export const googleSignUp = (formValues) => async (dispatch, getState) => {
   }
 };
 
-// export const regsiterViaMobile = () => async(dispatch, getState) => {
+export const loginViaMobile = (mobile) => async (dispatch, getState) => {
+  let message;
 
-//   let message;
+  dispatch(
+    authActions.SetIsSubmittingLogin({
+      isSubmitting: true,
+    })
+  );
 
-//   try{
+  try {
+    const res = await fetch(`${BaseURL}mobile/login`, {
+      method: 'POST',
 
-//   }
-//   catch(error) {
-//     console.log(error);
-//     dispatch(showSnackbar("error", message));
-//   }
-// }
+      body: JSON.stringify({
+        mobile,
+      }),
 
-// export const verifyOTPForMobileLogin = () => async(dispatch, getState) => {
-// let message;
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-// try{
+    const result = await res.json();
 
-// }
-// catch(error) {
-//   console.log(error);
-//   dispatch(showSnackbar("error", message));
-// }
-// }
+    message = result.message;
 
-// export const verifyOTPForMobileRegisteration = () => async(dispatch, getState) => {
-//   let message;
-//   try{
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
 
-//   }
-//   catch(error) {
-//     console.log(error);
-//     dispatch(showSnackbar("error", message));
-//   }
-// }
+    // Store token in auth state => redux store
+
+    // TODO REDIRECT TO MOBILE VERIFICATION PAGE
+
+    window.location.href = `/auth/mobile-login/?ref=https://www.app.qwikshop.online/auth/login&mob=${mobile}`;
+
+    dispatch(showSnackbar('success', message));
+
+    dispatch(
+      authActions.SetIsSubmittingLogin({
+        isSubmitting: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(
+      authActions.SetIsSubmittingLogin({
+        isSubmitting: false,
+      })
+    );
+  }
+};
+
+export const verifyLoginOTP = (mobile, otp) => async (dispatch, getState) => {
+  let message;
+
+  dispatch(
+    authActions.SetIsSubmittingVerify({
+      isSubmitting: true,
+    })
+  );
+
+  try {
+    //
+    const res = await fetch(`${BaseURL}mobile/verifyAndLogin`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        mobile,
+        otp,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+      })
+    );
+
+    dispatch(
+      userActions.FetchUser({
+        user: result.user,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchPermissions({
+        permissions: result.permissions,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    dispatch(
+      authActions.SetIsSubmittingVerify({
+        isSubmitting: false,
+      })
+    );
+
+    setTimeout(() => {
+      window.location.href = `/dashboard/home`;
+    }, 1000);
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(
+      authActions.SetIsSubmittingVerify({
+        isSubmitting: false,
+      })
+    );
+  }
+};
+
+export const resendMobileOTPForLogin = (mobile) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}mobile/resendLoginOTP`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        mobile,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    dispatch(showSnackbar('success', message));
+
+    dispatch(
+      authActions.SetIsReSendingOTP({
+        state: false,
+      })
+    );
+
+    //
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+
+    dispatch(
+      authActions.SetIsReSendingOTP({
+        state: false,
+      })
+    );
+  }
+};
+
+export const resendMobileOTPForRegistration = (mobile) => async (dispatch, getState) => {
+  let message;
+
+  dispatch(
+    authActions.SetIsReSendingOTP({
+      state: true,
+    })
+  );
+
+  try {
+    //
+    const res = await fetch(`${BaseURL}mobile/resendRegisterOTP`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        mobile,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    dispatch(showSnackbar('success', message));
+
+    dispatch(
+      authActions.SetIsReSendingOTP({
+        state: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(
+      authActions.SetIsReSendingOTP({
+        state: false,
+      })
+    );
+  }
+};
+
+export const registerViaMobile = (formValues, mobile) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(
+      `${BaseURL}mobile/register`,
+
+      {
+        method: 'POST',
+
+        body: JSON.stringify({
+          ...formValues,
+          mobile,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    window.location.href = `/auth/verify-mobile/?mob=${mobile}&ref=https://www.app.qwikshop.online/auth/register`;
+    dispatch(showSnackbar('success', message));
+
+    dispatch(
+      authActions.SetIsSubmittingRegister({
+        isSubmitting: false,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const verifyRegistrationOTP = (mobile, otp) => async (dispatch, getState) => {
+  let message;
+
+  dispatch(
+    authActions.SetIsSubmittingVerify({
+      isSubmitting: true,
+    })
+  );
+
+  try {
+    const res = await fetch(`${BaseURL}mobile/verifyAndRegister`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        mobile,
+        otp,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    dispatch(
+      authActions.SignIn({
+        token: result.token,
+      })
+    );
+
+    dispatch(
+      userActions.FetchUser({
+        user: result.user,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.store,
+      })
+    );
+
+    dispatch(
+      storeActions.FetchPermissions({
+        permissions: result.permissions,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    dispatch(
+      authActions.SetIsSubmittingVerify({
+        isSubmitting: false,
+      })
+    );
+
+    setTimeout(() => {
+      window.location.href = `/dashboard/home`;
+    }, 1000);
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(
+      authActions.SetIsSubmittingVerify({
+        isSubmitting: false,
+      })
+    );
+  }
+};

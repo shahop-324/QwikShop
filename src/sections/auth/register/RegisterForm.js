@@ -21,7 +21,7 @@ import Iconify from '../../../components/Iconify';
 // ----------------------------------------------------------------------
 // import CustomPhoneNumber from '../../../forms/PhoneNumber';
 
-import { register } from '../../../actions';
+import { register, registerViaMobile } from '../../../actions';
 
 import CustomPhoneNumber from '../../../forms/PhoneNumber';
 import 'react-phone-number-input/style.css';
@@ -167,7 +167,12 @@ const RegisterForm = () => {
         />
 
         <LoadingButton
-          disabled={!(formik.isValid && formik.dirty)}
+         disabled={registerVia === 'mobile' ? !phone : !(formik.isValid && formik.dirty)}
+         onClick={() => {
+           if(registerVia === 'mobile') {
+             dispatch(registerViaMobile({firstName: formik.values.firstName, lastName: formik.values.lastName, shopName: formik.values.shopName,}, phone));
+           }
+         }}
           fullWidth
           size="large"
           type="submit"

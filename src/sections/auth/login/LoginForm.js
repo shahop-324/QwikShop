@@ -10,7 +10,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PhoneInput from 'react-phone-number-input';
 import Iconify from '../../../components/Iconify';
-import { login, resetLoginFormLoading } from '../../../actions';
+import { login, resetLoginFormLoading, loginViaMobile } from '../../../actions';
 import GoogleAuth from '../../../pages/auth/GoogleAuth';
 
 import CustomPhoneNumber from '../../../forms/PhoneNumber';
@@ -20,6 +20,8 @@ import 'react-phone-number-input/style.css';
 // import CustomPhoneNumber from '../../../forms/PhoneNumber';
 
 export default function LoginForm() {
+  const [loginVia, setLoginVia] = useState('mobile');
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -33,12 +35,17 @@ export default function LoginForm() {
       password: Yup.string().required('Password is required'),
     }),
     onSubmit: (values) => {
-      dispatch(login(values.email, values.password));
+      if (loginVia === 'mobile') {
+        alert('Reached here');
+        //
+        dispatch(loginViaMobile(phone));
+      } else {
+        dispatch(login(values.email, values.password));
+      }
     },
   });
 
   const [phone, setPhone] = useState('');
-  const [loginVia, setLoginVia] = useState('mobile');
 
   useEffect(() => {
     dispatch(resetLoginFormLoading());
@@ -103,7 +110,13 @@ export default function LoginForm() {
       </Stack>
 
       <LoadingButton
-        disabled={!(formik.isValid && formik.dirty)}
+        disabled={loginVia === 'mobile' ? !phone : !(formik.isValid && formik.dirty)}
+        onClick={() => {
+          if (loginVia === 'mobile') {
+           
+            dispatch(loginViaMobile(phone));
+          }
+        }}
         fullWidth
         size="large"
         type="submit"

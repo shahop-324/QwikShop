@@ -10,9 +10,10 @@ import Avatar from './Avatar';
 export default function MyAvatar({ ...other }) {
   const { user } = useSelector((state) => state.user);
 
+  console.log(user?.image?.startsWith('https'));
   return (
     <Avatar
-      src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${user?.image}`}
+      src={ user?.image?.startsWith('https') ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${user?.image}` : user?.image}
       alt={`${user?.firstName} ${user?.lastName}`}
       color={
         `https://qwikshop.s3.ap-south-1.amazonaws.com/${user?.image}`

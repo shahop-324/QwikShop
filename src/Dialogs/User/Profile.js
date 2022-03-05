@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {LoadingButton} from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Typography,
@@ -25,7 +25,13 @@ import { Formik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { UploadAvatar } from '../../components/upload';
 import { fData } from '../../utils/formatNumber';
-import { updateUserProfile, showSnackbar, updateUserPassword, resetIsUpdatingUser, resetIsUpdatingPassword } from '../../actions';
+import {
+  updateUserProfile,
+  showSnackbar,
+  updateUserPassword,
+  resetIsUpdatingUser,
+  resetIsUpdatingPassword,
+} from '../../actions';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -72,8 +78,12 @@ const Profile = ({ open, handleClose }) => {
 
   const { user, isUpdatingUser, isUpdatingPassword } = useSelector((state) => state.user);
 
+  console.log(user?.image?.startsWith('https'));
+
   const [image, setImage] = useState();
-  const [fileToPreview, setFileToPreview] = useState(`https://qwikshop.s3.ap-south-1.amazonaws.com/${user.image}`);
+  const [fileToPreview, setFileToPreview] = useState(
+    user?.image?.startsWith('https') ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${user.image}` : user?.image
+  );
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -108,7 +118,7 @@ const Profile = ({ open, handleClose }) => {
   useEffect(() => {
     dispatch(resetIsUpdatingUser());
     dispatch(resetIsUpdatingPassword());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -124,7 +134,7 @@ const Profile = ({ open, handleClose }) => {
         <DialogTitle sx={{ mb: 2 }}>{'My Profile'}</DialogTitle>
 
         <DialogContent>
-          <Box sx={{ width: {xs: '400px', md: '600px'} }}>
+          <Box sx={{ width: { xs: '400px', md: '600px' } }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                 <Tab label="Profile" {...a11yProps(0)} />
@@ -201,7 +211,7 @@ const Profile = ({ open, handleClose }) => {
                               required
                             />
                             <TextField
-                            disabled
+                              disabled
                               value={values.email}
                               onBlur={handleBlur}
                               onChange={handleChange}

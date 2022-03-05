@@ -53,6 +53,8 @@ export default function Router() {
         { path: 'reset-password', element: <ResetPassword /> },
         { path: 'update-password', element: <UpdatePassword /> },
         { path: 'verify', element: <VerifyCode /> },
+        {path: 'mobile-login', element: <VerifyLoginOTP />},
+        {path: 'verify-mobile', element: <VerifyRegistrationCodeForm /> },
       ],
     },
     // Dashboard Routes
@@ -222,3 +224,5 @@ const PrivacyPolicy = Loadable(lazy(() => import('../pages/PrivacyPolicy')));
 const RefundPolicy = Loadable(lazy(() => import('../pages/RefundPolicy')));
 
 const MailchimpConnect = Loadable(lazy(() => import('../pages/MailchimpConnect')));
+const VerifyLoginOTP = Loadable(lazy(() => import('../pages/auth/VerifyLoginOTP')));
+const VerifyRegistrationCodeForm = Loadable(lazy(() => import('../pages/auth/VerifyRegistrationOTP')));
