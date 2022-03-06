@@ -201,7 +201,7 @@ export default function GeneralDivision() {
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [orderBy, setOrderBy] = useState('createdAt');
 
   const handleRequestSort = (property) => {
@@ -364,7 +364,7 @@ export default function GeneralDivision() {
                                         <Image
                                           disabledEffect
                                           alt={name}
-                                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`}
+                                          src={ image && !image.endsWith('undefined') ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${image}` : "https://qwikshop.s3.ap-south-1.amazonaws.com/images/noimage.png"}
                                           sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
                                         />
                                         <Typography variant="subtitle2" noWrap>
@@ -468,7 +468,7 @@ export default function GeneralDivision() {
 
             )}
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
+              rowsPerPageOptions={[5, 10, 25, 50]}
               component="div"
               count={divisions.length}
               rowsPerPage={rowsPerPage}

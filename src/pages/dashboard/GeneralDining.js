@@ -76,7 +76,7 @@ export default function DiningTableList() {
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [orderBy, setOrderBy] = useState('createdAt');
 
   useEffect(() => {
@@ -244,7 +244,7 @@ export default function DiningTableList() {
             </Scrollbar>
 
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
+              rowsPerPageOptions={[5, 10, 25, 50]}
               component="div"
               count={productList.length}
               rowsPerPage={rowsPerPage}
