@@ -1,3 +1,6 @@
+/* eslint-disable no-cond-assign */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-plusplus */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useCallback, useEffect } from 'react';
@@ -11,14 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fData } from '../../../../utils/formatNumber';
 
 import { UploadAvatar } from '../../../../components/upload';
-import { updateStoreGeneralInfo, resetIsSubmittingStoreSetup } from '../../../../actions';
+import { updateStoreGeneralInfo, resetIsSubmittingStoreSetup, updateStore } from '../../../../actions';
 
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
   const dispatch = useDispatch();
-
-
 
   const { store, isSubmittingStoreSetup } = useSelector((state) => state.store);
 
@@ -101,12 +102,13 @@ export default function AccountGeneral() {
   const [country, setCountry] = useState(store.country);
   const [category, setCategory] = useState(store.category);
 
-  
+  const [shopLat, setShopLat] = useState(store.lat || 26.2662023);
+  const [shopLong, setShopLong] = useState(store.long || 78.2081602);
+
   const [file, setFile] = useState();
   const [fileToPreview, setFileToPreview] = useState(
     store.logo && `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`
   );
-
 
   const handleDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -116,6 +118,167 @@ export default function AccountGeneral() {
       setFileToPreview(URL.createObjectURL(file));
     }
   }, []);
+
+  setTimeout(() => {
+    function showPosition(position) {
+      if (!store.lat) {
+        setShopLat(position.coords.latitude);
+      }
+      if (!store.long) {
+        setShopLong(position.coords.longitude);
+      }
+    }
+
+    if (window.navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    }
+
+    let city;
+    let infoWindow = '';
+    const addressEl = document.querySelector('#map-search');
+    const element = document.getElementById('map-canvas');
+
+    if (addressEl && element) {
+      const mapOptions = {
+        // How far the maps zooms in.
+        zoom: 10,
+        // Current Lat and Long position of the pin/
+        center: new window.google.maps.LatLng(shopLat, shopLong),
+        disableDefaultUI: false, // Disables the controls like zoom control on the map if set to true
+        scrollWheel: true, // If set to false disables the scrolling on the map.
+        draggable: true, // If set to false , you cannot move the map around.
+        // mapTypeId: google.maps.MapTypeId.HYBRID, // If set to HYBRID its between sat and ROADMAP, Can be set to SATELLITE as well.
+        // maxZoom: 11, // Wont allow you to zoom more than this
+        // minZoom: 9  // Wont allow you to go more up.
+      };
+
+      /**
+       * Creates the map using google function google.maps.Map() by passing the id of canvas and
+       * mapOptions object that we just created above as its parameters.
+       *
+       */
+      // Create an object map with the constructor function Map()
+      const map = new window.google.maps.Map(element, mapOptions); // Till this like of code it loads up the map.
+
+      /**
+       * Creates the marker on the map
+       *
+       */
+      const marker = new window.google.maps.Marker({
+        position: mapOptions.center,
+        map,
+        // icon: 'http://pngimages.net/sites/default/files/google-maps-png-image-70164.png',
+        draggable: true,
+      });
+
+      /**
+       * Creates a search box
+       */
+      const searchBox = new window.google.maps.places.SearchBox(addressEl);
+
+      /**
+       * When the place is changed on search box, it takes the marker to the searched location.
+       */
+      window.google.maps.event.addListener(searchBox, 'places_changed', () => {
+        const places = searchBox.getPlaces();
+        const bounds = new window.google.maps.LatLngBounds();
+        let i;
+        let place;
+        const addresss = places[0].formatted_address;
+
+        for (i = 0; (place = places[i]); i++) {
+          bounds.extend(place.geometry.location);
+          marker.setPosition(place.geometry.location); // Set marker position new.
+        }
+
+        map.fitBounds(bounds); // Fit to the bound
+        map.setZoom(15); // This function sets the zoom to 15, meaning zooms to level 15.
+        // console.log( map.getZoom() );
+
+        const lat = marker.getPosition().lat();
+        const long = marker.getPosition().lng();
+        setShopLat(lat);
+        setShopLong(long);
+
+        const resultArray = places[0].address_components;
+
+        let citi;
+
+        // Get the city and set the city input value to the one selected
+        for (let a = 0; a < resultArray.length; a++) {
+          if (resultArray[i].types[0] && resultArray[i].types[0] === 'administrative_area_level_2') {
+            citi = resultArray[i].long_name;
+            // city.value = citi;
+          }
+        }
+
+        // Closes the previous info window if it already exists
+        if (infoWindow) {
+          infoWindow.close();
+        }
+        /**
+         * Creates the info Window at the top of the marker
+         */
+        infoWindow = new window.google.maps.InfoWindow({
+          content: addresss,
+        });
+
+        infoWindow.open(map, marker);
+      });
+
+      /**
+       * Finds the new position of the marker when the marker is dragged.
+       */
+      window.google.maps.event.addListener(marker, 'dragend', (event) => {
+        let address;
+        let resultArray;
+        let citi;
+
+        console.log('i am dragged');
+        const lat = marker.getPosition().lat();
+        const long = marker.getPosition().lng();
+        setShopLat(lat);
+        setShopLong(long);
+
+        const geocoder = new window.google.maps.Geocoder();
+        geocoder.geocode({ latLng: marker.getPosition() }, (result, status) => {
+          if (status === 'OK') {
+            // This line can also be written like if ( status == google.maps.GeocoderStatus.OK ) {
+            address = result[0].formatted_address;
+            resultArray = result[0].address_components;
+
+            // Get the city and set the city input value to the one selected
+            for (let i = 0; i < resultArray.length; i++) {
+              if (resultArray[i].types[0] && resultArray[i].types[0] === 'administrative_area_level_2') {
+                citi = resultArray[i].long_name;
+                console.log(citi);
+                // city.value = citi;
+              }
+            }
+            addressEl.value = address;
+            // latEl.value = lat;
+            // longEl.value = long;
+          } else {
+            console.log(`Geocode was not successful for the following reason: ${status}`);
+          }
+
+          // Closes the previous info window if it already exists
+          if (infoWindow) {
+            infoWindow.close();
+          }
+
+          /**
+           * Creates the info Window at the top of the marker
+           */
+          infoWindow = new window.google.maps.InfoWindow({
+            content: address,
+          });
+
+          infoWindow.open(map, marker);
+        });
+      });
+    }
+  }, 1000);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -367,7 +530,23 @@ export default function AccountGeneral() {
               Save Changes
             </Button>
           </Stack>
-          
+          <Box sx={{ p: 2 }}>
+            <TextField sx={{ mb: 2 }} id="map-search" placeholder="Location" label="location" fullWidth />
+            {/*  */}
+            <div id="map-canvas" style={{ width: '100%', height: '500px' }}>
+              {/*  */}
+            </div>
+            <Stack sx={{ my: 2 }} direction={'row'} alignItems="center" justifyContent={'end'}>
+              <Button
+                onClick={() => {
+                  dispatch(updateStore({ lat: shopLat, long: shopLong }));
+                }}
+                variant="contained"
+              >
+                Update Map Location
+              </Button>
+            </Stack>
+          </Box>
         </Grid>
       </Grid>
     </form>

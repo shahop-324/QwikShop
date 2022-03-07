@@ -131,25 +131,25 @@ export default function BankingRecentTransitions({ link, storeName }) {
               </TableHead>
               <TableBody>
                 {recentOrders.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow key={row?.id}>
                     <TableCell>
-                      <Typography variant="caption">{row.ref}</Typography>
+                      <Typography variant="caption">{row?.ref}</Typography>
                     </TableCell>
 
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {dateFormat(new Date(row.createdAt || Date.now()), 'ddd mmm yy')}
+                        {dateFormat(new Date(row?.createdAt || Date.now()), 'ddd mmm yy')}
                       </Typography>
                     </TableCell>
 
-                    <TableCell>Rs.{row?.charges.total}</TableCell>
+                    <TableCell>Rs.{row?.charges?.total}</TableCell>
 
                     <TableCell>
                       <Label
                         variant={isLight ? 'ghost' : 'filled'}
-                        color={findColor(row.status)}
+                        color={findColor(row?.status)}
                       >
-                        {sentenceCase(row.status)}
+                        {sentenceCase(row?.status)}
                       </Label>
                     </TableCell>
 
