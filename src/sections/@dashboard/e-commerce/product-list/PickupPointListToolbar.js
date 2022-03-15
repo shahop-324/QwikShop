@@ -88,7 +88,7 @@ PickupPointListToolbar.propTypes = {
 };
 
 const options = ['Add Pickup Point'];
-const allowed = [];
+const allowed = ['pickupPointName', 'city', 'pincode', 'address', 'createdAt', 'contactPersonName', ];
 
 export default function PickupPointListToolbar({
   numSelected,

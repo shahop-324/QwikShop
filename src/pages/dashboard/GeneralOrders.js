@@ -76,17 +76,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const allowed = [];
+const allowed = ['ref', 'status', 'createdAt', 'charges', 'customer'];
 
 export default function GeneralOrders() {
   const dispatch = useDispatch();
 
   const [term, setTerm] = useState('');
-  const {store} = useSelector((state) => state.store);
-  const {orders} = useSelector((state) => state.order);
+  const { store } = useSelector((state) => state.store);
+  const { orders } = useSelector((state) => state.order);
 
-  const storeName = store.name 
-  const link = `qwikshop.online/${store.subName}`
+  const storeName = store.name;
+  const link = `qwikshop.online/${store.subName}`;
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -119,71 +119,72 @@ export default function GeneralOrders() {
                 />
               </Search>
               <CsvDownload
-            data={orders.map((el) =>
-              Object.keys(el)
-                .filter((key) => allowed.includes(key))
-                .reduce((obj, key) => {
-                  obj[key] = el[key];
-                  return obj;
-                }, {})
-            )}
-            filename={`products_list_${store.storeName}.csv`}
-            style={{
-              boxShadow: 'inset 0px 1px 0px 0px #00AB55',
-              background: 'linear-gradient(to bottom, #00AB55 5%, #13C06A 100%)',
-              backgroundColor: '#08BD62',
-              borderRadius: '6px',
-              border: '1px solid #00AB55',
-              display: 'inline-block',
-              cursor: 'pointer',
-              color: '#ffffff',
-              fontSize: '15px',
-              fontWeight: 'bold',
-              padding: '6px 24px',
-              textDecoration: 'none',
-              textShadow: '0px 1px 0px #0C8F4D',
-            }}
-          >
-            Export
-          </CsvDownload>
+                data={orders.map((el) =>
+                  Object.keys(el)
+                    .filter((key) => allowed.includes(key))
+                    .reduce((obj, key) => {
+                      obj[key] = el[key];
+                      return obj;
+                    }, {})
+                )}
+                filename={`products_list_${store.storeName}.csv`}
+                style={{
+                  boxShadow: 'inset 0px 1px 0px 0px #00AB55',
+                  background: 'linear-gradient(to bottom, #00AB55 5%, #13C06A 100%)',
+                  backgroundColor: '#08BD62',
+                  borderRadius: '6px',
+                  border: '1px solid #00AB55',
+                  display: 'inline-block',
+                  cursor: 'pointer',
+                  color: '#ffffff',
+                  fontSize: '15px',
+                  fontWeight: 'bold',
+                  padding: '6px 24px',
+                  textDecoration: 'none',
+                  textShadow: '0px 1px 0px #0C8F4D',
+                }}
+              >
+                Export
+              </CsvDownload>
             </Stack>
           </Grid>
 
           <Grid item xs={12}>
-          {!(typeof orders !== 'undefined' && orders.length > 0) ? (
-            <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
-              <Card sx={{ p: 3, my: 3 }}>
-                <img style={{ height: '150px', width: '150px' }} src={NoOrder} alt="no active order" />
-              </Card>
-              <Typography sx={{ mb: 3 }} variant="subtitle2">
-                Please share your store to get orders
-              </Typography>
-              <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-                <IconButton>
-                  <WhatsappShareButton url={link} title={storeName} separator=":">
-                    {' '}
-                    <WhatsappIcon round size={35} />{' '}
-                  </WhatsappShareButton>
-                </IconButton>
-                <IconButton>
-                  <FacebookShareButton url={link} quote={storeName}>
-                    <FacebookIcon round size={35} />
-                  </FacebookShareButton>
-                </IconButton>
-                <IconButton>
-                  <TelegramShareButton url={link} title={storeName}>
-                    <TelegramIcon round size={35} />
-                  </TelegramShareButton>
-                </IconButton>
-                <IconButton>
-                  <TwitterShareButton url={link} title={storeName}>
-                    <TwitterIcon round size={35} />
-                  </TwitterShareButton>
-                </IconButton>
+            {!(typeof orders !== 'undefined' && orders.length > 0) ? (
+              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+                <Card sx={{ p: 3, my: 3 }}>
+                  <img style={{ height: '150px', width: '150px' }} src={NoOrder} alt="no active order" />
+                </Card>
+                <Typography sx={{ mb: 3 }} variant="subtitle2">
+                  Please share your store to get orders
+                </Typography>
+                <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+                  <IconButton>
+                    <WhatsappShareButton url={link} title={storeName} separator=":">
+                      {' '}
+                      <WhatsappIcon round size={35} />{' '}
+                    </WhatsappShareButton>
+                  </IconButton>
+                  <IconButton>
+                    <FacebookShareButton url={link} quote={storeName}>
+                      <FacebookIcon round size={35} />
+                    </FacebookShareButton>
+                  </IconButton>
+                  <IconButton>
+                    <TelegramShareButton url={link} title={storeName}>
+                      <TelegramIcon round size={35} />
+                    </TelegramShareButton>
+                  </IconButton>
+                  <IconButton>
+                    <TwitterShareButton url={link} title={storeName}>
+                      <TwitterIcon round size={35} />
+                    </TwitterShareButton>
+                  </IconButton>
+                </Stack>
               </Stack>
-            </Stack>
-          ) :  <OrderDetails /> }
-           
+            ) : (
+              <OrderDetails />
+            )}
           </Grid>
         </Grid>
       </Container>

@@ -15,7 +15,7 @@ import { AbondonedCartDetails } from '../../sections/@dashboard/general/booking'
 import { fetchAbondonedCarts } from '../../actions';
 import NoAbondonedCart from '../../assets/empty-cart.png';
 
-const allowed = [];
+const allowed = ['name', 'contact', 'amount', 'updatedAt'];
 
 export default function GeneralOrders() {
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ export default function GeneralOrders() {
     dispatch(fetchAbondonedCarts());
   }, []);
 
-  const {store} = useSelector((state) => state.store);
+  const { store } = useSelector((state) => state.store);
   const { abondonedCarts } = useSelector((state) => state.order);
 
   const { themeStretch } = useSettings();
@@ -37,33 +37,33 @@ export default function GeneralOrders() {
             <Stack direction="row" className="mb-4 d-flex flex-row align-items-center justify-content-between">
               <Typography variant="h6">Abondoned Carts</Typography>
               <CsvDownload
-            data={abondonedCarts.map((el) =>
-              Object.keys(el)
-                .filter((key) => allowed.includes(key))
-                .reduce((obj, key) => {
-                  obj[key] = el[key];
-                  return obj;
-                }, {})
-            )}
-            filename={`products_list_${store.storeName}.csv`}
-            style={{
-              boxShadow: 'inset 0px 1px 0px 0px #00AB55',
-              background: 'linear-gradient(to bottom, #00AB55 5%, #13C06A 100%)',
-              backgroundColor: '#08BD62',
-              borderRadius: '6px',
-              border: '1px solid #00AB55',
-              display: 'inline-block',
-              cursor: 'pointer',
-              color: '#ffffff',
-              fontSize: '15px',
-              fontWeight: 'bold',
-              padding: '6px 24px',
-              textDecoration: 'none',
-              textShadow: '0px 1px 0px #0C8F4D',
-            }}
-          >
-            Export
-          </CsvDownload>
+                data={abondonedCarts.map((el) =>
+                  Object.keys(el)
+                    .filter((key) => allowed.includes(key))
+                    .reduce((obj, key) => {
+                      obj[key] = el[key];
+                      return obj;
+                    }, {})
+                )}
+                filename={`products_list_${store.storeName}.csv`}
+                style={{
+                  boxShadow: 'inset 0px 1px 0px 0px #00AB55',
+                  background: 'linear-gradient(to bottom, #00AB55 5%, #13C06A 100%)',
+                  backgroundColor: '#08BD62',
+                  borderRadius: '6px',
+                  border: '1px solid #00AB55',
+                  display: 'inline-block',
+                  cursor: 'pointer',
+                  color: '#ffffff',
+                  fontSize: '15px',
+                  fontWeight: 'bold',
+                  padding: '6px 24px',
+                  textDecoration: 'none',
+                  textShadow: '0px 1px 0px #0C8F4D',
+                }}
+              >
+                Export
+              </CsvDownload>
             </Stack>
           </Grid>
 

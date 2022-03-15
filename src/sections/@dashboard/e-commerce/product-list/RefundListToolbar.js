@@ -69,7 +69,7 @@ RefundListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-const allowed = [];
+const allowed = ['customer', 'order', 'resolved', 'createdAt'];
 
 export default function RefundListToolbar({ numSelected, setTerm }) {
   const theme = useTheme();

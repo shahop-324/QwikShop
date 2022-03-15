@@ -69,7 +69,7 @@ ShipmentListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-const allowed = [];
+const allowed = ['orderRef', 'carrier', 'status', 'order', 'createdAt'];
 
 export default function ShipmentListToolbar({ numSelected, setTerm }) {
   const theme = useTheme();

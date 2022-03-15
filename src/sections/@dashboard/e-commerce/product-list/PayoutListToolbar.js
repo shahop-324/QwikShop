@@ -69,7 +69,7 @@ PayoutListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-const allowed = [];
+const allowed = ['payoutId', 'amount', 'createdAt', 'method', ];
 
 export default function PayoutListToolbar({ numSelected, setTerm }) {
   const theme = useTheme();
