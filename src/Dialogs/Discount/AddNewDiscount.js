@@ -661,7 +661,7 @@ export default function AddNewDiscount({ open, handleClose }) {
         </Grid>
         <DialogActions>
           <div className="d-flex flex-row align-items-center justify-content-end mb-3">
-            <LoadingButton disabled={!(formik.isValid && formik.dirty)} type="submit" variant="contained">
+            <LoadingButton disabled={!(formik.isValid)} type="submit" variant="contained">
               {' '}
               Create discount{' '}
             </LoadingButton>

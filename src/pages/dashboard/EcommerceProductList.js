@@ -46,6 +46,8 @@ import DeleteProduct from '../../Dialogs/Product/DeleteProduct';
 import BulkDeleteProducts from '../../Dialogs/Product/BulkDeleteProducts';
 import AlterProductStock from '../../Dialogs/Product/AlterProductStock';
 import NoProducts from '../../assets/no-results.png';
+import BulkUploadProduct from '../../Dialogs/Product/BulkUploadProducts';
+import BulkUpdateProduct from '../../Dialogs/Product/BulkUpdateProducts';
 
 // ----------------------------------------------------------------------
 
@@ -146,6 +148,10 @@ export default function EcommerceProductList() {
     setOpenBulkImport(true);
   };
 
+  const handleCloseBulkImport = () => {
+    setOpenBulkImport(false);
+  };
+
   const handleCloseAddProduct = () => {
     setOpenAddproduct(false);
   };
@@ -155,6 +161,7 @@ export default function EcommerceProductList() {
   };
 
   const [openBulkDelete, setOpenBulkDelete] = useState(false);
+  const [openBulkUpdate, setOpenBulkUpdate] = useState(false);
 
   const handleOpenBulkDelete = () => {
     setOpenBulkDelete(true);
@@ -249,6 +256,14 @@ export default function EcommerceProductList() {
     setOpenDelete(false);
   };
 
+  const handleOpenBulkUpdate = () => {
+    setOpenBulkUpdate(true);
+  };
+
+  const handleCloseBulkUpdate = () => {
+    setOpenBulkUpdate(false);
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0;
 
   const filteredProducts = applySortFilter(products, getComparator(order, orderBy), filterName);
@@ -331,6 +346,8 @@ export default function EcommerceProductList() {
                 handleOpenBulkDelete();
               }}
               handleExportProducts={handleExportProducts}
+              products={products}
+              handleOpenBulkUpdate={handleOpenBulkUpdate}
             />
 
             {!(typeof products !== 'undefined' && products.length > 0) ? (
@@ -361,7 +378,7 @@ export default function EcommerceProductList() {
                         {(provided) => (
                           <TableBody {...provided.droppableProps} ref={provided.innerRef}>
                             {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                              const { _id, productName, category, discountedPrice, outOfStock, images } = row;
+                              const { _id, productName, category, discountedPrice, price, outOfStock, images } = row;
 
                               const isItemSelected = selected.indexOf(_id) !== -1;
 
@@ -387,7 +404,11 @@ export default function EcommerceProductList() {
                                           <Image
                                             disabledEffect
                                             alt={productName}
-                                            src={ images !== undefined && images.length > 0 ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${images[0]}` : "https://qwikshop.s3.ap-south-1.amazonaws.com/images/noimage.png"}
+                                            src={
+                                              images !== undefined && images.length > 0
+                                                ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${images[0]}`
+                                                : 'https://qwikshop.s3.ap-south-1.amazonaws.com/images/noimage.png'
+                                            }
                                             sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
                                           />
                                           <Typography variant="subtitle2" noWrap>
@@ -395,7 +416,7 @@ export default function EcommerceProductList() {
                                           </Typography>
                                         </Stack>
                                       </TableCell>
-                                      <TableCell style={{ minWidth: 160 }}>{category.label}</TableCell>
+                                      <TableCell style={{ minWidth: 160 }}>{category?.label || 'No category assigned'}</TableCell>
                                       <TableCell style={{ minWidth: 160 }}>
                                         {' '}
                                         <FormControlLabel
@@ -427,7 +448,7 @@ export default function EcommerceProductList() {
                                           {outOfStock ? 'Out of stock' : 'In stock'}
                                         </Label>
                                       </TableCell>
-                                      <TableCell align="right">{`Rs.${discountedPrice}`}</TableCell>
+                                      <TableCell align="right">{`Rs.${discountedPrice || price}`}</TableCell>
                                       <TableCell align="right">
                                         <IconButton
                                           onClick={() => {
@@ -502,6 +523,8 @@ export default function EcommerceProductList() {
           selected={selected}
         />
       )}
+      {openBulkImport && <BulkUploadProduct open={openBulkImport} handleClose={handleCloseBulkImport} />}
+      {openBulkUpdate && <BulkUpdateProduct open={openBulkUpdate} handleClose={handleCloseBulkUpdate} />}
     </>
   );
 }

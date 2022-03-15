@@ -29,8 +29,8 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'https://api.app.qwikshop.online/v1/';
-// const BaseURL = 'http://localhost:8000/v1/';
+// const BaseURL = 'https://api.app.qwikshop.online/v1/';
+const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -8361,5 +8361,117 @@ export const verifyRegistrationOTP = (mobile, otp) => async (dispatch, getState)
         isSubmitting: false,
       })
     );
+  }
+};
+
+export const resetIsBulkUpdatingProducts = () => async (dispatch, getState) => {
+  try {
+    dispatch(productActions.SetIsBulkUpdating({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsBulkImportingProducts = () => async (dispatch, getState) => {
+  try {
+    dispatch(productActions.SetIsBulkImporting({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const bulkImportProducts = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(productActions.SetIsBulkImporting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}product/bulkImport`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.CreateProducts({
+        products: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(productActions.SetIsBulkImporting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(productActions.SetIsBulkImporting({ state: false }));
+  }
+};
+
+export const bulkUpdateProducts = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(productActions.SetIsBulkUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}product/bulkUpdate`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      productActions.FetchProducts({
+        products: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+
+    dispatch(productActions.SetIsBulkUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(productActions.SetIsBulkUpdating({ state: false }));
   }
 };

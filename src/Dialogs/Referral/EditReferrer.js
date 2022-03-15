@@ -109,7 +109,7 @@ const EditReferrer = ({ open, handleClose, id }) => {
               </Box>
               <div className="d-flex flex-row align-items-center justify-content-end  mt-4">
                 <LoadingButton
-                 disabled={!(formik.isValid && formik.dirty)}
+                 disabled={!(formik.isValid)}
                   type="submit"
                   variant="contained"
                   loading={isUpdating}

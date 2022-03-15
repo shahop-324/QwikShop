@@ -833,7 +833,7 @@ export default function GeneralDiscount() {
                     </Stack>
 
                     <div className="d-flex flex-row align-items-center justify-content-end">
-                      <LoadingButton disabled={!(formik.isValid && formik.dirty)} type="submit" variant="contained">
+                      <LoadingButton disabled={!(formik.isValid)} type="submit" variant="contained">
                         {' '}
                         Create discount{' '}
                       </LoadingButton>

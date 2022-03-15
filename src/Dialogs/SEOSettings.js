@@ -134,7 +134,7 @@ const SEOSettings = ({ open, handleClose }) => {
           </Grid>
           <div className="d-flex flex-row align-items-center justify-content-end py-3 px-4">
             <LoadingButton
-              disabled={!(formik.isValid && formik.dirty)}
+              disabled={!(formik.isValid)}
               type="submit"
               loading={isUpdatingStoreSEO}
               variant="contained"

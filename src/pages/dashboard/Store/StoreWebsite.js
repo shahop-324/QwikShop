@@ -9,6 +9,7 @@ import { Container, Tab, Box, Tabs } from '@mui/material';
 import FormatColorFillRoundedIcon from '@mui/icons-material/FormatColorFillRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import BatchPredictionRoundedIcon from '@mui/icons-material/BatchPredictionRounded';
 
 // components
 import Page from '../../../components/Page';
@@ -16,6 +17,7 @@ import useSettings from '../../../hooks/useSettings';
 import StoreAppearance from './Website/Appearance';
 import StoreOtherInfo from './Website/OtherInfo';
 import StoreAmbience from "./Website/Ambience";
+import StorePreferences from './Website/StorePreferences';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +41,11 @@ export default function StoreWebsite() {
       value: 'Other Info',
       icon: <InfoRoundedIcon width={20} height={20} />,
       component: <StoreOtherInfo />,
+    },
+    {
+      value: 'Preferences',
+      icon: <BatchPredictionRoundedIcon width={20} height={20} />,
+      component: <StorePreferences />,
     },
   ];
 

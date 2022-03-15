@@ -75,7 +75,7 @@ export default function ResetPasswordForm() {
         />
 
         <LoadingButton
-          disabled={!(formik.isValid && formik.dirty)}
+          disabled={!(formik.isValid)}
           fullWidth
           size="large"
           type="submit"

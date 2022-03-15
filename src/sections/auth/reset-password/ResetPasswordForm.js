@@ -62,7 +62,7 @@ export default function ResetPasswordForm({ onSent }) {
           helperText={formik.touched.email && formik.errors.email}
         />
 
-        <LoadingButton  disabled={!(formik.isValid && formik.dirty)} fullWidth size="large" type="submit" variant="contained" loading={isSubmittingForgotPassword}>
+        <LoadingButton  disabled={!(formik.isValid)} fullWidth size="large" type="submit" variant="contained" loading={isSubmittingForgotPassword}>
           Reset Password
         </LoadingButton>
       </Stack>

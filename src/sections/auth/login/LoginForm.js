@@ -109,7 +109,7 @@ export default function LoginForm() {
       </Stack>
 
       <LoadingButton
-        disabled={loginVia === 'mobile' ? !phone : !(formik.isValid && formik.dirty)}
+        disabled={loginVia === 'mobile' ? !phone : !(formik.isValid)}
         onClick={() => {
           if (loginVia === 'mobile') {
            

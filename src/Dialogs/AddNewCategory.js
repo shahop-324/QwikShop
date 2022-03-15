@@ -105,7 +105,7 @@ const AddNewCategory = ({ open, handleClose }) => {
             </Grid>
             <DialogActions>
               <LoadingButton
-                disabled={!(formik.isValid && formik.dirty)}
+                disabled={!(formik.isValid)}
                 type="submit"
                 variant="contained"
                 loading={isCreating}

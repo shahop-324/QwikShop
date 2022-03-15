@@ -156,7 +156,7 @@ const EditSubCategory = ({ open, handleClose, id }) => {
             </Grid>
             <DialogActions>
               <LoadingButton
-                disabled={!(formik.isValid && formik.dirty)}
+                disabled={!(formik.isValid)}
                 type="submit"
                 variant="contained"
                 loading={isUpdating}

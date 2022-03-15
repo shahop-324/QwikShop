@@ -200,6 +200,54 @@ const steps = [
   'SEO',
 ];
 
+const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
+  ({ theme }) => ({
+    width: 42,
+    height: 26,
+    padding: 0,
+    '& .MuiSwitch-switchBase': {
+      padding: 0,
+      margin: 2,
+      transitionDuration: '300ms',
+      '&.Mui-checked': {
+        transform: 'translateX(16px)',
+        color: '#fff',
+        '& + .MuiSwitch-track': {
+          backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
+          opacity: 1,
+          border: 0,
+        },
+        '&.Mui-disabled + .MuiSwitch-track': {
+          opacity: 0.5,
+        },
+      },
+      '&.Mui-focusVisible .MuiSwitch-thumb': {
+        color: '#33cf4d',
+        border: '6px solid #fff',
+      },
+      '&.Mui-disabled .MuiSwitch-thumb': {
+        color: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
+      },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+      },
+    },
+    '& .MuiSwitch-thumb': {
+      boxSizing: 'border-box',
+      width: 22,
+      height: 22,
+    },
+    '& .MuiSwitch-track': {
+      borderRadius: 26 / 2,
+      backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+      opacity: 1,
+      transition: theme.transitions.create(['background-color'], {
+        duration: 500,
+      }),
+    },
+  })
+);
+
 // eslint-disable-next-line no-unused-vars
 const AddNewProduct = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -244,23 +292,23 @@ const AddNewProduct = ({ open, handleClose }) => {
     validateOnBlur: true,
     validateOnMount: true,
     validationSchema: Yup.object().shape({
-      metaTitle: Yup.string().required('Meta Title is required'),
-      metaKeyword: Yup.string().required('Meta Keywords is required'),
-      metaDescription: Yup.string().required('Meta Description is required'),
+      metaTitle: Yup.string(),
+      metaKeyword: Yup.string(),
+      metaDescription: Yup.string(),
       weight: Yup.number().required('Weight in grams is required'),
       productName: Yup.string().required('Product name is required'),
       brand: Yup.string(),
       price: Yup.string().required('Price is required'),
-      discountedPrice: Yup.string().required('Discounted price is required (can also be same as price)'),
-      minQuantitySold: Yup.number().required('Minimum number of quantity sold is required'),
-      quantityInStock: Yup.string().required('Quantity in stock is required'),
-      productSKU: Yup.string().required('Product SKU is required'),
+      discountedPrice: Yup.string(),
+      minQuantitySold: Yup.number(),
+      quantityInStock: Yup.string(),
+      productSKU: Yup.string(),
       wholesalePrice: Yup.number(),
       minWholesaleQuantity: Yup.number(),
       coins: Yup.number(),
-      length: Yup.string().required('Length is required'),
-      width: Yup.string().required('Width is required'),
-      height: Yup.string().required('Height is required'),
+      length: Yup.string(),
+      width: Yup.string(),
+      height: Yup.string(),
     }),
     onSubmit: (values) => {
       const formValues = {
@@ -281,15 +329,10 @@ const AddNewProduct = ({ open, handleClose }) => {
         metaTitle: values.metaTitle,
         metaKeyword: values.metaKeyword,
         coins: values.coins,
-
-        productType,
-
         description,
         category,
         subCategory,
-        division,
         isFragile,
-        isVeg,
         acceptCOD,
         specifications,
         productUnit,
@@ -427,11 +470,12 @@ const AddNewProduct = ({ open, handleClose }) => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState();
   const [subCategory, setSubCategory] = useState();
-  const [division, setDivision] = useState();
-  const [productType, setProductType] = useState(null);
+
   const [productUnit, setProductUnit] = useState({
     label: 'piece',
   });
+  const [enableDimension, setEnableDimension] = useState(false);
+  const [enableItemsInBox, setEnableItemsInBox] = useState(false);
 
   const [activeStep, setActiveStep] = useState(0);
   const [dimensionUnit, setDimensionUnit] = useState({
@@ -440,7 +484,6 @@ const AddNewProduct = ({ open, handleClose }) => {
   });
 
   const [isFragile, setIsFragile] = useState(false);
-  const [isVeg, setIsVeg] = useState(productType?.label !== 'Meat & Fish');
   const [InTheBox, setInTheBox] = useState([{ index: uuidv4(), label: '' }]);
   const [acceptCOD, setAcceptCOD] = useState(false);
 
@@ -587,44 +630,8 @@ const AddNewProduct = ({ open, handleClose }) => {
                       <Grid className="px-4 pt-3" container spacing={3}>
                         <Grid item xs={12} md={12}>
                           <Card sx={{ p: 3 }}>
-                            <Autocomplete
-                              required
-                              sx={{ mb: 3 }}
-                              value={productType}
-                              onChange={(e, value) => {
-                                setProductType(value);
-                              }}
-                              id=""
-                              fullWidth
-                              options={productTypeOptions}
-                              autoHighlight
-                              getOptionLabel={(option) => option.label}
-                              renderOption={(props, option) => (
-                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                  <img
-                                    loading="lazy"
-                                    width="20"
-                                    src={`${option.image}`}
-                                    srcSet={`${option.image} 2x`}
-                                    alt=""
-                                  />
-                                  {option.label}
-                                </Box>
-                              )}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  {...params}
-                                  label="Choose a Product Type"
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: '', // disable autocomplete and autofill
-                                  }}
-                                />
-                              )}
-                            />
                             <Box
-                              className="mb-4"
+                              
                               sx={{
                                 display: 'grid',
                                 columnGap: 2,
@@ -709,39 +716,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                   />
                                 )}
                               />
-                              <Autocomplete
-                                value={division}
-                                onChange={(e, value) => {
-                                  setDivision(value);
-                                }}
-                                id=""
-                                fullWidth
-                                options={divisionOptions}
-                                autoHighlight
-                                getOptionLabel={(option) => option.label}
-                                renderOption={(props, option) => (
-                                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                    <img
-                                      loading="lazy"
-                                      width="20"
-                                      src={`${option.image}`}
-                                      srcSet={`${option.image} 2x`}
-                                      alt=""
-                                    />
-                                    {option.label}
-                                  </Box>
-                                )}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    label="Choose a division"
-                                    inputProps={{
-                                      ...params.inputProps,
-                                      autoComplete: '', // disable autocomplete and autofill
-                                    }}
-                                  />
-                                )}
-                              />
+                              
                               <TextField
                                 value={formik.values.brand}
                                 onBlur={formik.handleBlur}
@@ -834,52 +809,6 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 helperText={formik.touched.coins && formik.errors.coins}
                                 type="number"
                               />
-                            </Box>
-
-                            <Box
-                              sx={{
-                                mt: 3,
-                                display: 'grid',
-                                columnGap: 2,
-                                rowGap: 2,
-                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                              }}
-                            >
-                              {(productType?.label === 'Grocery' ||
-                                productType?.label === 'Bakery Item' ||
-                                productType?.label === 'Fast Food' ||
-                                productType?.label === 'Indian Food' ||
-                                productType?.label === 'Chocolate' ||
-                                productType?.label === 'Medicine' ||
-                                productType?.label === 'Pet supplies') && (
-                                <FormControl className="mb-3">
-                                  <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
-                                  <RadioGroup
-                                    value={isVeg}
-                                    row
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
-                                    name="row-radio-buttons-group"
-                                  >
-                                    <FormControlLabel
-                                      value="true"
-                                      control={
-                                        <Radio
-                                          onClick={() => {
-                                            setIsVeg(true);
-                                          }}
-                                        />
-                                      }
-                                      label="Veg"
-                                    />
-                                    <FormControlLabel
-                                      value="false"
-                                      control={<Radio onClick={() => setIsVeg(false)} />}
-                                      label="Non Veg"
-                                    />
-                                  </RadioGroup>
-                                </FormControl>
-                              )}
-
                               <FormControl className="mb-3">
                                 <FormLabel id="demo-row-radio-buttons-group-label">
                                   Is Fragile (something which easily breaks or gets damaged) ?
@@ -914,21 +843,9 @@ const AddNewProduct = ({ open, handleClose }) => {
                                   />
                                 </RadioGroup>
                               </FormControl>
-                              <FormGroup className="mt-3">
-                                <FormControlLabel
-                                  control={
-                                    <Switch onClick={(e) => setAcceptCOD(e.target.checked)} checked={acceptCOD} />
-                                  }
-                                  label="Accept Cash on delivery"
-                                />
-                              </FormGroup>
-                              <FormGroup className="mt-3">
-                                <FormControlLabel
-                                  control={<Switch onClick={(e) => setFeatured(e.target.checked)} checked={featured} />}
-                                  label="Featured"
-                                />
-                              </FormGroup>
                             </Box>
+
+                           
                           </Card>
                         </Grid>
                       </Grid>
@@ -1220,127 +1137,163 @@ const AddNewProduct = ({ open, handleClose }) => {
                             </Box>
                           </Card>
                           <Card sx={{ p: 3, mb: 3 }}>
-                            <Box
-                              sx={{
-                                display: 'grid',
-                                columnGap: 2,
-                                rowGap: 3,
-                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                              }}
-                            >
-                              <Autocomplete
-                                required
-                                value={dimensionUnit}
-                                onChange={(e, value) => {
-                                  setDimensionUnit(value);
-                                }}
-                                id=""
-                                fullWidth
-                                options={dimensionUnitOptions}
-                                autoHighlight
-                                getOptionLabel={(option) => option.label}
-                                renderInput={(params) => (
-                                  <TextField
-                                    required
-                                    {...params}
-                                    label="Dimension unit"
-                                    inputProps={{
-                                      ...params.inputProps,
-                                      autoComplete: '', // disable autocomplete and autofill
+                            <Stack direction="row" alignItems={'center'} justifyContent="space-between">
+                              <Typography>Enable Dimensions</Typography>
+
+                              <FormControlLabel
+                                control={
+                                  <IOSSwitch
+                                    sx={{ m: 1 }}
+                                    checked={enableDimension}
+                                    onChange={(e) => {
+                                      setEnableDimension(e.target.checked);
                                     }}
                                   />
-                                )}
+                                }
+                                label=""
                               />
-                              <TextField
-                                value={formik.values.length}
-                                onBlur={formik.handleBlur}
-                                onChange={formik.handleChange}
-                                fullWidth
-                                label="Length"
-                                variant="outlined"
-                                name="length"
-                                error={!!formik.touched.length && !!formik.errors.length}
-                                helperText={formik.touched.length && formik.errors.length}
-                                type="number"
-                              />
-                              <TextField
-                                value={formik.values.width}
-                                onBlur={formik.handleBlur}
-                                onChange={formik.handleChange}
-                                fullWidth
-                                label="Width"
-                                variant="outlined"
-                                name="width"
-                                error={!!formik.touched.width && !!formik.errors.width}
-                                helperText={formik.touched.width && formik.errors.width}
-                                type="number"
-                              />
-                              <TextField
-                                value={formik.values.height}
-                                onBlur={formik.handleBlur}
-                                onChange={formik.handleChange}
-                                fullWidth
-                                label="Height"
-                                variant="outlined"
-                                name="height"
-                                error={!!formik.touched.height && !!formik.errors.height}
-                                helperText={formik.touched.height && formik.errors.height}
-                                type="number"
-                              />
-                            </Box>
-                          </Card>
-                          <Card sx={{ p: 3, mb: 3 }}>
-                            <Typography sx={{ mb: 3 }} variant="subtitle1">
-                              What's included in Box
-                            </Typography>
-                            <Box
-                              sx={{
-                                mb: 3,
-                                display: 'grid',
-                                columnGap: 2,
-                                rowGap: 3,
-                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                              }}
-                            >
-                              {InTheBox.map((el, index) => (
-                                <TextField
-                                  required
-                                  key={el.index}
-                                  name="item"
-                                  label={`Item ${index + 1}`}
-                                  fullWidth
-                                  value={el.label}
-                                  onChange={(e) => {
-                                    updateInTheBox(el.index, e.target.value);
-                                  }}
-                                  InputProps={{
-                                    endAdornment: (
-                                      <InputAdornment>
-                                        <Button
-                                          color="error"
-                                          onClick={() => {
-                                            deleteInTheBox(el.index);
-                                          }}
-                                        >
-                                          Remove
-                                        </Button>
-                                      </InputAdornment>
-                                    ),
-                                  }}
-                                />
-                              ))}
-                            </Box>
-
-                            <Stack direction="row" alignItems="center" justifyContent="center">
-                              <Button
-                                variant="outlined"
-                                onClick={() => {
-                                  addInTheBox();
+                            </Stack>
+                            {enableDimension && (
+                              <Box
+                                sx={{
+                                  mt: 3,
+                                  display: 'grid',
+                                  columnGap: 2,
+                                  rowGap: 3,
+                                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                                 }}
                               >
-                                Add Item
-                              </Button>
+                                <Autocomplete
+                                  value={dimensionUnit}
+                                  onChange={(e, value) => {
+                                    setDimensionUnit(value);
+                                  }}
+                                  id=""
+                                  fullWidth
+                                  options={dimensionUnitOptions}
+                                  autoHighlight
+                                  getOptionLabel={(option) => option.label}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      {...params}
+                                      label="Dimension unit"
+                                      inputProps={{
+                                        ...params.inputProps,
+                                        autoComplete: '', // disable autocomplete and autofill
+                                      }}
+                                    />
+                                  )}
+                                />
+                                <TextField
+                                  value={formik.values.length}
+                                  onBlur={formik.handleBlur}
+                                  onChange={formik.handleChange}
+                                  fullWidth
+                                  label="Length"
+                                  variant="outlined"
+                                  name="length"
+                                  error={!!formik.touched.length && !!formik.errors.length}
+                                  helperText={formik.touched.length && formik.errors.length}
+                                  type="number"
+                                />
+                                <TextField
+                                  value={formik.values.width}
+                                  onBlur={formik.handleBlur}
+                                  onChange={formik.handleChange}
+                                  fullWidth
+                                  label="Width"
+                                  variant="outlined"
+                                  name="width"
+                                  error={!!formik.touched.width && !!formik.errors.width}
+                                  helperText={formik.touched.width && formik.errors.width}
+                                  type="number"
+                                />
+                                <TextField
+                                  value={formik.values.height}
+                                  onBlur={formik.handleBlur}
+                                  onChange={formik.handleChange}
+                                  fullWidth
+                                  label="Height"
+                                  variant="outlined"
+                                  name="height"
+                                  error={!!formik.touched.height && !!formik.errors.height}
+                                  helperText={formik.touched.height && formik.errors.height}
+                                  type="number"
+                                />
+                              </Box>
+                            )}
+                          </Card>
+                          <Card sx={{ p: 3, mb: 3 }}>
+                            <Stack direction="row" alignItems={'center'} justifyContent="space-between">
+                              <Typography>Enable Items in box</Typography>
+
+                              <FormControlLabel
+                                control={
+                                  <IOSSwitch
+                                    sx={{ m: 1 }}
+                                    checked={enableItemsInBox}
+                                    onChange={(e) => {
+                                      setEnableItemsInBox(e.target.checked);
+                                    }}
+                                  />
+                                }
+                                label=""
+                              />
                             </Stack>
+                            {enableItemsInBox && (
+                              <Box sx={{ mt: 3 }}>
+                                <Typography sx={{ mb: 3 }} variant="subtitle1">
+                                  What's included in Box
+                                </Typography>
+                                <Box
+                                  sx={{
+                                    mb: 3,
+                                    display: 'grid',
+                                    columnGap: 2,
+                                    rowGap: 3,
+                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                                  }}
+                                >
+                                  {InTheBox.map((el, index) => (
+                                    <TextField
+                                      key={el.index}
+                                      name="item"
+                                      label={`Item ${index + 1}`}
+                                      fullWidth
+                                      value={el.label}
+                                      onChange={(e) => {
+                                        updateInTheBox(el.index, e.target.value);
+                                      }}
+                                      InputProps={{
+                                        endAdornment: (
+                                          <InputAdornment>
+                                            <Button
+                                              color="error"
+                                              onClick={() => {
+                                                deleteInTheBox(el.index);
+                                              }}
+                                            >
+                                              Remove
+                                            </Button>
+                                          </InputAdornment>
+                                        ),
+                                      }}
+                                    />
+                                  ))}
+                                </Box>
+
+                                <Stack direction="row" alignItems="center" justifyContent="center">
+                                  <Button
+                                    variant="outlined"
+                                    onClick={() => {
+                                      addInTheBox();
+                                    }}
+                                  >
+                                    Add Item
+                                  </Button>
+                                </Stack>
+                              </Box>
+                            )}
                           </Card>
                         </Grid>
                       </Grid>
@@ -1816,7 +1769,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                           Previous
                         </LoadingButton>
                         <LoadingButton
-                          disabled={!(formik.isValid && formik.dirty)}
+                          disabled={!(formik.isValid)}
                           type="submit"
                           variant="contained"
                           loading={isCreating}

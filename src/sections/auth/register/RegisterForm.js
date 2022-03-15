@@ -167,7 +167,7 @@ const RegisterForm = () => {
         />
 
         <LoadingButton
-         disabled={registerVia === 'mobile' ? !phone : !(formik.isValid && formik.dirty)}
+         disabled={registerVia === 'mobile' ? !phone : !(formik.isValid)}
          onClick={() => {
            if(registerVia === 'mobile') {
              dispatch(registerViaMobile({firstName: formik.values.firstName, lastName: formik.values.lastName, shopName: formik.values.shopName,}, phone));

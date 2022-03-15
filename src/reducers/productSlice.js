@@ -8,27 +8,29 @@ const productSlice = createSlice({
     isCreating: false,
     isUpdating: false,
     isDeleting: false,
+    isBulkImporting: false,
+    isBulkUpdating: false,
     subtotal: 0,
-      total: 2,
+    total: 2,
+    discount: 0,
+    shipping: 0,
+    billing: null,
+    filters: {
+      gender: [],
+      category: 'All',
+      colors: [],
+      priceRange: '',
+      rating: '',
+    },
+    checkout: {
+      activeStep: 0,
+      cart: [],
+      subtotal: 0,
+      total: 0,
       discount: 0,
       shipping: 0,
       billing: null,
-      filters: {
-        gender: [],
-        category: 'All',
-        colors: [],
-        priceRange: '',
-        rating: '',
-      },
-      checkout: {
-        activeStep: 0,
-        cart: [],
-        subtotal: 0,
-        total: 0,
-        discount: 0,
-        shipping: 0,
-        billing: null,
-      },
+    },
   },
 
   reducers: {
@@ -41,8 +43,17 @@ const productSlice = createSlice({
     SetIsDeleting(state, action) {
       state.isDeleting = action.payload.state;
     },
+    SetIsBulkImporting(state, action) {
+      state.isBulkImporting = action.payload.state;
+    },
+    SetIsBulkUpdating(state, action) {
+      state.isBulkUpdating = action.payload.state;
+    },
     CreateProduct(state, action) {
       state.products.push(action.payload.product);
+    },
+    CreateProducts(state, action) {
+      state.products = state.products.concat(action.payload.products);
     },
     UpdateProduct(state, action) {
       state.products = state.products.map((el) =>
@@ -56,8 +67,8 @@ const productSlice = createSlice({
       state.products = state.products.filter((el) => el._id !== action.payload.productId);
     },
     DeleteMultipleProduct(state, action) {
-        state.products = state.products.filter((el) => !action.payload.ids.includes(el._id));
-    }
+      state.products = state.products.filter((el) => !action.payload.ids.includes(el._id));
+    },
   },
 });
 

@@ -1,14 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import {
-  
-  Card,
-  Grid,
-  Dialog,
-  DialogTitle,
-  Button,
-  Typography,
-} from '@mui/material';
+import { Card, Grid, Dialog, DialogTitle, Button, Typography } from '@mui/material';
 
 import { ExcelRenderer } from 'react-excel-renderer';
 
@@ -29,7 +21,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
 
-const BulkUploadCategory = ({ open, handleClose }) => {
+const BulkUploadProduct = ({ open, handleClose }) => {
   const NewBlogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
@@ -55,15 +47,8 @@ const BulkUploadCategory = ({ open, handleClose }) => {
     defaultValues,
   });
 
-  const {
-   
-   
-   
-    handleSubmit,
-   
-  } = methods;
+  const { handleSubmit } = methods;
 
-  
   const onSubmit = async () => {};
 
   const handleDrop = (acceptedFiles) => {
@@ -122,4 +107,4 @@ const BulkUploadCategory = ({ open, handleClose }) => {
   );
 };
 
-export default BulkUploadCategory;
+export default BulkUploadProduct;

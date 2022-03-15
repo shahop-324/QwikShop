@@ -268,7 +268,7 @@ const AddCheckoutField = ({ open, handleClose }) => {
 
               <Stack sx={{ px: 4, py: 3 }} direction={'row'} alignItems={'center'} justifyContent={'end'} spacing={3}>
                 <LoadingButton
-                  disabled={!(formik.isValid && formik.dirty)}
+                  disabled={!(formik.isValid)}
                   loading={isCreatingCheckoutField}
                   type="submit"
                   variant="contained"

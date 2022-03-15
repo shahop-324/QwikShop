@@ -110,7 +110,7 @@ const EditCategory = ({ open, handleClose, id }) => {
         </div>
         <DialogActions>
           <LoadingButton
-            disabled={!(formik.isValid && formik.dirty)}
+            disabled={!(formik.isValid)}
             type="submit"
             variant="contained"
             loading={isUpdating}
