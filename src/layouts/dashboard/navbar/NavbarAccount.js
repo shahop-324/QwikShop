@@ -60,7 +60,7 @@ export default function NavbarAccount({ isCollapse }) {
   user?.stores
     ?.filter((el) => el._id !== store._id)
     ?.forEach((store) => {
-      MENU_OPTIONS.push({ name: store?.storeName, logo: store?.logo, id: store?._id });
+      MENU_OPTIONS.push({ name: store?.storeName, logo: store?.logo, qwikId: store?.qwikId?.toUpperCase(), id: store?._id });
     });
 
   return (
@@ -91,6 +91,9 @@ export default function NavbarAccount({ isCollapse }) {
             <Typography variant="subtitle2" noWrap>
               {store?.storeName}
             </Typography>
+            <Typography variant="caption" noWrap>
+                    {store?.qwikId?.toUpperCase()}
+                  </Typography>
           </Box>
         </RootStyle>
       </Link>
@@ -125,7 +128,7 @@ export default function NavbarAccount({ isCollapse }) {
                   width: '100% !important',
                 }}
               >
-                <Avatar src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.logo}`} />
+                <Avatar variant='rounded' src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.logo}`} />
 
                 <Box
                   sx={{
@@ -143,7 +146,11 @@ export default function NavbarAccount({ isCollapse }) {
                   <Typography variant="subtitle2" noWrap>
                     {option.name}
                   </Typography>
+                  <Typography variant="subtitle2" noWrap>
+                    {store.qwikId}
+                  </Typography>
                 </Box>
+                
               </RootStyle>
             </MenuItem>
           ))}
