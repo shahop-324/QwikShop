@@ -108,12 +108,7 @@ const AddNewReferrer = ({ open, handleClose }) => {
                   />
                 </Box>
                 <div className="d-flex flex-row align-items-center justify-content-end  mt-4">
-                  <LoadingButton
-                    disabled={!(formik.isValid)}
-                    type="submit"
-                    variant="contained"
-                    loading={isCreating}
-                  >
+                  <LoadingButton disabled={!formik.isValid} type="submit" variant="contained" loading={isCreating}>
                     Create Referrer
                   </LoadingButton>
                   <Button
