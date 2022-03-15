@@ -6,12 +6,20 @@ const referralSlice = createSlice({
   initialState: {
     referrals: [],
     purchases: [],
+    isBulkUpdating: false,
+    isBulkImporting: false,
     isCreating: false,
     isUpdating: false,
     isDeleting: false,
   },
 
   reducers: {
+    SetIsBulkUpdating(state, action) {
+      state.isBulkUpdating = action.payload.state;
+    },
+    SetIsBulkImporting(state, action) {
+      state.isBulkImporting = action.payload.state;
+    },
     SetIsCreating(state, action) {
       state.isCreating = action.payload.state;
     },
@@ -20,6 +28,9 @@ const referralSlice = createSlice({
     },
     SetIsDeleting(state, action) {
       state.isDeleting = action.payload.state;
+    },
+    CreateReferrals(state, action) {
+      state.referrals = state.referrals.concat(action.payload.referrals);
     },
     CreateReferral(state, action) {
       state.referrals.push(action.payload.referral);

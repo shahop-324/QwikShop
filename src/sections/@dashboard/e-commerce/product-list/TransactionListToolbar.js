@@ -7,6 +7,8 @@ import { Toolbar, Typography } from '@mui/material';
 // ----------------------------------------------------------------------
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import { useSelector } from 'react-redux';
+import CsvDownload from 'react-json-to-csv';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -67,9 +69,14 @@ TransactionListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
+const allowed = [];
+
 export default function TransactionListToolbar({ numSelected, setTerm }) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
+
+  const { transactions } = useSelector((state) => state.transaction);
+  const { store } = useSelector((state) => state.store);
 
   return (
     <RootStyle
@@ -101,6 +108,34 @@ export default function TransactionListToolbar({ numSelected, setTerm }) {
         {/* <Button variant="contained" onClick={() => {handleExportTransactions();}} startIcon={<FileDownloadRoundedIcon />}>
           Export
         </Button> */}
+        <CsvDownload
+            data={transactions.map((el) =>
+              Object.keys(el)
+                .filter((key) => allowed.includes(key))
+                .reduce((obj, key) => {
+                  obj[key] = el[key];
+                  return obj;
+                }, {})
+            )}
+            filename={`products_list_${store.storeName}.csv`}
+            style={{
+              boxShadow: 'inset 0px 1px 0px 0px #00AB55',
+              background: 'linear-gradient(to bottom, #00AB55 5%, #13C06A 100%)',
+              backgroundColor: '#08BD62',
+              borderRadius: '6px',
+              border: '1px solid #00AB55',
+              display: 'inline-block',
+              cursor: 'pointer',
+              color: '#ffffff',
+              fontSize: '15px',
+              fontWeight: 'bold',
+              padding: '6px 24px',
+              textDecoration: 'none',
+              textShadow: '0px 1px 0px #0C8F4D',
+            }}
+          >
+            Export
+          </CsvDownload>
       </div>
     </RootStyle>
   );

@@ -250,42 +250,6 @@ export default function GeneralPickupPoints() {
 
   const isNotFound = !filteredPickupPoints.length && Boolean(filterName);
 
-  const processPickupPointsData = () => {
-    const processedArray = [];
-
-    pickupPoints.map((point) => {
-      const array = Object.entries(point);
-
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
-
-      const asObject = Object.fromEntries(filtered);
-
-      return processedArray.push(asObject);
-    });
-
-    const finalArray = processedArray.map((obj) => Object.values(obj));
-
-    return finalArray;
-  };
-
-  const CreateAndDownloadCSV = (data) => {
-    let csv = 'name, out_of_stock, total_sales, \n';
-    data.forEach((row) => {
-      csv += row.join(',');
-      csv += '\n';
-    });
-
-    console.log(csv);
-    const hiddenElement = document.createElement('a');
-    hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'pickupPoints.csv';
-    hiddenElement.click();
-  };
-
-  const handleExportPickupPoints = () => {
-    CreateAndDownloadCSV(processPickupPointsData());
-  };
 
   return (
     <>
@@ -297,7 +261,7 @@ export default function GeneralPickupPoints() {
           filterName={filterName}
           onFilterName={handleFilterByName}
           onDeletePickupPoints={() => handleOpenBulkDelete()}
-          handleExportPickupPoints={handleExportPickupPoints}
+          
         />
 
 {!(typeof pickupPoints !== 'undefined' && pickupPoints.length > 0) ? (

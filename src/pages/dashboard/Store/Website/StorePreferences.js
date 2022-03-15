@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Typography,
@@ -11,12 +12,14 @@ import {
   RadioGroup,
   FormLabel,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
 import TableRowsRoundedIcon from '@mui/icons-material/TableRowsRounded';
 import CalendarViewDayRoundedIcon from '@mui/icons-material/CalendarViewDayRounded';
+import { resetIsUpdatingStorePerefernce, updateStorePreference } from '../../../../actions';
 
 const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />)(
   ({ theme }) => ({
@@ -69,12 +72,18 @@ const IOSSwitch = styled((props) => <Switch focusVisibleClassName=".Mui-focusVis
 const StorePreferences = () => {
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(resetIsUpdatingStorePerefernce());
+  }, []);
+
   const { store, isUpdatingPreference } = useSelector((state) => state.store);
 
-  const [mobileView, setMobileView] = useState('grid');
+  const [mobileView, setMobileView] = useState(store.mobileView || 'grid');
 
-  const [enableHeaderSocialIcons, setEnableHeaderSocialIcons] = useState(false);
-  const [enableEstimatedDeliveryTime, setEnableEstimatedDeliveryTime] = useState(false);
+  const [enableHeaderSocialIcons, setEnableHeaderSocialIcons] = useState(store.enableHeaderSocialIcons || false);
+  const [enableEstimatedDeliveryTime, setEnableEstimatedDeliveryTime] = useState(
+    store.enableEstimatedDeliveryTime || false
+  );
 
   return (
     <div>
@@ -85,17 +94,15 @@ const StorePreferences = () => {
           target="_blank"
           rel="noreferrer"
         >
-          <Button variant="contained" startIcon={<RemoveRedEyeIcon />}>
+          <Button variant="outlined" startIcon={<RemoveRedEyeIcon />}>
             Preview
           </Button>
         </a>
       </div>
-
       <Stack direction="row" alignItems="center" justifyContent="start">
         <Typography sx={{ mr: 17, fontSize: '18px' }} variant="subtitle2">
           Show Social Icons in header
         </Typography>
-
         <FormControlLabel
           control={
             <IOSSwitch
@@ -109,7 +116,6 @@ const StorePreferences = () => {
         />
       </Stack>
       <Divider sx={{ my: 3 }} />
-
       <Stack direction="row" alignItems="center" justifyContent="start">
         <Typography sx={{ mr: 15, fontSize: '18px' }} variant="subtitle2">
           Show Estimated delivery time
@@ -127,9 +133,7 @@ const StorePreferences = () => {
           label=""
         />
       </Stack>
-
       <Divider sx={{ my: 3 }} />
-
       <FormControl sx={{ mb: 3 }}>
         <FormLabel sx={{ mb: 2 }} id="demo-row-radio-buttons-group-label">
           Type of mobile view
@@ -193,9 +197,16 @@ const StorePreferences = () => {
       </FormControl>
       <Divider sx={{ my: 3 }} />
       <Stack direction={'row'} alignItems="center" justifyContent={'end'}>
-        <Button variant="contained" sx={{ maxWidth: 'max-content' }}>
+        <LoadingButton
+          loading={isUpdatingPreference}
+          onClick={() => {
+            dispatch(updateStorePreference({ mobileView, enableEstimatedDeliveryTime, enableHeaderSocialIcons }));
+          }}
+          variant="contained"
+          sx={{ maxWidth: 'max-content' }}
+        >
           Update Preference
-        </Button>
+        </LoadingButton>
       </Stack>
     </div>
   );

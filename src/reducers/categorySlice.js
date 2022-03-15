@@ -5,12 +5,20 @@ const categorySlice = createSlice({
 
   initialState: {
     categories: [],
+    isBulkUpdating: false,
+    isBulkImporting: false,
     isCreating: false,
     isUpdating: false,
     isDeleting: false,
   },
 
   reducers: {
+    SetIsBulkImporting(state, action) {
+      state.isBulkImporting = action.payload.state;
+    },
+    SetIsBulkUpdating(state, action) {
+      state.isBulkUpdating = action.payload.state;
+    },
     SetIsCreating(state, action) {
       state.isCreating = action.payload.state;
     },
@@ -19,6 +27,9 @@ const categorySlice = createSlice({
     },
     SetIsDeleting(state, action) {
       state.isDeleting = action.payload.state;
+    },
+    CreateCategories(state, action) {
+      state.categories = state.categories.concat(action.payload.categories);
     },
     CreateCategory(state, action) {
       state.categories.push(action.payload.category);

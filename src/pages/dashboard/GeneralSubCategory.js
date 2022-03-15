@@ -33,11 +33,7 @@ import Image from '../../components/Image';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 // sections
-import {
-  ProductMoreMenu,
-  CategoryListHead,
-  
-} from '../../sections/@dashboard/e-commerce/product-list';
+import { ProductMoreMenu, CategoryListHead } from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchSubCategory, updateSubCategoryStock, reorderSubCategories } from '../../actions';
 
 import AlterSubCategoryStock from '../../Dialogs/SubCategory/AlterSubCategoryStock';
@@ -48,6 +44,8 @@ import AddSubCategory from '../../Dialogs/AddSubCategory';
 import BulkDeleteSubCategory from '../../Dialogs/SubCategory/BulkDeleteSubCategories';
 import SubCategoryListToolbar from '../../sections/@dashboard/e-commerce/product-list/SubCategoryListToolbar';
 import NoSubCategories from '../../assets/tri-half-egg.png';
+import BulkUpdateSubCategory from '../../Dialogs/SubCategory/BulkUpdateSubCategory';
+import BulkUploadSubCategory from '../../Dialogs/SubCategory/BulkUploadSubCategory';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -145,6 +143,9 @@ export default function GeneralSubCategory() {
 
   const [openBulkDelete, setOpenBulkDelete] = useState(false);
 
+  const [openBulkImport, setOpenBulkImport] = useState(false);
+  const [openBulkUpdate, setOpenBulkUpdate] = useState(false);
+
   const handleOpenBulkDelete = () => {
     setOpenBulkDelete(true);
   };
@@ -186,6 +187,22 @@ export default function GeneralSubCategory() {
 
   const handleOpenAddSubCategory = () => {
     setOpenAddSubCategory(true);
+  };
+
+  const handleOpenBulkUpdate = () => {
+    setOpenBulkUpdate(true);
+  };
+
+  const handleCloseBulkUpdate = () => {
+    setOpenBulkUpdate(false);
+  };
+
+  const handleOpenBulkImport = () => {
+    setOpenBulkImport(true);
+  };
+
+  const handleCloseBulkImport = () => {
+    setOpenBulkImport(false);
   };
 
   const { subCategories } = useSelector((state) => state.subCategory);
@@ -260,46 +277,9 @@ export default function GeneralSubCategory() {
 
   const isNotFound = !filteredCategories.length && Boolean(filterName);
 
-  const processSubCategoriesData = () => {
-    const processedArray = [];
-
-    subCategories.map((category) => {
-      const array = Object.entries(category);
-
-      const filtered = array.filter(([key, value]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
-
-      const asObject = Object.fromEntries(filtered);
-
-      return processedArray.push(asObject);
-    });
-
-    const finalArray = processedArray.map((obj) => Object.values(obj));
-
-    return finalArray;
-  };
-
-  const CreateAndDownloadCSV = (data) => {
-    let csv = 'name, out_of_stock, total_sales, \n';
-    data.forEach((row) => {
-      csv += row.join(',');
-      csv += '\n';
-    });
-
-    console.log(csv);
-    const hiddenElement = document.createElement('a');
-    hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'subCategories.csv';
-    hiddenElement.click();
-  };
-
-  const handleExportSubCategories = () => {
-    CreateAndDownloadCSV(processSubCategoriesData());
-  };
-
   return (
     <>
-      <Page title="Category">
+      <Page title="Sub Category">
         <Container maxWidth={themeStretch ? false : 'lg'}>
           <Card>
             <SubCategoryListToolbar
@@ -309,166 +289,181 @@ export default function GeneralSubCategory() {
               filterName={filterName}
               onFilterName={handleFilterByName}
               onDeleteSubCategories={() => handleOpenBulkDelete()}
-              handleExportSubCategories={handleExportSubCategories}
+              handleImportSubCategories={handleOpenBulkImport}
+              handleOpenBulkUpdate={handleOpenBulkUpdate}
             />
 
-{!(typeof subCategories !== 'undefined' && subCategories.length > 0) ? (
+            {!(typeof subCategories !== 'undefined' && subCategories.length > 0) ? (
               <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
                 <Card sx={{ p: 3, my: 3 }}>
                   <img style={{ height: '150px', width: '150px' }} src={NoSubCategories} alt="no products in store" />
                 </Card>
                 <Typography sx={{ mb: 3 }} variant="subtitle2">
-                  You haven't added any Sub categories in your store, It helps your customer find exact product they want
+                  You haven't added any Sub categories in your store, It helps your customer find exact product they
+                  want
                 </Typography>
               </Stack>
             ) : (
+              <Scrollbar>
+                <TableContainer sx={{ minWidth: 900 }}>
+                  <Table>
+                    <CategoryListHead
+                      order={order}
+                      orderBy={orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={subCategories.length}
+                      numSelected={selected.length}
+                      onRequestSort={handleRequestSort}
+                      onSelectAllClick={handleSelectAllClick}
+                    />
 
-            <Scrollbar>
-              <TableContainer sx={{ minWidth: 900 }}>
-                <Table>
-                  <CategoryListHead
-                    order={order}
-                    orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
-                    rowCount={subCategories.length}
-                    numSelected={selected.length}
-                    onRequestSort={handleRequestSort}
-                    onSelectAllClick={handleSelectAllClick}
-                  />
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                      <Droppable droppableId="list">
+                        {(provided) => (
+                          <TableBody {...provided.droppableProps} ref={provided.innerRef}>
+                            {subCategories
+                              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                              .map((row, index) => {
+                                const {
+                                  _id,
+                                  name,
+                                  image,
+                                  products,
+                                  outOfStock,
+                                  hidden,
+                                  updatedAt,
+                                  totalSales,
+                                  category,
+                                } = row;
 
-                  <DragDropContext onDragEnd={handleDragEnd}>
-                    <Droppable droppableId="list">
-                      {(provided) => (
-                        <TableBody {...provided.droppableProps} ref={provided.innerRef}>
-                          {subCategories
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row, index) => {
-                              const { _id, name, image, products, outOfStock, hidden, updatedAt, totalSales, category } = row;
+                                const isItemSelected = selected.indexOf(_id) !== -1;
 
-                              const isItemSelected = selected.indexOf(_id) !== -1;
-
-                              return (
-                                <Draggable key={_id} draggableId={_id} index={index}>
-                                  {(provided) => (
-                                    <TableRow
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      ref={provided.innerRef}
-                                      hover
-                                      tabIndex={-1}
-                                      role="checkbox"
-                                      selected={isItemSelected}
-                                      aria-checked={isItemSelected}
-                                    >
-                                      <TableCell padding="checkbox">
-                                        <Checkbox checked={isItemSelected} onClick={() => handleClick(_id)} />
-                                      </TableCell>
-                                      <TableCell>
-                                        <Stack direction={'row'} alignItems={'center'}>
-                                          <Image
-                                            disabledEffect
-                                            alt={name}
-                                            src={ image && !image.endsWith('undefined') ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${image}` : "https://qwikshop.s3.ap-south-1.amazonaws.com/images/noimage.png"}
-                                            sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
-                                          />
-                                          <Typography variant="subtitle2" noWrap>
-                                            {name}
-                                          </Typography>
-                                        </Stack>
-                                      </TableCell>
-                                      <TableCell>
-                                        <Stack direction={'row'} alignItems={'center'}>
-                                          <Image
-                                            disabledEffect
-                                            alt={category.label}
-                                            src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${category.image}`}
-                                            sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
-                                          />
-                                          <Typography variant="subtitle2" noWrap>
-                                            {category.label}
-                                          </Typography>
-                                        </Stack>
-                                      </TableCell>
-                                      <TableCell style={{ minWidth: 160 }}>{products.length}</TableCell>
-                                      <TableCell style={{ minWidth: 160 }}>
-                                        <FormControlLabel
-                                          control={
-                                            <IOSSwitch
-                                              sx={{ m: 1 }}
-                                              checked={!outOfStock}
-                                              onClick={(e) => {
-                                                if (!outOfStock) {
-                                                  handleOpenStock(_id);
-                                                } else {
-                                                  dispatch(
-                                                    updateSubCategoryStock(
-                                                      _id,
-                                                      { hidden: false, outOfStock: false },
-                                                      handleCloseStock
-                                                    )
-                                                  );
-                                                }
-                                              }}
+                                return (
+                                  <Draggable key={_id} draggableId={_id} index={index}>
+                                    {(provided) => (
+                                      <TableRow
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        ref={provided.innerRef}
+                                        hover
+                                        tabIndex={-1}
+                                        role="checkbox"
+                                        selected={isItemSelected}
+                                        aria-checked={isItemSelected}
+                                      >
+                                        <TableCell padding="checkbox">
+                                          <Checkbox checked={isItemSelected} onClick={() => handleClick(_id)} />
+                                        </TableCell>
+                                        <TableCell>
+                                          <Stack direction={'row'} alignItems={'center'}>
+                                            <Image
+                                              disabledEffect
+                                              alt={name}
+                                              src={
+                                                image && !image.endsWith('undefined')
+                                                  ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`
+                                                  : 'https://qwikshop.s3.ap-south-1.amazonaws.com/images/noimage.png'
+                                              }
+                                              sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
                                             />
-                                          }
-                                          label=""
-                                        />
-                                        <Label
-                                          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                                          color={(outOfStock && 'error') || 'success'}
-                                        >
-                                          {!outOfStock ? 'In stock' : 'Out of stock'}
-                                        </Label>
-                                      </TableCell>
-                                     
-                                      <TableCell align="right">
-                                        <IconButton
-                                          onClick={() => {
-                                            handleOpenShare(_id);
-                                          }}
-                                          className="me-2"
-                                        >
-                                          <ShareRoundedIcon style={{ fontSize: '20px' }} />
-                                        </IconButton>
-                                        <ProductMoreMenu
-                                          productName={name}
-                                          onDelete={() => handleOpenDelete(_id)}
-                                          onEdit={() => {
-                                            handleOpenUpdate(_id);
-                                          }}
-                                        />
-                                      </TableCell>
-                                    </TableRow>
-                                  )}
-                                </Draggable>
-                              );
-                            })}
-                          {provided.placeholder}
-                        </TableBody>
-                      )}
-                    </Droppable>
-                  </DragDropContext>
+                                            <Typography variant="subtitle2" noWrap>
+                                              {name}
+                                            </Typography>
+                                          </Stack>
+                                        </TableCell>
+                                        <TableCell>
+                                          <Stack direction={'row'} alignItems={'center'}>
+                                            <Image
+                                              disabledEffect
+                                              alt={category.label}
+                                              src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${category.image}`}
+                                              sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
+                                            />
+                                            <Typography variant="subtitle2" noWrap>
+                                              {category.label}
+                                            </Typography>
+                                          </Stack>
+                                        </TableCell>
+                                        <TableCell style={{ minWidth: 160 }}>{products.length}</TableCell>
+                                        <TableCell style={{ minWidth: 160 }}>
+                                          <FormControlLabel
+                                            control={
+                                              <IOSSwitch
+                                                sx={{ m: 1 }}
+                                                checked={!outOfStock}
+                                                onClick={(e) => {
+                                                  if (!outOfStock) {
+                                                    handleOpenStock(_id);
+                                                  } else {
+                                                    dispatch(
+                                                      updateSubCategoryStock(
+                                                        _id,
+                                                        { hidden: false, outOfStock: false },
+                                                        handleCloseStock
+                                                      )
+                                                    );
+                                                  }
+                                                }}
+                                              />
+                                            }
+                                            label=""
+                                          />
+                                          <Label
+                                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                                            color={(outOfStock && 'error') || 'success'}
+                                          >
+                                            {!outOfStock ? 'In stock' : 'Out of stock'}
+                                          </Label>
+                                        </TableCell>
 
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
+                                        <TableCell align="right">
+                                          <IconButton
+                                            onClick={() => {
+                                              handleOpenShare(_id);
+                                            }}
+                                            className="me-2"
+                                          >
+                                            <ShareRoundedIcon style={{ fontSize: '20px' }} />
+                                          </IconButton>
+                                          <ProductMoreMenu
+                                            productName={name}
+                                            onDelete={() => handleOpenDelete(_id)}
+                                            onEdit={() => {
+                                              handleOpenUpdate(_id);
+                                            }}
+                                          />
+                                        </TableCell>
+                                      </TableRow>
+                                    )}
+                                  </Draggable>
+                                );
+                              })}
+                            {provided.placeholder}
+                          </TableBody>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
 
-                  {isNotFound && (
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align="center" colSpan={6}>
-                          <Box sx={{ py: 3 }}>
-                            <SearchNotFound searchQuery={filterName} />
-                          </Box>
-                        </TableCell>
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
                       </TableRow>
-                    </TableBody>
-                  )}
-                </Table>
-              </TableContainer>
-            </Scrollbar>
+                    )}
+
+                    {isNotFound && (
+                      <TableBody>
+                        <TableRow>
+                          <TableCell align="center" colSpan={6}>
+                            <Box sx={{ py: 3 }}>
+                              <SearchNotFound searchQuery={filterName} />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    )}
+                  </Table>
+                </TableContainer>
+              </Scrollbar>
             )}
 
             <TablePagination
@@ -497,6 +492,8 @@ export default function GeneralSubCategory() {
       {openDelete && <DeleteSubCategory open={openDelete} handleClose={handleCloseDelete} id={IdToDelete} />}
       {openUpdate && <EditSubCategory open={openUpdate} handleClose={handleCloseUpdate} id={IdToEdit} />}
       {openAddSubCategory && <AddSubCategory open={openAddSubCategory} handleClose={handleCloseAddSubCategory} />}
+      {openBulkUpdate && <BulkUpdateSubCategory open={openBulkUpdate} handleClose={handleCloseBulkUpdate} />}
+      {openBulkImport && <BulkUploadSubCategory open={openBulkImport} handleClose={handleCloseBulkImport} />}
     </>
   );
 }

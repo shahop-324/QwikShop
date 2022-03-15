@@ -1,17 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { Card, Grid, Dialog, DialogTitle, Button, Typography, Stack } from '@mui/material';
 import UpdateRoundedIcon from '@mui/icons-material/UpdateRounded';
-
+import {LoadingButton} from '@mui/lab';
 // @mui
 import { styled } from '@mui/material/styles';
 
 // components
 import { DataGrid } from '@mui/x-data-grid';
-import { EditRounded } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { bulkUpdateProducts } from '../../actions';
+import { bulkUpdateProducts, resetIsBulkUpdatingProducts } from '../../actions';
 
 const columns = [
   {
@@ -192,7 +192,11 @@ const BlukUpdateProducts = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
 
-  const { products } = useSelector((state) => state.product);
+useEffect(() => {
+  dispatch(resetIsBulkUpdatingProducts());
+}, []);
+
+  const { products, isBulkUpdating } = useSelector((state) => state.product);
 
   useEffect(() => {
     const mRows = products
@@ -219,7 +223,8 @@ const BlukUpdateProducts = ({ open, handleClose }) => {
         <Stack sx={{ p: 3 }} direction="row" alignItems="center" justifyContent="space-between">
           <LabelStyle>Double click & update</LabelStyle>
           <div className="d-flex flex-row align-items-center justify-content-end">
-            <Button
+            <LoadingButton
+            loading={isBulkUpdating}
               disabled={!(rows !== undefined && rows.length > 0)}
               startIcon={<UpdateRoundedIcon />}
               onClick={() => {
@@ -229,7 +234,7 @@ const BlukUpdateProducts = ({ open, handleClose }) => {
               variant="contained"
             >
               Update products
-            </Button>
+            </LoadingButton>
             <Button
               onClick={() => {
                 handleClose();

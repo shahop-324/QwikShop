@@ -39,7 +39,7 @@ const navConfig = [
           { title: 'product', path: PATH_DASHBOARD.catalouge.product },
           { title: 'category', path: PATH_DASHBOARD.catalouge.category },
           { title: 'sub category', path: PATH_DASHBOARD.catalouge.subcategory },
-          { title: 'division', path: PATH_DASHBOARD.catalouge.division },
+          // { title: 'division', path: PATH_DASHBOARD.catalouge.division },
           // { title: 'Catalouge Builder', path: PATH_DASHBOARD.catalouge.builder },
         ],
       },
@@ -74,11 +74,11 @@ const navConfig = [
         path: PATH_DASHBOARD.general.reviews,
         icon: <ReviewsRoundedIcon />,
       },
-      {
-        title: 'Academy',
-        path: PATH_DASHBOARD.general.academy,
-        icon: <SchoolRoundedIcon />,
-      },
+      // {
+      //   title: 'Academy',
+      //   path: PATH_DASHBOARD.general.academy,
+      //   icon: <SchoolRoundedIcon />,
+      // },
       // MANAGEMENT : E-COMMERCE
     ],
   },

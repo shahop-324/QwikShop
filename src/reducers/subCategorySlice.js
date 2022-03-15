@@ -5,12 +5,20 @@ const subCategorySlice = createSlice({
 
   initialState: {
     subCategories: [],
+    isBulkUpdating: false,
+    isBulkImporting: false,
     isCreating: false,
     isUpdating: false,
     isDeleting: false,
   },
 
   reducers: {
+    SetIsBulkUpdating(state, action) {
+      state.isBulkUpdating = action.payload.state;
+    },
+    SetIsBulkImporting(state, action) {
+      state.isBulkImporting = action.payload.state;
+    },
     SetIsCreating(state, action) {
       state.isCreating = action.payload.state;
     },
@@ -19,6 +27,9 @@ const subCategorySlice = createSlice({
     },
     SetIsDeleting(state, action) {
       state.isDeleting = action.payload.state;
+    },
+    CreateSubCategories(state, action) {
+      state.subCategories = state.subCategories.concat(action.payload.subCategories);
     },
     CreateSubCategory(state, action) {
       state.subCategories.push(action.payload.subCategory);

@@ -494,7 +494,7 @@ export default function GeneralIntegration() {
                         color="error"
                         variant="contained"
                         onClick={() => {
-                          dispatch(updateWhatsAppNumber(undefined, true));
+                          dispatch(updateWhatsAppNumber(undefined, true, () => {}));
                         }}
                       >
                         Uninstall

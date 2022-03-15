@@ -11,10 +11,8 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  
   Stack,
   Chip,
-  
 } from '@mui/material';
 // redux
 import dateFormat from 'dateformat';
@@ -24,10 +22,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 // sections
-import {
-  TransactionListHead,
-  TransactionListToolbar,
-} from '../../sections/@dashboard/e-commerce/product-list';
+import { TransactionListHead, RefundListToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchRefunds } from '../../actions';
 import NoRefunds from '../../assets/coin.png';
 
@@ -44,7 +39,6 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function GeneralTransaction() {
-  
   const dispatch = useDispatch();
 
   const [term, setTerm] = useState('');
@@ -58,9 +52,6 @@ export default function GeneralTransaction() {
       clearTimeout(timeoutId);
     };
   }, [term]);
-
-
-
 
   const { refunds } = useSelector((state) => state.transaction);
 
@@ -101,128 +92,92 @@ export default function GeneralTransaction() {
 
   const isNotFound = !filteredTransactions.length && Boolean(filterName);
 
-  const processTransactionsData = () => {
-    const processedArray = [];
-
-    refunds.map((transaction) => {
-      const array = Object.entries(transaction);
-
-      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
-
-      const asObject = Object.fromEntries(filtered);
-
-      return processedArray.push(asObject);
-    });
-
-    const finalArray = processedArray.map((obj) => Object.values(obj));
-
-    return finalArray;
-  };
-
-  const CreateAndDownloadCSV = (data) => {
-    let csv = 'name, out_of_stock, total_sales, \n';
-    data.forEach((row) => {
-      csv += row.join(',');
-      csv += '\n';
-    });
-
-    console.log(csv);
-    const hiddenElement = document.createElement('a');
-    hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'refunds.csv';
-    hiddenElement.click();
-  };
-
-  const handleExportTransactions = () => {
-    CreateAndDownloadCSV(processTransactionsData());
-  };
-
-
-
   return (
     <>
       <Card sx={{ px: 0 }}>
-        <TransactionListToolbar
+        <RefundListToolbar
           setTerm={setTerm}
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
-          handleExportTransactions={handleExportTransactions}
         />
 
-       
-{!(typeof refunds !== 'undefined' && refunds.length > 0) ? (
-              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
-                <Card sx={{ p: 3, my: 3 }}>
-                  <img style={{ height: '150px', width: '150px' }} src={NoRefunds} alt="no refunds" />
-                </Card>
-                <Typography sx={{ mb: 3 }} variant="subtitle2">
-                  There are no refunds history for your store
-                </Typography>
-              </Stack>
-            ) : (
+        {!(typeof refunds !== 'undefined' && refunds.length > 0) ? (
+          <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+            <Card sx={{ p: 3, my: 3 }}>
+              <img style={{ height: '150px', width: '150px' }} src={NoRefunds} alt="no refunds" />
+            </Card>
+            <Typography sx={{ mb: 3 }} variant="subtitle2">
+              There are no refunds history for your store
+            </Typography>
+          </Stack>
+        ) : (
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 900 }}>
+              <Table>
+                <TransactionListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={refunds.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                />
 
-        <Scrollbar>
-          <TableContainer sx={{ minWidth: 900 }}>
-            <Table>
-              <TransactionListHead
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={refunds.length}
-                numSelected={selected.length}
-                onRequestSort={handleRequestSort}
-                onSelectAllClick={handleSelectAllClick}
-              />
-
-              <TableBody>
-                {refunds.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                  const { _id } = row;
-
-                  const isItemSelected = selected.indexOf(_id) !== -1;
-
-                  return (
-                    <TableRow key={_id} hover tabIndex={-1} role="checkbox" aria-checked={isItemSelected}>
-                      <TableCell>
-                        <Stack direction={'row'} alignItems={'center'}>
-                          <Typography variant="subtitle2" noWrap>
-                           {row?.customer?.name}
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{row?.order?.ref}</TableCell>
-                      <TableCell style={{ minWidth: 160 }}>Rs.{row?.order?.charges?.total}</TableCell>
-                      <TableCell align="left">{dateFormat(new Date(row?.createdAt || Date.now()), 'ddd mmm dS, yy hh:mm TT')}</TableCell>
-                      <TableCell align="left">{row?.resolved ? <Chip label="Proccessed" color="primary" variant="outlined" /> : <Chip label="Processing" color="info" variant="outlined" /> }</TableCell>
-                      
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-
-              {isNotFound && (
                 <TableBody>
-                  <TableRow>
-                    <TableCell align="center" colSpan={6}>
-                      <Box sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              )}
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+                  {refunds.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { _id } = row;
 
-            )}
+                    const isItemSelected = selected.indexOf(_id) !== -1;
+
+                    return (
+                      <TableRow key={_id} hover tabIndex={-1} role="checkbox" aria-checked={isItemSelected}>
+                        <TableCell>
+                          <Stack direction={'row'} alignItems={'center'}>
+                            <Typography variant="subtitle2" noWrap>
+                              {row?.customer?.name}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+                        <TableCell style={{ minWidth: 160 }}>{row?.order?.ref}</TableCell>
+                        <TableCell style={{ minWidth: 160 }}>Rs.{row?.order?.charges?.total}</TableCell>
+                        <TableCell align="left">
+                          {dateFormat(new Date(row?.createdAt || Date.now()), 'ddd mmm dS, yy hh:mm TT')}
+                        </TableCell>
+                        <TableCell align="left">
+                          {row?.resolved ? (
+                            <Chip label="Proccessed" color="primary" variant="outlined" />
+                          ) : (
+                            <Chip label="Processing" color="info" variant="outlined" />
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+
+                {isNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6}>
+                        <Box sx={{ py: 3 }}>
+                          <SearchNotFound searchQuery={filterName} />
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+          </Scrollbar>
+        )}
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, 50]}

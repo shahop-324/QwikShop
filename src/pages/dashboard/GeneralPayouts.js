@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 // sections
-import { TransactionListHead, TransactionListToolbar } from '../../sections/@dashboard/e-commerce/product-list';
+import { TransactionListHead, PayoutListToolbar } from '../../sections/@dashboard/e-commerce/product-list';
 import { fetchPayouts } from '../../actions';
 import NoPayout from '../../assets/suitcase-with-cash.png';
 
@@ -132,7 +132,7 @@ export default function GeneralPayout() {
   return (
     <>
       <Card sx={{ px: 0 }}>
-        <TransactionListToolbar
+        <PayoutListToolbar
           setTerm={setTerm}
           numSelected={selected.length}
           filterName={filterName}

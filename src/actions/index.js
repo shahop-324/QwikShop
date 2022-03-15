@@ -7096,7 +7096,7 @@ export const verifyWhatsAppNumber = (otp, handleClose) => async (dispatch, getSt
     dispatch(showSnackbar('error', message));
   }
 };
-export const updateWhatsAppNumber = (phone, uninstall) => async (dispatch, getState) => {
+export const updateWhatsAppNumber = (phone, uninstall, handleClose) => async (dispatch, getState) => {
   let message;
 
   try {
@@ -7135,6 +7135,9 @@ export const updateWhatsAppNumber = (phone, uninstall) => async (dispatch, getSt
     );
 
     dispatch(showSnackbar('success', message));
+    if (handleClose) {
+      handleClose();
+    }
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -8380,6 +8383,78 @@ export const resetIsBulkImportingProducts = () => async (dispatch, getState) => 
   }
 };
 
+export const resetIsBulkUpdatingCategories = () => async (dispatch, getState) => {
+  try {
+    dispatch(categoryActions.SetIsBulkUpdating({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsBulkImportingSubCategories = () => async (dispatch, getState) => {
+  try {
+    dispatch(subCategoryActions.SetIsBulkImporting({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsBulkUpdatingSubCategories = () => async (dispatch, getState) => {
+  try {
+    dispatch(subCategoryActions.SetIsBulkUpdating({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsBulkImportingCustomer = () => async (dispatch, getState) => {
+  try {
+    dispatch(customerActions.SetIsBulkImporting({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsBulkUpdatingCustomer = () => async (dispatch, getState) => {
+  try {
+    dispatch(customerActions.SetIsBulkUpdating({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsBulkImportingReferral = () => async (dispatch, getState) => {
+  try {
+    dispatch(referralActions.SetIsBulkImporting({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsBulkUpdatingReferral = () => async (dispatch, getState) => {
+  try {
+    dispatch(referralActions.SetIsBulkUpdating({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsBulkImportingCategories = () => async (dispatch, getState) => {
+  try {
+    dispatch(categoryActions.SetIsBulkImporting({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsUpdatingStorePerefernce = () => async (dispatch, getState) => {
+  try {
+    dispatch(storeActions.SetIsUpdatingPreference({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const bulkImportProducts = (rows, handleClose) => async (dispatch, getState) => {
   let message;
   dispatch(productActions.SetIsBulkImporting({ state: true }));
@@ -8473,5 +8548,430 @@ export const bulkUpdateProducts = (rows, handleClose) => async (dispatch, getSta
     console.log(error);
     dispatch(showSnackbar('error', message));
     dispatch(productActions.SetIsBulkUpdating({ state: false }));
+  }
+};
+
+export const updateStorePreference = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingPreference({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}store/preference/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingPreference({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingPreference({ state: false }));
+  }
+};
+
+export const bulkUpdateCategories = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(categoryActions.SetIsBulkUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}category/bulkUpdate`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      categoryActions.FetchCategories({
+        categories: result.data,
+      })
+    );
+
+    dispatch(categoryActions.SetIsBulkUpdating({ state: false }));
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(categoryActions.SetIsBulkUpdating({ state: false }));
+  }
+};
+
+export const bulkUploadCategories = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(categoryActions.SetIsBulkImporting({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}category/bulkImport`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      categoryActions.CreateCategories({
+        products: result.data,
+      })
+    );
+
+    dispatch(categoryActions.SetIsBulkImporting({ state: false }));
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(categoryActions.SetIsBulkImporting({ state: false }));
+  }
+};
+
+export const bulkUpdateSubCategories = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(subCategoryActions.SetIsBulkUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}subCategory/bulkUpdate`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      subCategoryActions.FetchSubCategories({
+        subCategories: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(subCategoryActions.SetIsBulkUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(subCategoryActions.SetIsBulkUpdating({ state: false }));
+  }
+};
+
+export const bulkUploadSubCategories = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(productActions.SetIsBulkImporting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}subCategory/bulkImport`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      subCategoryActions.CreateSubCategories({
+        subCategories: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(subCategoryActions.SetIsBulkImporting({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(subCategoryActions.SetIsBulkImporting({ state: false }));
+  }
+};
+
+export const bulkUpdateCustomers = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsBulkUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}customer/bulkUpdate`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.FetchCustomers({
+        customers: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(customerActions.SetIsBulkUpdating({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsBulkUpdating({ state: false }));
+  }
+};
+
+export const bulkUploadCustomers = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(customerActions.SetIsBulkImporting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}customer/bulkImport`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      customerActions.CreateCustomers({
+        customers: result.data,
+      })
+    );
+
+    dispatch(customerActions.SetIsBulkImporting({ state: false }));
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(customerActions.SetIsBulkImporting({ state: false }));
+  }
+};
+
+export const bulkUpdateReferrals = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(referralActions.SetIsBulkUpdating({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}referral/bulkUpdate`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.FetchReferrals({
+        referrals: result.data,
+      })
+    );
+
+    dispatch(referralActions.SetIsBulkUpdating({ state: false }));
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(referralActions.SetIsBulkUpdating({ state: false }));
+  }
+};
+
+export const bulkUploadReferral = (rows, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(referralActions.SetIsBulkImporting({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}referral/bulkImport`, {
+      method: 'POST',
+
+      body: JSON.stringify({
+        rows,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      referralActions.CreateReferrals({
+        products: result.data,
+      })
+    );
+
+    dispatch(referralActions.SetIsBulkImporting({ state: false }));
+    dispatch(showSnackbar('success', message));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(referralActions.SetIsBulkUpdating({ state: false }));
   }
 };

@@ -17,13 +17,19 @@ import {
   Grow,
   ClickAwayListener,
   Portal,
+  Stack,
 } from '@mui/material';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
+import CsvDownload from 'react-json-to-csv';
 // ----------------------------------------------------------------------
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 // components
+import { useSelector } from 'react-redux';
+import { EditRounded } from '@mui/icons-material';
 import Iconify from '../../../../components/Iconify';
+
+const allowed = ['name'];
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -85,20 +91,22 @@ CategoryListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
-const options = ['Add Category'];
+const options = ['Add Category', 'Import using excel'];
 
 export default function CategoryListToolbar({
   numSelected,
-  
   onDeleteCategories,
-  
   openAddCategory,
   setTerm,
-  handleExportCategories,
+  // handleImportCategories,
+  handleOpenBulkUpdate,
+  openBulkImport,
 }) {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { categories } = useSelector((state) => state.category);
+  const { store } = useSelector((state) => state.store);
 
   const handleClick = () => {
     console.info(`You clicked ${options[selectedIndex]}`);
@@ -107,13 +115,9 @@ export default function CategoryListToolbar({
         openAddCategory();
         break;
 
-      // case 1:
-      //   openBulkImport();
-      //   break;
-
       case 1:
-        // Run logic to export all categories to excel
-        handleExportCategories();
+        // Run logic to import categories in bulk using excel
+        openBulkImport();
         break;
 
       default:
@@ -174,49 +178,88 @@ export default function CategoryListToolbar({
           </IconButton>
         </Tooltip>
       ) : (
-        <div className="d-flex flex-row align-items-center justify-content-end">
-          <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
-            <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-            <Button
-              size="small"
-              aria-controls={open ? 'split-button-menu' : undefined}
-              aria-expanded={open ? 'true' : undefined}
-              aria-label="add product category"
-              aria-haspopup="menu"
-              onClick={handleToggle}
-            >
-              <ArrowDropDownRoundedIcon />
-            </Button>
-          </ButtonGroup>
-          <Portal>
-            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                  }}
-                >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleClose}>
-                      <MenuList id="split-button-menu">
-                        {options.map((option, index) => (
-                          <MenuItem
-                            key={option}
-                            selected={index === selectedIndex}
-                            onClick={(event) => handleMenuItemClick(event, index)}
-                          >
-                            <Typography variant="subtitle2">{option}</Typography>
-                          </MenuItem>
-                        ))}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
-          </Portal>
-        </div>
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <div className="d-flex flex-row align-items-center justify-content-end">
+            <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+              <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+              <Button
+                size="small"
+                aria-controls={open ? 'split-button-menu' : undefined}
+                aria-expanded={open ? 'true' : undefined}
+                aria-label="add product category"
+                aria-haspopup="menu"
+                onClick={handleToggle}
+              >
+                <ArrowDropDownRoundedIcon />
+              </Button>
+            </ButtonGroup>
+            <Portal>
+              <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList id="split-button-menu">
+                          {options.map((option, index) => (
+                            <MenuItem
+                              key={option}
+                              selected={index === selectedIndex}
+                              onClick={(event) => handleMenuItemClick(event, index)}
+                            >
+                              <Typography variant="subtitle2">{option}</Typography>
+                            </MenuItem>
+                          ))}
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            </Portal>
+          </div>
+          <Button
+            onClick={() => {
+              handleOpenBulkUpdate();
+            }}
+            startIcon={<EditRounded />}
+            variant="outlined"
+          >
+            Bulk Update
+          </Button>
+          <CsvDownload
+            data={categories.map((el) =>
+              Object.keys(el)
+                .filter((key) => allowed.includes(key))
+                .reduce((obj, key) => {
+                  obj[key] = el[key];
+                  return obj;
+                }, {})
+            )}
+            filename={`categories_list_${store.storeName}.csv`}
+            style={{
+              boxShadow: 'inset 0px 1px 0px 0px #00AB55',
+              background: 'linear-gradient(to bottom, #00AB55 5%, #13C06A 100%)',
+              backgroundColor: '#08BD62',
+              borderRadius: '6px',
+              border: '1px solid #00AB55',
+              display: 'inline-block',
+              cursor: 'pointer',
+              color: '#ffffff',
+              fontSize: '15px',
+              fontWeight: 'bold',
+              padding: '6px 24px',
+              textDecoration: 'none',
+              textShadow: '0px 1px 0px #0C8F4D',
+            }}
+          >
+            Export
+          </CsvDownload>
+        </Stack>
       )}
     </RootStyle>
   );

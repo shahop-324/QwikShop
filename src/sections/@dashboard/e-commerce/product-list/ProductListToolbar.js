@@ -89,7 +89,7 @@ ProductListToolbar.propTypes = {
   onDeleteProducts: PropTypes.func,
 };
 
-const options = ['Add Product', 'Import Via Excel'];
+const options = ['Add Product', 'Import using Excel'];
 
 const allowed = [
   'productName',

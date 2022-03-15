@@ -5,6 +5,8 @@ const customerSlice = createSlice({
 
   initialState: {
     customers: [],
+    isBulkUpdating: false,
+    isBulkImporting: false,
     isCreating: false,
     isUpdating: false,
     isDeleting: false,
@@ -14,6 +16,12 @@ const customerSlice = createSlice({
   },
 
   reducers: {
+    SetIsBulkUpdating(state, action) {
+      state.isBulkUpdating = action.payload.state;
+    },
+    SetIsBulkImporting(state, action) {
+      state.isBulkImporting = action.payload.state;
+    },
     SetIsCreating(state, action) {
       state.isCreating = action.payload.state;
     },
@@ -31,6 +39,9 @@ const customerSlice = createSlice({
     },
     SetIsAddingCoins(state, action){
       state.isAddingCoins = action.payload.state;
+    },
+    CreateCustomers(state, action) {
+      state.customers = state.customers.concat(action.payload.customers);
     },
     CreateCustomer(state, action) {
       state.customers.push(action.payload.customer);

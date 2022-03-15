@@ -6,6 +6,7 @@ const storeSlice = createSlice({
   initialState: {
     store: {},
     error: false,
+    isUpdatingPreference: false,
     isSubmittingStoreSetup: false,
     isUpdatingPaymentSettings: false,
     isUpdatingFavicon: false,
@@ -36,6 +37,9 @@ const storeSlice = createSlice({
     },
     UpdateStore(state, action) {
       state.store = action.payload.store;
+    },
+    SetIsUpdatingPreference(state, action) {
+      state.isUpdatingPreference = action.payload.state;
     },
     SetIsUpdatingPaymentSettings(state, action) {
       state.isUpdatingPaymentSettings = action.payload.state;

@@ -83,7 +83,7 @@ export default function Router() {
         { path: 'refferal', element: <GeneralReferral /> },
         { path: 'integration', element: <GeneralIntegration /> },
         {path: 'reviews', element: <GeneralReviews />},
-        { path: 'academy', element: <GeneralAcademy /> },
+        // { path: 'academy', element: <GeneralAcademy /> },
         {
           path: 'catalouge',
           children: [
@@ -91,7 +91,7 @@ export default function Router() {
             { path: 'product', element: <EcommerceProductList /> },
             { path: 'category', element: <GeneralCategory /> },
             { path: 'sub-category', element: <GeneralSubCategory /> },
-            { path: 'division', element: <GeneralDivision /> },
+            // { path: 'division', element: <GeneralDivision /> },
             { path: 'builder', element: <GeneralCatalougeBuilder /> },
           ],
         },
@@ -182,11 +182,10 @@ const GeneralManage = Loadable(lazy(() => import('../pages/dashboard/GeneralMana
 const GeneralIntegration = Loadable(lazy(() => import('../pages/dashboard/GeneralIntegration')));
 const GeneralAbondonedCarts = Loadable(lazy(() => import('../pages/dashboard/GeneralAbondonedCarts')));
 const GeneralReviews = Loadable(lazy(() => import('../pages/dashboard/GeneralReviews')));
-const GeneralAcademy = Loadable(lazy(() => import('../pages/dashboard/GeneralAcademy')));
+// const GeneralAcademy = Loadable(lazy(() => import('../pages/dashboard/GeneralAcademy')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const GeneralCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralCategory')));
 const GeneralSubCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralSubCategory')))
-const GeneralDivision = Loadable(lazy(() => import('../pages/dashboard/GeneralDivision')))
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 // Main

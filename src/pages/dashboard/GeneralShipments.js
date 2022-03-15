@@ -149,42 +149,6 @@ export default function GeneralShipments() {
 
   const isNotFound = !filteredShipments.length && Boolean(filterName);
 
-  const processShipmentsData = () => {
-    const processedArray = [];
-
-    shipments.map((shipment) => {
-      const array = Object.entries(shipment);
-
-      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
-
-      const asObject = Object.fromEntries(filtered);
-
-      return processedArray.push(asObject);
-    });
-
-    const finalArray = processedArray.map((obj) => Object.values(obj));
-
-    return finalArray;
-  };
-
-  const CreateAndDownloadCSV = (data) => {
-    let csv = 'name, out_of_stock, total_sales, \n';
-    data.forEach((row) => {
-      csv += row.join(',');
-      csv += '\n';
-    });
-
-    console.log(csv);
-    const hiddenElement = document.createElement('a');
-    hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'shipments.csv';
-    hiddenElement.click();
-  };
-
-  const handleExportShipments = () => {
-    CreateAndDownloadCSV(processShipmentsData());
-  };
 
   return (
     <>
@@ -194,7 +158,8 @@ export default function GeneralShipments() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
-          handleExportShipments={handleExportShipments}
+          
+
         />
 
 {!(typeof shipments !== 'undefined' && shipments.length > 0) ? (

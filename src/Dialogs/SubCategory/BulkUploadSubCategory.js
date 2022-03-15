@@ -18,7 +18,7 @@ import { styled } from '@mui/material/styles';
 // components
 import { useDispatch, useSelector } from 'react-redux';
 import { FormProvider, RHFUploadSingleFile } from '../../components/hook-form';
-import { bulkUploadCategories, resetIsBulkImportingCategories } from '../../actions';
+import { bulkUploadSubCategories, resetIsBulkImportingSubCategories } from '../../actions';
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -30,7 +30,7 @@ const columns = [
   {
     field: 'name',
     headerName: 'Name',
-    description: 'Category name',
+    description: 'SubCategory name',
     width: 550,
     editable: true,
     sortable: true,
@@ -45,15 +45,15 @@ const schema = {
   },
 };
 
-const BulkUploadCategory = ({ open, handleClose }) => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(resetIsBulkImportingCategories());
-  }, []);
+const BulkUploadSubCategory = ({ open, handleClose }) => {
   const [rows, setRows] = useState([]);
   const [invalidFormat, setInvalidFormat] = useState(false);
-  const {isBulkImporting} = useSelector((state) => state.category);
+  const {isBulkImporting} = useSelector((state) => state.subCategory);
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(resetIsBulkImportingSubCategories());
+  }, []);
   const NewBlogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
@@ -104,19 +104,20 @@ const BulkUploadCategory = ({ open, handleClose }) => {
   return (
     <>
       <Dialog fullWidth maxWidth="sm" open={open}>
-        <DialogTitle>Bulk Upload Category</DialogTitle>
+        <DialogTitle>Bulk Upload SubCategory</DialogTitle>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <div>
                   <Stack sx={{ mb: 3 }} direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                    <LabelStyle>Import Categories via Excel / CSV</LabelStyle>
+                    <LabelStyle>Import Sub Categories via Excel / CSV</LabelStyle>
                     <div className="d-flex flex-row align-items-center justify-content-end">
-                    <LoadingButton loading={isBulkImporting} disabled={!(rows !== undefined && rows.length > 0)} onClick={() => {
-                dispatch(bulkUploadCategories(rows, handleClose));
+                     
+                      <LoadingButton loading={isBulkImporting} disabled={!(rows !== undefined && rows.length > 0)} onClick={() => {
+                dispatch(bulkUploadSubCategories(rows, handleClose));
               }} startIcon={<UploadRounded />} type="button" variant="contained">
-              Upload Categories
+              Upload Sub Categories
             </LoadingButton>
                       <Button
                         onClick={() => {
@@ -142,8 +143,8 @@ const BulkUploadCategory = ({ open, handleClose }) => {
                         style={{ textDecoration: 'none' }}
                         target={'_blank'}
                         rel="noreferrer"
-                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/category_sample_template_qwikshop.xlsx"
-                        download="qwikshop_category_upload_format"
+                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/subcategory_import_template_qwikshop.xlsx"
+                        download="qwikshop_subcategory_upload_format"
                       >
                         Click here
                       </a>
@@ -192,8 +193,8 @@ const BulkUploadCategory = ({ open, handleClose }) => {
                           style={{ textDecoration: 'none' }}
                           target={'_blank'}
                           rel="noreferrer"
-                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/category_sample_template_qwikshop.xlsx"
-                          download="qwikshop_category_upload_format"
+                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/subcategory_import_template_qwikshop.xlsx"
+                          download="qwikshop_subcategory_upload_format"
                         >
                           <Button startIcon={<FileDownloadRoundedIcon />} variant="outlined" size="large">
                             Download Excel format
@@ -212,4 +213,4 @@ const BulkUploadCategory = ({ open, handleClose }) => {
   );
 };
 
-export default BulkUploadCategory;
+export default BulkUploadSubCategory;

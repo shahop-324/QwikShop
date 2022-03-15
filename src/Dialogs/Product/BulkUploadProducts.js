@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Grid, Dialog, DialogTitle, Button, Typography, Stack } from '@mui/material';
 import readXlsxFile from 'read-excel-file';
 import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
-
+import {LoadingButton} from '@mui/lab';
 
 import * as Yup from 'yup';
 // form
@@ -17,9 +18,9 @@ import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { UploadRounded } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormProvider, RHFUploadSingleFile } from '../../components/hook-form';
-import { bulkImportProducts } from '../../actions';
+import { bulkImportProducts, resetIsBulkImportingProducts } from '../../actions';
 
 const columns = [
   {
@@ -269,6 +270,10 @@ const schema = {
 
 const BulkUploadProduct = ({ open, handleClose }) => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(resetIsBulkImportingProducts());
+  }, []);
+  const {isBulkImporting} = useSelector((state) => state.product);
   const [rows, setRows] = useState([]);
   const [invalidFormat, setInvalidFormat] = useState(false);
 
@@ -326,11 +331,11 @@ const BulkUploadProduct = ({ open, handleClose }) => {
         <Stack sx={{ p: 3 }} direction="row" alignItems="center" justifyContent="space-between">
           <LabelStyle>Import Products via Excel / CSV</LabelStyle>
           <div className="d-flex flex-row align-items-center justify-content-end">
-            <Button disabled={!(rows !== undefined && rows.length > 0)} onClick={() => {
+            <LoadingButton loading={isBulkImporting} disabled={!(rows !== undefined && rows.length > 0)} onClick={() => {
                 dispatch(bulkImportProducts(rows, handleClose));
               }} startIcon={<UploadRounded />} type="button" variant="contained">
               Upload products
-            </Button>
+            </LoadingButton>
             <Button
               onClick={() => {
                 handleClose();

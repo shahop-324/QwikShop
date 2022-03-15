@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
-import {LoadingButton} from '@mui/lab';
+import React, { useState, useEffect } from 'react';
+import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Dialog, DialogTitle, Button, Typography, Stack } from '@mui/material';
 import readXlsxFile from 'read-excel-file';
 import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
 import { v4 as uuidv4 } from 'uuid';
+import { UploadRounded } from '@mui/icons-material';
 
 import * as Yup from 'yup';
 // form
@@ -12,13 +13,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
 import { DataGrid } from '@mui/x-data-grid';
-import { UploadRounded } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
 // components
 import { useDispatch, useSelector } from 'react-redux';
 import { FormProvider, RHFUploadSingleFile } from '../../components/hook-form';
-import { bulkUploadCategories, resetIsBulkImportingCategories } from '../../actions';
+import { bulkUploadCustomers, resetIsBulkImportingCustomer } from '../../actions';
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -30,8 +30,40 @@ const columns = [
   {
     field: 'name',
     headerName: 'Name',
-    description: 'Category name',
-    width: 550,
+    description: 'Customer name',
+    width: 150,
+    editable: true,
+    sortable: true,
+  },
+  {
+    field: 'phone',
+    headerName: 'Phone',
+    description: 'Customer mobile number',
+    width: 200,
+    editable: true,
+    sortable: true,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    description: 'Customer email address',
+    width: 200,
+    editable: true,
+    sortable: true,
+  },
+  {
+    field: 'pincode',
+    headerName: 'Pincode',
+    description: 'Customer pincode',
+    width: 120,
+    editable: true,
+    sortable: true,
+  },
+  {
+    field: 'city',
+    headerName: 'City',
+    description: 'Customer city',
+    width: 120,
     editable: true,
     sortable: true,
   },
@@ -43,16 +75,36 @@ const schema = {
     type: String,
     required: true,
   },
+  phone: {
+    prop: 'phone',
+    type: String,
+    required: true,
+  },
+  email: {
+    prop: 'email',
+    type: String,
+    required: true,
+  },
+  pincode: {
+    prop: 'pincode',
+    type: Number,
+  },
+  city: {
+    prop: 'city',
+    type: String,
+  },
 };
 
-const BulkUploadCategory = ({ open, handleClose }) => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(resetIsBulkImportingCategories());
-  }, []);
+const BulkUploadCustomer = ({ open, handleClose }) => {
   const [rows, setRows] = useState([]);
   const [invalidFormat, setInvalidFormat] = useState(false);
-  const {isBulkImporting} = useSelector((state) => state.category);
+  const dispatch = useDispatch();
+
+  const { isBulkImporting } = useSelector((state) => state.customer);
+
+  useEffect(() => {
+    dispatch(resetIsBulkImportingCustomer());
+  }, []);
 
   const NewBlogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
@@ -103,21 +155,28 @@ const BulkUploadCategory = ({ open, handleClose }) => {
   };
   return (
     <>
-      <Dialog fullWidth maxWidth="sm" open={open}>
-        <DialogTitle>Bulk Upload Category</DialogTitle>
+      <Dialog fullWidth maxWidth="md" open={open}>
+        <DialogTitle>Bulk Upload Customer</DialogTitle>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <div>
                   <Stack sx={{ mb: 3 }} direction={'row'} alignItems="center" justifyContent={'space-between'}>
-                    <LabelStyle>Import Categories via Excel / CSV</LabelStyle>
+                    <LabelStyle>Import Customers via Excel / CSV</LabelStyle>
                     <div className="d-flex flex-row align-items-center justify-content-end">
-                    <LoadingButton loading={isBulkImporting} disabled={!(rows !== undefined && rows.length > 0)} onClick={() => {
-                dispatch(bulkUploadCategories(rows, handleClose));
-              }} startIcon={<UploadRounded />} type="button" variant="contained">
-              Upload Categories
-            </LoadingButton>
+                      <LoadingButton
+                        loading={isBulkImporting}
+                        disabled={!(rows !== undefined && rows.length > 0)}
+                        onClick={() => {
+                          dispatch(bulkUploadCustomers(rows, handleClose));
+                        }}
+                        startIcon={<UploadRounded />}
+                        type="button"
+                        variant="contained"
+                      >
+                        Upload customers
+                      </LoadingButton>
                       <Button
                         onClick={() => {
                           handleClose();
@@ -142,8 +201,8 @@ const BulkUploadCategory = ({ open, handleClose }) => {
                         style={{ textDecoration: 'none' }}
                         target={'_blank'}
                         rel="noreferrer"
-                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/category_sample_template_qwikshop.xlsx"
-                        download="qwikshop_category_upload_format"
+                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/customer_sample_import_template.xlsx"
+                        download="qwikshop_customer_upload_format"
                       >
                         Click here
                       </a>
@@ -186,14 +245,14 @@ const BulkUploadCategory = ({ open, handleClose }) => {
                           Invalid format, Please upload file in below format
                         </Typography>
                         <Typography variant="body2" color={'#538bF7'}>
-                          NOTE: Only name field is required
+                          NOTE: Only name, phone & email fields are required
                         </Typography>
                         <a
                           style={{ textDecoration: 'none' }}
                           target={'_blank'}
                           rel="noreferrer"
-                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/category_sample_template_qwikshop.xlsx"
-                          download="qwikshop_category_upload_format"
+                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/customer_sample_import_template.xlsx"
+                          download="qwikshop_customer_upload_format"
                         >
                           <Button startIcon={<FileDownloadRoundedIcon />} variant="outlined" size="large">
                             Download Excel format
@@ -212,4 +271,4 @@ const BulkUploadCategory = ({ open, handleClose }) => {
   );
 };
 
-export default BulkUploadCategory;
+export default BulkUploadCustomer;

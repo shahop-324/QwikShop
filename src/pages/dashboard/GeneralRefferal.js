@@ -39,7 +39,9 @@ import EditReferrer from '../../Dialogs/Referral/EditReferrer';
 import DeleteReferrer from '../../Dialogs/Referral/DeleteReferrer';
 import BulkDeleteReferrers from '../../Dialogs/Referral/BulkDeleteReferrers';
 import ReferralDetails from '../../Dialogs/Referral/ReferralDetails';
-import NoReferral from '../../assets/business-person-working-on-customer-based-marketing.png'
+import NoReferral from '../../assets/business-person-working-on-customer-based-marketing.png';
+import BulkUpdateReferral from "../../Dialogs/Referral/BulkUpdateReferral";
+import BulkUploadReferral from "../../Dialogs/Referral/BulkUploadReferral";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -142,6 +144,8 @@ export default function GeneralReferral() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [orderBy, setOrderBy] = useState('createdAt');
+  const [openBulkImport, setOpenBulkImport] = useState(false);
+  const [openBulkUpdate, setOpenBulkUpdate] = useState(false);
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -188,42 +192,21 @@ export default function GeneralReferral() {
 
   const isNotFound = !filteredReferrals.length && Boolean(filterName);
 
-  const processReferrersData = () => {
-    const processedArray = [];
-
-    referrals.map((referral) => {
-      const array = Object.entries(referral);
-
-      const filtered = array.filter(([key]) => key === 'name' || key === 'totalSales' || key === 'outOfStock');
-
-      const asObject = Object.fromEntries(filtered);
-
-      return processedArray.push(asObject);
-    });
-
-    const finalArray = processedArray.map((obj) => Object.values(obj));
-
-    return finalArray;
+  const handleOpenImport = () => {
+    setOpenBulkImport(true);
   };
 
-  const CreateAndDownloadCSV = (data) => {
-    let csv = 'name, out_of_stock, total_sales, \n';
-    data.forEach((row) => {
-      csv += row.join(',');
-      csv += '\n';
-    });
+  const handleCloseImport = () => {
+    setOpenBulkImport(false);
+  }
 
-    console.log(csv);
-    const hiddenElement = document.createElement('a');
-    hiddenElement.href = `data:text/csv;charset=utf-8,${encodeURI(csv)}`;
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'referrers.csv';
-    hiddenElement.click();
-  };
+  const handleOpenBulkUpdate = () => {
+    setOpenBulkUpdate(true);
+  }
 
-  const handleExportReferrers = () => {
-    CreateAndDownloadCSV(processReferrersData());
-  };
+  const handleCloseBulkUpdate = () => {
+    setOpenBulkUpdate(false);
+  }
 
   return (
     <>
@@ -236,135 +219,134 @@ export default function GeneralReferral() {
               numSelected={selected.length}
               filterName={filterName}
               onFilterName={handleFilterByName}
-              onDeleteReferrals={() => handleOpenBulkDelete()}
-              handleExportReferrers={handleExportReferrers}
+              onDeleteReferrals={() => handleOpenBulkDelete()}       
+              handleImportReferrers={handleOpenImport}
+              handleOpenBulkUpdate={handleOpenBulkUpdate}
             />
 
-{!(typeof referrals !== 'undefined' && referrals.length > 0) ? (
+            {!(typeof referrals !== 'undefined' && referrals.length > 0) ? (
               <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
                 <Card sx={{ p: 3, my: 3 }}>
                   <img style={{ height: '150px', width: '150px' }} src={NoReferral} alt="no referrals" />
                 </Card>
                 <Typography sx={{ mb: 3 }} variant="subtitle2">
-                 Please add people as referrer and give them commission and your business will grow several times
+                  Please add people as referrer and give them commission and your business will grow several times
                 </Typography>
               </Stack>
             ) : (
+              <Scrollbar>
+                <TableContainer sx={{ minWidth: 900 }}>
+                  <Table>
+                    <ReferralListHead
+                      order={order}
+                      orderBy={orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={referrals.length}
+                      numSelected={selected.length}
+                      onRequestSort={handleRequestSort}
+                      onSelectAllClick={handleSelectAllClick}
+                    />
 
-            <Scrollbar>
-              <TableContainer sx={{ minWidth: 900 }}>
-                <Table>
-                  <ReferralListHead
-                    order={order}
-                    orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
-                    rowCount={referrals.length}
-                    numSelected={selected.length}
-                    onRequestSort={handleRequestSort}
-                    onSelectAllClick={handleSelectAllClick}
-                  />
+                    <TableBody>
+                      {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        const { _id, name, phone, commission } = row;
 
-                  <TableBody>
-                    {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                      const { _id, name, phone, commission } = row;
+                        const myPurchases = purchases.filter((el) => el.ref === _id);
 
-                      const myPurchases = purchases.filter((el) => el.ref === _id);
+                        let totalSales = 0;
 
-                      let totalSales = 0;
+                        let totalEarnings = 0;
 
-                      let totalEarnings = 0;
+                        myPurchases.forEach((pur) => {
+                          totalSales = pur?.order?.charges?.total + totalSales;
+                          totalEarnings = pur.commissionAmount + totalEarnings;
+                        });
 
-                      myPurchases.forEach((pur) => {
-                        totalSales = pur?.order?.charges?.total + totalSales;
-                        totalEarnings = pur.commissionAmount + totalEarnings;
-                      });
+                        const isItemSelected = selected.indexOf(_id) !== -1;
 
-                      const isItemSelected = selected.indexOf(_id) !== -1;
-
-                      return (
-                        <TableRow
-                          key={_id}
-                          hover
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox checked={isItemSelected} onClick={() => handleClick(_id)} />
-                          </TableCell>
-                          <TableCell>
-                            <Stack direction={'row'} alignItems={'center'}>
-                              <Typography variant="subtitle2" noWrap>
-                                <a
-                                  href="#"
+                        return (
+                          <TableRow
+                            key={_id}
+                            hover
+                            tabIndex={-1}
+                            role="checkbox"
+                            selected={isItemSelected}
+                            aria-checked={isItemSelected}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox checked={isItemSelected} onClick={() => handleClick(_id)} />
+                            </TableCell>
+                            <TableCell>
+                              <Stack direction={'row'} alignItems={'center'}>
+                                <Typography variant="subtitle2" noWrap>
+                                  <a
+                                    href="#"
+                                    onClick={() => {
+                                      handleOpenDetails(_id);
+                                    }}
+                                  >
+                                    {name}
+                                  </a>
+                                </Typography>
+                              </Stack>
+                            </TableCell>
+                            <TableCell style={{ minWidth: 160 }}> {phone} </TableCell>
+                            <TableCell style={{ minWidth: 160 }}> {`${commission}%`} </TableCell>
+                            <TableCell style={{ minWidth: 160 }}> {`Rs.${totalSales}`} </TableCell>
+                            <TableCell align="left"> {`Rs.${totalEarnings}`} </TableCell>
+                            <TableCell align="right">
+                              <Tooltip title="Copy Referral Link">
+                                <IconButton
                                   onClick={() => {
-                                    handleOpenDetails(_id);
+                                    navigator.clipboard.writeText(`qwikshop.online/${store.subName}/?ref=${_id}`).then(
+                                      () => {
+                                        console.log('Async: Copying to clipboard was successful!');
+                                        dispatch(showSnackbar('success', 'Copied to clipboard!'));
+                                      },
+                                      (err) => {
+                                        console.error('Async: Could not copy text: ', err);
+                                        dispatch(showSnackbar('error', 'Failed to copy to clipboard!'));
+                                      }
+                                    );
                                   }}
+                                  className="me-2"
                                 >
-                                  {name}
-                                </a>
-                              </Typography>
-                            </Stack>
-                          </TableCell>
-                          <TableCell style={{ minWidth: 160 }}> {phone} </TableCell>
-                          <TableCell style={{ minWidth: 160 }}> {`${commission}%`} </TableCell>
-                          <TableCell style={{ minWidth: 160 }}> {`Rs.${totalSales}`} </TableCell>
-                          <TableCell align="left"> {`Rs.${totalEarnings}`} </TableCell>
-                          <TableCell align="right">
-                            <Tooltip title="Copy Referral Link">
-                              <IconButton
-                                onClick={() => {
-                                  navigator.clipboard.writeText(`qwikshop.online/${store.subName}/?ref=${_id}`).then(
-                                    () => {
-                                      console.log('Async: Copying to clipboard was successful!');
-                                      dispatch(showSnackbar('success', 'Copied to clipboard!'));
-                                    },
-                                    (err) => {
-                                      console.error('Async: Could not copy text: ', err);
-                                      dispatch(showSnackbar('error', 'Failed to copy to clipboard!'));
-                                    }
-                                  );
+                                  <ContentCopyRoundedIcon style={{ fontSize: '20px' }} />
+                                </IconButton>
+                              </Tooltip>
+                              <ProductMoreMenu
+                                productName={''}
+                                onDelete={() => handleOpenDelete(_id)}
+                                onEdit={() => {
+                                  handleOpenUpdate(_id);
                                 }}
-                                className="me-2"
-                              >
-                                <ContentCopyRoundedIcon style={{ fontSize: '20px' }} />
-                              </IconButton>
-                            </Tooltip>
-                            <ProductMoreMenu
-                              productName={''}
-                              onDelete={() => handleOpenDelete(_id)}
-                              onEdit={() => {
-                                handleOpenUpdate(_id);
-                              }}
-                            />
+                              />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+
+                    {isNotFound && (
+                      <TableBody>
+                        <TableRow>
+                          <TableCell align="center" colSpan={6}>
+                            <Box sx={{ py: 3 }}>
+                              <SearchNotFound searchQuery={filterName} />
+                            </Box>
                           </TableCell>
                         </TableRow>
-                      );
-                    })}
-                  </TableBody>
-
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-
-                  {isNotFound && (
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align="center" colSpan={6}>
-                          <Box sx={{ py: 3 }}>
-                            <SearchNotFound searchQuery={filterName} />
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  )}
-                </Table>
-              </TableContainer>
-            </Scrollbar>
-
+                      </TableBody>
+                    )}
+                  </Table>
+                </TableContainer>
+              </Scrollbar>
             )}
 
             <TablePagination
@@ -392,6 +374,8 @@ export default function GeneralReferral() {
       {openUpdate && <EditReferrer open={openUpdate} handleClose={handleCloseUpdate} id={IdToEdit} />}
       {openAddReferrer && <AddNewReferrer open={openAddReferrer} handleClose={handleCloseAddReferrer} />}
       {openDetails && <ReferralDetails open={openDetails} handleClose={handleCloseDetails} id={id} />}
+      {openBulkImport && <BulkUploadReferral open={openBulkImport} handleClose={handleCloseImport} />}
+      {openBulkUpdate && <BulkUpdateReferral open={openBulkUpdate} handleClose={handleCloseBulkUpdate} />}
     </>
   );
 }

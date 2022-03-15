@@ -1,10 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import { IconButton, Drawer, Stack, Box, Typography, TextField, Button } from '@mui/material';
-import React, { useState } from 'react';
+import { IconButton, Drawer, Stack, Box, Typography, Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {updateWhatsAppNumber} from "../../../actions";
+import PhoneInput from 'react-phone-number-input';
+import { updateWhatsAppNumber } from '../../../actions';
 import WhatsAppVerification from '../Verification/WhatsApp';
+import CustomPhoneNumber from '../../../forms/PhoneNumber';
+// @mui
+// Phone Input
+import 'react-phone-number-input/style.css';
 
 const WhatsAppBusinessChat = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -16,7 +22,13 @@ const WhatsAppBusinessChat = ({ open, handleClose }) => {
 
   const handleCloseVerification = () => {
     setOpenVerification(false);
-  }
+  };
+
+  useEffect(() => {
+    if (store.WAVerified) {
+      handleClose();
+    }
+  }, [store]);
 
   return (
     <>
@@ -44,31 +56,27 @@ const WhatsAppBusinessChat = ({ open, handleClose }) => {
                   gridTemplateColumns: { xs: 'repeat(1, 1fr)' },
                 }}
               >
-                <TextField
-                  required
+                <PhoneInput
                   name="whatsAppBusinessNumber"
-                  label="WhatsApp Business Number"
-                  fullWidth
+                  placeholder="WhatsApp Business Number"
                   value={whatsAppBusinessNumber}
-                  onChange={(e) => {
-                    setWhatsAppBusinessNumber(e.target.value);
-                  }}
+                  onChange={setWhatsAppBusinessNumber}
+                  inputComponent={CustomPhoneNumber}
+                  defaultCountry="IN"
                 />
               </Box>
 
-              <Button onClick={() => {
-                setOpenVerification(true);
-                dispatch(updateWhatsAppNumber(whatsAppBusinessNumber))
-              }} sx={{ my: 2 }} variant="contained" fullWidth>
+              <Button
+                onClick={() => {
+                  setOpenVerification(true);
+                  dispatch(updateWhatsAppNumber(whatsAppBusinessNumber, false, () => {}));
+                }}
+                sx={{ my: 2 }}
+                variant="contained"
+                fullWidth
+              >
                 Connect
               </Button>
-              {/* <Typography sx={{ my: 3 }} variant="subtitle2">
-                Need Help?
-              </Typography>
-              <PlayCircleRoundedIcon sx={{ mr: 1 }} />
-              <Link to="/">
-                <Typography variant="caption">See How to WhatsApp Chat Works</Typography>
-              </Link> */}
             </Box>
           </Box>
         </Drawer>

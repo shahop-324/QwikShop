@@ -62,7 +62,7 @@ export const PATH_DASHBOARD = {
     product: path(ROOTS_DASHBOARD, '/catalouge/product'),
     category: path(ROOTS_DASHBOARD, '/catalouge/category'),
     subcategory: path(ROOTS_DASHBOARD, '/catalouge/sub-category'),
-    division: path(ROOTS_DASHBOARD, '/catalouge/division'),
+    // division: path(ROOTS_DASHBOARD, '/catalouge/division'),
     builder: path(ROOTS_DASHBOARD, '/catalouge/builder'),
   },
   store: {

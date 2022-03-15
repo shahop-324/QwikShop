@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-key */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/jsx-boolean-value */
@@ -9,7 +9,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import Accordion from '@mui/material/Accordion';
@@ -309,7 +308,6 @@ const EditProduct = ({ open, handleClose, id }) => {
 
   const { categories } = useSelector((state) => state.category);
   const { subCategories } = useSelector((state) => state.subCategory);
-  const { divisions } = useSelector((state) => state.division);
 
   const formik = useFormik({
     initialValues: {
@@ -372,13 +370,10 @@ const EditProduct = ({ open, handleClose, id }) => {
         metaTitle: values.metaTitle,
         metaKeyword: values.metaKeyword,
         coins: values.coins,
-
         category,
         description,
         subCategory,
         isFragile,
-
-        acceptCOD,
         specifications,
         productUnit,
         dimensionUnit,
@@ -387,7 +382,6 @@ const EditProduct = ({ open, handleClose, id }) => {
         customVariants,
         addOnList,
         priceDeterminingVariant,
-        featured,
       };
 
       dispatch(updateProduct(id, formValues, imageFiles, videoFiles, excludedImages, excludedVideos, handleClose));
@@ -489,7 +483,6 @@ const EditProduct = ({ open, handleClose, id }) => {
     );
   };
 
-  const [featured, setFeatured] = useState(false);
   const [description, setDescription] = useState(product.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
   const [category, setCategory] = useState(product.category);
   const [subCategory, setSubCategory] = useState(product.subCategory);
@@ -505,7 +498,6 @@ const EditProduct = ({ open, handleClose, id }) => {
 
   const [isFragile, setIsFragile] = useState(product.isFragile);
   const [InTheBox, setInTheBox] = useState(product.InTheBox);
-  const [acceptCOD, setAcceptCOD] = useState(product.acceptCOD);
 
   const [videoFiles, setVideoFiles] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
@@ -682,14 +674,6 @@ const EditProduct = ({ open, handleClose, id }) => {
       label: subCategory.name,
       value: subCategory._id,
       image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
-    }));
-
-  const divisionOptions = divisions
-    .filter((el) => el.subCategory?.value === subCategory?.value)
-    .map((division) => ({
-      label: division.name,
-      value: division._id,
-      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${division.image}`,
     }));
 
   const addOnOptions = products
@@ -1418,7 +1402,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                                     gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                                   }}
                                 >
-                                  {InTheBox.map((el, index) => (
+                                  {InTheBox.map((el) => (
                                     <TextField
                                       key={el.index}
                                       name="item"
@@ -1536,7 +1520,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                               </AccordionSummary>
                               <AccordionDetails>
                                 <Card sx={{ p: 3 }}>
-                                  {colorsList.map((el, index) => (
+                                  {colorsList.map((el) => (
                                     <div key={el.index} className="d-flex flex-column">
                                       <Box
                                         className="mb-3"
@@ -1630,7 +1614,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                   <Card sx={{ p: 3 }}>
-                                    {el.options.map((elm, index) => (
+                                    {el.options.map((elm) => (
                                       <div className="d-flex flex-column mb-3" key={elm.index}>
                                         <Box
                                           className="mb-2"
@@ -1937,7 +1921,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                           Previous
                         </LoadingButton>
                         <LoadingButton
-                          disabled={!(formik.isValid)}
+                          disabled={!formik.isValid}
                           type="submit"
                           variant="contained"
                           loading={isUpdating}
@@ -2099,130 +2083,4 @@ const productUnitOptions = [
   {
     label: 'inch',
   },
-];
-
-const productTypeOptions = [
-  {
-    label: 'Grocery',
-    image:
-      'https://media.istockphoto.com/photos/groceries-picture-id171302954?k=20&m=171302954&s=612x612&w=0&h=kDpFXA8IoG22Uxog3YUmWvzBRzwyibd6r4S2v5z-Mno=',
-  },
-  {
-    label: 'Fruits & vegetables',
-    image: 'https://www.eatrightontario.ca/EatRightOntario/media/Website-images-resized/Vegetables-resized.jpg',
-  },
-  {
-    label: 'Meat & Fish',
-    image: 'https://m.economictimes.com/thumb/msid-72861899,width-1200,height-900,resizemode-4,imgsize-113532/1.jpg',
-  },
-  { label: 'Bakery Item', image: 'https://www.saccosystem.com/public/imgCat3/big/127-570717010-prodotti-da-forno.jpg' },
-  {
-    label: 'Fast Food',
-    image: 'https://cdn2.howtostartanllc.com/images/business-ideas/business-idea-images/fast-food.jpg',
-  },
-  {
-    label: 'Indian Food',
-    image: 'https://www.thecoldwire.com/wp-content/uploads/2020/11/selection-of-indian-food.jpg',
-  },
-  {
-    label: 'Drinks & Shakes',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpW34OFY9ciS23ldeLnWRIq35yWtE9h2NsffrJ3hsayhteF7rmWkx2pbMAewXT6LtZXRc&usqp=CAU',
-  },
-  { label: 'Indian Sweets', image: 'https://static.toiimg.com/photo/87304656.cms' },
-  {
-    label: 'Deserts',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYMQPQD0bMY1N_wuV9a3lCQX6-dB-BfytiJA&usqp=CAU',
-  },
-  {
-    label: 'Chocolate',
-    image:
-      'https://m.economictimes.com/thumb/msid-70545996,width-1200,height-900,resizemode-4,imgsize-679342/chocolate2.jpg',
-  },
-  { label: 'Womens clothing', image: 'https://i.pinimg.com/736x/37/2c/6f/372c6f40eb0835eea3abd13a02a64cd0.jpg' },
-  { label: 'Mens clothing', image: 'https://centralandme.com/wp-content/uploads/2017/09/sweat-shirt-thumb.jpg' },
-  {
-    label: 'Baby Clothing & Care',
-    image: 'https://d1lhri34tovdcj.cloudfront.net/prod/mom365/featured-images/babycare.jpg',
-  },
-  {
-    label: 'Cosmetics & Beauty',
-    image:
-      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/beauty-decorative-cosmetics-makeup-brushes-set-and-royalty-free-image-930934354-1565213062.jpg?crop=1.00xw:0.752xh;0,0.106xh&resize=1200:*',
-  },
-  { label: 'Electronic Appliances', image: 'https://femina.wwmindia.com/content/2020/sep/home-appliances.jpg' },
-  {
-    label: 'Electronic Gadgets',
-    image: 'https://5.imimg.com/data5/SELLER/Default/2021/4/US/FX/DC/119904249/electronic-gadgets-500x500.jpg',
-  },
-  { label: 'Sports & Fitness', image: 'https://sportsequipmentssite.files.wordpress.com/2016/03/sports-2-10-14.jpg' },
-  {
-    label: 'Furniture',
-    image:
-      'https://www.archiproducts.com/images/editor/gallery/desktop_260x260_1031d6ff-1ee8-4ae3-a14b-d26aaf38ca38.jpg',
-  },
-  {
-    label: 'Home Decor',
-    image: 'https://www.fnp.com/images/pr/l/v20210902185645/iron-ganesha-tlight-candle-stand_1.jpg',
-  },
-  {
-    label: 'Medicine',
-    image: 'https://sfenvironment.org/sites/default/files/styles/large/public/detail_th_medicine_0_0.jpg?itok=ynMwtFQd',
-  },
-
-  { label: 'Footwear', image: 'https://m.media-amazon.com/images/I/71D9ImsvEtL._UL1500_.jpg' },
-  { label: 'Travel essentials', image: 'https://5.imimg.com/data5/GV/NI/MY-6348933/travel-bags-1-500x500.jpg' },
-  {
-    label: 'Fashion Accessories',
-    image:
-      'https://previews.123rf.com/images/lyulka12/lyulka121801/lyulka12180100083/94256371-collection-of-women-s-black-set-of-fashion-accessories-and-cosmetics-on-a-wooden-white-background-fl.jpg',
-  },
-  {
-    label: 'Garments',
-    image:
-      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/best-bath-towels-1572897724.png?crop=1.00xw:0.724xh;0,0.215xh&resize=1200:*',
-  },
-  {
-    label: 'Stationary',
-    image: 'https://5.imimg.com/data5/YL/RI/OR/SELLER-95604177/stationeries-500x500-png-500x500.png',
-  },
-  {
-    label: 'Personal Care',
-    image: 'https://laxmimegamart.com/image/cache/catalog/picture/personal_care-600x315w.jpeg',
-  },
-  {
-    label: 'Pet supplies',
-    image:
-      'https://media.istockphoto.com/photos/accessories-for-cat-and-dog-on-blue-background-pet-care-and-training-picture-id1248454290?k=20&m=1248454290&s=612x612&w=0&h=Ajti5uiVqrJ4Ll66-1JS3qfSwSwvSHBAK-dOyJDj8Ow=',
-  },
-  {
-    label: 'Gifts',
-    image: 'https://www.mensjournal.com/wp-content/uploads/mf/1280-under-50-gifts-main.jpg?w=900&quality=86&strip=all',
-  },
-  {
-    label: 'Plants',
-    image:
-      'https://hgtvhome.sndimg.com/content/dam/images/grdn/fullset/2014/6/25/0/CI_04-fbfd01d70004.jpg.rend.hgtvcom.966.725.suffix/1452664590074.jpeg',
-  },
-  {
-    label: 'Watch',
-    image:
-      'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/affordable-watches-1575670104.jpg?crop=1.00xw:0.752xh;0,0.00962xh&resize=1200:*',
-  },
-  { label: 'Car & Bike Accessories', image: 'https://autojosh.com/wp-content/uploads/2019/03/genuine-car-parts.jpg' },
-  {
-    label: 'Electronic items',
-    image:
-      'https://hips.hearstapps.com/amv-prod-gp.s3.amazonaws.com/gearpatrol/wp-content/uploads/2017/10/Calming-Light-Bulbs-M2W-Gear-Patrol-Lead-Full.jpg',
-  },
-  {
-    label: 'Home Essentials',
-    image: 'https://cairowestmag.com/wp-content/uploads/2020/07/SummerHomeEssentials_Indoor_numbers.jpg',
-  },
-  {
-    label: 'Kitchen Essentials',
-    image: 'https://torontocaribbean.com/wp-content/uploads/2019/11/Depositphotos_198562496_l-2015.jpg',
-  },
-  { label: 'Dairy Products', image: 'https://news.sanfordhealth.org/wp-content/uploads/2020/06/Dairy-products.jpg' },
-  { label: 'Snacks', image: 'https://m.media-amazon.com/images/I/81FfpLMWNfL._SL1500_.jpg' },
 ];
