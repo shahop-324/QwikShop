@@ -136,7 +136,7 @@ const StorePreferences = () => {
       <Divider sx={{ my: 3 }} />
       <FormControl sx={{ mb: 3 }}>
         <FormLabel sx={{ mb: 2 }} id="demo-row-radio-buttons-group-label">
-          Type of mobile view
+         Product Card View
         </FormLabel>
         <RadioGroup
           value={mobileView}
