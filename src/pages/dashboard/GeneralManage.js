@@ -3,7 +3,6 @@ import QrCode2RoundedIcon from '@mui/icons-material/QrCode2Rounded';
 import PointOfSaleRoundedIcon from '@mui/icons-material/PointOfSaleRounded';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 import PhoneAndroidRoundedIcon from '@mui/icons-material/PhoneAndroidRounded';
-import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 // @mui

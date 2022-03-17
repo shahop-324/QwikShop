@@ -149,25 +149,25 @@ const StoreAppearance = () => {
 
   const categoryOptions = categories.map((el) => ({
     label: el.name,
-    value: el._id,
+    value: el.name,
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const subCategoryOptions = subCategories.map((el) => ({
     label: el.name,
-    value: el._id,
+    value: el.name,
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const divisionOptions = divisions.map((el) => ({
     label: el.name,
-    value: el._id,
+    value: el.name,
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const pageOptions = pages.map((el) => ({
     label: el.name,
-    value: el._id,
+    value: el.name,
   }));
 
   return (
@@ -679,6 +679,5 @@ const CTATypeOptions = [
   { label: 'Product' },
   { label: 'Category' },
   { label: 'Sub Category' },
-  { label: 'Division' },
   { label: 'Page' },
 ];
