@@ -15,7 +15,7 @@ const CancelOrder = ({ open, handleClose, id }) => {
   const order = orders.find((el) => el._id === id);
 
   const onSubmit = () => {
-    dispatch(cancelOrder(id, handleClose));
+    dispatch(cancelOrder(id, reason, handleClose));
   };
 
   return (

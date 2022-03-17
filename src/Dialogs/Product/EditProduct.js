@@ -1922,7 +1922,10 @@ const EditProduct = ({ open, handleClose, id }) => {
                         </LoadingButton>
                         <LoadingButton
                           disabled={!formik.isValid}
-                          type="submit"
+                          // type="submit"
+                          onClick={() => {
+                            formik.submitForm();
+                          }}
                           variant="contained"
                           loading={isUpdating}
                         >

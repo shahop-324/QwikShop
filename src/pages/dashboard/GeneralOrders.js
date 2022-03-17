@@ -30,7 +30,7 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 // sections
 import { OrderDetails } from '../../sections/@dashboard/general/booking';
-import { fetchOrders } from '../../actions';
+import { fetchOrders, fetchShipments } from '../../actions';
 
 import NoOrder from '../../assets/shopping-basket.png';
 
@@ -97,6 +97,10 @@ export default function GeneralOrders() {
       clearTimeout(timeoutId);
     };
   }, [term]);
+
+  useEffect(() => {
+    dispatch(fetchShipments());
+  }, []);
 
   const { themeStretch } = useSettings();
 

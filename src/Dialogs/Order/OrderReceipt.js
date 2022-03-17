@@ -186,44 +186,42 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
   const { products } = useSelector((state) => state.product);
   const { discounts } = useSelector((state) => state.discount);
   const { store } = useSelector((state) => state.store);
-  const { shipments } = useSelector((state) => state.shipment);
 
   const order = orders.find((el) => el._id === id);
 
-  const shipment = shipments.find((el) => el.orderRef === order.ref);
-
   useEffect(() => {
-    switch (order?.status) {
-      case 'Waiting For Acceptance':
+    switch (order?.status_id * 1) {
+      case -1: // 'Waiting for acceptance'
         setActiveStep(0);
         break;
-      case 'Pickup Scheduled/Generated':
+      case 0: // 'Accepted / Ready to ship'
         setActiveStep(1);
         break;
-      case 'Shipped':
+      case 6: // Shipped
         setActiveStep(2);
         break;
-      case 'In Transit':
+      case 18: // In transit
         setActiveStep(3);
         break;
-      case 'Out For Delivery':
+      case 17: // Out for delivery
         setActiveStep(4);
         break;
-      case 'Delivered':
+      case 7: // Delivered
         setActiveStep(5);
         break;
       default:
+        // default
         setActiveStep(100);
         break;
     }
   }, [orders]);
 
-  const appliedDiscount = discounts.find((el) => el._id === order.couponId);
+  const appliedDiscount = discounts.find((el) => el._id === order?.couponId);
 
   let orderedProducts = [];
   let givenProducts = [];
 
-  orderedProducts = order.items.map((el) => {
+  orderedProducts = order?.items.map((el) => {
     const matchedProduct = products.find((elm) => elm._id === el.product);
     console.log(el);
     return {
@@ -244,7 +242,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
     };
   });
 
-  givenProducts = order.givenProducts.map((el) => {
+  givenProducts = order?.givenProducts.map((el) => {
     const matchedProduct = products.find((elm) => elm._id.toString() === el.productId.toString());
     return {
       product: matchedProduct,
@@ -272,8 +270,8 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
           <DialogTitle sx={{ mb: 2 }}>{'Order Receipt'}</DialogTitle>
 
           {(() => {
-            switch (order.status) {
-              case 'Pending':
+            switch (order?.status_id * 1) {
+              case -1:
                 return (
                   <Stack spacing={2} sx={{ flexDirection: { sx: 'column', md: 'row' }, alignItems: 'center' }}>
                     <Button
@@ -301,11 +299,12 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                   </Stack>
                 );
 
-              case 'Accepted':
-                return (
+              default:
+                return order?.status_id * 1 !== 8 ? (
                   <Stack spacing={2} direction="row" alignItems="center">
                     {' '}
                     <Button
+                      disabled={order?.status_id * 1 === 8 || order?.status_id * 1 === 7}
                       onClick={() => {
                         setOpenCancel(true);
                       }}
@@ -317,10 +316,9 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                       Cancel
                     </Button>
                   </Stack>
+                ) : (
+                  <></>
                 );
-
-              default:
-                break;
             }
           })()}
         </Stack>
@@ -336,16 +334,16 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
           >
             <Typography variant="subtitle2">
               <span style={{ marginRight: '10px' }}>Order Id:</span>
-              {order.ref}
+              {order?.ref}
             </Typography>
             <Typography variant="subtitle2">
               <span style={{ marginRight: '10px' }}>Placed On:</span>
-              {dateFormat(new Date(order.createdAt), 'ddd, mmm dS, yy, h:MM TT')}
+              {dateFormat(new Date(order?.createdAt || Date.now()), 'ddd, mmm dS, yy, h:MM TT')}
             </Typography>
             <Typography variant="subtitle2">
               {' '}
               <span style={{ marginRight: '10px' }}>Delivered On:</span>{' '}
-              {order.deliveredOn ? dateFormat(new Date(order.deliveredOn)) : '----'}
+              {order?.deliveredOn ? dateFormat(new Date(order?.deliveredOn)) : '----'}
             </Typography>
           </Box>
         </Card>
@@ -353,7 +351,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
         <Card sx={{ p: 3, mb: 3 }}>
           {console.log(activeStep, activeStep * 1 !== 0)}
 
-          {activeStep *1  !== 100 ? (
+          {activeStep * 1 !== 100 ? (
             <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
               {steps.map((label) => (
                 <Step key={label}>
@@ -367,7 +365,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                 <Typography>Current Status is: </Typography>
                 <Typography>
                   {' '}
-                  <strong>{shipment.status}</strong>
+                  <strong>{order?.status}</strong>
                 </Typography>
               </Stack>
             </Card>
@@ -516,25 +514,25 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             <Divider sx={{ my: 1 }} />
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
-            <Typography variant="caption">Pincode</Typography>
-            <Typography variant="subtitle2">{order?.shippingAddress?.shipping_zip || '----'}</Typography>
-            </Stack>
+                <Typography variant="caption">Pincode</Typography>
+                <Typography variant="subtitle2">{order?.shippingAddress?.shipping_zip || '----'}</Typography>
+              </Stack>
             </div>
 
             <Divider sx={{ my: 1 }} />
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
-            <Typography variant="caption">Contact Number</Typography>
-            <Typography variant="subtitle2">{order?.shippingAddress?.shipping_contact || '----'}</Typography>
-</Stack>
-</div>
+                <Typography variant="caption">Contact Number</Typography>
+                <Typography variant="subtitle2">{order?.shippingAddress?.shipping_contact || '----'}</Typography>
+              </Stack>
+            </div>
             <Divider sx={{ my: 1 }} />
 
             <div>
               <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
-            <Typography variant="caption">Landmark</Typography>
-            <Typography variant="subtitle2">{order?.shippingAddress?.shipping_landmark || '----'}</Typography>
-            </Stack>
+                <Typography variant="caption">Landmark</Typography>
+                <Typography variant="subtitle2">{order?.shippingAddress?.shipping_landmark || '----'}</Typography>
+              </Stack>
             </div>
           </Card>
 
@@ -560,14 +558,17 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
               </Stack>
             </div>
 
-            { order?.charges !== undefined && order?.charges?.extra_charges !== undefined && order?.charges?.extra_charges?.length > 0 && order?.charges?.extra_charges.map((el) => (
-              <div key={el?.name}>
-                <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
-                  <Typography variant="caption">{el?.name}</Typography>
-                  <Typography variant="subtitle2">Rs.{el?.amount || '----'}</Typography>
-                </Stack>
-              </div>
-            ))}
+            {order?.charges !== undefined &&
+              order?.charges?.extra_charges !== undefined &&
+              order?.charges?.extra_charges?.length > 0 &&
+              order?.charges?.extra_charges.map((el) => (
+                <div key={el?.name}>
+                  <Stack sx={{ my: 2 }} direction="row" alignItems={'center'} justifyContent="space-between">
+                    <Typography variant="caption">{el?.name}</Typography>
+                    <Typography variant="subtitle2">Rs.{el?.amount || '----'}</Typography>
+                  </Stack>
+                </div>
+              ))}
 
             <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
 
@@ -581,12 +582,16 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             <Stack direction={'row'} alignItems="center" justifyContent={'space-between'}>
               <Typography>Mode of payment</Typography>
 
-              <Chip sx={{ fontWeight: 600 }} color={'primary'} label={order?.paymentMode ? order?.paymentMode?.toUpperCase() : '-----'} />
+              <Chip
+                sx={{ fontWeight: 600 }}
+                color={'primary'}
+                label={order?.paymentMode ? order?.paymentMode?.toUpperCase() : '-----'}
+              />
             </Stack>
           </Card>
         </Box>
 
-        {order.paymentMode === 'cod' && (
+        {order?.paymentMode === 'cod' && (
           <Card sx={{ p: 3, mb: 3 }}>
             <Box
               sx={{
@@ -722,24 +727,25 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
             </Stack>
           </Card>
 
-{finalArr !== undefined && finalArr.length > 0 && <Card sx={{ p: 3 }}>
-            <Typography sx={{ mb: 2 }} variant="subtitle2">
-              Checkout Details
-            </Typography>
+          {finalArr !== undefined && finalArr.length > 0 && (
+            <Card sx={{ p: 3 }}>
+              <Typography sx={{ mb: 2 }} variant="subtitle2">
+                Checkout Details
+              </Typography>
 
-            {finalArr.map((el) => (
-              <div>
-                <Stack key={el.name} direction="row" alignItems={'center'} justifyContent="space-between">
-                  <Typography variant="caption">{el?.name}</Typography>
-                  <Typography variant="subtitle2">
-                    {el?.value ? (el?.type !== 'Custom Dropdown' ? el?.value : el?.value?.label) : '----'}
-                  </Typography>
-                </Stack>
-                <Divider sx={{ my: 1 }} />
-              </div>
-            ))}
-          </Card>}
-          
+              {finalArr.map((el) => (
+                <div>
+                  <Stack key={el.name} direction="row" alignItems={'center'} justifyContent="space-between">
+                    <Typography variant="caption">{el?.name}</Typography>
+                    <Typography variant="subtitle2">
+                      {el?.value ? (el?.type !== 'Custom Dropdown' ? el?.value : el?.value?.label) : '----'}
+                    </Typography>
+                  </Stack>
+                  <Divider sx={{ my: 1 }} />
+                </div>
+              ))}
+            </Card>
+          )}
 
           <Card sx={{ p: 3 }}>
             <Typography sx={{ mb: 2 }} variant="subtitle1">
@@ -800,7 +806,7 @@ const OrderReceipt = ({ open, handleClose, id }) => {
     return el._id === id;
   });
 
-  const customerReviews = reviews.filter((el) => el.customer._id === order.customer._id);
+  const customerReviews = reviews.filter((el) => el.customer._id === order?.customer._id);
 
   const handleCloseReject = () => {
     setOpenReject(false);
@@ -814,7 +820,7 @@ const OrderReceipt = ({ open, handleClose, id }) => {
 
   useEffect(() => {
     customerReviews.forEach((el) => {
-      if (order.items.map((a) => a.product).includes(el.product)) {
+      if (order?.items.map((a) => a.product).includes(el.product)) {
         setReviewed(true);
       }
     });
@@ -835,7 +841,7 @@ const OrderReceipt = ({ open, handleClose, id }) => {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogActions>
-          <Chip label={order.status} color="primary" variant="outlined" />
+          <Chip label={order?.status} color="primary" variant="outlined" />
           <Stack sx={{ mx: 3 }} direction={'row'} alignItems="center" justifyContent={'end'}>
             {reviewed ? (
               <Chip label={'Review Received'} color="primary" variant="outlined" />
@@ -844,7 +850,7 @@ const OrderReceipt = ({ open, handleClose, id }) => {
                 onClick={() => {
                   dispatch(askForReview(id));
                 }}
-                disabled={order.status === 'Cancelled'}
+                disabled={order?.status_id * 1 !== 7}
                 variant="outlined"
                 startIcon={<MessageIcon />}
                 color="success"

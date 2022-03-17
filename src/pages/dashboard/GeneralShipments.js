@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 // @mui
@@ -14,6 +15,7 @@ import {
   IconButton,
   Stack,
   Button,
+  Chip,
 } from '@mui/material';
 import TimelineIcon from '@mui/icons-material/Timeline';
 // redux
@@ -149,7 +151,6 @@ export default function GeneralShipments() {
 
   const isNotFound = !filteredShipments.length && Boolean(filterName);
 
-
   return (
     <>
       <Card sx={{ px: 0 }}>
@@ -158,131 +159,133 @@ export default function GeneralShipments() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
-          
-
         />
 
-{!(typeof shipments !== 'undefined' && shipments.length > 0) ? (
-              <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
-                <Card sx={{ p: 3, my: 3 }}>
-                  <img style={{ height: '150px', width: '150px' }} src={NoShipment} alt="no shipment to process" />
-                </Card>
-                <Typography sx={{ mb: 3 }} variant="subtitle2">
-                  There are no shipments to process, Market your store and earn more
-                </Typography>
-              </Stack>
-            ) : (
+        {!(typeof shipments !== 'undefined' && shipments.length > 0) ? (
+          <Stack sx={{ width: '100%' }} direction="column" alignItems="center" justifyContent="center">
+            <Card sx={{ p: 3, my: 3 }}>
+              <img style={{ height: '150px', width: '150px' }} src={NoShipment} alt="no shipment to process" />
+            </Card>
+            <Typography sx={{ mb: 3 }} variant="subtitle2">
+              There are no shipments to process, Market your store and earn more
+            </Typography>
+          </Stack>
+        ) : (
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 900 }}>
+              <Table>
+                <ShipmentListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={shipments.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                />
 
-        <Scrollbar>
-          <TableContainer sx={{ minWidth: 900 }}>
-            <Table>
-              <ShipmentListHead
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={shipments.length}
-                numSelected={selected.length}
-                onRequestSort={handleRequestSort}
-                onSelectAllClick={handleSelectAllClick}
-              />
+                <TableBody>
+                  {shipments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const {
+                      _id,
+                      orderRef,
+                      carrier,
+                      status,
+                      order,
+                      // eslint-disable-next-line camelcase
+                      status_id,
+                      createdAt,
+                    } = row;
 
-              <TableBody>
-                {shipments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                  const {
-                    _id,
-                    orderRef,
-                    carrier,
-                    status,
-                    order,
+                    const isItemSelected = selected.indexOf(_id) !== -1;
 
-                    createdAt,
-                  } = row;
-
-                  const isItemSelected = selected.indexOf(_id) !== -1;
-
-                  return (
-                    <TableRow key={_id} hover tabIndex={-1} role="checkbox" aria-checked={isItemSelected}>
-                      <TableCell>
-                        <Stack direction={'row'} alignItems={'center'}>
-                          <Typography variant="subtitle2" noWrap>
-                            {orderRef}
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{carrier || 'Not Assigned'}</TableCell>
-                      <TableCell style={{ minWidth: 160 }}>{status}</TableCell>
-                      <TableCell align="left">Rs.{order?.deliveryCharge}</TableCell>
-                      <TableCell align="left">{dateFormat(new Date(createdAt), 'ddd mmm dS, yy hh:mm TT')}</TableCell>
-                      <TableCell align="right">
-                        {carrier ? (
-                          <Stack spacing={1} direction={'row'} alignItems="center">
-                            <IconButton
-                              onClick={() => {
-                                handleOpenUpdate(_id);
-                              }}
-                              className="me-2"
-                            >
-                              <ModeEditOutlineRoundedIcon color={'primary'} style={{ fontSize: '20px' }} />
-                            </IconButton>
-                            {carrier === 'Shiprocket' && (
-                              <IconButton
-                                onClick={() => {
-                                  handleOpenPrint(_id);
-                                }}
-                                className="me-2"
-                              >
-                                <ReceiptLongIcon color={'secondary'} style={{ fontSize: '20px' }} />
-                              </IconButton>
-                            )}
-
-<IconButton
-                            onClick={() => {
-                              handleOpenTimeline(row.order._id, _id, row.scans);
-                            }}
-                          >
-                            <TimelineIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
-                          </IconButton>
-
+                    return (
+                      <TableRow key={_id} hover tabIndex={-1} role="checkbox" aria-checked={isItemSelected}>
+                        <TableCell>
+                          <Stack direction={'row'} alignItems={'center'}>
+                            <Typography variant="subtitle2" noWrap>
+                              {orderRef}
+                            </Typography>
                           </Stack>
+                        </TableCell>
+                        <TableCell style={{ minWidth: 160 }}>{carrier || 'Not Assigned'}</TableCell>
+                        <TableCell style={{ minWidth: 160 }}>{status}</TableCell>
+                        <TableCell align="left">Rs.{order?.deliveryCharge}</TableCell>
+                        <TableCell align="left">{dateFormat(new Date(createdAt), 'ddd mmm dS, yy hh:mm TT')}</TableCell>
+                        {status_id * 1 !== 8 ? (
+                          <TableCell align="right">
+                            {carrier ? (
+                              <Stack spacing={1} direction={'row'} alignItems="center">
+                                <IconButton
+                                  onClick={() => {
+                                    handleOpenUpdate(_id);
+                                  }}
+                                  className="me-2"
+                                >
+                                  <ModeEditOutlineRoundedIcon color={'primary'} style={{ fontSize: '20px' }} />
+                                </IconButton>
+                                {carrier === 'Shiprocket' && (
+                                  <IconButton
+                                    onClick={() => {
+                                      handleOpenPrint(_id);
+                                    }}
+                                    className="me-2"
+                                  >
+                                    <ReceiptLongIcon color={'secondary'} style={{ fontSize: '20px' }} />
+                                  </IconButton>
+                                )}
+
+                                <IconButton
+                                  onClick={() => {
+                                    handleOpenTimeline(row.order._id, _id, row.scans);
+                                  }}
+                                >
+                                  <TimelineIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
+                                </IconButton>
+                              </Stack>
+                            ) : (
+                              <Button
+                                onClick={() => {
+                                  handleOpenAssign(_id);
+                                }}
+                                startIcon={<LocalShippingRounded />}
+                                variant="outlined"
+                              >
+                                Assign Carrier
+                              </Button>
+                            )}
+                          </TableCell>
                         ) : (
-                          <Button
-                            onClick={() => {
-                              handleOpenAssign(_id);
-                            }}
-                            startIcon={<LocalShippingRounded />}
-                            variant="outlined"
-                          >
-                            Assign Carrier
-                          </Button>
+                          <TableCell align="right">
+                            <Chip variant="outlined" label="Cancelled" color="error" />
+                          </TableCell>
                         )}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+
+                {isNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6}>
+                        <Box sx={{ py: 3 }}>
+                          <SearchNotFound searchQuery={filterName} />
+                        </Box>
                       </TableCell>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-
-              {isNotFound && (
-                <TableBody>
-                  <TableRow>
-                    <TableCell align="center" colSpan={6}>
-                      <Box sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              )}
-            </Table>
-          </TableContainer>
-        </Scrollbar>
-
-            )}
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+          </Scrollbar>
+        )}
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, 50]}

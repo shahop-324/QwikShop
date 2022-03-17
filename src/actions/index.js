@@ -29,8 +29,8 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'https://api.app.qwikshop.online/v1/';
-// const BaseURL = 'http://localhost:8000/v1/';
+// const BaseURL = 'https://api.app.qwikshop.online/v1/';
+const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -5954,6 +5954,8 @@ export const acceptOrder = (id) => async (dispatch, getState) => {
 
     console.log(result);
 
+    dispatch(showSnackbar('success', message));
+
     dispatch(
       orderActions.UpdateOrder({
         order: result.data,
@@ -5965,7 +5967,7 @@ export const acceptOrder = (id) => async (dispatch, getState) => {
   }
 };
 
-export const cancelOrder = (id, reason) => async (dispatch, getState) => {
+export const rejectOrder = (id, reason, handleClose) => async (dispatch, getState) => {
   let message;
 
   try {
@@ -6007,6 +6009,62 @@ export const cancelOrder = (id, reason) => async (dispatch, getState) => {
         shipment: result.shipment,
       })
     );
+    dispatch(showSnackbar('success', message));
+    if (handleClose) {
+      handleClose();
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
+export const cancelOrder = (id, reason, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    const res = await fetch(`${BaseURL}order/cancel`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        reason,
+        id,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      orderActions.UpdateOrder({
+        order: result.data,
+      })
+    );
+    dispatch(
+      shipmentActions.UpdateShipment({
+        shipment: result.shipment,
+      })
+    );
+    dispatch(showSnackbar('success', message));
+    if (handleClose) {
+      handleClose();
+    }
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));
@@ -6669,6 +6727,8 @@ export const assignShiprocket = (pickupPointId, shipmentId, handleClose) => asyn
       body: JSON.stringify({
         pickupPointId,
         shipmentId,
+        status: 'Accepted',
+        status_id: 0,
       }),
 
       headers: {
@@ -6691,15 +6751,19 @@ export const assignShiprocket = (pickupPointId, shipmentId, handleClose) => asyn
 
     console.log(result);
 
-    // dispatch(
-    //   shipmentActions.UpdateShipment({
-    //     shipment: result.data,
-    //   })
-    // );
+    if (result.shipment) {
+      dispatch(
+        shipmentActions.UpdateShipment({
+          shipment: result.shipment,
+        })
+      );
+    }
 
     dispatch(showSnackbar('success', message));
 
-    handleClose();
+    if (handleClose) {
+      handleClose();
+    }
   } catch (error) {
     console.log(error);
     dispatch(showSnackbar('error', message));

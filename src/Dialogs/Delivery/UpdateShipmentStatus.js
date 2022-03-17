@@ -154,7 +154,14 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const steps = ['Waiting for acceptance', 'Pickup Scheduled/Generated', 'Shipped', 'In Transit', 'Delivered'];
+const steps = [
+  'Waiting for acceptance',
+  'Preparing for shipment',
+  'Shipped',
+  'In Transit',
+  'Out for Delivery',
+  'Delivered',
+];
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -174,26 +181,27 @@ const UpdateShipment = ({ open, handleClose, id }) => {
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    switch (shipment?.status) {
-      case 'Waiting For Acceptance':
+    switch (shipment?.status_id * 1) {
+      case -1: // 'Waiting for acceptance'
         setActiveStep(0);
         break;
-      case 'Pickup Scheduled/Generated':
+      case 0: // 'Accepted / Ready to ship'
         setActiveStep(1);
         break;
-      case 'Shipped':
+      case 6: // Shipped
         setActiveStep(2);
         break;
-      case 'In Transit':
+      case 18: // In transit
         setActiveStep(3);
         break;
-      case 'Out For Delivery':
+      case 17: // Out for delivery
         setActiveStep(4);
         break;
-      case 'Delivered':
+      case 7: // Delivered
         setActiveStep(5);
         break;
       default:
+        // default
         setActiveStep(100);
         break;
     }
@@ -210,6 +218,87 @@ const UpdateShipment = ({ open, handleClose, id }) => {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
+        <Stack sx={{ p: 3 }} direction="row" alignItems={'center'} justifyContent="end">
+          <Box
+            className="mb-2"
+            sx={{
+              display: 'grid',
+              columnGap: 2,
+              rowGap: 3,
+              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+            }}
+          >
+            {(() => {
+              switch (shipment.status_id * 1) {
+                case 0:
+                  return (
+                    <Button
+                      disabled={shipment.carrier !== 'self'}
+                      onClick={() => {
+                        dispatch(updateShipment({ status: 'Shipped', status_id: 6 }, id));
+                      }}
+                      variant="contained"
+                    >
+                      Mark as Shipped
+                    </Button>
+                  );
+
+                case 6:
+                  return (
+                    <Button
+                      disabled={shipment.carrier !== 'self'}
+                      onClick={() => {
+                        dispatch(updateShipment({ status: 'In Transit', status_id: 18 }, id));
+                      }}
+                      variant="contained"
+                    >
+                      Mark as In Transit
+                    </Button>
+                  );
+
+                case 18:
+                  return (
+                    <Button
+                      disabled={shipment.carrier !== 'self'}
+                      onClick={() => {
+                        dispatch(updateShipment({ status: 'Out For Delivery', status_id: 17 }, id));
+                      }}
+                      variant="contained"
+                    >
+                      Mark as Out for delivery
+                    </Button>
+                  );
+                case 17:
+                  return (
+                    <Button
+                      disabled={shipment.carrier !== 'self'}
+                      onClick={() => {
+                        dispatch(updateShipment({ status: 'Delivered', status_id: 7 }, id));
+                      }}
+                      variant="contained"
+                    >
+                      Mark as Delivered
+                    </Button>
+                  );
+
+                case 7:
+                  return (
+                    <Chip label="This Shipment has been delivered successfully!" color="success" variant="outlined" />
+                  );
+
+                case 8:
+                  return <Chip label="This Shipment has been cancelled" color="error" variant="contained" />;
+
+                default:
+                  break;
+              }
+            })()}
+
+            <Button onClick={handleClose} variant="outlined">
+              Close
+            </Button>
+          </Box>
+        </Stack>
         <Card sx={{ width: '700px', p: 4 }}>
           {activeStep * 1 !== 100 ? (
             <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
@@ -268,38 +357,26 @@ const UpdateShipment = ({ open, handleClose, id }) => {
                   setAWBNumber(e.target.value);
                 }}
               />
-              <TextField
-                disabled={shipment.carrier !== 'self'}
-                className="mb-2"
-                type="text"
-                label={'Shipping Partner'}
-                name="carrier"
-                fullWidth
-                value={shipment.carrier !== 'self' ? carrier : shipment.carrier}
-                onChange={(e) => {
-                  setCarrier(e.target.value);
-                }}
-              />
+              
 
-              {shipment.etd && (
-                <MobileDateTimePicker
-                  disabled={shipment.carrier !== 'self'}
-                  value={etd}
-                  onChange={(newValue) => {
-                    setETD(newValue);
-                  }}
-                  label="Estimated Time of delivery"
-                  inputFormat="yyyy/MM/dd hh:mm a"
-                  mask="___/__/__ __:__ _M"
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              )}
+              <MobileDateTimePicker
+                fullWidth
+                disabled={shipment.carrier !== 'self'}
+                value={etd || Date.now()}
+                onChange={(newValue) => {
+                  setETD(newValue);
+                }}
+                label="Estimated Time of delivery"
+                inputFormat="yyyy/MM/dd hh:mm a"
+                mask="___/__/__ __:__ _M"
+                renderInput={(params) => <TextField sx={{ my: 2 }} fullWidth {...params} />}
+              />
             </Typography>
             <Stack direction={'row'} alignItems="center" justifyContent={'end'}>
               <Button
                 disabled={shipment.carrier !== 'self'}
                 onClick={() => {
-                  dispatch(updateShipment({ AWB: AWBNumber, carrier, etd }));
+                  dispatch(updateShipment({ AWB: AWBNumber, carrier, etd }, id, handleClose  ));
                 }}
                 sx={{ width: 'max-content' }}
                 variant="contained"
@@ -309,88 +386,8 @@ const UpdateShipment = ({ open, handleClose, id }) => {
             </Stack>
           </Card>
         </Card>
-        <DialogActions>
-          <Box
-            className="mb-2"
-            sx={{
-              display: 'grid',
-              columnGap: 2,
-              rowGap: 3,
-              gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-            }}
-          >
-            {(() => {
-              switch (shipment.status) {
-                case 'Waiting For Acceptance':
-                  return (
-                    <Button
-                      disabled={shipment.carrier !== 'self'}
-                      onClick={() => {
-                        dispatch(updateShipment({ status: 'Pickup Scheduled/Generated', status_id: 4 }, id));
-                      }}
-                      variant="contained"
-                    >
-                      Mark as Pickup Scheduled/Generated
-                    </Button>
-                  );
 
-                case 'Pickup Scheduled/Generated':
-                  return (
-                    <Button
-                      disabled={shipment.carrier !== 'self'}
-                      onClick={() => {
-                        dispatch(updateShipment({ status: 'Shipped', status_id: 7 }, id));
-                      }}
-                      variant="contained"
-                    >
-                      Mark as Shipped
-                    </Button>
-                  );
-
-                case 'Shipped':
-                  return (
-                    <Button
-                      disabled={shipment.carrier !== 'self'}
-                      onClick={() => {
-                        dispatch(updateShipment({ status: 'In Transit', status_id: 20 }, id));
-                      }}
-                      variant="contained"
-                    >
-                      Mark as In Transit
-                    </Button>
-                  );
-
-                case 'In Transit':
-                  return (
-                    <Button
-                      disabled={shipment.carrier !== 'self'}
-                      onClick={() => {
-                        dispatch(updateShipment({ status: 'Delivered', status_id: 8 }, id));
-                      }}
-                      variant="contained"
-                    >
-                      Mark as Delivered
-                    </Button>
-                  );
-
-                case 'Delivered':
-                  return (
-                    <Chip label="This Shipment has been delivered successfully!" color="success" variant="outlined" />
-                  );
-
-                case 'Cancelled':
-                  return <Chip label="This Shipment has been cancelled" color="error" variant="contained" />;
-
-                default:
-                  break;
-              }
-            })()}
-
-            <Button onClick={handleClose} variant="outlined">
-              Close
-            </Button>
-          </Box>
-        </DialogActions>
+        
       </Dialog>
     </>
   );

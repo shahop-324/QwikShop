@@ -146,7 +146,7 @@ const AssignCarrier = ({ open, handleClose, id }) => {
                 if (carrier === 'shiprocket') {
                   handleOpenConfirmation();
                 } else {
-                  dispatch(updateShipment({ carrier: 'self' }, id, handleClose));
+                  dispatch(updateShipment({ carrier: 'self', status: 'Accepted', status_id: 0 }, id, handleClose));
                 }
               } else {
                 dispatch(showSnackbar('info', 'Please select a pickup point.'));

@@ -4,7 +4,7 @@ import { Typography, Button, Dialog, DialogActions, DialogTitle, TextField, Box 
 import { LoadingButton } from '@mui/lab';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { cancelOrder } from '../../actions';
+import { rejectOrder } from '../../actions';
 
 const RejectOrder = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const RejectOrder = ({ open, handleClose, id }) => {
   const order = orders.find((el) => el._id === id);
 
   const onSubmit = () => {
-    dispatch(cancelOrder(id, handleClose));
+    dispatch(rejectOrder(id, reason, handleClose));
   };
 
   return (
