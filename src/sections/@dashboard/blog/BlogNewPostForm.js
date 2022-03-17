@@ -110,12 +110,18 @@ export default function BlogNewPostForm() {
       const file = acceptedFiles[0];
 
       if (file) {
-        setValue(
-          'cover',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
+        try{
+          setValue(
+            'cover',
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          );
+        }
+        catch(error) {
+          console.log(error);
+        }
+        
       }
     },
     [setValue]

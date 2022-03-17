@@ -88,13 +88,19 @@ function UploadFile() {
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      setFiles(
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
+      try{
+        setFiles(
+          acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          )
+        );
+      }
+      catch(error) {
+        console.log(error);
+      }
+      
     },
     [setFiles]
   );

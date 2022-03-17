@@ -106,12 +106,18 @@ export default function UserNewForm({ isEdit, currentUser }) {
       const file = acceptedFiles[0];
 
       if (file) {
-        setValue(
-          'avatarUrl',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
+        try{
+          setValue(
+            'avatarUrl',
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          );
+        }
+        catch(error) {
+          console.log(error);
+        }
+        
       }
     },
     [setValue]

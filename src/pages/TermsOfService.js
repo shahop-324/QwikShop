@@ -1,10 +1,9 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import {  Grid,  Container, Typography } from '@mui/material';
+import { Grid, Container, Typography } from '@mui/material';
 
 // components
 import Page from '../components/Page';
-
 
 // ----------------------------------------------------------------------
 
@@ -21,14 +20,14 @@ export default function TermsOfService() {
     <Page title="Terms of service">
       <RootStyle>
         <Container>
-          <Typography sx={{mb: 5, pb: 5}} variant="h3" align="center" paragraph>
+          <Typography sx={{ mb: 5, pb: 5 }} variant="h3" align="center" paragraph>
             Terms of Service
           </Typography>
 
           <Grid container spacing={3}>
             {/*  */}
 
-            <h2 style={{marginBottom: "30px"}}>1. Terms</h2>
+            <h2 style={{ marginBottom: '30px' }}>1. Terms</h2>
 
             <p>
               By accessing this Website, accessible from www.qwikshop.online, you are agreeing to be bound by these
@@ -37,7 +36,7 @@ export default function TermsOfService() {
               site. The materials contained in this Website are protected by copyright and trade mark law.
             </p>
 
-            <h2 style={{marginBottom: "30px"}}>2. Use License</h2>
+            <h2 style={{ marginBottom: '30px' }}>2. Use License</h2>
 
             <p>
               Permission is granted to temporarily download one copy of the materials on BLUEMEET PRIVATE LIMITED's
@@ -59,7 +58,7 @@ export default function TermsOfService() {
               your possession whether it is printed or electronic format.
             </p>
 
-            <h2 style={{marginBottom: "30px"}}>3. Disclaimer</h2>
+            <h2 style={{ marginBottom: '30px' }}>3. Disclaimer</h2>
 
             <p>
               All the materials on BLUEMEET PRIVATE LIMITED’s Website are provided "as is". BLUEMEET PRIVATE LIMITED
@@ -69,7 +68,7 @@ export default function TermsOfService() {
               Website.
             </p>
 
-            <h2 style={{marginBottom: "30px"}}>4. Limitations</h2>
+            <h2 style={{ marginBottom: '30px' }}>4. Limitations</h2>
 
             <p>
               BLUEMEET PRIVATE LIMITED or its suppliers will not be hold accountable for any damages that will arise
@@ -79,7 +78,7 @@ export default function TermsOfService() {
               limitations of liability for incidental damages, these limitations may not apply to you.
             </p>
 
-            <h2 style={{marginBottom: "30px"}}>5. Revisions and Errata</h2>
+            <h2 style={{ marginBottom: '30px' }}>5. Revisions and Errata</h2>
 
             <p>
               The materials appearing on BLUEMEET PRIVATE LIMITED’s Website may include technical, typographical, or
@@ -89,7 +88,7 @@ export default function TermsOfService() {
               materials.
             </p>
 
-            <h2 style={{marginBottom: "30px"}}>6. Links</h2>
+            <h2 style={{ marginBottom: '30px' }}>6. Links</h2>
 
             <p>
               BLUEMEET PRIVATE LIMITED has not reviewed all of the sites linked to its Website and is not responsible
@@ -97,7 +96,7 @@ export default function TermsOfService() {
               PRIVATE LIMITED of the site. The use of any linked website is at the user’s own risk.
             </p>
 
-            <h2 style={{marginBottom: "30px"}}>7. Site Terms of Use Modifications</h2>
+            <h2 style={{ marginBottom: '30px' }}>7. Site Terms of Use Modifications</h2>
 
             <p>
               BLUEMEET PRIVATE LIMITED may revise these Terms of Use for its Website at any time without prior notice.
@@ -105,13 +104,12 @@ export default function TermsOfService() {
               of Use.
             </p>
 
-            <h2 style={{marginBottom: "30px"}}>8. Governing Law</h2>
+            <h2 style={{ marginBottom: '30px' }}>8. Governing Law</h2>
 
             <p>
               Any claim related to BLUEMEET PRIVATE LIMITED's Website shall be governed by the laws of in without
               regards to its conflict of law provisions.
             </p>
-           
           </Grid>
         </Container>
       </RootStyle>

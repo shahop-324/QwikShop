@@ -6,6 +6,8 @@ const storeSlice = createSlice({
   initialState: {
     store: {},
     error: false,
+    isUpdatingPolicyPreference: false,
+    isGeneratingPolicy: false,
     isUpdatingPreference: false,
     isSubmittingStoreSetup: false,
     isUpdatingPaymentSettings: false,
@@ -37,6 +39,12 @@ const storeSlice = createSlice({
     },
     UpdateStore(state, action) {
       state.store = action.payload.store;
+    },
+    SetIsGeneratingPolicy(state, action) {
+      state.isGeneratingPolicy = action.payload.state;
+    },
+    SetIsUpdatingPolicyPreference(state, action) {
+      state.isUpdatingPolicyPreference = action.payload.state;
     },
     SetIsUpdatingPreference(state, action) {
       state.isUpdatingPreference = action.payload.state;

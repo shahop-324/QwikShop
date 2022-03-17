@@ -84,6 +84,7 @@ const StorePreferences = () => {
   const [enableEstimatedDeliveryTime, setEnableEstimatedDeliveryTime] = useState(
     store.enableEstimatedDeliveryTime || false
   );
+  const [enableOrderCancellation, setEnableOrderCancellation] = useState(store.enableOrderCancellation);
 
   return (
     <div>
@@ -100,7 +101,7 @@ const StorePreferences = () => {
         </a>
       </div>
       <Stack direction="row" alignItems="center" justifyContent="start">
-        <Typography sx={{ mr: 17, fontSize: '18px' }} variant="subtitle2">
+        <Typography sx={{ mr: 17, fontSize: '15px' }} variant="subtitle2">
           Show Social Icons in header
         </Typography>
         <FormControlLabel
@@ -117,7 +118,7 @@ const StorePreferences = () => {
       </Stack>
       <Divider sx={{ my: 3 }} />
       <Stack direction="row" alignItems="center" justifyContent="start">
-        <Typography sx={{ mr: 15, fontSize: '18px' }} variant="subtitle2">
+        <Typography sx={{ mr: 15, fontSize: '15px' }} variant="subtitle2">
           Show Estimated delivery time
         </Typography>
 
@@ -134,9 +135,27 @@ const StorePreferences = () => {
         />
       </Stack>
       <Divider sx={{ my: 3 }} />
+      <Stack direction="row" alignItems="center" justifyContent="start">
+        <Typography sx={{ mr: 20, fontSize: '15px' }} variant="subtitle2">
+          Allow order cancellation
+        </Typography>
+
+        <FormControlLabel
+          control={
+            <IOSSwitch
+              checked={enableOrderCancellation}
+              onChange={(e) => {
+                setEnableOrderCancellation(e.target.checked);
+              }}
+            />
+          }
+          label=""
+        />
+      </Stack>
+      <Divider sx={{ my: 3 }} />
       <FormControl sx={{ mb: 3 }}>
         <FormLabel sx={{ mb: 2 }} id="demo-row-radio-buttons-group-label">
-         Product Card View
+          Product Card View
         </FormLabel>
         <RadioGroup
           value={mobileView}
@@ -200,7 +219,14 @@ const StorePreferences = () => {
         <LoadingButton
           loading={isUpdatingPreference}
           onClick={() => {
-            dispatch(updateStorePreference({ mobileView, enableEstimatedDeliveryTime, enableHeaderSocialIcons }));
+            dispatch(
+              updateStorePreference({
+                mobileView,
+                enableEstimatedDeliveryTime,
+                enableHeaderSocialIcons,
+                enableOrderCancellation,
+              })
+            );
           }}
           variant="contained"
           sx={{ maxWidth: 'max-content' }}

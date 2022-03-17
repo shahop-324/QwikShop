@@ -59,7 +59,13 @@ const AddSubCategory = ({ open, handleClose }) => {
       prev.value = file;
       return prev;
     });
-    setFileToPreview(URL.createObjectURL(file));
+    try{
+      setFileToPreview(URL.createObjectURL(file));
+    }
+    catch(error) {
+      console.log(error);
+    }
+    
   };
 
   return (

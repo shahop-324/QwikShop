@@ -66,7 +66,13 @@ const StoreImage = ({ open, handleClose, handleOpenStoreCreated }) => {
     const file = acceptedFiles[0];
     console.log(file);
     setImage(file);
-    setFileToPreview(URL.createObjectURL(file));
+    try{
+      setFileToPreview(URL.createObjectURL(file));
+    }
+    catch(error) {
+      console.log(error);
+    }
+    
   };
 
   return (

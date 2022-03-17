@@ -133,14 +133,20 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      setValue(
-        'images',
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
+      try{
+        setValue(
+          'images',
+          acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          )
+        );
+      }
+      catch(error) {
+        console.log(error);
+      }
+      
     },
     [setValue]
   );

@@ -3,12 +3,14 @@ import QrCode2RoundedIcon from '@mui/icons-material/QrCode2Rounded';
 import PointOfSaleRoundedIcon from '@mui/icons-material/PointOfSaleRounded';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 import PhoneAndroidRoundedIcon from '@mui/icons-material/PhoneAndroidRounded';
+import ReceiptRoundedIcon from '@mui/icons-material/ReceiptRounded';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 // @mui
 import { Grid, Container } from '@mui/material';
 // hooks
 import TravelExploreRoundedIcon from '@mui/icons-material/TravelExploreRounded';
+import { ViewCarouselRounded } from '@mui/icons-material';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -23,6 +25,7 @@ import SEOSettings from '../../Dialogs/SEOSettings';
 import CreateInvoice from '../../Dialogs/CreateInvoice';
 import MarketingDesignOptions from '../../Dialogs/MarketingDesignOptions';
 import FaviconSettings from '../../Dialogs/Manage/FaviconSettings';
+import StoreBanners from '../../Dialogs/StoreBanners';
 
 export default function GeneralManage() {
   const { themeStretch } = useSettings();
@@ -42,6 +45,16 @@ export default function GeneralManage() {
   const [openMarketingDesignOptions, setOpenMarketingDesignOptions] = useState(false);
 
   const [openFaviconSetting, setOpenFaviconSetting] = useState(false);
+
+  const [openBanners, setOpenBanners] = useState(false);
+
+  const handleOpenBanners = () => {
+    setOpenBanners(true);
+  }
+
+  const handleCloseBanners = () => {
+    setOpenBanners(false);
+  }
 
   const handleCloseStoreTimings = () => {
     setOpenStoreTimings(false);
@@ -78,6 +91,10 @@ export default function GeneralManage() {
   const handleOpenSEOSettings = () => {
     setOpenSEOSettings(true);
   };
+
+  // const handleOpenCreateInvoice = () => {
+  //   setOpenCreateInvoice(true);
+  // }
 
   const handleCloseCreateInvoice = () => {
     setOpenCreateInvoice(false);
@@ -155,6 +172,26 @@ export default function GeneralManage() {
                 color={'success'}
               />
               </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
+              
+                title="Update"
+                action={handleOpenBanners}
+                total={'Store Banners'}
+                icon={<ViewCarouselRounded />}
+                color={'info'}
+              />
+            </Grid>
+            {/* <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
+              
+                title="Generate"
+                action={handleOpenCreateInvoice}
+                total={'Create Invoice'}
+                icon={<ReceiptRoundedIcon />}
+                color={'warning'}
+              />
+            </Grid> */}
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
               comingSoon
@@ -178,6 +215,7 @@ export default function GeneralManage() {
         <MarketingDesignOptions open={openMarketingDesignOptions} handleClose={handleCloseMarketingDesignOptions} />
       )}
       {openFaviconSetting && <FaviconSettings open={openFaviconSetting} handleClose={handleCloseFaviconSetting} />}
+      {openBanners && <StoreBanners open={openBanners} handleClose={handleCloseBanners} />}
     </>
   );
 }

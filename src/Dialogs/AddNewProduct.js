@@ -538,14 +538,20 @@ const AddNewProduct = ({ open, handleClose }) => {
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      setValue(
-        'images',
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
+      try{
+        setValue(
+          'images',
+          acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          )
+        );
+      }
+      catch(error) {
+        console.log(error);
+      }
+      
 
       acceptedFiles.map((el) => {
         if (el.type === 'video/mp4') {

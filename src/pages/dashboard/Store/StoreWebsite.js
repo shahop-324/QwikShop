@@ -12,12 +12,14 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BatchPredictionRoundedIcon from '@mui/icons-material/BatchPredictionRounded';
 
 // components
+import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import Page from '../../../components/Page';
 import useSettings from '../../../hooks/useSettings';
 import StoreAppearance from './Website/Appearance';
 import StoreOtherInfo from './Website/OtherInfo';
 import StoreAmbience from "./Website/Ambience";
 import StorePreferences from './Website/StorePreferences';
+import PolicyPreferences from './Website/PolicyPreferences';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +48,11 @@ export default function StoreWebsite() {
       value: 'Preferences',
       icon: <BatchPredictionRoundedIcon width={20} height={20} />,
       component: <StorePreferences />,
+    },
+    {
+      value: 'Policy Preferences',
+      icon: <ArticleRoundedIcon width={20} height={20} />,
+      component: <PolicyPreferences />,
     },
   ];
 

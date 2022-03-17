@@ -115,7 +115,11 @@ export default function AccountGeneral() {
 
     if (file) {
       setFile(file);
-      setFileToPreview(URL.createObjectURL(file));
+      try {
+        setFileToPreview(URL.createObjectURL(file));
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, []);
 

@@ -99,7 +99,12 @@ const Profile = ({ open, handleClose }) => {
     const file = acceptedFiles[0];
     console.log(file);
     setImage(file);
-    setFileToPreview(URL.createObjectURL(file));
+    try{
+      setFileToPreview(URL.createObjectURL(file));
+    }
+    catch(error) {
+      console.log(error);
+    }
   };
 
   const handleFormSubmit = async (values) => {

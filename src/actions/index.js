@@ -6818,6 +6818,96 @@ export const assignSelfShipping = (pickupPointId, shipmentId, handleClose) => as
 
 // ******************************************** Store Theme Customisation ********************************************** //
 
+export const updateStoreBanners = (banners, handleClose) => async (dispatch, getState) => {
+  let message;
+
+  try {
+    // For each banner update
+
+    // update banners array by adding image field if they contain any file
+
+    const data = banners;
+    let newData = data;
+
+    data.forEach(async (element) => {
+      // if element contains file then upload file
+
+      if (element.file) {
+        const key = `store/banner/${uuidv4()}.${element.file.type}`;
+
+        s3.getSignedUrl(
+          'putObject',
+          { Bucket: 'qwikshop', Key: key, ContentType: `image/${element.file.type}` },
+          async (_err, presignedURL) => {
+            await fetch(presignedURL, {
+              method: 'PUT',
+
+              body: element.file,
+
+              headers: {
+                'Content-Type': element.file.type,
+              },
+            });
+
+            // Now update that particular data (banner) whose image was uploaded
+            const newObj = data.find((el) => el.index === element.index);
+            newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
+
+            console.log(newObj);
+
+            newData = newData.map((el) => (el.index !== newObj.index ? el : newObj));
+            console.log(newData);
+          }
+        );
+      }
+    });
+
+    console.log(newData);
+
+    setTimeout(async () => {
+      const res = await fetch(`${BaseURL}store/updateBanners`, {
+        method: 'POST',
+
+        body: JSON.stringify({
+          banners: newData,
+        }),
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      message = result.message;
+
+      if (!res.ok) {
+        if (!res.message) {
+          throw new Error(message);
+        } else {
+          throw new Error(res.message);
+        }
+      }
+
+      console.log(result);
+
+      dispatch(
+        storeActions.FetchStore({
+          store: result.data,
+        })
+      );
+
+      dispatch(showSnackbar('success', message));
+    }, 4000);
+
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+  }
+};
+
 export const updateHeroBanners = (banners) => async (dispatch, getState) => {
   let message;
 
@@ -8511,6 +8601,22 @@ export const resetIsBulkImportingCategories = () => async (dispatch, getState) =
   }
 };
 
+export const resetIsGeneratingPolicy = () => async (dispatch, getState) => {
+  try {
+    dispatch(storeActions.SetIsGeneratingPolicy({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetIsUpdatingPolicyPerefernce = () => async (dispatch, getState) => {
+  try {
+    dispatch(storeActions.SetIsUpdatingPolicyPreference({ state: false }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const resetIsUpdatingStorePerefernce = () => async (dispatch, getState) => {
   try {
     dispatch(storeActions.SetIsUpdatingPreference({ state: false }));
@@ -8612,6 +8718,95 @@ export const bulkUpdateProducts = (rows, handleClose) => async (dispatch, getSta
     console.log(error);
     dispatch(showSnackbar('error', message));
     dispatch(productActions.SetIsBulkUpdating({ state: false }));
+  }
+};
+
+export const autoGeneratePolicies = () => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsGeneratingPolicy({ state: true }));
+  try {
+    const res = await fetch(`${BaseURL}store/generatePolicy`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsGeneratingPolicy({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsGeneratingPolicy({ state: false }));
+  }
+};
+
+export const updatePolicyPreference = (formValues) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingPolicyPreference({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/policyPreference/update`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.FetchStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingPolicyPreference({ state: false }));
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingPolicyPreference({ state: false }));
   }
 };
 

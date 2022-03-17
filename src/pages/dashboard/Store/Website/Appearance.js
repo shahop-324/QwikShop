@@ -107,7 +107,8 @@ const StoreAppearance = () => {
 
     console.log(file);
 
-    setHeroBanners((prev) =>
+    try{
+      setHeroBanners((prev) =>
       prev.map((el) => {
         if (el.index !== index) {
           return el;
@@ -117,6 +118,12 @@ const StoreAppearance = () => {
         return el;
       })
     );
+    }
+    catch(error) {
+      console.log(error);
+    }
+
+    
   };
 
 
