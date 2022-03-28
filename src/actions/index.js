@@ -4302,7 +4302,7 @@ export const deleteCheckoutField = (id, handleClose) => async (dispatch, getStat
 
 // **************************************************** Staff *************************************************************** //
 
-// Add, update, delete
+// Add, update, deletes
 
 export const addStaffMember = (formValues, handleClose) => async (dispatch, getState) => {
   let message;
