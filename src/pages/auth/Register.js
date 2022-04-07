@@ -73,6 +73,19 @@ export default function Register() {
   const smUp = useResponsive('up', 'sm');
   const mdUp = useResponsive('up', 'md');
 
+  window.onload = function () {
+    if (!window.location.hash) {
+      window.location += "#loaded";
+      window.location.reload();
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.onload();
+    }, 1000);
+  }, []);
+
   return (
     <Page title="Register">
       <RootStyle>

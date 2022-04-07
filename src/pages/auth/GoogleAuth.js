@@ -12,6 +12,8 @@ import { googleSignIn } from '../../actions';
 class GoogleAuth extends React.Component {
   state = { isGoogleClicked: false };
 
+  
+
   componentDidMount() {
     window.gapi.load('client:auth2', () => {
       window.gapi.client
@@ -67,6 +69,8 @@ class GoogleAuth extends React.Component {
   onSignOutClick = () => {
     this.auth.signOut();
   };
+
+  
 
   renderAuthButton() {
     return (

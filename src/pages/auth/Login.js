@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Card, Stack, Link, Button, Container, Typography } from '@mui/material';
 // routes
+import { useEffect } from 'react';
 import { PATH_AUTH } from '../../routes/paths';
 import useResponsive from '../../hooks/useResponsive';
 // components
@@ -64,6 +65,19 @@ export default function Login() {
   const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
+
+  window.onload = function () {
+    if (!window.location.hash) {
+      window.location += "#loaded";
+      window.location.reload();
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.onload();
+    }, 1000);
+  }, []);
 
   return (
     <Page title="Login">

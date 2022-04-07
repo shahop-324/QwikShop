@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
@@ -16,7 +17,6 @@ import {
   Divider,
   Chip,
   TextField,
-  DialogActions,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Stepper from '@mui/material/Stepper';

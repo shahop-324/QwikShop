@@ -29,8 +29,8 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'https://api.app.qwikshop.online/v1/';
-// const BaseURL = 'http://localhost:8000/v1/';
+// const BaseURL = 'https://api.app.qwikshop.online/v1/';
+const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -566,12 +566,18 @@ export const setupStore = (formValues, lat, long, onNext, handleClose) => async 
 
     dispatch(showSnackbar('success', message));
 
+    console.log(onNext, handleClose);
+
     if (onNext) {
-      onNext();
+      if (onNext) {
+        onNext();
+      }
     }
 
     setTimeout(() => {
-      handleClose();
+      if (handleClose) {
+        handleClose();
+      }
     }, 6000);
 
     dispatch(
@@ -591,6 +597,9 @@ export const setupStore = (formValues, lat, long, onNext, handleClose) => async 
 };
 
 export const fetchUserDetails = () => async (dispatch, getState) => {
+  if (!getState().auth.token) {
+    return;
+  }
   let message;
 
   try {
@@ -631,6 +640,9 @@ export const fetchUserDetails = () => async (dispatch, getState) => {
 };
 
 export const fetchStoreDetails = () => async (dispatch, getState) => {
+  if (!getState().auth.token) {
+    return;
+  }
   let message;
 
   try {
@@ -671,6 +683,9 @@ export const fetchStoreDetails = () => async (dispatch, getState) => {
 };
 
 export const fetchRecentOrder = () => async (dispatch, getState) => {
+  if (!getState().auth.token) {
+    return;
+  }
   let message;
 
   try {
@@ -711,6 +726,9 @@ export const fetchRecentOrder = () => async (dispatch, getState) => {
 };
 
 export const fetchSubnames = () => async (dispatch, getState) => {
+  if (!getState().auth.token) {
+    return;
+  }
   let message;
 
   try {
@@ -1371,6 +1389,9 @@ export const updateProduct =
   };
 
 export const fetchProducts = (term) => async (dispatch, getState) => {
+  if (!getState().auth.token) {
+    return;
+  }
   let message;
   try {
     //
@@ -5344,6 +5365,9 @@ export const deleteMultipleCustomers = (ids, handleClose) => async (dispatch, ge
 };
 
 export const fetchCustomers = (term, tag) => async (dispatch, getState) => {
+  if (!getState().auth.token) {
+    return;
+  }
   let message;
   try {
     const fullLocation = `${BaseURL}customer/getAll`;
@@ -6072,6 +6096,9 @@ export const cancelOrder = (id, reason, handleClose) => async (dispatch, getStat
 };
 
 export const fetchOrders = (term) => async (dispatch, getState) => {
+  if (!getState().auth.token) {
+    return;
+  }
   let message;
 
   try {
@@ -8055,7 +8082,7 @@ export const googleSignIn = (formValues) => async (dispatch, getState) => {
     );
   } catch (error) {
     console.log(error);
-    dispatch(showSnackbar('error', 'Failed to sign in via google, please try other method'));
+    dispatch(showSnackbar('error', message));
     dispatch(
       authActions.SetIsSubmittingLogin({
         isSubmitting: false,

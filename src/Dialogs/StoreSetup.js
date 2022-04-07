@@ -245,7 +245,7 @@ const StoreSetup = ({ open, handleClose }) => {
         console.log(error);
       }
 
-      dispatch(setupStore({ ...values, lat, long, category, country }, onNext, handleClose));
+      dispatch(setupStore({ ...values, lat, long, category, country }, lat, long, onNext, handleClose));
     },
   });
 
@@ -330,7 +330,7 @@ const StoreSetup = ({ open, handleClose }) => {
                           }}
                         >
                           <TextField
-                            disabled={ store.storeName }
+                            disabled={store.storeName}
                             value={formik.values.storeName}
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
@@ -376,7 +376,7 @@ const StoreSetup = ({ open, handleClose }) => {
                                 label="Choose a country"
                                 inputProps={{
                                   ...params.inputProps,
-                                  autoComplete: '', // disable autocomplete and autofill
+                                  // autoComplete: '', // disable autocomplete and autofill
                                 }}
                               />
                             )}
@@ -497,7 +497,7 @@ const StoreSetup = ({ open, handleClose }) => {
                   </Grid>
                   <DialogActions>
                     <LoadingButton
-                      disabled={!(formik.isValid)}
+                      disabled={!formik.isValid}
                       type="submit"
                       variant="contained"
                       loading={isSubmittingStoreSetup}

@@ -16,7 +16,6 @@ import {
   WhatsappIcon,
 } from 'react-share';
 
-import { useSelector } from 'react-redux';
 import { SeoIllustration } from '../../../../assets';
 
 // ----------------------------------------------------------------------
@@ -41,7 +40,6 @@ AppWelcome.propTypes = {
 };
 
 export default function AppWelcome({ displayName, link, storeName }) {
-  const {store} = useSelector((state) => state.store);
   return (
     <RootStyle>
       <CardContent
@@ -57,7 +55,10 @@ export default function AppWelcome({ displayName, link, storeName }) {
         </Typography>
 
         <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          Here's your store link, <br /> <a target={'_blank'} rel="noreferrer" href={`//${link}`}>{link}</a>
+          Here's your store link, <br />{' '}
+          <a target={'_blank'} rel="noreferrer" href={`//${link}`}>
+            {link}
+          </a>
         </Typography>
 
         {/* <Card sx={{p: 1, pb: { xs: 2, xl: 2 },}}>
