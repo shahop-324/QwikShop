@@ -97,6 +97,7 @@ export default function HomeHero() {
               </Button> */}
               <a href="http://play.google.com/store/?pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
                 <img
+                style={{maxWidth: '250px'}}
                   alt="Get it on Google Play"
                   src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
                 />
