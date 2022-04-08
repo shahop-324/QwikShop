@@ -60,8 +60,6 @@ export default function HomeHero() {
   return (
     <MotionContainer>
       <RootStyle>
-       
-
         <HeroImgStyle
           alt="hero"
           src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/hero.png'}
@@ -83,12 +81,12 @@ export default function HomeHero() {
             <m.div variants={varFade().inRight}>
               <Typography sx={{ color: '#ffffff' }}>
                 The starting point for your next online business, QwikShop allows you to run your online business
-                 without techincal knowledge.
+                without techincal knowledge.
               </Typography>
             </m.div>
 
             <m.div variants={varFade().inRight}>
-              <Button
+              {/* <Button
                 size="large"
                 variant="contained"
                 component={RouterLink}
@@ -96,7 +94,13 @@ export default function HomeHero() {
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
                Start My Business
-              </Button>
+              </Button> */}
+              <a href="http://play.google.com/store/?pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+                <img
+                  alt="Get it on Google Play"
+                  src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                />
+              </a>
             </m.div>
           </ContentStyle>
         </Container>
