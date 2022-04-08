@@ -124,7 +124,7 @@ const AssignCarrier = ({ open, handleClose, id }) => {
                   />
                   <Stack direction={'row'} alignItems="center" spacing={2}>
                     <img
-                      src={'http://www.jubileerestaurant.in/img/deliverybike.png'}
+                      src={'https://cdn3d.iconscout.com/3d/premium/thumb/delivery-man-riding-a-motorcycle-with-delivery-box-4377907-3659216.png'}
                       style={{ height: '120px' }}
                       alt="delivery"
                     />
