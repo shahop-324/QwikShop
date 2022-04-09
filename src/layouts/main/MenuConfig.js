@@ -21,11 +21,11 @@ const menuConfig = [
     icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
     path: '#features',
   },
-  {
-    title: 'Pricing',
-    icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
-    path: '/pricing',
-  },
+  // {
+  //   title: 'Pricing',
+  //   icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,
+  //   path: '/pricing',
+  // },
   {
     title: 'Login',
     icon: <Iconify icon={'eva:book-open-fill'} {...ICON_SIZE} />,

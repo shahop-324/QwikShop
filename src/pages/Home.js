@@ -1,6 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import {Box, Typography, Container, Stack} from '@mui/material'
+import { Box, Typography, Container, Stack } from '@mui/material';
 import HomeTagLine from '../sections/home/HomeTagLine';
 // components
 import Page from '../components/Page';
@@ -55,27 +55,21 @@ export default function HomePage() {
 
           <HomeCleanInterfaces />
 
-<Box sx={{my: 3}}>
-  <Container>
-    <Stack direction="row" alignItems="center" justifyContent="center">
-    <Typography variant="h3">
-    Easiest and powerful way to sell online
-  </Typography>
-    </Stack>
-  
-  </Container>
- 
-<Carousel />
-</Box>
+          <Box sx={{ my: 3 }}>
+            <Container>
+              <Stack direction="row" alignItems="center" justifyContent="center">
+                <Typography variant="h3">Easiest and powerful way to sell online</Typography>
+              </Stack>
+            </Container>
 
-<HomeMinimal id="features" />
-         
+            <Carousel />
+          </Box>
+
+          <HomeMinimal id="features" />
 
           {/* // TODO RUN ANY KIND OF BUSINESS => SLICK CAROUSEL => AUTO PLAY */}
 
           {/* // TODO EVERYTHING YOU NEED TO SCALE AND MAINTAIN => FEATURE CARDS => CTA */}
-
-          
 
           {/* <HomePricingPlans /> */}
 

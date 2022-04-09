@@ -8,6 +8,7 @@ import { PATH_AUTH } from '../../routes/paths';
 // components
 import Iconify from '../../components/Iconify';
 import { MotionContainer, varFade } from '../../components/animate';
+import useResponsive from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -57,14 +58,18 @@ const HeroImgStyle = styled(m.img)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomeHero() {
+  const isDesktop = useResponsive('up', 'md');
+
   return (
     <MotionContainer>
       <RootStyle>
-        <HeroImgStyle
-          alt="hero"
-          src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/hero.png'}
-          variants={varFade().inUp}
-        />
+        {isDesktop && (
+          <HeroImgStyle
+            alt="hero"
+            src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/hero.png'}
+            variants={varFade().inUp}
+          />
+        )}
 
         <Container>
           <ContentStyle>
@@ -95,13 +100,15 @@ export default function HomeHero() {
               >
                Start My Business
               </Button> */}
-              <a href="http://play.google.com/store/?pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
-                <img
-                style={{maxWidth: '250px'}}
-                  alt="Get it on Google Play"
-                  src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
-                />
-              </a>
+              <row className={!isDesktop && "d-flex flex-row align-items-center justify-content-center"}>
+                <a href="http://play.google.com/store/?pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+                  <img
+                    style={{ maxWidth: '200px' }}
+                    alt="Get it on Google Play"
+                    src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                  />
+                </a>
+              </row>
             </m.div>
           </ContentStyle>
         </Container>

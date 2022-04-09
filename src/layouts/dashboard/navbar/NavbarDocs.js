@@ -1,4 +1,5 @@
 // @mui
+import { WhatsApp } from '@mui/icons-material';
 import { Stack, Button, Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
@@ -14,13 +15,13 @@ export default function NavbarDocs() {
 
       <div>
         <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-          Upgrade at Just
-          <br /> Rs. 10 Per Day
+          Send us your feedback
+          <br /> 
         </Typography>
       </div>
 
-      <Button href={`/dashboard/store/settings`} target="_blank" rel="noopener" variant="contained">
-        Get Premium
+      <Button startIcon={<WhatsApp />} href={`https://wa.me/+916265081928`} target="_blank" rel="noopener" variant="contained">
+        Feedback
       </Button>
     </Stack>
   );

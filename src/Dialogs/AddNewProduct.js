@@ -1764,7 +1764,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                           disabled={!(formik.isValid)}
                           type="submit"
                           variant="contained"
-                          loading={isCreating}
+                          // loading={isCreating}
                         >
                           Finish <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
                         </LoadingButton>

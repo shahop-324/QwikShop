@@ -5,6 +5,7 @@ import { Box, Grid, Button, Container, Typography } from '@mui/material';
 // routes
 // components
 import Image from '../../components/Image';
+import useResponsive from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,8 @@ export default function HomeHugePackElements() {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
+  const isDesktop = useResponsive('up', 'md');
+
   return (
     <RootStyle>
       <Container>
@@ -46,7 +49,7 @@ export default function HomeHugePackElements() {
                 justifyContent: 'center',
               }}
             >
-              <Image sx={{ height: '400px' }} disabledEffect alt={`screen ${0 + 1}`} src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/add-products.png'} />
+              <Image sx={{ height: isDesktop ? '400px' : '200px' }} disabledEffect alt={`screen ${0 + 1}`} src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/add-products.png'} />
             </Box>
           </Grid>
           <Grid item xs={12} md={5} sx={{ display: 'flex', alignItems: 'center' }}>
