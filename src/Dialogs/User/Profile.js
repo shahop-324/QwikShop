@@ -115,7 +115,7 @@ const Profile = ({ open, handleClose }) => {
   const user_profile_schema = Yup.object().shape({
     firstName: Yup.string().required('First name is required'),
     lastName: Yup.string().required('Last name is required'),
-    email: Yup.string().required('Email is required'),
+    email: Yup.string(),
   });
 
   const initialValues = {
@@ -229,9 +229,10 @@ const Profile = ({ open, handleClose }) => {
                               name="email"
                               label="Email"
                               fullWidth
-                              required
+                              // required
                             />
                             <PhoneInput
+                            disabled
                               name="phoneNumber"
                               placeholder="Phone Number"
                               value={phone}
@@ -239,17 +240,7 @@ const Profile = ({ open, handleClose }) => {
                               inputComponent={CustomPhoneNumber}
                               defaultCountry="IN"
                             />
-                            <TextField
-                              value={values.phone}
-                              onBlur={handleBlur}
-                              onChange={handleChange}
-                              error={!!touched.phone && !!errors.phone}
-                              helperText={touched.phone && errors.phone}
-                              name="phone"
-                              label="Contact No."
-                              fullWidth
-                              required
-                            />
+                            
                           </Box>
                         </Card>
                       </Grid>

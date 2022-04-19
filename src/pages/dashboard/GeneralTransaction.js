@@ -172,7 +172,8 @@ export default function GeneralTransaction() {
               />
 
               <TableBody>
-                {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                {transactions.slice(0)
+                  .reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                   const { _id, id, order, name, amount, customer, status, createdAt, image, products, outOfStock, hidden, totalSales } = row;
 
                   const isItemSelected = selected.indexOf(_id) !== -1;

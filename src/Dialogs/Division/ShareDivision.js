@@ -35,33 +35,33 @@ const ShareDivision = ({ open, handleClose, id }) => {
 
         <Stack direction={'row'} alignItems="center" justifyContent="center" spacing={2}>
           <Tooltip title="WhatsApp">
-            <IconButton>
+            
               <WhatsappShareButton url={link} title={name} separator=":">
                 {' '}
                 <WhatsappIcon round size={35} />{' '}
               </WhatsappShareButton>
-            </IconButton>
+            
           </Tooltip>
           <Tooltip title="Facebook">
-            <IconButton>
+            
               <FacebookShareButton url={link} quote={name}>
                 <FacebookIcon round size={35} />
               </FacebookShareButton>
-            </IconButton>
+            
           </Tooltip>
           <Tooltip title="Telegram">
-            <IconButton>
+            
               <TelegramShareButton url={link} title={name}>
                 <TelegramIcon round size={35} />
               </TelegramShareButton>
-            </IconButton>
+            
           </Tooltip>
           <Tooltip title="Twitter">
-            <IconButton>
+            
               <TwitterShareButton url={link} title={name}>
                 <TwitterIcon round size={35} />
               </TwitterShareButton>
-            </IconButton>
+            
           </Tooltip>
           <Tooltip title="Copy Link">
             <IconButton

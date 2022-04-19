@@ -190,7 +190,7 @@ const StoreSetup = ({ open, handleClose }) => {
       pincode: '',
       landmark: '',
 
-      phone: '',
+      phone: store.phone || '',
       gstin: '',
     },
     validateOnChange: true,
@@ -496,14 +496,14 @@ const StoreSetup = ({ open, handleClose }) => {
                     </Grid>
                   </Grid>
                   <DialogActions>
-                    <LoadingButton
+                    <Button
                       disabled={!formik.isValid}
                       type="submit"
                       variant="contained"
                       loading={isSubmittingStoreSetup}
                     >
                       Proceed <ArrowForwardIosRoundedIcon className="ms-3" style={{ fontSize: '0.8rem' }} />
-                    </LoadingButton>
+                    </Button>
                   </DialogActions>
                 </form>
               );

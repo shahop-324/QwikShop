@@ -28,7 +28,7 @@ export default function BankingInviteFriends() {
 
   return (
     <div>
-      <Image
+      {/* <Image
         visibleByDefault
         disabledEffect
         src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_invite.png"
@@ -39,17 +39,17 @@ export default function BankingInviteFriends() {
           position: 'relative',
           filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.24))',
         }}
-      />
+      /> */}
       <ContentStyle>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4">
             Invite friends <br /> and earn
           </Typography>
-          <Typography variant="h2">Rs.50</Typography>
+          
         </Stack>
 
         <Typography variant="body2" sx={{ mt: 2, mb: 3 }}>
-          You and your friend both gets Rs.50, which can be used to get QwikShop Premium and QwikShop themes.
+          Earn Upto Rs. 50,000 / Per month by referring other online sellers to QwikShop. You will get 0.05% on each sale they make.
         </Typography>
 
         <span style={{}} className="mb-4">

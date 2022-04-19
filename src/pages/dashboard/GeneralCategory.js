@@ -364,6 +364,8 @@ export default function GeneralCategory() {
                         {(provided) => (
                           <TableBody {...provided.droppableProps} ref={provided.innerRef}>
                             {categories
+                            .slice(0)
+                            .reverse()
                               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                               .map((row, index) => {
                                 const { _id, name, image, products, outOfStock, updatedAt } = row;

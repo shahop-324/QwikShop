@@ -149,9 +149,9 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
               onChangeMode('light')
             }
           }}  />} label="" />
-          <IconButton id="beamer" button="beamer">
+          {/* <IconButton id="beamer" button="beamer">
             <CampaignRounded style={{ fontSize: '26px' }} />
-          </IconButton>
+          </IconButton> */}
           <IconButton onClick={() => {setOpenWallet(true)}}>
             <AccountBalanceWalletRoundedIcon style={{ fontSize: '26px' }} />
           </IconButton>

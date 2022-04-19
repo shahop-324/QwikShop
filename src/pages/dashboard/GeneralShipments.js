@@ -185,7 +185,8 @@ export default function GeneralShipments() {
                 />
 
                 <TableBody>
-                  {shipments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {shipments.slice(0)
+                  .reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const {
                       _id,
                       orderRef,

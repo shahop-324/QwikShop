@@ -102,7 +102,8 @@ const GeneralReviews = () => {
                   gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                 }}
               >
-                {reviews.map((item) => (
+                {reviews.slice(0)
+                  .reverse().map((item) => (
                   <ReviewItem key={item._id} item={item} />
                 ))}
               </Box>

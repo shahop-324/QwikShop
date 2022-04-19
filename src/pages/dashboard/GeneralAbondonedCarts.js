@@ -35,7 +35,7 @@ export default function GeneralOrders() {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Stack direction="row" className="mb-4 d-flex flex-row align-items-center justify-content-between">
-              <Typography variant="h6">Abondoned Carts</Typography>
+              <Typography variant="h6">Abandoned Carts</Typography>
               <CsvDownload
                 data={abondonedCarts.map((el) =>
                   Object.keys(el)
@@ -74,7 +74,7 @@ export default function GeneralOrders() {
                   <img style={{ height: '150px', width: '150px' }} src={NoAbondonedCart} alt="no abondoned cart" />
                 </Card>
                 <Typography sx={{ mb: 3 }} variant="subtitle2">
-                  There are no Abondoned carts in your store
+                  There are no Abandoned carts in your store
                 </Typography>
               </Stack>
             ) : (

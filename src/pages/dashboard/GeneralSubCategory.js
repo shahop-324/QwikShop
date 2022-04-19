@@ -322,6 +322,8 @@ export default function GeneralSubCategory() {
                         {(provided) => (
                           <TableBody {...provided.droppableProps} ref={provided.innerRef}>
                             {subCategories
+                            .slice(0)
+                            .reverse()
                               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                               .map((row, index) => {
                                 const {

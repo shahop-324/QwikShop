@@ -188,7 +188,7 @@ const CARDS = [
     icon: (
       <RemoveShoppingCartRoundedIcon sx={{mb: 10, mx: 'auto', width: 40, height: 40, color: "#20278B"}} />
     ),
-    title: 'Abondoned Cart',
+    title: 'Abandoned Cart',
     description: 'You can send your customers offers to place an order by checking abondoned carts and can recover lot of hidden revenue fro your business.',
   },
   {

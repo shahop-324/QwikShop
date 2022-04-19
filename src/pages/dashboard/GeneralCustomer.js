@@ -188,7 +188,7 @@ export default function GeneralCustomer() {
                 </Search>
 
                 <Stack direction="row" alignItems="center" spacing={2}>
-                  <div className="d-flex flex-row align-items-center justify-content-end">
+                  {/* <div className="d-flex flex-row align-items-center justify-content-end">
                     <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
                       <Button onClick={handleClick}>{options[selectedIndex]}</Button>
                       <Button
@@ -230,8 +230,8 @@ export default function GeneralCustomer() {
                         )}
                       </Popper>
                     </Portal>
-                  </div>
-                  <Button
+                  </div> */}
+                  {/* <Button
                     onClick={() => {
                       handleOpenBulkUpdate();
                     }}
@@ -239,7 +239,7 @@ export default function GeneralCustomer() {
                     variant="outlined"
                   >
                     Bulk Update
-                  </Button>
+                  </Button> */}
                   <CsvDownload
                     data={customers.map((el) =>
                       Object.keys(el)

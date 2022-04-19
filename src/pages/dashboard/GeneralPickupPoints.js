@@ -288,7 +288,8 @@ export default function GeneralPickupPoints() {
               />
 
               <TableBody>
-                {pickupPoints.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                {pickupPoints.slice(0)
+                  .reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                   const { _id, pickupPointName, city, pincode, operational, address, createdAt } = row;
 
                   const isItemSelected = selected.indexOf(_id) !== -1;

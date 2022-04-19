@@ -33,8 +33,6 @@ import Print from '../../../../Dialogs/Delivery/Print';
 export default function OrderDetails() {
   const { orders } = useSelector((state) => state.order);
 
-
-
   const [openPrint, setOpenPrint] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openAssign, setOpenAssign] = useState(false);
@@ -65,7 +63,6 @@ export default function OrderDetails() {
     setId(id);
     setOpenReceipt(true);
   };
-
 
   const handleOpenAssign = (shipmentId) => {
     setShipmentId(shipmentId);
@@ -152,71 +149,79 @@ export default function OrderDetails() {
               </TableHead>
               <TableBody>
                 {orders?.length > 0 &&
-                  orders?.map((row) => (
-                    <TableRow key={row?._id}>
-                      <TableCell>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <Typography variant="subtitle2">{row?.ref}</Typography>
-                        </Stack>
-                      </TableCell>
+                  orders
+                    ?.slice(0)
+                    .reverse()
+                    .map((row) => (
+                      <TableRow key={row?._id}>
+                        <TableCell>
+                          <Stack direction="row" alignItems="center" spacing={2}>
+                            <Typography variant="subtitle2">{row?.ref}</Typography>
+                          </Stack>
+                        </TableCell>
 
-                      <TableCell>{row?.customer?.name}</TableCell>
-                      <TableCell>
-                        <Label variant={'ghost'} color={getStatusColor(row.status)}>
-                          {row?.status}
-                        </Label>
-                      </TableCell>
+                        <TableCell>{row?.customer?.name}</TableCell>
+                        <TableCell>
+                          <Label variant={'ghost'} color={getStatusColor(row.status)}>
+                            {row?.status}
+                          </Label>
+                        </TableCell>
 
-                      <TableCell sx={{ textTransform: 'capitalize' }}>Rs.{row?.charges?.total}</TableCell>
+                        <TableCell sx={{ textTransform: 'capitalize' }}>Rs.{row?.charges?.total}</TableCell>
 
-                      <TableCell align="center">
-                        <Typography variant="caption">
-                          {dateFormat(row?.createdAt, 'ddd mmm dS, yy hh:mm TT')}
-                        </Typography>
-                      </TableCell>
+                        <TableCell align="center">
+                          <Typography variant="caption">
+                            {dateFormat(row?.createdAt, 'ddd mmm dS, yy hh:mm TT')}
+                          </Typography>
+                        </TableCell>
 
-                      <TableCell align="right">
-                        <Stack spacing={1} direction={'row'} alignItems="center">
-                          <IconButton
-                            onClick={() => {
-                              handleOpenReceipt(row._id);
-                            }}
-                          >
-                            <ReceiptIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
-                          </IconButton>
-
-                          <IconButton
-                            onClick={() => {
-                              handleOpenTimeline(row._id, row.shipment, row.scans);
-                            }}
-                          >
-                            <TimelineIcon style={{ fontSize: '20px', color: '#CF4A6B' }} />
-                          </IconButton>
-                          {!row.shipment.carrier ? (
+                        <TableCell align="right">
+                          <Stack spacing={1} direction={'row'} alignItems="center">
                             <IconButton
                               onClick={() => {
-                                handleOpenAssign(row.shipment._id);
+                                handleOpenReceipt(row._id);
                               }}
                             >
-                              <LocalShipping style={{ fontSize: '20px', color: '#CF844A' }} />
+                              <ReceiptIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
                             </IconButton>
-                          ) : (
-                            <IconButton onClick={() => {
-                              handleOpenUpdate(row.shipment._id);
-                            }}>
-                              <EditRounded  style={{ fontSize: '20px', color: '#00AB5C' }} />
+
+                            <IconButton
+                              onClick={() => {
+                                handleOpenTimeline(row._id, row.shipment, row.scans);
+                              }}
+                            >
+                              <TimelineIcon style={{ fontSize: '20px', color: '#CF4A6B' }} />
                             </IconButton>
-                          )}
-                          {row.shipment.carrier === 'Shiprocket' && <IconButton onClick={()=> {
-                            handleOpenPrint(row.shipment_id);
-                          }}>
-                            <ReceiptLongRounded style={{ fontSize: '20px', color: '#00AB5C' }} />
-                          </IconButton> }
-                          
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                            {!row.shipment.carrier ? (
+                              <IconButton
+                                onClick={() => {
+                                  handleOpenAssign(row.shipment._id);
+                                }}
+                              >
+                                <LocalShipping style={{ fontSize: '20px', color: '#CF844A' }} />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                onClick={() => {
+                                  handleOpenUpdate(row.shipment._id);
+                                }}
+                              >
+                                <EditRounded style={{ fontSize: '20px', color: '#00AB5C' }} />
+                              </IconButton>
+                            )}
+                            {row.shipment.carrier === 'Shiprocket' && (
+                              <IconButton
+                                onClick={() => {
+                                  handleOpenPrint(row.shipment_id);
+                                }}
+                              >
+                                <ReceiptLongRounded style={{ fontSize: '20px', color: '#00AB5C' }} />
+                              </IconButton>
+                            )}
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
               </TableBody>
             </Table>
           </TableContainer>

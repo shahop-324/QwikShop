@@ -320,7 +320,8 @@ export default function GeneralDiscount() {
                   },
                 }}
               >
-                {discounts.map((el) => {
+                {discounts.slice(0)
+                  .reverse().map((el) => {
                   const {
                     discountCode,
                     _id,

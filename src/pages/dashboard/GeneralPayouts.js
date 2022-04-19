@@ -165,7 +165,8 @@ export default function GeneralPayout() {
               />
 
               <TableBody>
-                {payouts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                {payouts.slice(0)
+                  .reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                   const { _id } = row;
 
                   const isItemSelected = selected.indexOf(_id) !== -1;

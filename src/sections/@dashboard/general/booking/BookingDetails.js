@@ -93,7 +93,8 @@ export default function BookingDetails({ customers }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {customers?.length > 0 && customers?.map((row) => (
+                {customers?.length > 0 && customers?.slice(0)
+                  .reverse().map((row) => (
                   <TableRow key={row._id}>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
@@ -127,20 +128,20 @@ export default function BookingDetails({ customers }) {
                         >
                           <SmsIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
                         </IconButton>
-                        <IconButton
+                        {/* <IconButton
                           onClick={() => {
                             handleOpenEdit(row._id);
                           }}
                         >
                           <ModeEditIcon style={{ fontSize: '20px', color: '#A94ACF' }} />
-                        </IconButton>
-                        <IconButton
+                        </IconButton> */}
+                        {/* <IconButton
                           onClick={() => {
                             handleOpenDelete(row._id);
                           }}
                         >
                           <DeleteIcon style={{ fontSize: '20px', color: '#C03725' }} />
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton onClick={() => {
                             handleOpenPreview(row._id);
                           }}>

@@ -111,7 +111,7 @@ export default function BankingRecentTransitions({ link, storeName }) {
     }
 
     return color;
-  }
+  };
 
   return (
     <>
@@ -130,40 +130,40 @@ export default function BankingRecentTransitions({ link, storeName }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {recentOrders.map((row) => (
-                  <TableRow key={row?.id}>
-                    <TableCell>
-                      <Typography variant="caption">{row?.ref}</Typography>
-                    </TableCell>
+                {recentOrders
+                  .slice(0)
+                  .reverse()
+                  .map((row) => (
+                    <TableRow key={row?.id}>
+                      <TableCell>
+                        <Typography variant="caption">{row?.ref}</Typography>
+                      </TableCell>
 
-                    <TableCell>
-                      <Typography variant="subtitle2">
-                        {dateFormat(new Date(row?.createdAt || Date.now()), 'ddd mmm yy')}
-                      </Typography>
-                    </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2">
+                          {dateFormat(new Date(row?.createdAt || Date.now()), 'ddd mmm yy')}
+                        </Typography>
+                      </TableCell>
 
-                    <TableCell>Rs.{row?.charges?.total}</TableCell>
+                      <TableCell>Rs.{row?.charges?.total}</TableCell>
 
-                    <TableCell>
-                      <Label
-                        variant={isLight ? 'ghost' : 'filled'}
-                        color={findColor(row?.status)}
-                      >
-                        {sentenceCase(row?.status)}
-                      </Label>
-                    </TableCell>
+                      <TableCell>
+                        <Label variant={isLight ? 'ghost' : 'filled'} color={findColor(row?.status)}>
+                          {sentenceCase(row?.status)}
+                        </Label>
+                      </TableCell>
 
-                    <TableCell align="right">
-                      <IconButton
-                        onClick={() => {
-                          handleOpenReceipt(row._id);
-                        }}
-                      >
-                        <ReceiptIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell align="right">
+                        <IconButton
+                          onClick={() => {
+                            handleOpenReceipt(row._id);
+                          }}
+                        >
+                          <ReceiptIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -176,27 +176,22 @@ export default function BankingRecentTransitions({ link, storeName }) {
                 Please share your store to get orders
               </Typography>
               <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-                <IconButton>
-                  <WhatsappShareButton url={link} title={storeName} separator=":">
-                    {' '}
-                    <WhatsappIcon round size={35} />{' '}
-                  </WhatsappShareButton>
-                </IconButton>
-                <IconButton>
-                  <FacebookShareButton url={link} quote={storeName}>
-                    <FacebookIcon round size={35} />
-                  </FacebookShareButton>
-                </IconButton>
-                <IconButton>
-                  <TelegramShareButton url={link} title={storeName}>
-                    <TelegramIcon round size={35} />
-                  </TelegramShareButton>
-                </IconButton>
-                <IconButton>
-                  <TwitterShareButton url={link} title={storeName}>
-                    <TwitterIcon round size={35} />
-                  </TwitterShareButton>
-                </IconButton>
+                <WhatsappShareButton url={link} title={storeName} separator=":">
+                  {' '}
+                  <WhatsappIcon round size={35} />{' '}
+                </WhatsappShareButton>
+
+                <FacebookShareButton url={link} quote={storeName}>
+                  <FacebookIcon round size={35} />
+                </FacebookShareButton>
+
+                <TelegramShareButton url={link} title={storeName}>
+                  <TelegramIcon round size={35} />
+                </TelegramShareButton>
+
+                <TwitterShareButton url={link} title={storeName}>
+                  <TwitterIcon round size={35} />
+                </TwitterShareButton>
               </Stack>
             </Stack>
           )}
@@ -239,6 +234,5 @@ function AvatarIcon({ icon }) {
 }
 
 // ----------------------------------------------------------------------
-
 
 // ----------------------------------------------------------------------

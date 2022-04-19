@@ -66,49 +66,57 @@ export default function AbondonedCartDetails() {
               </TableHead>
               <TableBody>
                 {abondonedCarts?.length > 0 &&
-                  abondonedCarts?.map((row) => {
-                    console.log(row)
-                    return (
-                    <TableRow key={row?._id}>
-                      <TableCell>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <Typography variant="subtitle2">{row?.name}</Typography>
-                        </Stack>
-                      </TableCell>
+                  abondonedCarts
+                    ?.slice(0)
+                    .reverse()
+                    .map((row) => {
+                      console.log(row);
+                      return (
+                        <TableRow key={row?._id}>
+                          <TableCell>
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                              <Typography variant="subtitle2">{row?.name}</Typography>
+                            </Stack>
+                          </TableCell>
 
-                      <TableCell>{row?.contact}</TableCell>
-                      <TableCell>
-                          {/* {Render Products in cart with their quantity, clickable link and name} */}
-                          
-                          {row.cart.map((el) => (
-                                  <Chip color="primary" variant="outlined" key={el.id} label={`${el.name} (${el.qty})`} />
-                              ))}
-                      </TableCell>
+                          <TableCell>{row?.contact}</TableCell>
+                          <TableCell>
+                            {/* {Render Products in cart with their quantity, clickable link and name} */}
 
-                      <TableCell>
-                        <Label
-                          variant={'ghost'}
-                          color={
-                            (row.status === 'paid' && 'success') || (row.status === 'pending' && 'warning') || 'error'
-                          }
-                        >
-                          Rs.{row?.amount}
-                        </Label>
-                      </TableCell>
+                            {row.cart.map((el) => (
+                              <Chip color="primary" variant="outlined" key={el.id} label={`${el.name} (${el.qty})`} />
+                            ))}
+                          </TableCell>
 
-                      <TableCell sx={{ textTransform: 'capitalize' }}>{timeAgo.format( new Date(row?.updatedAt || Date.now()) )}</TableCell>
+                          <TableCell>
+                            <Label
+                              variant={'ghost'}
+                              color={
+                                (row.status === 'paid' && 'success') ||
+                                (row.status === 'pending' && 'warning') ||
+                                'error'
+                              }
+                            >
+                              Rs.{row?.amount}
+                            </Label>
+                          </TableCell>
 
-                      <TableCell align="right">
-                        <IconButton
-                          onClick={() => {
-                            handleOpenSMSCustomer(row.customerId);
-                          }}
-                        >
-                          <MessageRoundedIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  )})}
+                          <TableCell sx={{ textTransform: 'capitalize' }}>
+                            {timeAgo.format(new Date(row?.updatedAt || Date.now()))}
+                          </TableCell>
+
+                          <TableCell align="right">
+                            <IconButton
+                              onClick={() => {
+                                handleOpenSMSCustomer(row.customerId);
+                              }}
+                            >
+                              <MessageRoundedIcon style={{ fontSize: '20px', color: '#4A7DCF' }} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
               </TableBody>
             </Table>
           </TableContainer>

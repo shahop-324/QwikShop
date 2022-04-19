@@ -68,27 +68,22 @@ export default function AppWelcome({ displayName, link, storeName }) {
         <span>Share via</span>
 
         <Stack direction="row" spacing={2}>
-          <IconButton>
-            <WhatsappShareButton url={link} title={storeName} separator=":">
-              {' '}
-              <WhatsappIcon round size={35} />{' '}
-            </WhatsappShareButton>
-          </IconButton>
-          <IconButton>
-            <FacebookShareButton url={link} quote={storeName}>
-              <FacebookIcon round size={35} />
-            </FacebookShareButton>
-          </IconButton>
-          <IconButton>
-            <TelegramShareButton url={link} title={storeName}>
-              <TelegramIcon round size={35} />
-            </TelegramShareButton>
-          </IconButton>
-          <IconButton>
-            <TwitterShareButton url={link} title={storeName}>
-              <TwitterIcon round size={35} />
-            </TwitterShareButton>
-          </IconButton>
+          <WhatsappShareButton url={link} title={storeName} separator=":">
+            {' '}
+            <WhatsappIcon round size={35} />{' '}
+          </WhatsappShareButton>
+
+          <FacebookShareButton url={link} quote={storeName}>
+            <FacebookIcon round size={35} />
+          </FacebookShareButton>
+
+          <TelegramShareButton url={link} title={storeName}>
+            <TelegramIcon round size={35} />
+          </TelegramShareButton>
+
+          <TwitterShareButton url={link} title={storeName}>
+            <TwitterIcon round size={35} />
+          </TwitterShareButton>
         </Stack>
 
         {/* <Button variant="contained" to="#" component={RouterLink}>

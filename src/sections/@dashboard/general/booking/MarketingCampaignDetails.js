@@ -76,7 +76,8 @@ export default function MarketingCampaignDetails() {
               </TableHead>
               <TableBody>
                 {campaigns?.length > 0 &&
-                  campaigns?.map((row) => (
+                  campaigns?.slice(0)
+                  .reverse().map((row) => (
                     <TableRow key={row?._id}>
                       <TableCell>
                         <Stack direction="row" alignItems="center" spacing={2}>

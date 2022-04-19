@@ -126,7 +126,8 @@ export default function GeneralTransaction() {
                 />
 
                 <TableBody>
-                  {refunds.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {refunds.slice(0)
+                  .reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const { _id } = row;
 
                     const isItemSelected = selected.indexOf(_id) !== -1;

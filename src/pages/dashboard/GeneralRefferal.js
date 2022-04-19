@@ -248,7 +248,8 @@ export default function GeneralReferral() {
                     />
 
                     <TableBody>
-                      {referrals.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                      {referrals.slice(0)
+                  .reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                         const { _id, name, phone, commission } = row;
 
                         const myPurchases = purchases.filter((el) => el.ref === _id);

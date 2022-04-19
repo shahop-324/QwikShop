@@ -163,27 +163,27 @@ export default function GeneralOrders() {
                   Please share your store to get orders
                 </Typography>
                 <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-                  <IconButton>
+                  
                     <WhatsappShareButton url={link} title={storeName} separator=":">
                       {' '}
                       <WhatsappIcon round size={35} />{' '}
                     </WhatsappShareButton>
-                  </IconButton>
-                  <IconButton>
+                  
+                  
                     <FacebookShareButton url={link} quote={storeName}>
                       <FacebookIcon round size={35} />
                     </FacebookShareButton>
-                  </IconButton>
-                  <IconButton>
+                  
+                  
                     <TelegramShareButton url={link} title={storeName}>
                       <TelegramIcon round size={35} />
                     </TelegramShareButton>
-                  </IconButton>
-                  <IconButton>
+                  
+                  
                     <TwitterShareButton url={link} title={storeName}>
                       <TwitterIcon round size={35} />
                     </TwitterShareButton>
-                  </IconButton>
+                  
                 </Stack>
               </Stack>
             ) : (
