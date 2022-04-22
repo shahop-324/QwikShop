@@ -32,7 +32,7 @@ const QwikshopLearn = [
       'In this article you can learn how QwikShop delivery works?',
     image:
       'https://miro.medium.com/max/745/1*4cy0tKqeOMkBb08bcocy8Q.png',
-      href: 'https://intercom.help/qwikshop/en/articles/6012657-how-to-create-discounts'
+      href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ'
   },
   {
     id: '89292j93u',
@@ -41,7 +41,7 @@ const QwikshopLearn = [
       'In this article you can learn how to how to prepare your items for shipping?',
     image:
       'https://www.marketing91.com/wp-content/uploads/2020/03/Factors-affecting-Sales-discount.jpg',
-      href: 'https://intercom.help/qwikshop/en/articles/6012635-how-to-measure-sales'
+      href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ'
   },
 ];
 

@@ -95,10 +95,7 @@ const ManageCharges = ({ open, handleClose }) => {
   const [extraCharges, setExtraCharges] = useState(store.extraCharges);
 
   const addChargeRow = () => {
-    setExtraCharges((prev) => [
-      ...prev,
-      { index: uuidv4(), chargeName: '', type: 'flat', chargePercentage: '', chargeAmount: '' },
-    ]);
+    setExtraCharges((prev) => [...prev, { index: uuidv4(), name: '', type: 'Flat', percentage: '', charge: '' }]);
   };
 
   const deleteChargeRow = (index) => {
@@ -186,7 +183,7 @@ const ManageCharges = ({ open, handleClose }) => {
                     name="gstNumber"
                     label="GSTIN Number"
                     fullWidth
-                    value={store.gstin}
+                    value={gstNumber}
                     onChange={(e) => {
                       setGSTNumber(e.target.value);
                     }}
@@ -222,25 +219,25 @@ const ManageCharges = ({ open, handleClose }) => {
                   <FormControl className="mb-3" component="fieldset">
                     <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
                       <FormControlLabel
-                        value="percentage"
+                        value="Percentage"
                         label={'Percentage'}
                         control={
                           <Radio
-                            checked={el.type === 'percentage'}
+                            checked={el.type === 'percentage' || el.type === 'Percentage'}
                             onClick={() => {
-                              updateChargeRow('percentage', el.index, 'type');
+                              updateChargeRow('Percentage', el.index, 'type');
                             }}
                           />
                         }
                       />
                       <FormControlLabel
-                        value="flat"
+                        value="Flat"
                         label="Flat"
                         control={
                           <Radio
-                            checked={el.type === 'flat'}
+                            checked={el.type === 'flat' || el.type === 'Flat'}
                             onClick={() => {
-                              updateChargeRow('flat', el.index, 'type');
+                              updateChargeRow('Flat', el.index, 'type');
                             }}
                           />
                         }
@@ -260,21 +257,21 @@ const ManageCharges = ({ open, handleClose }) => {
                       name="chargeName"
                       label="Charge Name"
                       fullWidth
-                      value={el.chargeName}
+                      value={el.name}
                       onChange={(e) => {
-                        updateChargeRow(e.target.value, el.index, 'chargeName');
+                        updateChargeRow(e.target.value, el.index, 'name');
                       }}
                     />
 
-                    {el.type === 'flat' && (
+                    {el.type === 'Flat' && (
                       <TextField
                         type="number"
                         name="chargeAmount"
                         label="Charge Amount"
                         fullWidth
-                        value={el.chargeAmount}
+                        value={el.charge}
                         onChange={(e) => {
-                          updateChargeRow(e.target.value, el.index, 'chargeAmount');
+                          updateChargeRow(e.target.value, el.index, 'charge');
                         }}
                         InputProps={{
                           startAdornment: (
@@ -286,15 +283,15 @@ const ManageCharges = ({ open, handleClose }) => {
                       />
                     )}
 
-                    {el.type === 'percentage' && (
+                    {el.type === 'Percentage' && (
                       <TextField
                         type="number"
                         name="chargePercentage"
                         label="Charge Percentage"
                         fullWidth
-                        value={el.chargePercentage}
+                        value={el.percentage}
                         onChange={(e) => {
-                          updateChargeRow(e.target.value, el.index, 'chargePercentage');
+                          updateChargeRow(e.target.value, el.index, 'percentage');
                         }}
                         InputProps={{
                           endAdornment: (

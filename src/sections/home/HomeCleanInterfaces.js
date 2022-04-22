@@ -59,27 +59,7 @@ export default function HomeCleanInterfaces() {
            
           
         </Box>
-        <Box
-          sx={{
-            textAlign: 'center',
-            mt: 10,
-            
-          }}
-        >
-          <Stack direction="row" alignItems="center" justifyContent="center" spacing={4}>
-          <PhoneInput
-          width={'400px'}
-                  name="phoneNumber"
-                  placeholder="Phone number"
-                  value={phone}
-                  onChange={setPhone}
-                  inputComponent={CustomPhoneNumber}
-                  defaultCountry="IN"
-                />
-          <Button startIcon={<StoreMallDirectoryRoundedIcon />} variant='contained' size="large">Create my store</Button>
-          </Stack>
-           
-        </Box>
+      
       </Container>
     </RootStyle>
   );

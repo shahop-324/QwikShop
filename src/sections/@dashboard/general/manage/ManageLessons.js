@@ -32,7 +32,7 @@ const QwikshopLearn = [
       'In this article you can learn how you can get your own store QR code and share it so anyone can easily purchase products from your shop...',
     image:
       'https://nationalseniors.com.au/generated/share-image/istock-1269502903-jpg.jpg',
-      href: 'https://intercom.help/qwikshop/en/articles/6012663-how-to-manage-my-store'
+      href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ'
   },
   
 ];

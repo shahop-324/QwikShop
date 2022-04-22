@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Button, Box, Container, Typography, Stack } from '@mui/material';
 // routes
+import { AndroidRounded } from '@mui/icons-material';
 import { PATH_AUTH } from '../../routes/paths';
 // components
 import Iconify from '../../components/Iconify';
@@ -91,16 +92,18 @@ export default function HomeHero() {
             </m.div>
 
             <m.div variants={varFade().inRight}>
-              {/* <Button
+              <Button
+                startIcon={<AndroidRounded width={20} height={20} />}
                 size="large"
                 variant="contained"
                 component={RouterLink}
                 to={PATH_AUTH.register}
-                startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
+                color={'primary'}
+                // startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
-               Start My Business
-              </Button> */}
-              <div className={!isDesktop && "d-flex flex-row align-items-center justify-content-center"}>
+                Download App
+              </Button>
+              {/* <div className={!isDesktop && "d-flex flex-row align-items-center justify-content-center"}>
                 <a href="http://play.google.com/store/?pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
                   <img
                     style={{ maxWidth: '200px' }}
@@ -108,7 +111,7 @@ export default function HomeHero() {
                     src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
                   />
                 </a>
-              </div>
+              </div> */}
             </m.div>
           </ContentStyle>
         </Container>

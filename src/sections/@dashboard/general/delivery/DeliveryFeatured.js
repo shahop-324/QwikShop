@@ -31,7 +31,7 @@ const QwikshopLearn = [
     description: 'In this article you can learn how QwikShop delivery works?',
     image:
       'https://media.edgeprop.my/s3fs-public/styles/newsthumbnails/public/field/image/delivery-man-with-face-mask-delivering-order-motorcycle_154993-160_0.jpg',
-    href: 'https://intercom.help/qwikshop/en/articles/6012637-how-does-qwikshop-delivery-works',
+    href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ',
   },
   {
     id: '89292j93u',
@@ -39,14 +39,14 @@ const QwikshopLearn = [
     description: 'In this article you can learn how to how to prepare your items for shipping?',
     image:
       'https://i.guim.co.uk/img/media/3ed1a62c989d9edfe6232dad1dfe49fa7f25aaf9/0_450_4500_2700/master/4500.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=ce20365626a27d9d3aee9bfe51249f69',
-    href: 'https://intercom.help/qwikshop/en/articles/6012638-how-to-prepare-items-for-delivery',
+    href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ',
   },
   {
     id: '89292j93u',
     title: 'How to set delivery pricing?',
     description: 'In this article you can learn how to set delivery pricing based on pincodes and distance?',
     image: 'https://www.manageengine.com/products/service-desk-msp/images/msp-pricing.png',
-    href: 'https://intercom.help/qwikshop/en/articles/6012639-how-to-set-delivery-pricing',
+    href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ',
   },
   {
     id: '89292j93u',
@@ -55,7 +55,7 @@ const QwikshopLearn = [
     image:
       'https://i0.wp.com/post.healthline.com/wp-content/uploads/2020/09/631650-The-6-Best-Vegetarian-Meal-Delivery-Services-of-2020-1296x728-Header_81b9bf.jpg?w=1155&h=1528',
 
-    href: 'https://intercom.help/qwikshop/en/articles/6012640-how-to-do-self-delivery',
+    href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ',
   },
 ];
 

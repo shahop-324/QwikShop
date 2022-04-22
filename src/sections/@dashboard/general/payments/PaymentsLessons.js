@@ -32,7 +32,7 @@ const QwikshopLearn = [
       'In this article you can learn how to setup and launch SMS marketing...',
     image:
       'https://i.pinimg.com/600x315/be/17/ce/be17cea2bfa2962b11a537b33821f591.jpg',
-      href: 'https://intercom.help/qwikshop/en/articles/6012648-how-to-accept-payments-via-upi'
+      href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ'
   },
   {
     id: '89292j93u',
@@ -41,7 +41,7 @@ const QwikshopLearn = [
       'In this article you can learn how to promote your online business on QwikShop with Google Adwords...',
     image:
       'https://miro.medium.com/max/500/1*5c8KOrF2CKKQCcY67sJDWA.jpeg',
-      href: 'https://intercom.help/qwikshop/en/articles/6012648-how-to-accept-payments-via-upi',
+      href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ',
   },
   {
     id: '89292j93u',
@@ -50,7 +50,7 @@ const QwikshopLearn = [
       'In this article you can learn how to promote your online business on QwikShop with Facebook Ads...',
     image:
       'https://www.livemint.com/rf/Image-621x414/LiveMint/Period1/2015/08/27/Photos/mutualfundplant1.jpg',
-      href: 'https://intercom.help/qwikshop/en/articles/6012651-how-to-check-fund-transfer-payout'
+      href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ'
   },
   {
     id: '89292j93u',
@@ -59,7 +59,7 @@ const QwikshopLearn = [
       'In this article you can learn how to create discount and promote your sales?',
     image:
       'https://media.gcflearnfree.org/content/55e06a5c1496fdb039ceef5d_01_17_2014/ManagingCheckingAccount_Intro.png',
-      href: 'https://intercom.help/qwikshop/en/articles/6012648-how-to-accept-payments-via-upi'
+      href: 'https://www.youtube.com/channel/UCFdJ6n7vox94QFlFsnTLPtQ'
   },
 ];
 
