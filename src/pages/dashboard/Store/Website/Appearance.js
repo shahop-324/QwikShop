@@ -149,19 +149,19 @@ const StoreAppearance = () => {
 
   const categoryOptions = categories.map((el) => ({
     label: el.name,
-    value: el.name,
+    value: el._id,
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const subCategoryOptions = subCategories.map((el) => ({
     label: el.name,
-    value: el.name,
+    value: el._id,
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const divisionOptions = divisions.map((el) => ({
     label: el.name,
-    value: el.name,
+    value: el._id,
     image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
