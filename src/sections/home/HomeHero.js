@@ -92,17 +92,20 @@ export default function HomeHero() {
             </m.div>
 
             <m.div variants={varFade().inRight}>
+              <a style={{textDecoration: 'none'}} download="qwikshop" href="https://qwikshop.s3.ap-south-1.amazonaws.com/AppRevision/Android/app.apk" >
               <Button
                 startIcon={<AndroidRounded width={20} height={20} />}
                 size="large"
                 variant="contained"
-                component={RouterLink}
-                to={PATH_AUTH.register}
+                // component={RouterLink}
+                // to={PATH_AUTH.register}
                 color={'primary'}
                 // startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
                 Download App
               </Button>
+              </a>
+              
               {/* <div className={!isDesktop && "d-flex flex-row align-items-center justify-content-center"}>
                 <a href="http://play.google.com/store/?pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
                   <img
