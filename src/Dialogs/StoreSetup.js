@@ -173,7 +173,7 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const steps = ['Welcome', 'Store Info', 'Store created'];
+const steps = ['Welcome', 'Store Info'];
 
 const StoreSetup = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -506,20 +506,6 @@ const StoreSetup = ({ open, handleClose }) => {
                     </Button>
                   </DialogActions>
                 </form>
-              );
-
-            case 2:
-              return (
-                <>
-                  <Confetti width={width} height={height} />
-                  <DialogTitle className="text-center">Store Created</DialogTitle>
-                  <Container className="d-flex flex-column align-items-center justify-content-center">
-                    <StoreMallDirectoryRoundedIcon className="mb-3" style={{ fontSize: '200', color: 'green' }} />
-                    <Typography variant="p2">
-                      Now, you can easily run your business online for free in hasslefree & Efficient manner.
-                    </Typography>
-                  </Container>
-                </>
               );
 
             default:

@@ -49,7 +49,7 @@ export const showSnackbar = (severity, message) => async (dispatch, _getState) =
 
   setTimeout(() => {
     dispatch(snackbarActions.closeSnackBar());
-  }, 6000);
+  }, 4000);
 };
 
 export const showNotification = (message) => async (dispatch, _getState) => {
@@ -556,13 +556,11 @@ export const setupStore = (formValues, lat, long, onNext, handleClose) => async 
 
     console.log(result);
 
-    setTimeout(() => {
-      dispatch(
-        storeActions.UpdateStore({
-          store: result.data,
-        })
-      );
-    }, 6000);
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
 
     dispatch(showSnackbar('success', message));
 
@@ -574,11 +572,8 @@ export const setupStore = (formValues, lat, long, onNext, handleClose) => async 
       }
     }
 
-    setTimeout(() => {
-      if (handleClose) {
-        handleClose();
-      }
-    }, 6000);
+    handleClose();
+
 
     dispatch(
       storeActions.SetIsSubmittingSteup({
