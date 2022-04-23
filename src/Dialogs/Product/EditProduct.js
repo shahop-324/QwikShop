@@ -816,7 +816,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                                 onBlur={formik.handleBlur}
                                 onChange={formik.handleChange}
                                 fullWidth
-                                label="Price"
+                                label="MRP (Label Price)"
                                 variant="outlined"
                                 name="price"
                                 error={!!formik.touched.price && !!formik.errors.price}
@@ -835,7 +835,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                                 onBlur={formik.handleBlur}
                                 onChange={formik.handleChange}
                                 fullWidth
-                                label="Discounted Price"
+                                label="Your Selling Price"
                                 variant="outlined"
                                 name="discountedPrice"
                                 error={!!formik.touched.discountedPrice && !!formik.errors.discountedPrice}
@@ -1247,7 +1247,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                                 onBlur={formik.handleBlur}
                                 onChange={formik.handleChange}
                                 fullWidth
-                                label="Minimum Quantity Sold"
+                                label="Minimum Purchase Quantity"
                                 variant="outlined"
                                 name="minQuantitySold"
                                 error={!!formik.touched.minQuantitySold && !!formik.errors.minQuantitySold}
@@ -1283,7 +1283,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                                 onBlur={formik.handleBlur}
                                 onChange={formik.handleChange}
                                 fullWidth
-                                label="Weight"
+                                label="Weight (in gm per unit)"
                                 variant="outlined"
                                 name="weight"
                                 error={!!formik.touched.weight && !!formik.errors.weight}

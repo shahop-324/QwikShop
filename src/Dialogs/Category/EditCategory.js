@@ -116,6 +116,11 @@ const EditCategory = ({ open, handleClose, id }) => {
         </div>
         <DialogActions>
           <LoadingButton
+          onClick={()=> {
+            if(formik.values.categoryName) {
+              dispatch(updateCategory(file.value, formik.values.categoryName, id, handleClose));
+            }
+          }}
             disabled={!(formik.isValid)}
             type="submit"
             variant="contained"

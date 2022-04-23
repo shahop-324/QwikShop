@@ -538,7 +538,7 @@ const AddNewProduct = ({ open, handleClose }) => {
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      try{
+      try {
         setValue(
           'images',
           acceptedFiles.map((file) =>
@@ -547,11 +547,9 @@ const AddNewProduct = ({ open, handleClose }) => {
             })
           )
         );
-      }
-      catch(error) {
+      } catch (error) {
         console.log(error);
       }
-      
 
       acceptedFiles.map((el) => {
         if (el.type === 'video/mp4') {
@@ -623,7 +621,6 @@ const AddNewProduct = ({ open, handleClose }) => {
                         <Grid item xs={12} md={12}>
                           <Card sx={{ p: 3 }}>
                             <Box
-                              
                               sx={{
                                 display: 'grid',
                                 columnGap: 2,
@@ -708,7 +705,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                   />
                                 )}
                               />
-                              
+
                               <TextField
                                 value={formik.values.brand}
                                 onBlur={formik.handleBlur}
@@ -725,7 +722,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 onBlur={formik.handleBlur}
                                 onChange={formik.handleChange}
                                 fullWidth
-                                label="Price"
+                                label="MRP (Label Price)"
                                 variant="outlined"
                                 name="price"
                                 error={!!formik.touched.price && !!formik.errors.price}
@@ -744,7 +741,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 onBlur={formik.handleBlur}
                                 onChange={formik.handleChange}
                                 fullWidth
-                                label="Discounted Price"
+                                label="Your Selling Price"
                                 variant="outlined"
                                 name="discountedPrice"
                                 error={!!formik.touched.discountedPrice && !!formik.errors.discountedPrice}
@@ -836,8 +833,6 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 </RadioGroup>
                               </FormControl>
                             </Box>
-
-                           
                           </Card>
                         </Grid>
                       </Grid>
@@ -1083,7 +1078,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 onBlur={formik.handleBlur}
                                 onChange={formik.handleChange}
                                 fullWidth
-                                label="Minimum Quantity Sold"
+                                label="Minimum Purchase Quantity"
                                 variant="outlined"
                                 name="minQuantitySold"
                                 error={!!formik.touched.minQuantitySold && !!formik.errors.minQuantitySold}
@@ -1119,7 +1114,7 @@ const AddNewProduct = ({ open, handleClose }) => {
                                 onBlur={formik.handleBlur}
                                 onChange={formik.handleChange}
                                 fullWidth
-                                label="Weight"
+                                label="Weight (in gm per unit)"
                                 variant="outlined"
                                 name="weight"
                                 error={!!formik.touched.weight && !!formik.errors.weight}
@@ -1761,8 +1756,46 @@ const AddNewProduct = ({ open, handleClose }) => {
                           Previous
                         </LoadingButton>
                         <LoadingButton
-                          disabled={!(formik.isValid)}
-                          type="submit"
+                          onClick={() => {
+                            if (!formik.isValid) {
+                              return;
+                            }
+                            const formValues = {
+                              productName: formik.values.productName,
+                              brand: formik.values.brand,
+                              price: formik.values.price,
+                              discountedPrice: formik.values.discountedPrice,
+                              wholesalePrice: formik.values.wholesalePrice,
+                              minWholesaleQuantity: formik.values.minWholesaleQuantity,
+                              productSKU: formik.values.productSKU,
+                              weight: formik.values.weight,
+                              quantityInStock: formik.values.quantityInStock,
+                              minQuantitySold: formik.values.minQuantitySold,
+                              length: formik.values.length,
+                              width: formik.values.width,
+                              height: formik.values.height,
+                              metaDescription: formik.values.metaDescription,
+                              metaTitle: formik.values.metaTitle,
+                              metaKeyword: formik.values.metaKeyword,
+                              coins: formik.values.coins,
+                              description,
+                              category,
+                              subCategory,
+                              isFragile,
+                              specifications,
+                              productUnit,
+                              dimensionUnit,
+                              InTheBox,
+                              colorsList,
+                              customVariants,
+                              addOnList,
+                              priceDeterminingVariant,
+                            };
+
+                            dispatch(createNewProduct(formValues, imageFiles, videoFiles, handleClose));
+                          }}
+                          disabled={!formik.isValid}
+                          // type="submit"
                           variant="contained"
                           // loading={isCreating}
                         >
