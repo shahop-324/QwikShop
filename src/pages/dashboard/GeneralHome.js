@@ -34,7 +34,7 @@ export default function GeneralApp() {
 
   const { customers } = useSelector((state) => state.customer);
 
-  const [openStoreSetup, setOpenStoreSetup] = useState( store ? !store?.setupCompleted : false);
+  const [openStoreSetup, setOpenStoreSetup] = useState(store ? !store?.setupCompleted : false);
 
   const [openStoreImage, setOpenStoreImage] = useState(false);
 
@@ -70,7 +70,6 @@ export default function GeneralApp() {
 
   const { user } = useSelector((state) => state.user);
 
-
   const { themeStretch } = useSettings();
 
   return (
@@ -80,7 +79,13 @@ export default function GeneralApp() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
               <AppWelcome
-                storeName={store.name}
+                storeName={
+                  store.shareStoreMessage
+                    ? store.shareStoreMessage
+                        .replace(/{{storeName}}/g, store.storeName)
+                        .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                    : store.name
+                }
                 displayName={`${user?.firstName} ${user?.lastName}`}
                 link={`qwikshop.online/${store.subName}`}
               />

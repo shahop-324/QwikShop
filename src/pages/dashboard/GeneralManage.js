@@ -9,7 +9,14 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { Grid, Container } from '@mui/material';
 // hooks
 import TravelExploreRoundedIcon from '@mui/icons-material/TravelExploreRounded';
-import { ViewCarouselRounded } from '@mui/icons-material';
+import {
+  Message,
+  ReceiptLongRounded,
+  ShoppingCartCheckoutSharp,
+  Store,
+  ViewCarouselRounded,
+  WhatsApp,
+} from '@mui/icons-material';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -25,6 +32,8 @@ import CreateInvoice from '../../Dialogs/CreateInvoice';
 import MarketingDesignOptions from '../../Dialogs/MarketingDesignOptions';
 import FaviconSettings from '../../Dialogs/Manage/FaviconSettings';
 import StoreBanners from '../../Dialogs/StoreBanners';
+import ShareMessage from '../../Dialogs/ShareMessage';
+import OrderFlow from '../../Dialogs/OrderFlow';
 
 export default function GeneralManage() {
   const { themeStretch } = useSettings();
@@ -47,13 +56,33 @@ export default function GeneralManage() {
 
   const [openBanners, setOpenBanners] = useState(false);
 
+  const [openShareMessage, setOpenShareMessage] = useState(false);
+
+  const [openCheckoutFlow, setOpenCheckoutFlow] = useState(false);
+
+  const handleOpenShareMessage = () => {
+    setOpenShareMessage(true);
+  };
+
+  const handleOpenCheckoutFlow = () => {
+    setOpenCheckoutFlow(true);
+  };
+
+  const handleCloseShareMessage = () => {
+    setOpenShareMessage(false);
+  };
+
+  const handleCloseCheckoutFlow = () => {
+    setOpenCheckoutFlow(false);
+  };
+
   const handleOpenBanners = () => {
     setOpenBanners(true);
-  }
+  };
 
   const handleCloseBanners = () => {
     setOpenBanners(false);
-  }
+  };
 
   const handleCloseStoreTimings = () => {
     setOpenStoreTimings(false);
@@ -101,11 +130,11 @@ export default function GeneralManage() {
 
   const handleCloseFaviconSetting = () => {
     setOpenFaviconSetting(false);
-  }
+  };
 
   const handleOpenFaviconSettings = () => {
     setOpenFaviconSetting(true);
-  }
+  };
 
   const handleCloseMarketingDesignOptions = () => {
     setOpenMarketingDesignOptions(false);
@@ -122,7 +151,7 @@ export default function GeneralManage() {
             <Grid item xs={12} md={4}>
               <ManageLessons />
             </Grid>
-           
+
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
                 title="View QR Code"
@@ -141,8 +170,7 @@ export default function GeneralManage() {
                 color={'success'}
               />
             </Grid>
-            
-            
+
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
                 title="Edit"
@@ -163,17 +191,16 @@ export default function GeneralManage() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
-              // comingSoon
+                // comingSoon
                 title="Edit"
                 action={handleOpenDeliveryZones}
                 total={'Delivery Pricing'}
                 icon={<LocalShippingIcon />}
                 color={'success'}
               />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
-              
                 title="Update"
                 action={handleOpenBanners}
                 total={'Store Banners'}
@@ -181,23 +208,64 @@ export default function GeneralManage() {
                 color={'info'}
               />
             </Grid>
-            {/* <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
-              
-                title="Generate"
-                action={handleOpenCreateInvoice}
-                total={'Create Invoice'}
-                icon={<ReceiptRoundedIcon />}
-                color={'warning'}
-              />
-            </Grid> */}
+
             <Grid item xs={12} sm={6} md={3}>
               <AnalyticsWidgetSummary
-              comingSoon
+                // comingSoon
+                title="Customise"
+                action={handleOpenShareMessage}
+                total={'Share Message'}
+                icon={<Message />}
+                color={'warning'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
+                // comingSoon
+                title="Customise"
+                action={handleOpenCheckoutFlow}
+                total={'Order Flow'}
+                icon={<ShoppingCartCheckoutSharp />}
+                color={'error'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
+                comingSoon
+                title="Coming soon"
+                // action={handleOpenCreateInvoice}
+                total={'Invoice'}
+                icon={<ReceiptLongRounded />}
+                color={'warning'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
+                comingSoon
                 title="Get Mobile App"
                 action={handleOpenSEOSettings}
                 total={'Android App'}
                 icon={<PhoneAndroidRoundedIcon />}
+                color={'success'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
+                comingSoon
+                title="Coming soon"
+                // action={handleOpenCreateInvoice}
+                total={'Business cards'}
+                icon={<Store />}
+                color={'warning'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AnalyticsWidgetSummary
+                comingSoon
+                title="Get Mobile App"
+                action={handleOpenSEOSettings}
+                total={'WhatsApp Story'}
+                icon={<WhatsApp />}
                 color={'success'}
               />
             </Grid>
@@ -215,6 +283,8 @@ export default function GeneralManage() {
       )}
       {openFaviconSetting && <FaviconSettings open={openFaviconSetting} handleClose={handleCloseFaviconSetting} />}
       {openBanners && <StoreBanners open={openBanners} handleClose={handleCloseBanners} />}
+      {openShareMessage && <ShareMessage open={openShareMessage} handleClose={handleCloseShareMessage} />}
+      {openCheckoutFlow && <OrderFlow open={openCheckoutFlow} handleClose={handleCloseCheckoutFlow} />}
     </>
   );
 }

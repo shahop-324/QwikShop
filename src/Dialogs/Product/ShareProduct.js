@@ -35,33 +35,70 @@ const ShareProduct = ({ open, handleClose, id }) => {
 
         <Stack direction={'row'} alignItems="center" justifyContent="center" spacing={2}>
           <Tooltip title="WhatsApp">
-            
-              <WhatsappShareButton url={link} title={productName} separator=":">
-                {' '}
-                <WhatsappIcon round size={35} />{' '}
-              </WhatsappShareButton>
-            
+            <WhatsappShareButton
+              url={link}
+              title={
+                store.shareProductMessage
+                  ? store.shareProductMessage
+                      .replace(/{{storeName}}/g, store.storeName)
+                      .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                      .replace(/{{productName}}/g, productName)
+                      .replace(/{{productLink}}/g, link)
+                  : productName
+              }
+              separator=":"
+            >
+              {' '}
+              <WhatsappIcon round size={35} />{' '}
+            </WhatsappShareButton>
           </Tooltip>
           <Tooltip title="Facebook">
-            
-              <FacebookShareButton url={link} quote={productName}>
-                <FacebookIcon round size={35} />
-              </FacebookShareButton>
-            
+            <FacebookShareButton
+              url={link}
+              quote={
+                store.shareProductMessage
+                  ? store.shareProductMessage
+                      .replace(/{{storeName}}/g, store.storeName)
+                      .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                      .replace(/{{productName}}/g, productName)
+                      .replace(/{{productLink}}/g, link)
+                  : productName
+              }
+            >
+              <FacebookIcon round size={35} />
+            </FacebookShareButton>
           </Tooltip>
           <Tooltip title="Telegram">
-            
-              <TelegramShareButton url={link} title={productName}>
-                <TelegramIcon round size={35} />
-              </TelegramShareButton>
-            
+            <TelegramShareButton
+              url={link}
+              title={
+                store.shareProductMessage
+                  ? store.shareProductMessage
+                      .replace(/{{storeName}}/g, store.storeName)
+                      .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                      .replace(/{{productName}}/g, productName)
+                      .replace(/{{productLink}}/g, link)
+                  : productName
+              }
+            >
+              <TelegramIcon round size={35} />
+            </TelegramShareButton>
           </Tooltip>
           <Tooltip title="Twitter">
-            
-              <TwitterShareButton url={link} title={productName}>
-                <TwitterIcon round size={35} />
-              </TwitterShareButton>
-            
+            <TwitterShareButton
+              url={link}
+              title={
+                store.shareProductMessage
+                  ? store.shareProductMessage
+                      .replace(/{{storeName}}/g, store.storeName)
+                      .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                      .replace(/{{productName}}/g, productName)
+                      .replace(/{{productLink}}/g, link)
+                  : productName
+              }
+            >
+              <TwitterIcon round size={35} />
+            </TwitterShareButton>
           </Tooltip>
           <Tooltip title="Copy Link">
             <IconButton

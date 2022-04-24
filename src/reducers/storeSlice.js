@@ -6,6 +6,8 @@ const storeSlice = createSlice({
   initialState: {
     store: {},
     error: false,
+    isUpadtingOrderFlow: false,
+    isUpadtingShareMessage: false,
     isUpdatingPolicyPreference: false,
     isGeneratingPolicy: false,
     isUpdatingPreference: false,
@@ -42,6 +44,12 @@ const storeSlice = createSlice({
     },
     SetIsGeneratingPolicy(state, action) {
       state.isGeneratingPolicy = action.payload.state;
+    },
+    SetIsUpdatingOrderFlow(state, action) {
+      state.isUpadtingOrderFlow = action.payload.state;
+    },
+    SetIsUpdatingShareMessage(state, action) {
+      state.isUpadtingShareMessage = action.payload.state;
     },
     SetIsUpdatingPolicyPreference(state, action) {
       state.isUpdatingPolicyPreference = action.payload.state;

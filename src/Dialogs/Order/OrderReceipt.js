@@ -35,9 +35,9 @@ import MessageIcon from '@mui/icons-material/Message';
 import CheckBoxRoundedIcon from '@mui/icons-material/CheckBoxRounded';
 import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
 import FilterFramesRoundedIcon from '@mui/icons-material/FilterFramesRounded';
-import AddRoadRoundedIcon from '@mui/icons-material/AddRoadRounded';
 import MopedRoundedIcon from '@mui/icons-material/MopedRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import { DeliveryDiningRounded, DiningRounded } from '@mui/icons-material';
 import Iconify from '../../components/Iconify';
 import CoinPNG from '../../assets/coin.png';
 import RejectOrder from './RejectOrder';
@@ -139,9 +139,8 @@ function ColorlibStepIcon(props) {
     1: <CheckBoxRoundedIcon />,
     2: <FilterFramesRoundedIcon />,
     3: <LocalShippingRoundedIcon />,
-    4: <AddRoadRoundedIcon />,
-    5: <MopedRoundedIcon />,
-    6: <CheckCircleRoundedIcon />,
+    4: <MopedRoundedIcon />,
+    5: <CheckCircleRoundedIcon />,
   };
 
   return (
@@ -169,14 +168,44 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const steps = [
-  'Waiting for acceptance',
-  'Preparing for shipment',
-  'Shipped',
-  'In Transit',
-  'Out for Delivery',
-  'Delivered',
-];
+function RestaurantColorlibStepIcon(props) {
+  const { active, completed, className } = props;
+
+  const icons = {
+    1: <FilterFramesRoundedIcon />,
+    2: <DiningRounded />,
+    3: <DeliveryDiningRounded />,
+    4: <CheckCircleRoundedIcon />,
+  };
+
+  return (
+    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+      {icons[String(props.icon)]}
+    </ColorlibStepIconRoot>
+  );
+}
+
+RestaurantColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
+  icon: PropTypes.node,
+};
+
+const steps = ['Waiting for acceptance', 'Preparing for shipment', 'Shipped', 'Out for Delivery', 'Delivered'];
+
+const restaurantSteps = ['Waiting for acceptance', 'Accepted & Preparing', 'Out for Delivery', 'Delivered'];
 
 const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject }, ref) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -198,16 +227,25 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
         setActiveStep(1);
         break;
       case 6: // Shipped
-        setActiveStep(2);
-        break;
-      case 18: // In transit
-        setActiveStep(3);
+        if (store.orderFlow === 'regular') {
+          setActiveStep(2);
+        } else {
+          setActiveStep(100);
+        }
         break;
       case 17: // Out for delivery
-        setActiveStep(4);
+        if (store.orderFlow === 'regular') {
+          setActiveStep(3);
+        } else {
+          setActiveStep(2);
+        }
         break;
       case 7: // Delivered
-        setActiveStep(5);
+        if (store.orderFlow === 'regular') {
+          setActiveStep(4);
+        } else {
+          setActiveStep(3);
+        }
         break;
       default:
         // default
@@ -352,13 +390,23 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
           {console.log(activeStep, activeStep * 1 !== 0)}
 
           {activeStep * 1 !== 100 ? (
-            <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            store.orderFlow === 'regular' ? (
+              <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            ) : (
+              <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+                {restaurantSteps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel StepIconComponent={RestaurantColorlibStepIcon}>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            )
           ) : (
             <Card sx={{ p: 3 }}>
               <Stack spacing={1} direction={'row'} alignItems="center">
@@ -754,32 +802,32 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
 
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Name</Typography>
-              <Typography variant="subtitle2">{order?.billingAddress?.shipping_name || '----'}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.billing_name || '----'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Address</Typography>
-              <Typography variant="subtitle2">{order?.billingAddress?.shipping_address1 || '----'}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.billing_address1 || '----'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Pincode</Typography>
-              <Typography variant="subtitle2">{order?.billingAddress?.shipping_zip || '----'}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.billing_zip || '----'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Contact Number</Typography>
-              <Typography variant="subtitle2">{order?.billingAddress?.shipping_contact || '----'}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.billing_contact || '----'}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
 
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Landmark</Typography>
-              <Typography variant="subtitle2">{order?.shippingAddress?.shipping_landmark || '----'}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress?.billing_landmark || '----'}</Typography>
             </Stack>
           </Card>
         </Box>

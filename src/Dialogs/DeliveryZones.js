@@ -4,28 +4,33 @@ import React, { useState } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CurrencyRupeeRoundedIcon from '@mui/icons-material/CurrencyRupeeRounded';
 // @mui
-import { Box, Card, Grid, Dialog, DialogTitle, TextField, Button, Typography, DialogActions, InputAdornment } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Dialog,
+  DialogTitle,
+  TextField,
+  Button,
+  Typography,
+  DialogActions,
+  InputAdornment,
+} from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateSelfDeliveryZone } from '../actions';
-
-
 
 const DeliveryZones = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const { store, isUpadtingSelfDeliveryZone } = useSelector((state) => state.store);
   const [storePincode, setStorePincode] = useState(store.pincode);
-  const [pricePer100gm, setPricePer100gm] = useState(store.pricePer100gm)
+  const [pricePer100gm, setPricePer100gm] = useState(store.pricePer100gm);
   const [pricePer5km, setPricePer5km] = useState(store.pricePer5km);
- 
-
-  
 
   const onSubmit = () => {
     const formValues = {
       storePincode,
       pricePer100gm,
       pricePer5km,
-     
     };
 
     dispatch(updateSelfDeliveryZone(formValues, handleClose));
@@ -52,7 +57,7 @@ const DeliveryZones = ({ open, handleClose }) => {
         <Grid className="px-4 pt-3" container spacing={3}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }} className="mb-4">
-              <Typography variant='body2' className="mb-3">
+              <Typography variant="body2" className="mb-3">
                 All delivery distances will be calculated from your store pincode.
               </Typography>
               <Box
@@ -64,8 +69,8 @@ const DeliveryZones = ({ open, handleClose }) => {
                 }}
               >
                 <TextField
-                disabled
-                helperText={"You can change your store pincode by updating store profile"}
+                  disabled
+                  helperText={'You can change your store pincode by updating store profile'}
                   name="storePincode"
                   label="Store Pincode"
                   fullWidth
@@ -77,10 +82,7 @@ const DeliveryZones = ({ open, handleClose }) => {
               </Box>
             </Card>
             <Card sx={{ p: 3 }} className="mb-4">
-
-            <Typography className="mb-3">
-               Delivery Price per 100gm Weight
-              </Typography>
+              <Typography className="mb-3">Delivery Price per 100gm Weight</Typography>
 
               <Box
                 sx={{
@@ -99,19 +101,17 @@ const DeliveryZones = ({ open, handleClose }) => {
                     setPricePer100gm(e.target.value);
                   }}
                   InputProps={{
-                    startAdornment: <InputAdornment>
-                    <CurrencyRupeeRoundedIcon />
-                    </InputAdornment>
+                    startAdornment: (
+                      <InputAdornment>
+                        <CurrencyRupeeRoundedIcon />
+                      </InputAdornment>
+                    ),
                   }}
                 />
               </Box>
-
             </Card>
             <Card sx={{ p: 3 }} className="mb-4">
-
-            <Typography className="mb-3">
-               Delivery Price per 5km
-              </Typography>
+              <Typography className="mb-3">Delivery Price per 5km</Typography>
               <Box
                 sx={{
                   display: 'grid',
@@ -129,19 +129,19 @@ const DeliveryZones = ({ open, handleClose }) => {
                     setPricePer5km(e.target.value);
                   }}
                   InputProps={{
-                    startAdornment: <InputAdornment>
-                    <CurrencyRupeeRoundedIcon />
-                    </InputAdornment>
+                    startAdornment: (
+                      <InputAdornment>
+                        <CurrencyRupeeRoundedIcon />
+                      </InputAdornment>
+                    ),
                   }}
                 />
               </Box>
-
             </Card>
-           
           </Grid>
         </Grid>
         <DialogActions>
-        <div className="d-flex flex-row align-items-center">
+          <div className="d-flex flex-row align-items-center">
             <LoadingButton onClick={onSubmit} loading={isUpadtingSelfDeliveryZone} variant="contained" className="me-3">
               Save
             </LoadingButton>

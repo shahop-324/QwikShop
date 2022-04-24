@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
@@ -78,35 +79,26 @@ export default function BankingRecentTransitions({ link, storeName }) {
     setOpenReceipt(true);
   };
 
-  const findColor = (status) => {
+  const findColor = (status_id) => {
     let color = 'info';
-    switch (status) {
-      case 'Pending':
+    switch (status_id * 1) {
+      case -1: // 'Waiting for acceptance'
         color = 'warning';
         break;
-      case 'Cancelled':
-        color = 'error';
+      case 0: // 'Accepted / Ready to ship'
+        color = 'info';
         break;
-      case 'Accepted':
+      case 6: // Shipped
+        color = 'info';
+        break;
+      case 17: // Out for delivery
+        color = 'primary';
+        break;
+      case 7: // Delivered
         color = 'success';
         break;
-      case 'Rejected':
-        color = 'error';
-        break;
-      case 'Requested Return':
-        color = 'info';
-        break;
-      case 'Requested Replacement':
-        color = 'info';
-        break;
-      case 'Returned':
-        color = 'error';
-        break;
-      case 'Replaced':
-        color = 'info';
-        break;
-
       default:
+        // default
         break;
     }
 
@@ -145,10 +137,10 @@ export default function BankingRecentTransitions({ link, storeName }) {
                         </Typography>
                       </TableCell>
 
-                      <TableCell>Rs.{row?.charges?.total}</TableCell>
+                      <TableCell>Rs.{(row?.charges?.total * 1).toFixed(2)}</TableCell>
 
                       <TableCell>
-                        <Label variant={isLight ? 'ghost' : 'filled'} color={findColor(row?.status)}>
+                        <Label variant={isLight ? 'ghost' : 'filled'} color={findColor(row?.status_id)}>
                           {sentenceCase(row?.status)}
                         </Label>
                       </TableCell>

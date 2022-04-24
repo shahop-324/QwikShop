@@ -29,8 +29,8 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-const BaseURL = 'https://api.app.qwikshop.online/v1/';
-// const BaseURL = 'http://localhost:8000/v1/';
+// const BaseURL = 'https://api.app.qwikshop.online/v1/';
+const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -3461,6 +3461,104 @@ export const updateStoreSEO = (formValues, file, handleClose) => async (dispatch
     console.log(error);
     dispatch(showSnackbar('error', message));
     dispatch(storeActions.SetIsUpdatingStoreSEO({ state: false }));
+    handleClose();
+  }
+};
+
+export const updateOrderFlow = (orderFlow, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingOrderFlow({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/manage/order-flow`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        orderFlow,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingOrderFlow({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingOrderFlow({ state: false }));
+    handleClose();
+  }
+};
+
+export const updateShareMessages = (formValues, handleClose) => async (dispatch, getState) => {
+  let message;
+  dispatch(storeActions.SetIsUpdatingShareMessage({ state: true }));
+
+  try {
+    const res = await fetch(`${BaseURL}store/manage/share-message`, {
+      method: 'PATCH',
+
+      body: JSON.stringify({
+        ...formValues,
+      }),
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getState().auth.token}`,
+      },
+    });
+
+    const result = await res.json();
+
+    message = result.message;
+
+    if (!res.ok) {
+      if (!res.message) {
+        throw new Error(message);
+      } else {
+        throw new Error(res.message);
+      }
+    }
+
+    console.log(result);
+
+    dispatch(
+      storeActions.UpdateStore({
+        store: result.data,
+      })
+    );
+
+    dispatch(showSnackbar('success', message));
+    dispatch(storeActions.SetIsUpdatingShareMessage({ state: false }));
+    handleClose();
+  } catch (error) {
+    console.log(error);
+    dispatch(showSnackbar('error', message));
+    dispatch(storeActions.SetIsUpdatingShareMessage({ state: false }));
     handleClose();
   }
 };

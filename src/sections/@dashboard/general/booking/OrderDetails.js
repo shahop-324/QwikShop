@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useState } from 'react';
 import {
   Box,
@@ -93,34 +94,25 @@ export default function OrderDetails() {
 
   let statusColor = 'info';
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Pending':
+  const getStatusColor = (status_id) => {
+    switch (status_id*1) {
+      case -1: // 'Waiting for acceptance'
         statusColor = 'warning';
         break;
-      case 'Cancelled':
-        statusColor = 'error';
-        break;
-      case 'Accepted':
-        statusColor = 'success';
-        break;
-      case 'Rejected':
-        statusColor = 'error';
-        break;
-      case 'Returned':
-        statusColor = 'error';
-        break;
-      case 'Replaced':
+      case 0: // 'Accepted / Ready to ship'
         statusColor = 'info';
         break;
-      case 'Requested Return':
-        statusColor = 'warning';
+      case 6: // Shipped
+        statusColor = 'info';
         break;
-      case 'Requested Replacement':
-        statusColor = 'warning';
+      case 17: // Out for delivery
+        statusColor = 'primary';
         break;
-
+      case 7: // Delivered
+        statusColor = 'success';
+        break;
       default:
+        // default
         break;
     }
 
@@ -162,12 +154,12 @@ export default function OrderDetails() {
 
                         <TableCell>{row?.customer?.name}</TableCell>
                         <TableCell>
-                          <Label variant={'ghost'} color={getStatusColor(row.status)}>
+                          <Label variant={'ghost'} color={getStatusColor(row.status_id)}>
                             {row?.status}
                           </Label>
                         </TableCell>
 
-                        <TableCell sx={{ textTransform: 'capitalize' }}>Rs.{row?.charges?.total}</TableCell>
+                        <TableCell sx={{ textTransform: 'capitalize' }}>Rs.{(row?.charges?.total * 1).toFixed(2)}</TableCell>
 
                         <TableCell align="center">
                           <Typography variant="caption">
@@ -192,10 +184,12 @@ export default function OrderDetails() {
                             >
                               <TimelineIcon style={{ fontSize: '20px', color: '#CF4A6B' }} />
                             </IconButton>
-                            {!row.shipment.carrier ? (
+                            {!row.carrier ? (
                               <IconButton
                                 onClick={() => {
-                                  handleOpenAssign(row.shipment._id);
+                                  console.log(row);
+
+                                  handleOpenAssign(row.shipment);
                                 }}
                               >
                                 <LocalShipping style={{ fontSize: '20px', color: '#CF844A' }} />
@@ -203,13 +197,13 @@ export default function OrderDetails() {
                             ) : (
                               <IconButton
                                 onClick={() => {
-                                  handleOpenUpdate(row.shipment._id);
+                                  handleOpenUpdate(row.shipment);
                                 }}
                               >
                                 <EditRounded style={{ fontSize: '20px', color: '#00AB5C' }} />
                               </IconButton>
                             )}
-                            {row.shipment.carrier === 'Shiprocket' && (
+                            {row.carrier === 'Shiprocket' && (
                               <IconButton
                                 onClick={() => {
                                   handleOpenPrint(row.shipment_id);

@@ -293,32 +293,32 @@ const ComponentToPrint = React.forwardRef(({ id }, ref) => {
 
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Name</Typography>
-              <Typography variant="subtitle2">{order?.billingAddress.shipping_name}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.billing_name}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Address</Typography>
-              <Typography variant="subtitle2">{order?.billingAddress.shipping_address1}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.billing_address1}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Pincode</Typography>
-              <Typography variant="subtitle2">{order?.billingAddress.shipping_zip}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.billing_zip}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Contact Number</Typography>
-              <Typography variant="subtitle2">{order?.billingAddress.shipping_contact}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.billing_contact}</Typography>
             </Stack>
 
             <Divider sx={{ my: 1 }} />
 
             <Stack direction="row" alignItems={'center'} justifyContent="space-between">
               <Typography variant="caption">Landmark</Typography>
-              <Typography variant="subtitle2">{order?.shippingAddress.shipping_landmark}</Typography>
+              <Typography variant="subtitle2">{order?.billingAddress.billing_landmark}</Typography>
             </Stack>
           </Card>
         </Box>

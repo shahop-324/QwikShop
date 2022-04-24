@@ -35,23 +35,68 @@ const ShareCategory = ({ open, handleClose, id }) => {
 
         <Stack direction={'row'} alignItems="center" justifyContent="center" spacing={2}>
           <Tooltip title="WhatsApp">
-            <WhatsappShareButton url={link} title={name} separator=":">
+            <WhatsappShareButton
+              url={link}
+              title={
+                store.shareProductMessage
+                  ? store.shareProductMessage
+                      .replace(/{{storeName}}/g, store.storeName)
+                      .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                      .replace(/{{categoryName}}/g, name)
+                      .replace(/{{categoryLink}}/g, link)
+                  : name
+              }
+              separator=":"
+            >
               {' '}
               <WhatsappIcon round size={35} />{' '}
             </WhatsappShareButton>
           </Tooltip>
           <Tooltip title="Facebook">
-            <FacebookShareButton url={link} quote={name}>
+            <FacebookShareButton
+              url={link}
+              quote={
+                store.shareProductMessage
+                  ? store.shareProductMessage
+                      .replace(/{{storeName}}/g, store.storeName)
+                      .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                      .replace(/{{categoryName}}/g, name)
+                      .replace(/{{categoryLink}}/g, link)
+                  : name
+              }
+            >
               <FacebookIcon round size={35} />
             </FacebookShareButton>
           </Tooltip>
           <Tooltip title="Telegram">
-            <TelegramShareButton url={link} title={name}>
+            <TelegramShareButton
+              url={link}
+              title={
+                store.shareProductMessage
+                  ? store.shareProductMessage
+                      .replace(/{{storeName}}/g, store.storeName)
+                      .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                      .replace(/{{categoryName}}/g, name)
+                      .replace(/{{categoryLink}}/g, link)
+                  : name
+              }
+            >
               <TelegramIcon round size={35} />
             </TelegramShareButton>
           </Tooltip>
           <Tooltip title="Twitter">
-            <TwitterShareButton url={link} title={name}>
+            <TwitterShareButton
+              url={link}
+              title={
+                store.shareProductMessage
+                  ? store.shareProductMessage
+                      .replace(/{{storeName}}/g, store.storeName)
+                      .replace(/{{storeLink}}/g, `qwikshop.online/${store.subName}`)
+                      .replace(/{{categoryName}}/g, name)
+                      .replace(/{{categoryLink}}/g, link)
+                  : name
+              }
+            >
               <TwitterIcon round size={35} />
             </TwitterShareButton>
           </Tooltip>

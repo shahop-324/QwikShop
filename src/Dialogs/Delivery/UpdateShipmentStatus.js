@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
@@ -6,18 +8,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded';
 import { MobileDateTimePicker } from '@mui/lab';
-import {
-  Card,
-  Stack,
-  Typography,
-  Dialog,
-  Slide,
-  Button,
-  Box,
-  Divider,
-  Chip,
-  TextField,
-} from '@mui/material';
+import { Card, Stack, Typography, Dialog, Slide, Button, Box, Divider, Chip, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -30,6 +21,7 @@ import LocalShippingRoundedIcon from '@mui/icons-material/LocalShippingRounded';
 import AddRoadRoundedIcon from '@mui/icons-material/AddRoadRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
+import { CheckBoxRounded, DeliveryDiningRounded, DiningRounded, MopedRounded } from '@mui/icons-material';
 import { updateShipment } from '../../actions';
 
 const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
@@ -122,10 +114,10 @@ function ColorlibStepIcon(props) {
   const { active, completed, className } = props;
 
   const icons = {
-    1: <FilterFramesRoundedIcon />,
-    2: <ScheduleRoundedIcon />,
+    1: <CheckBoxRounded />,
+    2: <FilterFramesRoundedIcon />,
     3: <LocalShippingRoundedIcon />,
-    4: <AddRoadRoundedIcon />,
+    4: <MopedRounded />,
     5: <CheckCircleRoundedIcon />,
   };
 
@@ -154,14 +146,43 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-const steps = [
-  'Waiting for acceptance',
-  'Preparing for shipment',
-  'Shipped',
-  'In Transit',
-  'Out for Delivery',
-  'Delivered',
-];
+function RestaurantColorlibStepIcon(props) {
+  const { active, completed, className } = props;
+
+  const icons = {
+    1: <FilterFramesRoundedIcon />,
+    2: <DiningRounded />,
+    3: <DeliveryDiningRounded />,
+    4: <CheckCircleRoundedIcon />,
+  };
+
+  return (
+    <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+      {icons[String(props.icon)]}
+    </ColorlibStepIconRoot>
+  );
+}
+
+RestaurantColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
+  icon: PropTypes.node,
+};
+const steps = ['Waiting for acceptance', 'Preparing for shipment', 'Shipped', 'Out for Delivery', 'Delivered'];
+
+const restaurantSteps = ['Waiting for acceptance', 'Accepted & Preparing', 'Out for Delivery', 'Delivered'];
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -169,6 +190,7 @@ const UpdateShipment = ({ open, handleClose, id }) => {
   const dispatch = useDispatch();
 
   const { shipments } = useSelector((state) => state.shipment);
+  const { store } = useSelector((state) => state.store);
 
   const shipment = shipments.find((el) => el._id === id);
 
@@ -189,16 +211,25 @@ const UpdateShipment = ({ open, handleClose, id }) => {
         setActiveStep(1);
         break;
       case 6: // Shipped
-        setActiveStep(2);
-        break;
-      case 18: // In transit
-        setActiveStep(3);
+        if (store.orderFlow === 'regular') {
+          setActiveStep(2);
+        } else {
+          setActiveStep(100);
+        }
         break;
       case 17: // Out for delivery
-        setActiveStep(4);
+        if (store.orderFlow === 'regular') {
+          setActiveStep(3);
+        } else {
+          setActiveStep(2);
+        }
         break;
       case 7: // Delivered
-        setActiveStep(5);
+        if (store.orderFlow === 'regular') {
+          setActiveStep(4);
+        } else {
+          setActiveStep(3);
+        }
         break;
       default:
         // default
@@ -231,7 +262,7 @@ const UpdateShipment = ({ open, handleClose, id }) => {
             {(() => {
               switch (shipment.status_id * 1) {
                 case 0:
-                  return (
+                  return store.orderFlow === 'regular' ? (
                     <Button
                       disabled={shipment.carrier !== 'self'}
                       onClick={() => {
@@ -241,22 +272,19 @@ const UpdateShipment = ({ open, handleClose, id }) => {
                     >
                       Mark as Shipped
                     </Button>
-                  );
-
-                case 6:
-                  return (
+                  ) : (
                     <Button
                       disabled={shipment.carrier !== 'self'}
                       onClick={() => {
-                        dispatch(updateShipment({ status: 'In Transit', status_id: 18 }, id));
+                        dispatch(updateShipment({ status: 'Out For Delivery', status_id: 17 }, id));
                       }}
                       variant="contained"
                     >
-                      Mark as In Transit
+                      Mark as Out for delivery
                     </Button>
                   );
 
-                case 18:
+                case 6:
                   return (
                     <Button
                       disabled={shipment.carrier !== 'self'}
@@ -268,6 +296,7 @@ const UpdateShipment = ({ open, handleClose, id }) => {
                       Mark as Out for delivery
                     </Button>
                   );
+
                 case 17:
                   return (
                     <Button
@@ -301,13 +330,23 @@ const UpdateShipment = ({ open, handleClose, id }) => {
         </Stack>
         <Card sx={{ width: '700px', p: 4 }}>
           {activeStep * 1 !== 100 ? (
-            <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            store.orderFlow === 'regular' ? (
+              <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            ) : (
+              <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+                {restaurantSteps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel StepIconComponent={RestaurantColorlibStepIcon}>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            )
           ) : (
             <Card sx={{ p: 3 }}>
               <Stack spacing={1} direction={'row'} alignItems="center">
@@ -357,7 +396,6 @@ const UpdateShipment = ({ open, handleClose, id }) => {
                   setAWBNumber(e.target.value);
                 }}
               />
-              
 
               <MobileDateTimePicker
                 fullWidth
@@ -376,7 +414,7 @@ const UpdateShipment = ({ open, handleClose, id }) => {
               <Button
                 disabled={shipment.carrier !== 'self'}
                 onClick={() => {
-                  dispatch(updateShipment({ AWB: AWBNumber, carrier, etd }, id, handleClose  ));
+                  dispatch(updateShipment({ AWB: AWBNumber, carrier, etd }, id, handleClose));
                 }}
                 sx={{ width: 'max-content' }}
                 variant="contained"
@@ -386,8 +424,6 @@ const UpdateShipment = ({ open, handleClose, id }) => {
             </Stack>
           </Card>
         </Card>
-
-        
       </Dialog>
     </>
   );

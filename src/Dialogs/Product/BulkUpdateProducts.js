@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Grid, Dialog, DialogTitle, Button, Typography, Stack } from '@mui/material';
 import UpdateRoundedIcon from '@mui/icons-material/UpdateRounded';
-import {LoadingButton} from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 // @mui
 import { styled } from '@mui/material/styles';
 
@@ -191,10 +191,11 @@ const allowed = [
 const BlukUpdateProducts = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const [rows, setRows] = useState([]);
+  const [pageSize, setPageSize] = useState(50);
 
-useEffect(() => {
-  dispatch(resetIsBulkUpdatingProducts());
-}, []);
+  useEffect(() => {
+    dispatch(resetIsBulkUpdatingProducts());
+  }, []);
 
   const { products, isBulkUpdating } = useSelector((state) => state.product);
 
@@ -216,6 +217,10 @@ useEffect(() => {
     setRows(mRows);
   }, []);
 
+  const handleChangeRowsPerPage = (value) => {
+    alert(value);
+  };
+
   return (
     <>
       <Dialog fullWidth maxWidth="xl" open={open}>
@@ -224,7 +229,7 @@ useEffect(() => {
           <LabelStyle>Double click & update</LabelStyle>
           <div className="d-flex flex-row align-items-center justify-content-end">
             <LoadingButton
-            loading={isBulkUpdating}
+              loading={isBulkUpdating}
               disabled={!(rows !== undefined && rows.length > 0)}
               startIcon={<UpdateRoundedIcon />}
               onClick={() => {
@@ -269,7 +274,7 @@ useEffect(() => {
                     autoHeight
                     rows={rows}
                     columns={columns}
-                    pageSize={25}
+                    pageSize={pageSize}
                     rowsPerPageOptions={[25, 50, 100, 200, 500]}
                     disableSelectionOnClick
                   />
