@@ -87,7 +87,7 @@ const AccountPolicies = () => {
                 value={value}
                 onChange={handleChange}
                 aria-label="Vertical tabs example"
-                sx={{ borderRight: 1, borderColor: 'divider', width: "250px" }}
+                sx={{ borderRight: 1, borderColor: 'divider', width: '150px' }}
               >
                 <Tab label="Terms" {...a11yProps(0)} />
                 <Tab label="Privacy Policy" {...a11yProps(1)} />
@@ -96,12 +96,12 @@ const AccountPolicies = () => {
                 <Tab label="Disclaimer Policy" {...a11yProps(4)} />
                 <Tab label="" {...a11yProps(4)} />
               </Tabs>
-              <TabPanel value={value} index={0}>
+              <TabPanel value={value} index={0} sx={{ width: '600px' }}>
                 <Box className="mb-3">
                   <Typography id="list-item-1" variant="subtitle1" className="my-2">
                     Terms of service
                   </Typography>
-                  <Editor value={terms} onChange={(html) => setTerms(html)} />
+                  <Editor sx={{ width: '740px' }} value={terms} onChange={(html) => setTerms(html)} />
                   <Stack className="my-2" direction={'row'} justifyContent={'end'} spacing={3}>
                     {' '}
                     <LoadingButton loading={isUpdatingPolicy} variant="contained" onClick={onSubmitTerms}>
@@ -115,7 +115,7 @@ const AccountPolicies = () => {
                   <Typography id="list-item-2" variant="subtitle1" className="my-2">
                     Privacy Policy
                   </Typography>
-                  <Editor value={privacyPolicy} onChange={(html) => setPrivacyPolicy(html)} />
+                  <Editor sx={{ width: '740px' }} value={privacyPolicy} onChange={(html) => setPrivacyPolicy(html)} />
                   <Stack className="my-2" direction={'row'} justifyContent={'end'} spacing={3}>
                     {' '}
                     <LoadingButton loading={isUpdatingPolicy} variant="contained" onClick={onSubmitPrivacyPolicy}>
@@ -129,7 +129,7 @@ const AccountPolicies = () => {
                   <Typography id="list-item-3" variant="subtitle1" className="my-2">
                     Refund Policy
                   </Typography>
-                  <Editor value={refundPolicy} onChange={(html) => setRefundPolicy(html)} />
+                  <Editor sx={{ width: '740px' }} value={refundPolicy} onChange={(html) => setRefundPolicy(html)} />
                   <Stack className="my-2" direction={'row'} justifyContent={'end'} spacing={3}>
                     {' '}
                     <LoadingButton
@@ -149,7 +149,7 @@ const AccountPolicies = () => {
                   <Typography id="list-item-3" variant="subtitle1" className="my-2">
                     Shipping Policy
                   </Typography>
-                  <Editor value={shippingPolicy} onChange={(html) => setShippingPolicy(html)} />
+                  <Editor sx={{ width: '740px' }} value={shippingPolicy} onChange={(html) => setShippingPolicy(html)} />
                   <Stack className="my-2" direction={'row'} justifyContent={'end'} spacing={3}>
                     {' '}
                     <LoadingButton loading={isUpdatingPolicy} onClick={onSubmitShippingPolicy} variant="contained">
@@ -163,7 +163,11 @@ const AccountPolicies = () => {
                   <Typography id="list-item-3" variant="subtitle1" className="my-2">
                     Disclaimer Policy
                   </Typography>
-                  <Editor value={disclaimerPolicy} onChange={(html) => setDisclaimerPolicy(html)} />
+                  <Editor
+                    sx={{ width: '740px' }}
+                    value={disclaimerPolicy}
+                    onChange={(html) => setDisclaimerPolicy(html)}
+                  />
                   <Stack className="my-2" direction={'row'} justifyContent={'end'} spacing={3}>
                     {' '}
                     <LoadingButton loading={isUpdatingPolicy} onClick={onSubmitDisclaimerPolicy} variant="contained">
