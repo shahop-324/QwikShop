@@ -86,6 +86,8 @@ const StorePreferences = () => {
   );
   const [enableOrderCancellation, setEnableOrderCancellation] = useState(store.enableOrderCancellation);
 
+  const [enableGoogleMap, setEnableGoogleMap] = useState(store.showGoogleMap);
+
   return (
     <div>
       <div style={{ width: '100%' }} className="d-flex flex-row align-items-center justify-content-end mb-3">
@@ -146,6 +148,24 @@ const StorePreferences = () => {
               checked={enableOrderCancellation}
               onChange={(e) => {
                 setEnableOrderCancellation(e.target.checked);
+              }}
+            />
+          }
+          label=""
+        />
+      </Stack>
+      <Divider sx={{ my: 3 }} />
+      <Stack direction="row" alignItems="center" justifyContent="start">
+        <Typography sx={{ mr: 20, fontSize: '15px' }} variant="subtitle2">
+          Show Google Map Location
+        </Typography>
+
+        <FormControlLabel
+          control={
+            <IOSSwitch
+              checked={enableGoogleMap}
+              onChange={(e) => {
+                setEnableGoogleMap(e.target.checked);
               }}
             />
           }
@@ -225,6 +245,7 @@ const StorePreferences = () => {
                 enableEstimatedDeliveryTime,
                 enableHeaderSocialIcons,
                 enableOrderCancellation,
+                showGoogleMap: enableGoogleMap,
               })
             );
           }}

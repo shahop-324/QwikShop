@@ -54,23 +54,20 @@ const StoreBanners = ({ open, handleClose }) => {
 
     console.log(file);
 
-    try{
+    try {
       setBanners((prev) =>
-      prev.map((el) => {
-        if (el.index !== index) {
+        prev.map((el) => {
+          if (el.index !== index) {
+            return el;
+          }
+          el.file = file;
+          el.preview = URL.createObjectURL(file);
           return el;
-        }
-        el.file = file;
-        el.preview = URL.createObjectURL(file);
-        return el;
-      })
-    );
-    }
-    catch(error) {
+        })
+      );
+    } catch (error) {
       console.log(error);
     }
-
-   
   };
 
   return (
@@ -122,6 +119,8 @@ const StoreBanners = ({ open, handleClose }) => {
                         >
                           Allowed *.jpeg, *.jpg, *.png, *.gif
                           <br /> max size of {fData(3145728)}
+                          <br />
+                          Preferred Resolution is 600 X 300 Px
                         </Typography>
                       }
                     />
@@ -165,7 +164,6 @@ const StoreBanners = ({ open, handleClose }) => {
               Add Banner
             </Button>
           </Stack>
-          
         </Box>
       </Dialog>
     </>

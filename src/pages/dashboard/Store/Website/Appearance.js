@@ -167,7 +167,7 @@ const StoreAppearance = () => {
 
   const pageOptions = pages.map((el) => ({
     label: el.name,
-    value: el.name,
+    value: el.slug,
   }));
 
   return (
