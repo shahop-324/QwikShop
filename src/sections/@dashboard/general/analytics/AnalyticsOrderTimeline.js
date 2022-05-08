@@ -1,28 +1,33 @@
-import PropTypes from 'prop-types';
 // @mui
+import PropTypes from 'prop-types';
 import { Card, Typography, CardHeader, CardContent } from '@mui/material';
 import { Timeline, TimelineDot, TimelineItem, TimelineContent, TimelineSeparator, TimelineConnector } from '@mui/lab';
 // utils
 import { fDateTime } from '../../../../utils/formatTime';
-// _mock_
-import { _analyticOrderTimeline } from '../../../../_mock';
 
 // ----------------------------------------------------------------------
 
-export default function AnalyticsOrderTimeline() {
+AnalyticsOrderTimeline.propTypes = {
+  title: PropTypes.string,
+  subheader: PropTypes.string,
+  list: PropTypes.array.isRequired,
+};
+
+export default function AnalyticsOrderTimeline({ title, subheader, list, ...other }) {
   return (
-    <Card
-      sx={{
-        '& .MuiTimelineItem-missingOppositeContent:before': {
-          display: 'none',
-        },
-      }}
-    >
-      <CardHeader title="Order Timeline" />
-      <CardContent>
+    <Card {...other}>
+      <CardHeader title={title} subheader={subheader} />
+
+      <CardContent
+        sx={{
+          '& .MuiTimelineItem-missingOppositeContent:before': {
+            display: 'none',
+          },
+        }}
+      >
         <Timeline>
-          {_analyticOrderTimeline.map((item, index) => (
-            <OrderItem key={item.id} item={item} isLast={index === _analyticOrderTimeline.length - 1} />
+          {list.map((item, index) => (
+            <OrderItem key={item.id} item={item} isLast={index === list.length - 1} />
           ))}
         </Timeline>
       </CardContent>
@@ -57,8 +62,10 @@ function OrderItem({ item, isLast }) {
         />
         {isLast ? null : <TimelineConnector />}
       </TimelineSeparator>
+
       <TimelineContent>
         <Typography variant="subtitle2">{title}</Typography>
+
         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           {fDateTime(time)}
         </Typography>

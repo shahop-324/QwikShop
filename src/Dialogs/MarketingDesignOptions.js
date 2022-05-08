@@ -6,7 +6,7 @@ import { Box, Card, Grid, Dialog, DialogTitle, DialogActions, TextField, Autocom
 import CreditScoreRoundedIcon from '@mui/icons-material/CreditScoreRounded';
 import ViewCarouselRoundedIcon from '@mui/icons-material/ViewCarouselRounded';
 import WhatsappRoundedIcon from '@mui/icons-material/WhatsappRounded';
-import { AnalyticsWidgetSummary } from '../sections/@dashboard/general/analytics';
+import { GeneralWidgetSummary } from '../sections/@dashboard/general/analytics';
 
 // eslint-disable-next-line react/prop-types
 const MarketingDesignOptions = ({ open, handleClose }) => {
@@ -38,27 +38,28 @@ const MarketingDesignOptions = ({ open, handleClose }) => {
                   gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' },
                 }}
               >
-                <AnalyticsWidgetSummary
+                <GeneralWidgetSummary
                   title="Create"
                   action={redirectToBusinessCardDesign}
                   total={'Business Card'}
                   icon={<CreditScoreRoundedIcon />}
                   color={'info'}
                 />
-                <AnalyticsWidgetSummary
+                <GeneralWidgetSummary
                   title="Create"
                   action={redirectToStoreBannerDesign}
                   total={'Store Banners'}
                   icon={<ViewCarouselRoundedIcon />}
                   color={'error'}
                 />
-                <AnalyticsWidgetSummary
+                <GeneralWidgetSummary
                   title="Create"
                   action={redirectToWhatsAppBusinessStoryDesign}
                   total={'WhatsApp Story'}
                   icon={<WhatsappRoundedIcon />}
                   color={'success'}
                 />
+                
               </Box>
             </Card>
           </Grid>

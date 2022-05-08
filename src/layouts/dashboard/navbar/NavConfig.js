@@ -13,6 +13,7 @@ import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
 // routes
+import { ReceiptRounded, RssFeedRounded, BarChartRounded } from '@mui/icons-material';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 
 const navConfig = [
@@ -21,6 +22,7 @@ const navConfig = [
   {
     items: [
       { title: 'Home', path: PATH_DASHBOARD.general.home, icon: <HomeRoundedIcon /> },
+      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: <BarChartRounded /> },
       {
         title: 'Order',
         path: PATH_DASHBOARD.order.root,
@@ -28,6 +30,7 @@ const navConfig = [
         children: [
           { title: 'list', path: PATH_DASHBOARD.order.list },
           { title: 'abondoned carts', path: PATH_DASHBOARD.order.abondonedCarts },
+          { title: 'subscriptions', path: PATH_DASHBOARD.order.abondonedCarts },
         ],
       },
       {
@@ -38,6 +41,8 @@ const navConfig = [
           { title: 'product', path: PATH_DASHBOARD.catalouge.product },
           { title: 'category', path: PATH_DASHBOARD.catalouge.category },
           { title: 'sub category', path: PATH_DASHBOARD.catalouge.subcategory },
+          { title: 'bundles', path: PATH_DASHBOARD.catalouge.subcategory },
+          { title: 'digital products', path: PATH_DASHBOARD.catalouge.subcategory },
           // { title: 'division', path: PATH_DASHBOARD.catalouge.division },
           // { title: 'Catalouge Builder', path: PATH_DASHBOARD.catalouge.builder },
         ],
@@ -62,7 +67,31 @@ const navConfig = [
           { title: 'Menus', path: PATH_DASHBOARD.store.menus },
         ],
       },
-     
+      // INVOICE
+      {
+        title: 'invoice',
+        path: PATH_DASHBOARD.invoice.root,
+        icon: <ReceiptRounded />,
+        children: [
+          { title: 'list', path: PATH_DASHBOARD.invoice.list },
+          { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
+          { title: 'create', path: PATH_DASHBOARD.invoice.new },
+          { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
+        ],
+      },
+
+      // BLOG
+      {
+        title: 'blog',
+        path: PATH_DASHBOARD.blog.root,
+        icon: <RssFeedRounded />,
+        children: [
+          { title: 'posts', path: PATH_DASHBOARD.blog.posts },
+          { title: 'post', path: PATH_DASHBOARD.blog.demoView },
+          { title: 'create', path: PATH_DASHBOARD.blog.new },
+        ],
+      },
+
       {
         title: 'Integrations',
         path: PATH_DASHBOARD.general.integration,

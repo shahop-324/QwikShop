@@ -17,7 +17,7 @@ import Page from '../../components/Page';
 import { MarketingCampaignDetails } from '../../sections/@dashboard/general/booking';
 
 // sections
-import { AnalyticsWidgetSummary } from '../../sections/@dashboard/general/analytics';
+import { GeneralWidgetSummary } from '../../sections/@dashboard/general/analytics';
 
 import { MarketingLessons, MarketingWelcome } from '../../sections/@dashboard/general/marketing/index';
 import CreateSMSCampaign from '../../Dialogs/CreateSMSCampaign';
@@ -86,7 +86,7 @@ export default function GeneralBooking() {
               <MarketingLessons />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 action={handleOpenCreateSMSCampaign}
                 title="Create Campaign"
                 total={'SMS'}
@@ -94,7 +94,7 @@ export default function GeneralBooking() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 action={handleOpenCreateEmailCampaign}
                 title="Create Campaign"
                 total={'Email'}
@@ -103,7 +103,7 @@ export default function GeneralBooking() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 comingSoon
                 action={handleOpenCreateGoogleAdsCampaign}
                 title="Create Campaign"
@@ -113,7 +113,7 @@ export default function GeneralBooking() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 comingSoon
                 action={handleOpenCreateFacebookAdsCampaign}
                 title="Create Campaign"

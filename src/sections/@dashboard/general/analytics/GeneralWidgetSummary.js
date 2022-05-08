@@ -1,13 +1,18 @@
-// @mui
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
+// @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Card, Typography } from '@mui/material';
+import { Card, Typography, Button, Chip } from '@mui/material';
 // utils
-import { fShortenNumber } from '../../../../utils/formatNumber';
-// components
-import Iconify from '../../../../components/Iconify';
+
 
 // ----------------------------------------------------------------------
+
+const RootStyle = styled(Card)(({ theme }) => ({
+  boxShadow: 'none',
+  textAlign: 'center',
+  padding: theme.spacing(5, 0),
+}));
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
   margin: 'auto',
@@ -22,26 +27,19 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-AnalyticsWidgetSummary.propTypes = {
-  color: PropTypes.string,
+GeneralWidgetSummary.propTypes = {
+  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
   icon: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  total: PropTypes.number.isRequired,
-  sx: PropTypes.object,
+  total: PropTypes.number,
 };
 
-export default function AnalyticsWidgetSummary({ title, total, icon, color = 'primary', sx, ...other }) {
+export default function GeneralWidgetSummary({ comingSoon, title, action, total, icon, color = 'primary' }) {
   return (
-    <Card
+    <RootStyle
       sx={{
-        py: 5,
-        boxShadow: 0,
-        textAlign: 'center',
         color: (theme) => theme.palette[color].darker,
         bgcolor: (theme) => theme.palette[color].lighter,
-        ...sx,
       }}
-      {...other}
     >
       <IconWrapperStyle
         sx={{
@@ -53,14 +51,16 @@ export default function AnalyticsWidgetSummary({ title, total, icon, color = 'pr
             )} 100%)`,
         }}
       >
-        <Iconify icon={icon} width={24} height={24} />
+        {icon}
       </IconWrapperStyle>
-
-      <Typography variant="h3">{fShortenNumber(total)}</Typography>
-
-      <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        {title}
-      </Typography>
-    </Card>
+      <Typography variant="h5">{total}</Typography>
+      {comingSoon ? (
+        <Chip className="my-3" label={'Coming Soon'} variant="contained" color="primary" />
+      ) : (
+        <Button onClick={action} className="my-3" variant="contained" to="#">
+          {title}
+        </Button>
+      )}
+    </RootStyle>
   );
 }

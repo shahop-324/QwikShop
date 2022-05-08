@@ -61,9 +61,7 @@ export default function AppWelcome({ displayName, link, storeName }) {
           </a>
         </Typography>
 
-        {/* <Card sx={{p: 1, pb: { xs: 2, xl: 2 },}}>
-          {store.qwikId}
-        </Card> */}
+        
 
         <span>Share via</span>
 

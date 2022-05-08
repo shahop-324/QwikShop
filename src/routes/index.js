@@ -53,8 +53,8 @@ export default function Router() {
         { path: 'reset-password', element: <ResetPassword /> },
         { path: 'update-password', element: <UpdatePassword /> },
         { path: 'verify', element: <VerifyCode /> },
-        {path: 'mobile-login', element: <VerifyLoginOTP />},
-        {path: 'verify-mobile', element: <VerifyRegistrationCodeForm /> },
+        { path: 'mobile-login', element: <VerifyLoginOTP /> },
+        { path: 'verify-mobile', element: <VerifyRegistrationCodeForm /> },
       ],
     },
     // Dashboard Routes
@@ -64,6 +64,7 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'home', element: <GeneralHome /> },
+        { path: 'analytics', element: <GeneralAnalytics /> },
         {
           path: 'order',
           children: [
@@ -74,7 +75,7 @@ export default function Router() {
         },
         { path: 'delivery', element: <GeneralDelivery /> },
         { path: 'customer', element: <GeneralCustomer /> },
-        
+
         { path: 'marketing', element: <GeneralMarketing /> },
         { path: 'payment', element: <GeneralPayment /> },
         { path: 'discount', element: <GeneralDiscount /> },
@@ -82,7 +83,7 @@ export default function Router() {
         { path: 'questions', element: <GeneralQuestion /> },
         { path: 'refferal', element: <GeneralReferral /> },
         { path: 'integration', element: <GeneralIntegration /> },
-        {path: 'reviews', element: <GeneralReviews />},
+        { path: 'reviews', element: <GeneralReviews /> },
         // { path: 'academy', element: <GeneralAcademy /> },
         {
           path: 'catalouge',
@@ -93,6 +94,25 @@ export default function Router() {
             { path: 'sub-category', element: <GeneralSubCategory /> },
             // { path: 'division', element: <GeneralDivision /> },
             { path: 'builder', element: <GeneralCatalougeBuilder /> },
+          ],
+        },
+        {
+          path: 'invoice',
+          children: [
+            { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
+            { path: 'list', element: <InvoiceList /> },
+            { path: ':id', element: <InvoiceDetails /> },
+            { path: ':id/edit', element: <InvoiceEdit /> },
+            { path: 'new', element: <InvoiceCreate /> },
+          ],
+        },
+        {
+          path: 'blog',
+          children: [
+            { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
+            { path: 'posts', element: <BlogPosts /> },
+            { path: 'post/:title', element: <BlogPost /> },
+            { path: 'new', element: <BlogNewPost /> },
           ],
         },
         {
@@ -169,7 +189,6 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 // Dashboard
 const GeneralHome = Loadable(lazy(() => import('../pages/dashboard/GeneralHome')));
 
-
 const GeneralOrders = Loadable(lazy(() => import('../pages/dashboard/GeneralOrders')));
 const GeneralDelivery = Loadable(lazy(() => import('../pages/dashboard/GeneralDelivery')));
 const GeneralCustomer = Loadable(lazy(() => import('../pages/dashboard/GeneralCustomer')));
@@ -185,7 +204,7 @@ const GeneralReviews = Loadable(lazy(() => import('../pages/dashboard/GeneralRev
 // const GeneralAcademy = Loadable(lazy(() => import('../pages/dashboard/GeneralAcademy')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const GeneralCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralCategory')));
-const GeneralSubCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralSubCategory')))
+const GeneralSubCategory = Loadable(lazy(() => import('../pages/dashboard/GeneralSubCategory')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 // Main
@@ -211,6 +230,8 @@ const StoreOffers = Loadable(lazy(() => import('../layouts/store/storeOffers')))
 //
 const GeneralCatalougeBuilder = Loadable(lazy(() => import('../pages/dashboard/GeneralCatalougeBuilder')));
 
+const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
+
 // Store Settings Dashboard
 
 const StoreProfile = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
@@ -225,3 +246,14 @@ const RefundPolicy = Loadable(lazy(() => import('../pages/RefundPolicy')));
 const MailchimpConnect = Loadable(lazy(() => import('../pages/MailchimpConnect')));
 const VerifyLoginOTP = Loadable(lazy(() => import('../pages/auth/VerifyLoginOTP')));
 const VerifyRegistrationCodeForm = Loadable(lazy(() => import('../pages/auth/VerifyRegistrationOTP')));
+
+// INVOICE
+const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));
+const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDetails')));
+const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
+const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
+
+// BLOG
+const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
+const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
+const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));

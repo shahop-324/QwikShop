@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Box, Card, Divider, Container, Typography, Pagination } from '@mui/material';
@@ -7,6 +8,8 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
+// utils
+import axios from '../../utils/axios';
 // components
 import Page from '../../components/Page';
 import Markdown from '../../components/Markdown';
@@ -37,11 +40,32 @@ export default function BlogPost() {
   const [error, setError] = useState(null);
 
   const getPost = useCallback(async () => {
-   
+    try {
+      const response = await axios.get('/api/blog/post', {
+        params: { title },
+      });
+
+      if (isMountedRef.current) {
+        setPost(response.data.post);
+      }
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
+    }
   }, [isMountedRef, title]);
 
   const getRecentPosts = useCallback(async () => {
-   
+    try {
+      const response = await axios.get('/api/blog/posts/recent', {
+        params: { title },
+      });
+
+      if (isMountedRef.current) {
+        setRecentPosts(response.data.recentPosts);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }, [isMountedRef, title]);
 
   useEffect(() => {
@@ -56,10 +80,11 @@ export default function BlogPost() {
           heading="Post Details"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'settings', href: PATH_DASHBOARD.store.settings },
-            
+            { name: 'Blog', href: PATH_DASHBOARD.blog.root },
+            { name: sentenceCase(title) },
           ]}
         />
+
         {post && (
           <Card>
             <BlogPostHero post={post} />
@@ -94,8 +119,11 @@ export default function BlogPost() {
             </Box>
           </Card>
         )}
+
         {!post && !error && <SkeletonPost />}
+
         {error && <Typography variant="h6">404 {error}!</Typography>}
+
         <BlogPostRecent posts={recentPosts} />
       </Container>
     </Page>

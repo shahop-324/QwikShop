@@ -16,13 +16,20 @@ import {
   Store,
   ViewCarouselRounded,
   WhatsApp,
+  Twitter,
+  Instagram,
+  InfoRounded,
+  FileOpenRounded,
+  AccountBalanceRounded,
+  CardGiftcardRounded,
+  DraftsRounded,
 } from '@mui/icons-material';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import { ManageWelcome, ManageLessons } from '../../sections/@dashboard/general/manage/index';
 // sections
-import { AnalyticsWidgetSummary } from '../../sections/@dashboard/general/analytics';
+import { GeneralWidgetSummary } from '../../sections/@dashboard/general/analytics';
 import StoreTimings from '../../Dialogs/StoreTimings';
 import StoreQRCode from '../../Dialogs/StoreQRCode';
 import ManageCharges from '../../Dialogs/ManageCharges';
@@ -153,7 +160,7 @@ export default function GeneralManage() {
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 title="View QR Code"
                 action={handleOpenQRCode}
                 total={'Store QR Code'}
@@ -162,7 +169,7 @@ export default function GeneralManage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 title="Edit Charges"
                 action={handleOpenManageCharges}
                 total={'Manage Charges'}
@@ -172,7 +179,7 @@ export default function GeneralManage() {
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 title="Edit"
                 action={handleOpenSEOSettings}
                 total={'SEO'}
@@ -181,7 +188,7 @@ export default function GeneralManage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 title="Edit"
                 action={handleOpenFaviconSettings}
                 total={'Store Favicon'}
@@ -190,7 +197,7 @@ export default function GeneralManage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 // comingSoon
                 title="Edit"
                 action={handleOpenDeliveryZones}
@@ -200,7 +207,7 @@ export default function GeneralManage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 title="Update"
                 action={handleOpenBanners}
                 total={'Store Banners'}
@@ -210,7 +217,7 @@ export default function GeneralManage() {
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 // comingSoon
                 title="Customise"
                 action={handleOpenShareMessage}
@@ -220,7 +227,7 @@ export default function GeneralManage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 // comingSoon
                 title="Customise"
                 action={handleOpenCheckoutFlow}
@@ -230,17 +237,17 @@ export default function GeneralManage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 comingSoon
                 title="Coming soon"
                 // action={handleOpenCreateInvoice}
-                total={'Invoice'}
-                icon={<ReceiptLongRounded />}
+                total={'Newsletter Subscribers'}
+                icon={<DraftsRounded />}
                 color={'warning'}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 comingSoon
                 title="Get Mobile App"
                 action={handleOpenSEOSettings}
@@ -250,7 +257,7 @@ export default function GeneralManage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 comingSoon
                 title="Coming soon"
                 // action={handleOpenCreateInvoice}
@@ -260,12 +267,66 @@ export default function GeneralManage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AnalyticsWidgetSummary
+              <GeneralWidgetSummary
                 comingSoon
                 title="Get Mobile App"
                 action={handleOpenSEOSettings}
                 total={'WhatsApp Story'}
                 icon={<WhatsApp />}
+                color={'success'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <GeneralWidgetSummary
+                title="Manage"
+                action={handleOpenSEOSettings}
+                total={'Gift Cards'}
+                icon={<CardGiftcardRounded />}
+                color={'success'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <GeneralWidgetSummary
+                title="Manage"
+                action={handleOpenSEOSettings}
+                total={'Payment Gateway'}
+                icon={<AccountBalanceRounded />}
+                color={'success'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <GeneralWidgetSummary
+                title="Manage"
+                action={handleOpenSEOSettings}
+                total={'Digital Services'}
+                icon={<FileOpenRounded />}
+                color={'success'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <GeneralWidgetSummary
+                title="Edit"
+                action={handleOpenSEOSettings}
+                total={'About Us'}
+                icon={<InfoRounded />}
+                color={'success'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <GeneralWidgetSummary
+                title="Edit"
+                action={handleOpenSEOSettings}
+                total={'Instagram Feed'}
+                icon={<Instagram />}
+                color={'success'}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <GeneralWidgetSummary
+                title="Edit"
+                action={handleOpenSEOSettings}
+                total={'Twitter Feed'}
+                icon={<Twitter />}
                 color={'success'}
               />
             </Grid>

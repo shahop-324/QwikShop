@@ -6,6 +6,8 @@ import { Grid, Button, Container, Stack } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
+// utils
+import axios from '../../utils/axios';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -51,7 +53,15 @@ export default function BlogPosts() {
   const sortedPosts = applySort(posts, filters);
 
   const getAllPosts = useCallback(async () => {
-    
+    try {
+      const response = await axios.get('/api/blog/posts/all');
+
+      if (isMountedRef.current) {
+        setPosts(response.data.posts);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }, [isMountedRef]);
 
   useEffect(() => {
@@ -71,14 +81,14 @@ export default function BlogPosts() {
           heading="Blog"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Settings', href: PATH_DASHBOARD.store.settings },
+            { name: 'Blog', href: PATH_DASHBOARD.blog.root },
             { name: 'Posts' },
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.store.settings}
+              to={PATH_DASHBOARD.blog.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               New Post

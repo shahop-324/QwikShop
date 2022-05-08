@@ -38,6 +38,7 @@ export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   general: {
     home: path(ROOTS_DASHBOARD, '/home'),
+    analytics: path(ROOTS_DASHBOARD, '/analytics'),
     delivery: path(ROOTS_DASHBOARD, '/delivery'),
     customer: path(ROOTS_DASHBOARD, '/customer'),
     marketing: path(ROOTS_DASHBOARD, '/marketing'),
@@ -71,6 +72,22 @@ export const PATH_DASHBOARD = {
     theme: path(ROOTS_DASHBOARD, '/store/theme'),
     pages: path(ROOTS_DASHBOARD, '/store/pages'),
     menus: path(ROOTS_DASHBOARD, '/store/menus'),
+  },
+  invoice: {
+    root: path(ROOTS_DASHBOARD, '/invoice'),
+    list: path(ROOTS_DASHBOARD, '/invoice/list'),
+    new: path(ROOTS_DASHBOARD, '/invoice/new'),
+    view: (id) => path(ROOTS_DASHBOARD, `/invoice/${id}`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/invoice/${id}/edit`),
+    demoEdit: path(ROOTS_DASHBOARD, '/invoice/e99f09a7-dd88-49d5-b1c8-1daf80c2d7b1/edit'),
+    demoView: path(ROOTS_DASHBOARD, '/invoice/e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5'),
+  },
+  blog: {
+    root: path(ROOTS_DASHBOARD, '/blog'),
+    posts: path(ROOTS_DASHBOARD, '/blog/posts'),
+    new: path(ROOTS_DASHBOARD, '/blog/new'),
+    view: (title) => path(ROOTS_DASHBOARD, `/blog/post/${title}`),
+    demoView: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
   },
 };
 
