@@ -87,6 +87,7 @@ const StorePreferences = () => {
   const [enableOrderCancellation, setEnableOrderCancellation] = useState(store.enableOrderCancellation);
 
   const [enableGoogleMap, setEnableGoogleMap] = useState(store.showGoogleMap);
+  const [enableUnverifiedOrders, setEnableUnverifiedOrders] = useState(store.disableGuestVerification);
 
   return (
     <div>
@@ -157,15 +158,35 @@ const StorePreferences = () => {
       <Divider sx={{ my: 3 }} />
       <Stack direction="row" alignItems="center" justifyContent="start">
         <Typography sx={{ mr: 20, fontSize: '15px' }} variant="subtitle2">
-          Show Google Map Location
+          Show Store Location
         </Typography>
 
         <FormControlLabel
+          sx={{ ml: 1.6 }}
           control={
             <IOSSwitch
               checked={enableGoogleMap}
               onChange={(e) => {
                 setEnableGoogleMap(e.target.checked);
+              }}
+            />
+          }
+          label=""
+        />
+      </Stack>
+      <Divider sx={{ my: 3 }} />
+      <Stack direction="row" alignItems="center" justifyContent="start">
+        <Typography sx={{ mr: 20, fontSize: '15px' }} variant="subtitle2">
+          Allow Unverified orders
+        </Typography>
+
+        <FormControlLabel
+          sx={{ ml: 0.005 }}
+          control={
+            <IOSSwitch
+              checked={enableUnverifiedOrders}
+              onChange={(e) => {
+                setEnableUnverifiedOrders(e.target.checked);
               }}
             />
           }
@@ -246,6 +267,7 @@ const StorePreferences = () => {
                 enableHeaderSocialIcons,
                 enableOrderCancellation,
                 showGoogleMap: enableGoogleMap,
+                disableGuestVerification: enableUnverifiedOrders,
               })
             );
           }}
