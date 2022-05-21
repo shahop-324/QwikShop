@@ -134,25 +134,25 @@ const StoreMenus = () => {
   const productOptions = products.map((el) => ({
     label: el.productName,
     value: el._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.images[0]}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.images[0]}`,
   }));
 
   const categoryOptions = categories.map((el) => ({
     label: el.name,
     value: el._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const subCategoryOptions = subCategories.map((el) => ({
     label: el.name,
     value: el._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const divisionOptions = divisions.map((el) => ({
     label: el.name,
     value: el._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const pageOptions = pages.map((el) => ({

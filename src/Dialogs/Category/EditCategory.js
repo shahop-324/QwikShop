@@ -46,7 +46,7 @@ const EditCategory = ({ open, handleClose, id }) => {
 
   const dispatch = useDispatch();
   const [file, setFile] = useState({ error: false, message: 'Category Image is required', value: '' });
-  const [fileToPreview, setFileToPreview] = useState(`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`);
+  const [fileToPreview, setFileToPreview] = useState(`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${image}`);
 
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];

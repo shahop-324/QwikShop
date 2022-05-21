@@ -54,7 +54,7 @@ export default function HomeCleanInterfaces() {
                 // disabledEffect
                 // visibleByDefault
                 alt={`clean`}
-                src={`https://qwikshop.s3.ap-south-1.amazonaws.com/images/theme-preview-min.png`}
+                src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/images/theme-preview-min.png`}
               />
            
           

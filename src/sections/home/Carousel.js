@@ -22,22 +22,22 @@ export default function SimpleSlider() {
   };
 
   const images = [
-    { url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+10.png', title: 'Sell Shoes Online' },
-    { url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+11.png', title: 'Sell Books Online' },
-    { url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+12.png', title: 'Sell Laptop Online' },
-    { url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+13.png', title: 'Sell Food Online' },
+    { url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+10.png', title: 'Sell Shoes Online' },
+    { url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+11.png', title: 'Sell Books Online' },
+    { url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+12.png', title: 'Sell Laptop Online' },
+    { url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+13.png', title: 'Sell Food Online' },
     {
-      url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+14.png',
+      url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+14.png',
       title: 'Sell Clothes Online',
     },
-    { url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+15.png', title: 'Sell Art Online' },
+    { url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+15.png', title: 'Sell Art Online' },
     {
-      url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+16.png',
+      url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+16.png',
       title: 'Sell Grocery Online',
     },
-    { url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+17.png', title: 'Sell Mobile Online' },
+    { url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+17.png', title: 'Sell Mobile Online' },
     {
-      url: 'https://qwikshop.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+18.png',
+      url: 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/Carousel/Carousel/Group+18.png',
       title: 'Sell Furniture Online',
     },
   ];

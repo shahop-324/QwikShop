@@ -180,25 +180,25 @@ export default function EditDiscount({ open, handleClose, id }) {
   const categoryOptions = categories.map((el) => ({
     label: el.name,
     value: el._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.image}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.image}`,
   }));
 
   const productOptions = products.map((el) => ({
     label: el.productName,
     value: el._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el.images[0]}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.images[0]}`,
   }));
 
   const subCategoryOptions = subCategories.map((subCategory) => ({
     label: subCategory.name,
     value: subCategory._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
   }));
 
   const divisionOptions = divisions.map((division) => ({
     label: division.name,
     value: division._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${division.image}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${division.image}`,
   }));
 
   return (

@@ -364,7 +364,7 @@ export default function GeneralDivision() {
                                         <Image
                                           disabledEffect
                                           alt={name}
-                                          src={ image && !image.endsWith('undefined') ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${image}` : "https://qwikshop.s3.ap-south-1.amazonaws.com/images/noimage.png"}
+                                          src={ image && !image.endsWith('undefined') ? `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${image}` : "https://qwikshop-in.s3.ap-south-1.amazonaws.com/images/noimage.png"}
                                           sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
                                         />
                                         <Typography variant="subtitle2" noWrap>
@@ -377,7 +377,7 @@ export default function GeneralDivision() {
                                         <Image
                                           disabledEffect
                                           alt={subCategory.label}
-                                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`}
+                                          src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${subCategory.image}`}
                                           sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
                                         />
                                         <Typography variant="subtitle2" noWrap>

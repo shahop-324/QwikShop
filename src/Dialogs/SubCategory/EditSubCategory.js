@@ -53,7 +53,7 @@ const EditSubCategory = ({ open, handleClose, id }) => {
 
   const dispatch = useDispatch();
   const [file, setFile] = useState({ error: false, message: 'Sub Category Image is required', value: '' });
-  const [fileToPreview, setFileToPreview] = useState(`https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`);
+  const [fileToPreview, setFileToPreview] = useState(`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${image}`);
   const [category, setCategory] = useState(subCategory.category);
 
   const handleDrop = (acceptedFiles) => {
@@ -126,8 +126,8 @@ const EditSubCategory = ({ open, handleClose, id }) => {
                         <img
                           loading="lazy"
                           width="20"
-                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image}`}
-                          srcSet={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.image} 2x`}
+                          src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${option.image}`}
+                          srcSet={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${option.image} 2x`}
                           alt=""
                         />
                         {option.label}

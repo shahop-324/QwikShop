@@ -88,7 +88,7 @@ const Profile = ({ open, handleClose }) => {
 
   const [image, setImage] = useState();
   const [fileToPreview, setFileToPreview] = useState(
-    user?.image?.startsWith('https') ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${user.image}` : user?.image
+    user?.image?.startsWith('https') ? `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${user.image}` : user?.image
   );
 
   const handleChange = (event, newValue) => {

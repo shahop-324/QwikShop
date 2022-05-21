@@ -67,7 +67,7 @@ export default function HomeHero() {
         {isDesktop && (
           <HeroImgStyle
             alt="hero"
-            src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/hero.png'}
+            src={'https://qwikshop-in.s3.ap-south-1.amazonaws.com/images/hero.png'}
             variants={varFade().inUp}
           />
         )}
@@ -92,7 +92,7 @@ export default function HomeHero() {
             </m.div>
 
             <m.div variants={varFade().inRight}>
-              {/* <a style={{textDecoration: 'none'}} download="qwikshop" href="https://qwikshop.s3.ap-south-1.amazonaws.com/AppRevision/Android/app.apk" >
+              {/* <a style={{textDecoration: 'none'}} download="qwikshop" href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/AppRevision/Android/app.apk" >
               <Button
                 startIcon={<AndroidRounded width={20} height={20} />}
                 size="large"

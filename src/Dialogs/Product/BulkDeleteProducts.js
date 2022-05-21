@@ -28,7 +28,7 @@ const BulkDeleteProducts = ({ open, handleClose, selected, setSelected }) => {
         {selectedProducts.map((el, index) => (
           <Stack sx={{ px: 4, my: 2 }} key={el._id} direction="row" alignItems={'center'} spacing={2}>
             <Typography variant="subtitle2">{index + 1}</Typography>
-            <Avatar src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.images[0]}`} alt={''} />
+            <Avatar src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.images[0]}`} alt={''} />
             <Typography variant="subtitle1">{el.productName}</Typography>
           </Stack>
         ))}

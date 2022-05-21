@@ -13,10 +13,10 @@ export default function MyAvatar({ ...other }) {
   console.log(user?.image?.startsWith('https'));
   return (
     <Avatar
-      src={ user?.image?.startsWith('https') ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${user?.image}` : user?.image}
+      src={ user?.image?.startsWith('https') ? `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${user?.image}` : user?.image}
       alt={`${user?.firstName} ${user?.lastName}`}
       color={
-        `https://qwikshop.s3.ap-south-1.amazonaws.com/${user?.image}`
+        `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${user?.image}`
           ? 'default'
           : createAvatar(`${user?.firstName} ${user?.lastName}`).color
       }

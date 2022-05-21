@@ -76,7 +76,7 @@ export default function HomeHugePackElements() {
                 justifyContent: 'center',
               }}
             >
-              <Image sx={{ height: isDesktop ? '400px' : '200px' }} disabledEffect alt={`screen ${0 + 1}`} src={'https://qwikshop.s3.ap-south-1.amazonaws.com/images/create-store.png'} />
+              <Image sx={{ height: isDesktop ? '400px' : '200px' }} disabledEffect alt={`screen ${0 + 1}`} src={'https://qwikshop-in.s3.ap-south-1.amazonaws.com/images/create-store.png'} />
             </Box>
           </Grid>
         </Grid>

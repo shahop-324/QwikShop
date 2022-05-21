@@ -673,7 +673,7 @@ const EditProduct = ({ open, handleClose, id }) => {
   const categoryOptions = categories.map((category) => ({
     label: category.name,
     value: category._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${category.image}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${category.image}`,
   }));
 
   const subCategoryOptions = subCategories
@@ -681,7 +681,7 @@ const EditProduct = ({ open, handleClose, id }) => {
     .map((subCategory) => ({
       label: subCategory.name,
       value: subCategory._id,
-      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
+      image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
     }));
 
   const addOnOptions = products
@@ -689,7 +689,7 @@ const EditProduct = ({ open, handleClose, id }) => {
     .map((product) => ({
       label: product.productName,
       value: product._id,
-      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${product.images[0]}`,
+      image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${product.images[0]}`,
     }));
 
   return (
@@ -1015,7 +1015,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                                       className="me-3 mb-3"
                                       style={{ height: '78px !important', width: '78px !important' }}
                                     >
-                                      <ImagePreview src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`} />
+                                      <ImagePreview src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el}`} />
 
                                       {excludedImages.includes(el) ? (
                                         <Tooltip title="Include Image">
@@ -1049,7 +1049,7 @@ const EditProduct = ({ open, handleClose, id }) => {
                                       className="me-3 mb-3"
                                       style={{ height: '78px !important', width: '78px !important' }}
                                     >
-                                      <VideoPreview src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`} />
+                                      <VideoPreview src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el}`} />
 
                                       {excludedVideos.includes(el) ? (
                                         <Tooltip title="Include video">

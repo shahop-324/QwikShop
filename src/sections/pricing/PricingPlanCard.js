@@ -89,7 +89,7 @@ export default function PricingPlanCard({ card, index }) {
         currency: 'INR',
         name: store.storeName,
         description: `QwikShop Premium`,
-        image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`,
+        image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${store.logo}`,
         order_id: order.data.id,
         handler(response) {
           dispatch(showSnackbar('success', 'QwikShop Plan Purchase is successfully processed!'));

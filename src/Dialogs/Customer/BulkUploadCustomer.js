@@ -202,7 +202,7 @@ const BulkUploadCustomer = ({ open, handleClose }) => {
                         style={{ textDecoration: 'none' }}
                         target={'_blank'}
                         rel="noreferrer"
-                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/customer_sample_import_template.xlsx"
+                        href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/customer_sample_import_template.xlsx"
                         download="qwikshop_customer_upload_format"
                       >
                         Click here
@@ -252,7 +252,7 @@ const BulkUploadCustomer = ({ open, handleClose }) => {
                           style={{ textDecoration: 'none' }}
                           target={'_blank'}
                           rel="noreferrer"
-                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/customer_sample_import_template.xlsx"
+                          href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/customer_sample_import_template.xlsx"
                           download="qwikshop_customer_upload_format"
                         >
                           <Button startIcon={<FileDownloadRoundedIcon />} variant="outlined" size="large">

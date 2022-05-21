@@ -107,7 +107,7 @@ export default function AccountGeneral() {
 
   const [file, setFile] = useState();
   const [fileToPreview, setFileToPreview] = useState(
-    store.logo && `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`
+    store.logo && `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${store.logo}`
   );
 
   const handleDrop = useCallback((acceptedFiles) => {

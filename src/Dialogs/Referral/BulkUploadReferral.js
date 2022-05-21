@@ -198,7 +198,7 @@ const BulkUploadReferral = ({ open, handleClose }) => {
                         style={{ textDecoration: 'none' }}
                         target={'_blank'}
                         rel="noreferrer"
-                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/referral_smaple_import_template.xlsx"
+                        href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/referral_smaple_import_template.xlsx"
                         download="qwikshop_referral_upload_format"
                       >
                         Click here
@@ -248,7 +248,7 @@ const BulkUploadReferral = ({ open, handleClose }) => {
                           style={{ textDecoration: 'none' }}
                           target={'_blank'}
                           rel="noreferrer"
-                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/referral_smaple_import_template.xlsx"
+                          href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/referral_smaple_import_template.xlsx"
                           download="qwikshop_referral_upload_format"
                         >
                           <Button startIcon={<FileDownloadRoundedIcon />} variant="outlined" size="large">

@@ -395,8 +395,8 @@ export default function GeneralCategory() {
                                               alt={name}
                                               src={
                                                 image && !image.endsWith('undefined')
-                                                  ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${image}`
-                                                  : 'https://qwikshop.s3.ap-south-1.amazonaws.com/images/noimage.png'
+                                                  ? `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${image}`
+                                                  : 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/images/noimage.png'
                                               }
                                               sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
                                             />

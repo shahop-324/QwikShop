@@ -440,7 +440,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                   <Stack direction={'row'} alignItems="center" spacing={2}>
                     <Avatar
                       variant="rounded"
-                      src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
+                      src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
                       sx={{ width: 70, height: 70 }}
                     />
                     <Stack spacing={1}>
@@ -508,7 +508,7 @@ const ComponentToPrint = React.forwardRef(({ id, setOpenCancel, setOpenReject },
                       <Stack direction={'row'} alignItems="center" spacing={2}>
                         <Avatar
                           variant="rounded"
-                          src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
+                          src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el.product.images[0]}`}
                           sx={{ width: 70, height: 70 }}
                         />
                         <Stack spacing={1}>

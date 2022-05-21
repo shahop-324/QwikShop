@@ -143,7 +143,7 @@ const BulkUploadCategory = ({ open, handleClose }) => {
                         style={{ textDecoration: 'none' }}
                         target={'_blank'}
                         rel="noreferrer"
-                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/category_sample_template_qwikshop.xlsx"
+                        href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/category_sample_template_qwikshop.xlsx"
                         download="qwikshop_category_upload_format"
                       >
                         Click here
@@ -193,7 +193,7 @@ const BulkUploadCategory = ({ open, handleClose }) => {
                           style={{ textDecoration: 'none' }}
                           target={'_blank'}
                           rel="noreferrer"
-                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/category_sample_template_qwikshop.xlsx"
+                          href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/category_sample_template_qwikshop.xlsx"
                           download="qwikshop_category_upload_format"
                         >
                           <Button startIcon={<FileDownloadRoundedIcon />} variant="outlined" size="large">

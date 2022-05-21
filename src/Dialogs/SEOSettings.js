@@ -42,7 +42,7 @@ const SEOSettings = ({ open, handleClose }) => {
 
   const [file, setFile] = useState('');
   const [fileToPreview, setFileToPreview] = useState(
-    store.seoImagePreview && `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.seoImagePreview}`
+    store.seoImagePreview && `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${store.seoImagePreview}`
   );
 
   const handleDrop = (acceptedFiles) => {

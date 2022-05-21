@@ -24,7 +24,7 @@ const FaviconSettings = ({ open, handleClose }) => {
   });
 
   const [file, setFile] = useState('');
-  const [fileToPreview, setFileToPreview] = useState(store.favicon && `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.favicon}`);
+  const [fileToPreview, setFileToPreview] = useState(store.favicon && `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${store.favicon}`);
 
   const methods = useForm({
     resolver: yupResolver(SEOSchema),

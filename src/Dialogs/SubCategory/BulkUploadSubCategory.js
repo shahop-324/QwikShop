@@ -144,7 +144,7 @@ const BulkUploadSubCategory = ({ open, handleClose }) => {
                         style={{ textDecoration: 'none' }}
                         target={'_blank'}
                         rel="noreferrer"
-                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/subcategory_import_template_qwikshop.xlsx"
+                        href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/subcategory_import_template_qwikshop.xlsx"
                         download="qwikshop_subcategory_upload_format"
                       >
                         Click here
@@ -194,7 +194,7 @@ const BulkUploadSubCategory = ({ open, handleClose }) => {
                           style={{ textDecoration: 'none' }}
                           target={'_blank'}
                           rel="noreferrer"
-                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/subcategory_import_template_qwikshop.xlsx"
+                          href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/subcategory_import_template_qwikshop.xlsx"
                           download="qwikshop_subcategory_upload_format"
                         >
                           <Button startIcon={<FileDownloadRoundedIcon />} variant="outlined" size="large">

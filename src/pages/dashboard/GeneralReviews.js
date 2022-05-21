@@ -192,7 +192,7 @@ function ReviewItem({ item }) {
           <Avatar
             sx={{ mr: 2 }}
             alt={customer.name}
-            src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${customer.image}`}
+            src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${customer.image}`}
           />
           <div>
             <Typography variant="subtitle2">{customer.name}</Typography>
@@ -259,7 +259,7 @@ function ReviewItem({ item }) {
             <img
               key={el}
               className="me-1 mb-1"
-              src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`}
+              src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el}`}
               style={{ height: '70px' }}
               alt="product review"
             />
@@ -269,18 +269,18 @@ function ReviewItem({ item }) {
           <div
             key={el}
             onClick={() => {
-              handleOpenVideo(`https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`);
+              handleOpenVideo(`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el}`);
             }}
           >
             <video
-              src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`}
+              src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el}`}
               style={{ height: '70px', width: '70px' }}
             />
           </div>
         ))}
         {/* {isViewerOpen && (
           <ImageViewer
-            src={images.map((el) => `https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`)}
+            src={images.map((el) => `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el}`)}
             currentIndex={currentImage}
             disableScroll
             backgroundStyle={{
@@ -360,7 +360,7 @@ function ReviewItem({ item }) {
                 enableMouseEvents
               >
                 {images
-                  .map((el) => ({ imgPath: `https://qwikshop.s3.ap-south-1.amazonaws.com/${el}`, label: '' }))
+                  .map((el) => ({ imgPath: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${el}`, label: '' }))
                   .map((step, index) => (
                     <div key={step.label}>
                       {Math.abs(currentImage - index) <= 2 ? (

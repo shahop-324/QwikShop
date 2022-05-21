@@ -61,7 +61,7 @@ const RechargeWallet = ({ open, handleClose }) => {
         currency: 'INR',
         name: store.storeName,
         description: `Wallet Recharge`,
-        image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`,
+        image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${store.logo}`,
         order_id: order.data.id,
         handler() {
           dispatch(showSnackbar('success', 'Your wallet recharge has been successfully processed!'));

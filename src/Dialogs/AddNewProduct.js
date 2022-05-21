@@ -582,7 +582,7 @@ const AddNewProduct = ({ open, handleClose }) => {
   const categoryOptions = categories.map((category) => ({
     label: category.name,
     value: category._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${category.image}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${category.image}`,
   }));
 
   const subCategoryOptions = subCategories
@@ -590,13 +590,13 @@ const AddNewProduct = ({ open, handleClose }) => {
     .map((subCategory) => ({
       label: subCategory.name,
       value: subCategory._id,
-      image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
+      image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${subCategory.image}`,
     }));
 
   const addOnOptions = products.map((product) => ({
     label: product.productName,
     value: product._id,
-    image: `https://qwikshop.s3.ap-south-1.amazonaws.com/${product.images[0]}`,
+    image: `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${product.images[0]}`,
   }));
 
   return (

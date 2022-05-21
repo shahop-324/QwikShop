@@ -29,14 +29,14 @@ import { divisionActions } from '../reducers/divisionSlice';
 import { menuActions } from '../reducers/menuSlice';
 import { walletActions } from '../reducers/walletSlice';
 
-// const BaseURL = 'https://api.app.qwikshop.online/v1/';
-const BaseURL = 'http://localhost:8000/v1/';
+const BaseURL = 'https://api.app.qwikshop.online/v1/';
+// const BaseURL = 'http://localhost:8000/v1/';
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
   region: 'ap-south-1',
-  accessKeyId: 'AKIA3EQQNGREDXST6CHF',
-  secretAccessKey: '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',
+  accessKeyId: 'AKIARWFU6ILBXBP5JCPB',
+  secretAccessKey: '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',
 });
 
 export const showSnackbar = (severity, message) => async (dispatch, _getState) => {
@@ -825,7 +825,7 @@ export const createCategory = (file, name, handleClose) => async (dispatch, getS
 
     s3.getSignedUrl(
       'putObject',
-      { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+      { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
       async (_err, presignedURL) => {
         await fetch(presignedURL, {
           method: 'PUT',
@@ -898,7 +898,7 @@ export const updateCategory = (file, name, id, handleClose) => async (dispatch, 
     if (file) {
       s3.getSignedUrl(
         'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
         async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
@@ -1196,7 +1196,7 @@ export const createNewProduct = (formValues, images, videos, handleClose) => asy
 
       s3.getSignedUrl(
         'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+        { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${_element.type}` },
         async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
@@ -1216,7 +1216,7 @@ export const createNewProduct = (formValues, images, videos, handleClose) => asy
       videoKeys.push(key);
       s3.getSignedUrl(
         'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+        { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${_element.type}` },
         async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
@@ -1295,7 +1295,7 @@ export const updateProduct =
 
         s3.getSignedUrl(
           'putObject',
-          { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+          { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${_element.type}` },
           async (_err, presignedURL) => {
             await fetch(presignedURL, {
               method: 'PUT',
@@ -1316,7 +1316,7 @@ export const updateProduct =
         videoKeys.push(key);
         s3.getSignedUrl(
           'putObject',
-          { Bucket: 'qwikshop', Key: key, ContentType: `image/${_element.type}` },
+          { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${_element.type}` },
           async (_err, presignedURL) => {
             await fetch(presignedURL, {
               method: 'PUT',
@@ -1685,7 +1685,7 @@ export const createSubCategory = (file, name, category, handleClose) => async (d
 
     s3.getSignedUrl(
       'putObject',
-      { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+      { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
       async (_err, presignedURL) => {
         await fetch(presignedURL, {
           method: 'PUT',
@@ -1759,7 +1759,7 @@ export const updateSubCategory = (file, name, category, id, handleClose) => asyn
     if (file) {
       s3.getSignedUrl(
         'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
         async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
@@ -2103,7 +2103,7 @@ export const createDivision = (file, name, subCategory, handleClose) => async (d
 
     s3.getSignedUrl(
       'putObject',
-      { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+      { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
       async (_err, presignedURL) => {
         await fetch(presignedURL, {
           method: 'PUT',
@@ -2174,7 +2174,7 @@ export const updateDivision = (file, name, subCategory, id, handleClose) => asyn
     if (file) {
       s3.getSignedUrl(
         'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
         async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
@@ -3335,7 +3335,7 @@ export const updateStoreFavicon = (file, handleClose) => async (dispatch, getSta
 
     s3.getSignedUrl(
       'putObject',
-      { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+      { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
       async (_err, presignedURL) => {
         await fetch(presignedURL, {
           method: 'PUT',
@@ -3405,7 +3405,7 @@ export const updateStoreSEO = (formValues, file, handleClose) => async (dispatch
 
       s3.getSignedUrl(
         'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
         async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
@@ -3871,7 +3871,7 @@ export const updateStoreGeneralInfo = (formValues, subName, file) => async (disp
 
       s3.getSignedUrl(
         'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
         async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
@@ -6515,7 +6515,7 @@ export const updateUserProfile = (formValues, file) => async (dispatch, getState
       console.log('entered into file case');
       s3.getSignedUrl(
         'putObject',
-        { Bucket: 'qwikshop', Key: key, ContentType: `image/${file.type}` },
+        { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${file.type}` },
         async (_err, presignedURL) => {
           await fetch(presignedURL, {
             method: 'PUT',
@@ -6956,7 +6956,7 @@ export const updateStoreBanners = (banners, handleClose) => async (dispatch, get
 
         s3.getSignedUrl(
           'putObject',
-          { Bucket: 'qwikshop', Key: key, ContentType: `image/${element.file.type}` },
+          { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${element.file.type}` },
           async (_err, presignedURL) => {
             await fetch(presignedURL, {
               method: 'PUT',
@@ -6970,7 +6970,7 @@ export const updateStoreBanners = (banners, handleClose) => async (dispatch, get
 
             // Now update that particular data (banner) whose image was uploaded
             const newObj = data.find((el) => el.index === element.index);
-            newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
+            newObj.preview = `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${key}`;
 
             console.log(newObj);
 
@@ -7046,7 +7046,7 @@ export const updateHeroBanners = (banners) => async (dispatch, getState) => {
 
         s3.getSignedUrl(
           'putObject',
-          { Bucket: 'qwikshop', Key: key, ContentType: `image/${element.file.type}` },
+          { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${element.file.type}` },
           async (_err, presignedURL) => {
             await fetch(presignedURL, {
               method: 'PUT',
@@ -7060,7 +7060,7 @@ export const updateHeroBanners = (banners) => async (dispatch, getState) => {
 
             // Now update that particular data (banner) whose image was uploaded
             const newObj = data.find((el) => el.index === element.index);
-            newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
+            newObj.preview = `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${key}`;
 
             console.log(newObj);
 
@@ -7133,7 +7133,7 @@ export const updateCustomBanners = (banners) => async (dispatch, getState) => {
 
         s3.getSignedUrl(
           'putObject',
-          { Bucket: 'qwikshop', Key: key, ContentType: `image/${element.file.type}` },
+          { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${element.file.type}` },
           async (_err, presignedURL) => {
             await fetch(presignedURL, {
               method: 'PUT',
@@ -7147,7 +7147,7 @@ export const updateCustomBanners = (banners) => async (dispatch, getState) => {
 
             // Now update that particular data (custom banner) whose image was uploaded
             const newObj = data.find((el) => el.index === element.index);
-            newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
+            newObj.preview = `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${key}`;
 
             console.log(newObj);
 
@@ -7217,7 +7217,7 @@ export const updateImageBanners = (banners) => async (dispatch, getState) => {
 
         s3.getSignedUrl(
           'putObject',
-          { Bucket: 'qwikshop', Key: key, ContentType: `image/${element.file.type}` },
+          { Bucket: 'qwikshop-in', Key: key, ContentType: `image/${element.file.type}` },
           async (_err, presignedURL) => {
             await fetch(presignedURL, {
               method: 'PUT',
@@ -7231,7 +7231,7 @@ export const updateImageBanners = (banners) => async (dispatch, getState) => {
 
             // Now update that particular data (custom banner) whose image was uploaded
             const newObj = data.find((el) => el.index === element.index);
-            newObj.preview = `https://qwikshop.s3.ap-south-1.amazonaws.com/${key}`;
+            newObj.preview = `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${key}`;
 
             data = data.map((el) => (el.index !== newObj.index ? el : newObj));
           }

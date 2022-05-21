@@ -170,7 +170,7 @@ function QuestionItem({ item, onDelete }) {
     <Stack spacing={2} sx={{ minHeight: 150, width: '100%', position: 'relative', p: 3 }}>
       <Stack direction="row" alignItems={'center'} justifyContent="space-between">
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar alt={customer.name} src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${customer.image}`} />
+          <Avatar alt={customer.name} src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${customer.image}`} />
           <div>
             <Typography variant="subtitle2">{customer.name}</Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary', mt: 0.5, display: 'block' }}>

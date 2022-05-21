@@ -73,7 +73,7 @@ export default function NavbarAccount({ isCollapse }) {
             }),
           }}
         >
-          <Avatar src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${store.logo}`} />
+          <Avatar src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${store.logo}`} />
 
           <Box
             sx={{
@@ -126,7 +126,7 @@ export default function NavbarAccount({ isCollapse }) {
                   width: '100% !important',
                 }}
               >
-                <Avatar variant='rounded' src={`https://qwikshop.s3.ap-south-1.amazonaws.com/${option.logo}`} />
+                <Avatar variant='rounded' src={`https://qwikshop-in.s3.ap-south-1.amazonaws.com/${option.logo}`} />
 
                 <Box
                   sx={{

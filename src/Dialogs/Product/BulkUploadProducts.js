@@ -363,7 +363,7 @@ const BulkUploadProduct = ({ open, handleClose }) => {
                       <a
                         target={'_blank'}
                         rel="noreferrer"
-                        href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/product_upload_format.xlsx"
+                        href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/product_upload_format.xlsx"
                         download="qwikshop_product_upload_format"
                       >
                         Click here
@@ -408,7 +408,7 @@ const BulkUploadProduct = ({ open, handleClose }) => {
                           style={{ textDecoration: 'none' }}
                           target={'_blank'}
                           rel="noreferrer"
-                          href="https://qwikshop.s3.ap-south-1.amazonaws.com/excel_template/product_upload_format.xlsx"
+                          href="https://qwikshop-in.s3.ap-south-1.amazonaws.com/excel_template/product_upload_format.xlsx"
                           download="qwikshop_product_upload_format"
                         >
                           <Button startIcon={<FileDownloadRoundedIcon />} variant="outlined" size="large">

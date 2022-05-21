@@ -410,8 +410,8 @@ export default function EcommerceProductList() {
                                               alt={productName}
                                               src={
                                                 images !== undefined && images.length > 0
-                                                  ? `https://qwikshop.s3.ap-south-1.amazonaws.com/${images[0]}`
-                                                  : 'https://qwikshop.s3.ap-south-1.amazonaws.com/images/noimage.png'
+                                                  ? `https://qwikshop-in.s3.ap-south-1.amazonaws.com/${images[0]}`
+                                                  : 'https://qwikshop-in.s3.ap-south-1.amazonaws.com/images/noimage.png'
                                               }
                                               sx={{ borderRadius: 1.5, width: 64, height: 64, mr: 2 }}
                                             />
